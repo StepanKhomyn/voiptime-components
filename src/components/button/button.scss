@@ -1,0 +1,97 @@
+@use '../../assets/fonts' as *;
+
+@mixin button-type($type-name, $color-prefix) {
+  &--#{$type-name} {
+    background-color: var(--color-#{$color-prefix}-main);
+    color: white;
+
+    &:hover:not(.vt-button--disabled) {
+      background-color: var(--color-#{$color-prefix}-hover);
+    }
+
+    &:active:not(.vt-button--disabled) {
+      background-color: var(--color-#{$color-prefix}-pressed);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-#{$color-prefix}-focus);
+      outline-offset: 2px;
+    }
+  }
+}
+
+.vt-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-button);
+  border-radius: var(--radius-main);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+
+  // базовий варіант
+  background-color: white;
+  color: var(--color-gray-1);
+
+  // Вкладені стилі після оголошень
+  &__icon {
+    margin-right: 8px;
+  }
+
+  &__content {
+    @include vt-typography('vt-button');
+    display: inline-block;
+  }
+
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  &--loading {
+
+  }
+
+  &--icon-only {
+    .vt-button__icon {
+      margin: 0;
+    }
+  }
+
+  &--circle {
+    border-radius: 50%;
+    padding: 6px;
+    width: 36px;
+    height: 36px;
+  }
+
+  &--square {
+    padding: 6px;
+    width: 36px;
+    height: 36px;
+  }
+
+  &--default {
+    background-color: var(--color-gray-5);
+    color: var(--color-gray-3);
+
+    &:hover:not(.vt-button--disabled) {
+      background-color: var(--color-gray-4);
+      color: var(--color-gray-2);
+    }
+
+    &:active:not(.vt-button--disabled) {
+      background-color: var(--color-gray-5);
+      color: var(--color-gray-2);
+    }
+  }
+
+  // Кольорові типи
+  @include button-type('primary', 'primary');
+  @include button-type('success', 'success');
+  @include button-type('warning', 'warning');
+  @include button-type('danger', 'danger');
+  @include button-type('info', 'yellow');
+}

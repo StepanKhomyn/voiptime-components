@@ -1,0 +1,129 @@
+@use '../../assets/fonts' as *;
+
+.vt-columns-selector {
+  display: flex;
+  flex-direction: row;
+
+  &-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vt-gap-lg);
+  }
+
+  &__panel {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--vt-gap-sm);
+    border-right: 1px solid var(--color-gray-4);
+    padding-right: var(--vt-padding-base);
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: var(--vt-gap-sm);
+      padding: var(--vt-padding-sm);
+      border-radius: var(--radius-main);
+      position: relative;
+      transition: all 0.15s ease;
+
+      &[draggable='true'] {
+        cursor: move;
+      }
+
+      &--dragging {
+        opacity: 0.5;
+        background-color: var(--color-gray-6);
+        transform: scale(0.98);
+      }
+
+      &--drop-before {
+        border-top: 3px solid var(--color-primary-main, #409eff);
+        margin-top: -2px;
+        padding-top: calc(var(--vt-padding-sm) - 1px);
+      }
+
+      &--drop-after {
+        border-bottom: 3px solid var(--color-primary-main, #409eff);
+        margin-bottom: -2px;
+        padding-bottom: calc(var(--vt-padding-sm) - 1px);
+      }
+
+      &-icon {
+        color: var(--color-gray-3);
+
+        &--draggable {
+          color: var(--color-gray-2);
+          cursor: grab;
+
+          &:active {
+            cursor: grabbing;
+          }
+        }
+      }
+
+      &-pinned {
+        background-color: var(--color-gray-6);
+        padding: var(--vt-padding-sm);
+        border-radius: var(--radius-main);
+        color: var(--color-gray-3);
+        font-size: 12px;
+        white-space: nowrap;
+      }
+    }
+  }
+
+  &__available {
+    width: 75%;
+    padding-left: var(--vt-padding-base);
+    display: flex;
+    flex-direction: column;
+    gap: var(--vt-gap-lg);
+  }
+
+  &__group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vt-padding-base);
+
+    &-header {
+      padding: var(--vt-padding-base) 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: var(--vt-gap-sm);
+
+      &:hover {
+        background-color: var(--color-gray-7);
+      }
+    }
+
+    &-icon {
+      color: var(--color-gray-3);
+    }
+
+    &-toggle {
+      margin-left: auto;
+      color: var(--color-gray-3);
+      transition: transform 0.2s ease;
+    }
+
+    &-columns {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--vt-gap-sm);
+    }
+
+    &-column {
+      display: flex;
+      align-items: center;
+      gap: var(--vt-gap-sm);
+    }
+  }
+
+  &__pinned-note {
+    color: var(--color-gray-3);
+    font-size: 12px;
+    font-style: italic;
+  }
+}

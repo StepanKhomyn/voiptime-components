@@ -1,0 +1,32 @@
+:root {
+  --scrollbar-width: 10px;
+  --scrollbar-height: 10px;
+}
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: var(--scrollbar-width);
+    height: var(--scrollbar-height);
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--color-scrollbar-track);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: var(--color-scrollbar-thumb); // none
+    transition: background-color 0.2s;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-scrollbar-thumb-hover);
+  }
+
+  &::-webkit-scrollbar-thumb:active {
+    background-color: var(--color-scrollbar-thumb-active);
+  }
+
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}

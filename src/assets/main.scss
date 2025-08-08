@@ -1,0 +1,32 @@
+//(змінні через :root)
+
+// 1. Палітра кольорів
+@use './colors' as *;
+
+// 2. Типографія
+@use './fonts' as *;
+
+// 3. Радіус
+@use './radius' as *;
+
+// 4. Padding
+@use './padding' as *;
+
+// 5. Padding
+@use './gap' as *;
+
+// 6. Scrollbar
+@use './scrollbar' as *;
+
+@use '../components/button/button';
+@use '../components/loader/loader';
+@use '../components/pagination/pagination';
+@use '../components/table/table';
+@use '../components/table/column-selector';
+@use '../components/modal/modal';
+@use '../components/checkbox/checkbox';
+@use '../directives/tooltip/tooltip';
+
+body {
+  @include custom-scrollbar;
+}

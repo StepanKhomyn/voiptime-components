@@ -1,0 +1,173 @@
+@use '../../assets/fonts' as *;
+
+@mixin checkbox-variant($variant-name, $color-prefix) {
+  &--#{$variant-name} {
+    .vt-checkbox__box--checked, .vt-checkbox__box--double {
+      background-color: var(--color-#{$color-prefix}-main);
+      border-color: var(--color-#{$color-prefix}-main);
+    }
+
+    &:not(.vt-checkbox--disabled):hover {
+      .vt-checkbox__box--checked,
+      {
+        background-color: var(--color-#{$color-prefix}-hover);
+        border-color: var(--color-#{$color-prefix}-hover);
+      }
+    }
+
+    // Hover effects for unchecked state
+    &:not(.vt-checkbox--disabled):hover {
+      .vt-checkbox__box:not(.vt-checkbox__box--checked):not(.vt-checkbox__box--indeterminate) {
+        border-color: var(--color-#{$color-prefix}-hover);
+      }
+    }
+  }
+}
+
+.vt-checkbox {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:focus + .vt-checkbox__box {
+      //box-shadow: 0 0 0 2px var(--color-primary-focus);
+      outline: none;
+    }
+  }
+
+  &__box {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--color-gray-4);
+    border-radius: var(--radius-main);
+    background-color: white;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    &--checked {
+      background-color: var(--color-primary-main);
+      border-color: var(--color-primary-main);
+    }
+
+    &--double {
+      background-color: var(--color-primary-main);
+      border-color: var(--color-primary-main);
+    }
+
+    &--indeterminate {
+      background-color: var(--color-gray-4);
+
+      &:hover {
+        background-color: var(--color-gray-3);
+        border-color: var(--color-gray-3);
+      }
+    }
+
+    &--disabled {
+      background-color: var(--color-gray-5);
+      border-color: var(--color-gray-4);
+    }
+  }
+
+  &__checkmark {
+    width: 10px;
+    height: 10px;
+    stroke-width: 2;
+    stroke-dasharray: 16;
+    stroke-dashoffset: 16;
+    transition: stroke-dashoffset 0.2s ease-in-out;
+    color: #FFFFFF;
+
+    &--checked {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  &__indeterminate-mark {
+    width: 8px;
+    height: 2px;
+    background-color: white;
+    border-radius: 1px;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+
+    &--visible {
+      opacity: 1;
+    }
+  }
+
+  &__label {
+    margin-left: 8px;
+    @include vt-typography('vt-checkbox');
+    color: var(--color-gray-1);
+
+    &--disabled {
+      color: var(--color-gray-3);
+    }
+  }
+
+  // Size variants
+  &--small {
+    .vt-checkbox__box {
+      width: 14px;
+      height: 14px;
+    }
+
+    .vt-checkbox__checkmark {
+      width: 8px;
+      height: 8px;
+    }
+
+    .vt-checkbox__indeterminate-mark {
+      width: 6px;
+      height: 1.5px;
+    }
+
+    .vt-checkbox__label {
+      margin-left: 6px;
+    }
+  }
+
+  &--large {
+    .vt-checkbox__box {
+      width: 22px;
+      height: 22px;
+    }
+
+    .vt-checkbox__checkmark {
+      width: 12px;
+      height: 12px;
+    }
+
+    .vt-checkbox__indeterminate-mark {
+      width: 10px;
+      height: 2.5px;
+    }
+
+    .vt-checkbox__label {
+      margin-left: 10px;
+    }
+  }
+
+  // Color variants using mixin
+  @include checkbox-variant('primary', 'primary');
+  @include checkbox-variant('success', 'success');
+  @include checkbox-variant('warning', 'warning');
+  @include checkbox-variant('danger', 'danger');
+  @include checkbox-variant('info', 'yellow');
+}

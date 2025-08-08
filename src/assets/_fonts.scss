@@ -1,0 +1,100 @@
+:root {
+  // Font families
+  --font-primary: 'Inter', sans-serif;
+  --font-secondary: 'Roboto', serif;
+
+  // Font sizes
+  --font-size-base: 16px;
+  --font-size-lg: 20px;
+  --font-size-sm: 14px;
+
+  // Font weights
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  //Buttons
+  --vt-button-font-family: var(--font-primary);
+  --vt-button-font-size: var(--font-size-sm);
+  --vt-button-font-weight: var(--font-weight-medium);
+  --vt-button-line-height: 19.23px;
+  --vt-button-letter-spacing: 0;
+
+  //Pagination
+  --vt-pagination-font-family: var(--font-secondary);
+  --vt-pagination-font-size: var(--font-size-sm);
+  --vt-pagination-font-weight: var(--font-weight-regular);
+  --vt-pagination-line-height: 20px;
+  --vt-pagination-letter-spacing: 0;
+  --vt-pagination-vertical-align: middle;
+
+  // Table Header (th)
+  --vt-table-th-font-family: var(--font-secondary);
+  --vt-table-th-font-weight: var(--font-weight-medium);
+  --vt-table-th-font-size: var(--font-size-sm);
+  --vt-table-th-line-height: 110%;
+  --vt-table-th-letter-spacing: 0;
+  --vt-table-th-vertical-align: middle;
+
+  // Table Body (td)
+  --vt-table-td-font-family: var(--font-secondary);
+  --vt-table-td-font-weight: var(--font-weight-regular);
+  --vt-table-td-font-size: var(--font-size-sm);
+  --vt-table-td-line-height: 20px;
+  --vt-table-td-letter-spacing: 0%;
+
+  // Drop down
+  --vt-dropdown-font-family: var(--font-secondary);
+  --vt-dropdown-font-weight: var(--font-weight-regular);
+  --vt-dropdown-font-size: var(--font-size-sm);
+  --vt-dropdown-line-height: 20px;
+  --vt-dropdown-letter-spacing: 0%;
+
+  // Modal
+  --vt-modal-header-font-family: var(--font-secondary);
+  --vt-modal-header-font-weight: var(--font-weight-regular);
+  --vt-modal-header-font-size: var(--font-size-base);
+  --vt-modal-header-line-height: 100%;
+  --vt-modal-header-letter-spacing: 0%;
+
+  // Checkbox
+  --vt-checkbox-font-family: var(--font-secondary);
+  --vt-checkbox-font-weight: var(--font-weight-regular);
+  --vt-checkbox-font-size: var(--font-size-base);
+  --vt-checkbox-line-height: 100%;
+  --vt-checkbox-letter-spacing: 0%;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('@/assets/fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('@/assets/fonts/Roboto-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('@/assets/fonts/Roboto-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@mixin vt-typography($prefix) {
+  font-family: var(--#{$prefix}-font-family);
+  font-weight: var(--#{$prefix}-font-weight);
+  font-size: var(--#{$prefix}-font-size);
+  line-height: var(--#{$prefix}-line-height);
+  letter-spacing: var(--#{$prefix}-letter-spacing);
+  vertical-align: var(--#{$prefix}-vertical-align);
+}

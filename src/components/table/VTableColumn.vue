@@ -1,0 +1,118 @@
+<script setup lang="ts">
+  import { inject, onMounted, onUnmounted, useSlots, watch } from 'vue';
+  import type { VTableColumn } from './types';
+
+  interface VTableColumnProps {
+    prop: string;
+    label: string;
+    width?: number;
+    minWidth?: number;
+    maxWidth?: number;
+    sortable?: boolean;
+    pinnedLeft?: boolean;
+    pinnedRight?: boolean;
+    actionColumn?: boolean;
+    showOverflowTooltip?: boolean;
+    selectable?: boolean;
+  }
+
+  const props = withDefaults(defineProps<VTableColumnProps>(), {
+    sortable: true,
+    actionColumn: true,
+    showOverflowTooltip: true,
+    selectable: true,
+    pinnedLeft: false,
+    pinnedRight: false,
+  });
+
+  // Отримуємо слоти
+  const slots = useSlots();
+
+  // Отримуємо масив колонок від батьківської таблиці
+  const columns = inject<VTableColumn[]>('vt-table-columns');
+
+  if (!columns) {
+    console.error(
+      'VTableColumn: не знайдено контекст таблиці. Переконайтеся, що компонент використовується всередині VTable.'
+    );
+  }
+
+  // Створюємо об'єкт колонки
+  const createColumn = (): VTableColumn => ({
+    prop: props.prop,
+    label: props.label,
+    width: props.width,
+    minWidth: props.minWidth,
+    maxWidth: props.maxWidth,
+    sortable: props.sortable,
+    pinnedLeft: props.pinnedLeft,
+    pinnedRight: props.pinnedRight,
+    actionColumn: props.actionColumn,
+    showOverflowTooltip: props.showOverflowTooltip,
+    selectable: props.selectable,
+    // Зберігаємо слот - пріоритет: назва колонки -> default -> slot
+    renderSlot: slots[props.prop] || slots.default || slots.slot,
+  });
+
+  let columnIndex = -1;
+
+  // Додаємо колонку до масиву при монтуванні
+  onMounted(() => {
+    if (columns) {
+      const newColumn = createColumn();
+      columns.push(newColumn);
+      columnIndex = columns.length - 1;
+      console.log(`VTableColumn: зареєстровано колонку "${props.label}" (${props.prop}) на позиції ${columnIndex}`);
+    }
+  });
+
+  // Спостерігаємо за змінами пропсів і оновлюємо колонку
+  watch(
+    () => [
+      props.width,
+      props.minWidth,
+      props.maxWidth,
+      props.sortable,
+      props.pinnedLeft,
+      props.pinnedRight,
+      props.actionColumn,
+      props.showOverflowTooltip,
+      props.selectable,
+      props.label,
+    ],
+    () => {
+      if (columns && columnIndex !== -1) {
+        // Знаходимо колонку за prop (більш надійно ніж за індексом)
+        const existingColumnIndex = columns.findIndex(col => col.prop === props.prop);
+        if (existingColumnIndex !== -1) {
+          // Оновлюємо існуючу колонку зі збереженням renderSlot
+          const existingColumn = columns[existingColumnIndex];
+          const updatedColumn = {
+            ...createColumn(),
+            renderSlot: existingColumn.renderSlot, // Зберігаємо існуючий renderSlot
+          };
+
+          // Замінюємо колонку
+          columns[existingColumnIndex] = updatedColumn;
+          console.log(`VTableColumn: оновлено колонку "${props.label}" (${props.prop})`);
+        }
+      }
+    },
+    { deep: true }
+  );
+
+  // Видаляємо колонку з масиву при демонтуванні
+  onUnmounted(() => {
+    if (columns) {
+      const index = columns.findIndex(col => col.prop === props.prop);
+      if (index > -1) {
+        columns.splice(index, 1);
+        console.log(`VTableColumn: видалено колонку "${props.label}" (${props.prop})`);
+      }
+    }
+  });
+</script>
+
+<template>
+  <!-- Цей компонент не рендерить нічого, він тільки реєструє колонку -->
+</template>

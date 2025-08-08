@@ -1,0 +1,78 @@
+@use '../../assets/fonts' as *;
+
+.vt-pagination {
+  @include vt-typography('vt-pagination');
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--padding-pagination);
+  flex-wrap: wrap;
+  color: var(--color-gray-3);
+
+  &__info {
+    display: flex;
+    align-items: center;
+    gap: var(--vt-gap-base);
+  }
+
+  &__rows-per-page {
+    display: flex;
+    align-items: center;
+    gap: var(--vt-gap-base);
+  }
+
+  &__select {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    min-width: 4rem;
+
+    &:focus {
+      outline: none;
+      border-color: var(--vt-c-brand, #3b82f6);
+      box-shadow: 0 0 0 1px var(--vt-c-brand, #3b82f6);
+    }
+  }
+
+
+  &__navigation {
+    display: flex;
+    align-items: center;
+    gap: var(--vt-gap-base);
+  }
+
+  &__nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: none;
+    user-select: none;
+    background-color: transparent;
+    color: var(--color-gray-4);
+    padding: 5px 11px;
+    border-radius: 50px;
+
+    &:not(.vt-pagination__nav-button--active):not(:disabled):hover {
+      color: var(--color-gray-3);
+      background-color: var(--color-gray-5);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+
+    &--active {
+      background-color: var(--color-primary-main);
+      color: #FFFFFF;
+
+      &:hover {
+        background-color: var(--color-primary-hover);
+        cursor: default;
+      }
+    }
+
+    &.has-items {
+      color: var(--color-gray-3);
+    }
+  }
+}
