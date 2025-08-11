@@ -56,7 +56,7 @@
   // Для відстеження попередньої позиції скролу
   const lastScrollTop = ref(0);
   // Для debounce
-  let scrollTimeout: number | null = null;
+  let scrollTimeout: ReturnType<typeof setTimeout>;
 
   // Ініціалізація internal колонок з пропсів
   const initializeInternalColumns = () => {
@@ -196,7 +196,7 @@
           infinityScrollTriggered.value = false;
         }, 1000);
       }
-    }, 50); // debounce 50ms
+    }, 50); as unknown as number; // debounce 50ms
   };
 
   // Метод для ручного скидання флагу infinity scroll
