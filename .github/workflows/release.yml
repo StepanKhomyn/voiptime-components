@@ -1,21 +1,30 @@
 name: Publish Package to npmjs
+
 on:
-  release:
-    types: [ published ]
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+  packages: write
+
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
     steps:
       - uses: actions/checkout@v4
-      # Setup .npmrc file to publish to npm
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
-          node-version: '21'
-          registry-url: 'https://registry.npmjs.org'
+          node-version: "21"
+          registry-url: "https://registry.npmjs.org"
       - run: npm ci
-      - run: npm publish --provenance --access public
+      - name: Authenticate npm
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
+      - run: npm whoami
+      - run: npm publish --dry-run --access public || echo "Dry run publish failed, but continuing"
+      - run: npx semantic-release
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
