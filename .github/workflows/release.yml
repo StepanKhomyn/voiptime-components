@@ -1,65 +1,21 @@
-name: Release
-
+name: Publish Package to npmjs
 on:
-  push:
-    branches: [ "main" ]
-
-permissions:
-  contents: write
-  packages: write
-  issues: write
-  pull-requests: write
-
-jobs:
   release:
+    types: [ published ]
+jobs:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          fetch-depth: 0
+      # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
-          node-version: "21"
-          registry-url: "https://registry.npmjs.org"
-      - name: Install deps
-        run: npm ci
-
-      - name: Debug NPM Token
+          node-version: '21'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish --provenance --access public
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "Checking if NPM_TOKEN exists..."
-          if [ -z "$NPM_TOKEN" ]; then
-            echo "❌ NPM_TOKEN is empty or not set!"
-            exit 1
-          else
-            echo "✅ NPM_TOKEN exists"
-            echo "Token length: ${#NPM_TOKEN}"
-            echo "Token starts with: ${NPM_TOKEN:0:8}..."
-            echo "Token ends with: ...${NPM_TOKEN: -8}"
-          fi
-
-      - name: Test NPM Token
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "Testing NPM authentication..."
-          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
-          npm whoami
-          echo "NPM token is valid ✅"
-
-      - name: Test publish access
-        env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          echo "Testing publish permissions..."
-          npm access get --package voiptime-components || echo "Package access check failed, but continuing..."
-          npm publish --dry-run
-          echo "Publish permissions verified ✅"
-
-      - name: Run semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
