@@ -1,26 +1,33 @@
 {
   "name": "voiptime-components",
   "private": false,
-  "version": "0.0.10",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.0.29",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
   "style": "dist/index.css",
   "types": "dist/index.d.ts",
   "files": [
-    "dist"
+    "dist",
+    "src/assets"
   ],
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.umd.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
-    "./index.css": "./dist/index.css"
+    "./index.css": "./dist/index.css",
+    "./scss/mixins": "./src/assets/_mixins.scss"
   },
+  "sass": "src/assets/main.scss",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
+    "type-check": "vue-tsc -p tsconfig.build.json --noEmit false",
+    "build": "vue-tsc -p tsconfig.build.json && vite build",
     "prepare": "npm run build",
     "preview": "vite preview"
   },
@@ -31,14 +38,14 @@
     "vue": "^3.5.17"
   },
   "devDependencies": {
-    "@types/node": "^24.1.0",
-    "@vitejs/plugin-vue": "^6.0.0",
-    "@vue/tsconfig": "^0.7.0",
+    "@types/node": "^20.14.0",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "@vue/tsconfig": "^0.5.1",
     "prettier": "^3.6.2",
     "sass": "^1.89.2",
-    "typescript": "~5.8.3",
-    "vite": "^7.0.4",
-    "vite-plugin-dts": "^4.5.4",
-    "vue-tsc": "^2.2.12"
+    "typescript": "~5.5.0",
+    "vite": "^5.4.8",
+    "vite-plugin-dts": "^4.2.3",
+    "vue-tsc": "^2.1.6"
   }
 }

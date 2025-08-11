@@ -1,6 +1,7 @@
 <script setup>
   import { ref } from 'vue';
   import ButtonTest from './ButtonTest.vue';
+  import DemoTable from './DemoTable.vue';
 
   const activeSlot = ref(null);
 
@@ -43,6 +44,7 @@
 
       <!-- Компоненти -->
       <ButtonTest v-if="activeSlot === 1" />
+      <DemoTable v-if="activeSlot === 2" />
       <!-- і т.д. -->
     </div>
   </div>

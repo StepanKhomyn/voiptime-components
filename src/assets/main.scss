@@ -15,8 +15,8 @@
 // 5. Padding
 @use './gap' as *;
 
-// 6. Scrollbar
-@use './scrollbar' as *;
+// 6. mixins
+@use './mixins' as *;
 
 @use '../components/button/button';
 @use '../components/loader/loader';
@@ -28,5 +28,5 @@
 @use '../directives/tooltip/tooltip';
 
 body {
-  @include custom-scrollbar;
+  @include vt-scrollbar;
 }

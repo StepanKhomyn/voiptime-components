@@ -1,4 +1,4 @@
-import type { SortDirection, SortState, VTableColumn } from '../types';
+import type { SortDirection, SortState, VTableColumnProps } from '../types';
 
 /**
  * Спрощений базовий метод сортування з автоматичним визначенням типу
@@ -41,7 +41,7 @@ const isValidDate = (value: any): boolean => {
  * Прямий обробник сортування
  */
 export const handleSortDirect = (
-  column: VTableColumn,
+  column: VTableColumnProps,
   direction: SortDirection,
   onSortChange: (newSortState: SortState) => void
 ): void => {
@@ -57,7 +57,7 @@ export const handleSortDirect = (
  * Отримання CSS класів для іконок сортування
  */
 export const getSortIconClasses = (
-  column: VTableColumn,
+  column: VTableColumnProps,
   currentSortState: SortState | null
 ): { asc: string; desc: string } => {
   const isCurrentColumn = currentSortState?.prop === column.prop;
@@ -79,7 +79,7 @@ export const getSortIconClasses = (
 export const sortTableData = <T extends Record<string, any>>(
   data: T[],
   sortState: SortState | null,
-  columns: VTableColumn[]
+  columns: VTableColumnProps[]
 ): T[] => {
   if (!sortState) return [...data];
 

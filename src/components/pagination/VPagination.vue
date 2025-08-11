@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { computed, watch } from 'vue';
-  import { PaginationEmits, PaginationProps } from './types';
+  import type { PaginationEmits, PaginationProps } from './types';
   import VButton from '@/components/button/VButton.vue';
   import VIcon from '@/components/icon/VIcon.vue';
   // Props

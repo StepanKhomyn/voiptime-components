@@ -1,11 +1,11 @@
 // composables.ts
 import { computed, ref } from 'vue';
-import type { ResizeState, StickyPosition, VTableColumn, VTableProps, VTableStyleConfig } from '../types';
+import type { ResizeState, StickyPosition, VTableColumnProps, VTableProps, VTableStyleConfig } from '../types';
 
 /**
  * Композабл для роботи з колонками таблиці
  */
-export function useTableColumns(columns: VTableColumn[]) {
+export function useTableColumns(columns: VTableColumnProps[]) {
   const sortedColumns = computed(() => {
     return [...columns].sort((a, b) => {
       if (a.pinnedLeft && !b.pinnedLeft) return -1;
@@ -79,7 +79,7 @@ export function useTableStyles(props: VTableProps) {
   };
 
   const getColumnStyle = (
-    col: VTableColumn,
+    col: VTableColumnProps,
     index: number,
     getStickyOffsetFn: (side: StickyPosition, index: number, hasSelectable?: boolean) => number,
     getDefaultColumnWidth: () => number
@@ -106,18 +106,18 @@ export function useTableStyles(props: VTableProps) {
     if (col.pinnedLeft) {
       style.position = 'sticky';
       style.left = `${getStickyOffsetFn('left', index, props.selectable)}px`;
-      style.zIndex = 10;
+      style.zIndex = '10';
     } else if (col.pinnedRight) {
       style.position = 'sticky';
       style.right = `${getStickyOffsetFn('right', index, false)}px`;
-      style.zIndex = 10;
+      style.zIndex = '10';
     }
 
     return style;
   };
 
   const getHeaderStyle = (
-    col: VTableColumn,
+    col: VTableColumnProps,
     index: number,
     getStickyOffsetFn: (side: StickyPosition, index: number, hasSelectable?: boolean) => number,
     getDefaultColumnWidth: () => number
@@ -131,9 +131,9 @@ export function useTableStyles(props: VTableProps) {
 
       // Підвищуємо z-index для pinned колонок в header
       if (col.pinnedLeft || col.pinnedRight) {
-        style.zIndex = 12;
+        style.zIndex = '12';
       } else {
-        style.zIndex = 11;
+        style.zIndex = '11';
       }
     }
 
@@ -141,7 +141,7 @@ export function useTableStyles(props: VTableProps) {
   };
 
   const getFooterStyle = (
-    col: VTableColumn,
+    col: VTableColumnProps,
     index: number,
     getStickyOffsetFn: (side: StickyPosition, index: number, hasSelectable?: boolean) => number,
     getDefaultColumnWidth: () => number
@@ -155,9 +155,9 @@ export function useTableStyles(props: VTableProps) {
 
       // Підвищуємо z-index для pinned колонок в footer
       if (col.pinnedLeft || col.pinnedRight) {
-        style.zIndex = 12;
+        style.zIndex = '12';
       } else {
-        style.zIndex = 11;
+        style.zIndex = '11';
       }
     }
 
@@ -187,7 +187,7 @@ export function useColumnResize() {
 
   const onMouseDown = (
     e: MouseEvent,
-    col: VTableColumn,
+    col: VTableColumnProps,
     getDefaultColumnWidth: (prop: string) => number,
     callback?: (newWidth: number) => void // Додаємо callback параметр
   ) => {
@@ -234,7 +234,6 @@ export function useColumnResize() {
 
         // ВАЖЛИВО: Викликаємо callback з новою шириною
         if (callback && resizingCol.width) {
-          console.log('📏 Викликаємо callback з новою шириною:', resizingCol.width);
           callback(resizingCol.width);
         }
       }

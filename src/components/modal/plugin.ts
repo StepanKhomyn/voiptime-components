@@ -136,11 +136,9 @@ class VModalManager implements VModalInstance {
   }
 
   private recalculateZIndices(): void {
-    this.modalStack.forEach((modal, index) => {
-      const newZIndex = this.baseZIndex + index * 10;
-      // Оскільки z-index тепер передається через пропси,
-      // перерахунок відбувається автоматично при ре-рендері
-    });
+    // Оскільки z-index тепер передається через пропси,
+    // перерахунок відбувається автоматично при ре-рендері
+    // Ця функція залишена для майбутньої функціональності
   }
 }
 

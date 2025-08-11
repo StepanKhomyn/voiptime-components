@@ -19,7 +19,7 @@
   const isIconOnly = computed(() => Boolean(props.icon && props.shape));
 
   const slotText = computed(() => {
-    const slot = slots.default?.();
+    const slot = slots.default ? slots.default({}) : null;
     return slot?.[0]?.children?.toString() ?? '';
   });
 

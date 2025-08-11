@@ -49,11 +49,12 @@
     <VTable
       ref="tableRef"
       :data="currentPageData"
-      :all-data="allKnownData"
+      :all-data="[]"
       :max-height="400"
       @sort-change="handleTableSort"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
+      @infinity-scroll="handleScroll"
       @columns-change="handleColumnsChange"
       show-summary
       :summary-method="getSummaries"
@@ -117,7 +118,7 @@
   import VTable from '@/components/table/VTable.vue';
   import VTableColumn from '@/components/table/VTableColumn.vue';
   import VPagination from '@/components/pagination/VPagination.vue';
-  import type { SelectionChangeEventData, VTableColumn as VTableColumnType } from '@/components/table/types';
+  import type { SelectionChangeEventData, VTableColumnProps as VTableColumnType } from '@/components/table/types';
 
   // Референс на таблицю для доступу до методів
   const tableRef = ref();
@@ -430,6 +431,10 @@
     if (data.event.ctrlKey || data.event.metaKey) {
       toggleSingleRow(data.row);
     }
+  };
+
+  const handleScroll = () => {
+    console.log('scrolled');
   };
 
   const handleTableSort = (data: any) => {

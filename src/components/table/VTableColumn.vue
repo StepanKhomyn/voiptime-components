@@ -1,20 +1,7 @@
 <script setup lang="ts">
+  import type { Slots } from 'vue';
   import { inject, onMounted, onUnmounted, useSlots, watch } from 'vue';
-  import type { VTableColumn } from './types';
-
-  interface VTableColumnProps {
-    prop: string;
-    label: string;
-    width?: number;
-    minWidth?: number;
-    maxWidth?: number;
-    sortable?: boolean;
-    pinnedLeft?: boolean;
-    pinnedRight?: boolean;
-    actionColumn?: boolean;
-    showOverflowTooltip?: boolean;
-    selectable?: boolean;
-  }
+  import type { VTableColumnProps } from './types';
 
   const props = withDefaults(defineProps<VTableColumnProps>(), {
     sortable: true,
@@ -26,10 +13,10 @@
   });
 
   // Отримуємо слоти
-  const slots = useSlots();
+  const slots = useSlots() as Slots & Record<string, any>;
 
   // Отримуємо масив колонок від батьківської таблиці
-  const columns = inject<VTableColumn[]>('vt-table-columns');
+  const columns = inject<VTableColumnProps[]>('vt-table-columns');
 
   if (!columns) {
     console.error(
@@ -38,7 +25,7 @@
   }
 
   // Створюємо об'єкт колонки
-  const createColumn = (): VTableColumn => ({
+  const createColumn = (): VTableColumnProps => ({
     prop: props.prop,
     label: props.label,
     width: props.width,
@@ -51,7 +38,7 @@
     showOverflowTooltip: props.showOverflowTooltip,
     selectable: props.selectable,
     // Зберігаємо слот - пріоритет: назва колонки -> default -> slot
-    renderSlot: slots[props.prop] || slots.default || slots.slot,
+    renderSlot: slots[props.prop] ?? slots.default ?? slots.slot,
   });
 
   let columnIndex = -1;
@@ -62,7 +49,6 @@
       const newColumn = createColumn();
       columns.push(newColumn);
       columnIndex = columns.length - 1;
-      console.log(`VTableColumn: зареєстровано колонку "${props.label}" (${props.prop}) на позиції ${columnIndex}`);
     }
   });
 
@@ -94,7 +80,6 @@
 
           // Замінюємо колонку
           columns[existingColumnIndex] = updatedColumn;
-          console.log(`VTableColumn: оновлено колонку "${props.label}" (${props.prop})`);
         }
       }
     },
@@ -107,7 +92,6 @@
       const index = columns.findIndex(col => col.prop === props.prop);
       if (index > -1) {
         columns.splice(index, 1);
-        console.log(`VTableColumn: видалено колонку "${props.label}" (${props.prop})`);
       }
     }
   });

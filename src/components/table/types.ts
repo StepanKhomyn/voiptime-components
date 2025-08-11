@@ -1,4 +1,5 @@
-// types.ts - розширена версія з підтримкою виділення та v-model
+import type { Component, VNode } from 'vue';
+import type { IconName } from '@/icons';
 
 export interface VTableStyleConfig {
   [key: string]: string;
@@ -8,7 +9,7 @@ export type StickyPosition = 'left' | 'right';
 export type SortDirection = 'asc' | 'desc';
 
 export interface ResizeState {
-  resizingCol: VTableColumn | null;
+  resizingCol: VTableColumnProps | null;
   startX: number;
   startWidth: number;
 }
@@ -20,7 +21,7 @@ export interface SortState {
 
 // Дані події сортування
 export interface SortChangeEventData {
-  column: VTableColumn;
+  column: VTableColumnProps;
   direction: SortDirection | null;
   prop: string;
   sortedData: Record<string, any>[];
@@ -38,33 +39,19 @@ export interface VTableColumnGroup {
   name: string;
   label: string;
   order: number;
-  icon?: string;
+  icon?: IconName;
   color?: string;
-  columns: VTableColumn[];
+  columns: VTableColumnProps[];
 }
 
-export interface VTableProps {
-  data: Record<string, any>[];
-  maxHeight?: number;
-  defaultSort?: SortState;
-  showSummary?: boolean;
-  summaryMethod?: (params: { columns: VTableColumn[]; data: Record<string, any>[] }) => any[];
-  columnsSelector?: VTableColumn[];
-  // Пропси для виділення
-  selectable?: boolean;
-  selectionKey?: string; // ключ для ідентифікації рядків (за замовчуванням 'id')
-  defaultSelection?: any[]; // рядки виділені за замовчуванням
-  selectOnClickRow?: boolean; // виділяти рядок при кліку на нього
-  highlightCurrentRow?: boolean; // підсвічувати поточний рядок
+export type VTableRenderSlot = (props: {
+  row: Record<string, any>;
+  column: VTableColumnProps;
+  value: any;
+  index?: number;
+}) => VNode | VNode[] | string | Component;
 
-  // Додаткові пропси для повного вибору
-  allData?: Record<string, any>[]; // всі дані для повного виділення
-
-  // Опціональний v-model для колонок
-  columns?: VTableColumnGroup[];
-}
-
-export interface VTableColumn {
+export interface VTableColumnProps {
   prop: string;
   label: string;
   width?: number;
@@ -75,9 +62,66 @@ export interface VTableColumn {
   pinnedRight?: boolean;
   actionColumn?: boolean;
   showOverflowTooltip?: boolean;
-
+  selectable?: boolean;
   // Додаємо підтримку слотів
-  renderSlot?: Function;
+  renderSlot?: VTableRenderSlot;
+  sortMethod?: Function;
+}
+
+// Явно типізуємо props interface
+export interface VTableProps {
+  /** Масив даних для відображення в таблиці */
+  data: Record<string, any>[];
+  /** Максимальна висота таблиці (для sticky header) */
+  maxHeight?: number;
+  /** Початкове сортування */
+  defaultSort?: SortState;
+  /** Показувати підсумковий рядок */
+  showSummary?: boolean;
+  /** Метод для обчислення підсумкових значень */
+  summaryMethod?: (params: { columns: VTableColumnProps[]; data: Record<string, any>[] }) => any[];
+  /** Групи колонок для селектора */
+  columnsSelector?: VTableColumnGroup[];
+
+  // Пропси для виділення
+  /** Чи включити функціонал виділення рядків */
+  selectable?: boolean;
+  /** Ключ для ідентифікації рядків (за замовчуванням 'id') */
+  selectionKey?: string;
+  /** Рядки виділені за замовчуванням */
+  defaultSelection?: any[];
+  /** Виділяти рядок при кліку на нього */
+  selectOnClickRow?: boolean;
+  /** Підсвічувати поточний рядок */
+  highlightCurrentRow?: boolean;
+
+  // Додаткові пропси для повного вибору
+  /** Всі дані для повного виділення (якщо відрізняються від data) */
+  allData?: Record<string, any>[];
+
+  // Опціональний v-model для колонок
+  /** Конфігурація колонок */
+  columns?: VTableColumnProps[];
+}
+
+// Явно типізуємо emits interface
+export interface VTableEmits {
+  'sort-change': [payload: SortChangeEventData];
+  'selection-change': [payload: SelectionChangeEventData];
+  'current-change': [
+    payload: {
+      currentRow: Record<string, any> | null;
+      oldCurrentRow: Record<string, any> | null;
+    },
+  ];
+  'row-click': [payload: { row: Record<string, any>; column: VTableColumnProps; event: Event }];
+  'update:columns': [payload: VTableColumnProps[]];
+  'column-pin': [payload: { column: VTableColumnProps; position: 'left' | 'right' | 'none' }];
+  'column-resize': [payload: { column: VTableColumnProps; width: number; oldWidth?: number }];
+  'column-visibility': [payload: { column: VTableColumnProps }];
+  'column-sort': [payload: { column: VTableColumnProps; direction: 'asc' | 'desc' | null }];
+  'columns-change': [columns: VTableColumnProps[]];
+  'infinity-scroll': [];
 }
 
 export const DEFAULT_COLUMN_CONFIG = {
@@ -87,28 +131,4 @@ export const DEFAULT_COLUMN_CONFIG = {
   visible: true,
   pinnedLeft: false,
   pinnedRight: false,
-};
-
-export interface VTableEmits {
-  'sort-change': SortChangeEventData;
-  'selection-change': SelectionChangeEventData;
-  'current-change': {
-    currentRow: Record<string, any> | null;
-    oldCurrentRow: Record<string, any> | null;
-  };
-  'row-click': {
-    row: Record<string, any>;
-    column: VTableColumn;
-    event: Event;
-  };
-
-  // v-model емітери (опціональні)
-  'update:columns': VTableColumn[];
-
-  // Події для колонок
-  'column-pin': { column: VTableColumn; position: 'left' | 'right' | 'none' };
-  'column-resize': { column: VTableColumn; width: number; oldWidth?: number };
-  'column-visibility': { column: VTableColumn };
-  'column-sort': { column: VTableColumn; direction: 'asc' | 'desc' | null };
-  'columns-change': [columns: VTableColumn[]];
-}
+} as const;

@@ -1,22 +1,13 @@
 <script setup lang="ts">
   import { computed, onMounted, ref } from 'vue';
-  import type { VTableColumn } from '@/components/table/types';
+  import type { VTableColumnGroup, VTableColumnProps } from '@/components/table/types';
   import VIcon from '@/components/icon/VIcon.vue';
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
   import VButton from '@/components/button/VButton.vue';
   import { modalManager } from '@/components/modal/plugin';
 
-  interface VTableColumnGroup {
-    name: string;
-    label: string;
-    order: number;
-    icon?: string;
-    color?: string;
-    columns: VTableColumn[];
-  }
-
   interface Props {
-    columns: VTableColumn[];
+    columns: VTableColumnProps[];
     columnsSelector?: VTableColumnGroup[];
   }
 
@@ -25,11 +16,11 @@
   });
 
   const emit = defineEmits<{
-    'update-columns': [columns: VTableColumn[]];
+    'update-columns': [columns: VTableColumnProps[]];
   }>();
 
   // Стан компонента
-  const workingColumns = ref<VTableColumn[]>([]);
+  const workingColumns = ref<VTableColumnProps[]>([]);
   const expandedGroups = ref<Set<string>>(new Set());
 
   // Стан для drag & drop
@@ -46,7 +37,7 @@
         return;
       }
 
-      const groupColumnProps = group.columns.map(col => col.prop);
+      const groupColumnProps = group.columns.map((col: VTableColumnProps) => col.prop);
       const selectedGroupColumns = workingColumns.value.filter(col => groupColumnProps.includes(col.prop));
 
       if (selectedGroupColumns.length === 0) {
@@ -61,20 +52,15 @@
     return statuses;
   });
 
-  // Відділяємо видалені колонки від звичайних груп
-  const removedColumnsGroup = computed(() => {
-    return props.columnsSelector.find(group => group.name === 'removed');
-  });
-
   const regularGroups = computed(() => {
     return props.columnsSelector.filter(group => group.name !== 'removed');
   });
 
   // Перевірка чи колонка закріплена
-  const isPinned = (column: VTableColumn) => column.pinnedLeft || column.pinnedRight;
+  const isPinned = (column: VTableColumnProps) => column.pinnedLeft || column.pinnedRight;
 
   // Перевірка чи можна перетягувати колонку
-  const canDragColumn = (column: VTableColumn) => !isPinned(column);
+  const canDragColumn = (column: VTableColumnProps) => !isPinned(column);
 
   // Знаходимо межі для переміщення
   const getDragBounds = () => {
@@ -102,7 +88,7 @@
   };
 
   // Перевірка чи можна вставити колонку в позицію
-  const canDropAtPosition = (insertIndex: number, draggedIdx: number) => {
+  const canDropAtPosition = (insertIndex: number) => {
     const bounds = getDragBounds();
 
     // Перевіряємо чи позиція в межах дозволеного діапазону
@@ -156,7 +142,7 @@
       insertIndex--;
     }
 
-    if (canDropAtPosition(insertIndex, draggedIndex.value)) {
+    if (canDropAtPosition(insertIndex)) {
       targetIndex.value = index;
       dropPosition.value = position;
       event.dataTransfer!.dropEffect = 'move';
@@ -197,7 +183,7 @@
       insertIndex--;
     }
 
-    if (!canDropAtPosition(insertIndex, draggedIndex.value) || insertIndex === draggedIndex.value) {
+    if (!canDropAtPosition(insertIndex) || insertIndex === draggedIndex.value) {
       resetDragState();
       return;
     }
@@ -253,16 +239,16 @@
   };
 
   // Обробка зміни стану окремої колонки
-  const handleColumnToggle = (column: VTableColumn, isChecked: boolean) => {
+  const handleColumnToggle = (column: VTableColumnProps, isChecked: boolean) => {
     if (isChecked) {
-      if (!workingColumns.value.some(col => col.prop === column.prop)) {
+      if (!workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop)) {
         workingColumns.value.push({ ...column });
       }
     } else {
       if (isPinned(column)) {
         return;
       }
-      workingColumns.value = workingColumns.value.filter(col => col.prop !== column.prop);
+      workingColumns.value = workingColumns.value.filter((col: VTableColumnProps) => col.prop !== column.prop);
     }
   };
 
@@ -270,34 +256,34 @@
   const handleGroupToggle = (group: VTableColumnGroup, isChecked: boolean) => {
     if (isChecked) {
       group.columns.forEach(column => {
-        if (!workingColumns.value.some(col => col.prop === column.prop)) {
+        if (!workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop)) {
           workingColumns.value.push({ ...column });
         }
       });
     } else {
-      const columnsToRemove: VTableColumn[] = [];
+      const columnsToRemove: VTableColumnProps[] = [];
 
       group.columns.forEach(column => {
-        const workingColumn = workingColumns.value.find(col => col.prop === column.prop);
+        const workingColumn = workingColumns.value.find((col: VTableColumnProps) => col.prop === column.prop);
         if (workingColumn && !isPinned(workingColumn)) {
           columnsToRemove.push(workingColumn);
         }
       });
 
       workingColumns.value = workingColumns.value.filter(
-        col => !columnsToRemove.some(removeCol => removeCol.prop === col.prop)
+        (col: VTableColumnProps) => !columnsToRemove.some(removeCol => removeCol.prop === col.prop)
       );
     }
   };
 
   // Перевірка чи колонка вибрана
-  const isColumnSelected = (column: VTableColumn) => {
-    return workingColumns.value.some(col => col.prop === column.prop);
+  const isColumnSelected = (column: VTableColumnProps) => {
+    return workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop);
   };
 
   // Перевірка чи можна змінити стан колонки
-  const canToggleColumn = (column: VTableColumn) => {
-    const workingColumn = workingColumns.value.find(col => col.prop === column.prop);
+  const canToggleColumn = (column: VTableColumnProps) => {
+    const workingColumn = workingColumns.value.find((col: VTableColumnProps) => col.prop === column.prop);
     return !workingColumn || !isPinned(workingColumn);
   };
 
@@ -370,10 +356,6 @@
               @click.stop
             />
             <VIcon v-if="group.icon" :name="group.icon" class="vt-columns-selector__group-icon" />
-            <VIcon
-              :name="expandedGroups.has(group.name) ? 'chevronUp' : 'chevronDown'"
-              class="vt-columns-selector__group-toggle"
-            />
           </div>
 
           <div v-if="expandedGroups.has(group.name)" class="vt-columns-selector__group-columns">

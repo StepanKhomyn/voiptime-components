@@ -71,7 +71,7 @@
   }
 
   &__content {
-    @include custom-scrollbar;
+    @include vt-scrollbar;
     padding: var(--vt-padding-lg);
     flex: 1;
     overflow-y: auto;

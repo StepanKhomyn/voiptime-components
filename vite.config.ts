@@ -18,9 +18,20 @@ export default defineConfig({
     dts({
       entryRoot: 'src',
       outDir: 'dist',
-      exclude: ['**/*.test.*', '**/tests/**', 'vite.config.ts'],
+      include: ['src/**/*.ts', 'src/**/*.vue'],
+      exclude: ['**/*.test.*', '**/tests/**'],
       insertTypesEntry: true,
       rollupTypes: true,
+      tsconfigPath: './tsconfig.build.json',
+      cleanVueFileName: true,
+      copyDtsFiles: false,
+      staticImport: true,
+      beforeWriteFile: (filePath, content) => {
+        return {
+          filePath,
+          content,
+        };
+      },
     }),
   ],
   build: {

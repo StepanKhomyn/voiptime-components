@@ -16,4 +16,5 @@ export interface VButtonProps {
   icon?: IconName;
   tooltip?: boolean;
   tooltipPlacement?: TooltipPlacement;
+  htmlType?: 'button' | 'submit' | 'reset';
 }

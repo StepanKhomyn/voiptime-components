@@ -3,7 +3,7 @@
   --scrollbar-height: 10px;
 }
 
-@mixin custom-scrollbar {
+@mixin vt-scrollbar {
   &::-webkit-scrollbar {
     width: var(--scrollbar-width);
     height: var(--scrollbar-height);

@@ -32,11 +32,34 @@
   table-layout: fixed;
 
   &-wrapper {
-    @include custom-scrollbar;
+    @include vt-scrollbar;
     position: relative;
     width: 100%;
     overflow: auto;
     scrollbar-gutter: stable;
+  }
+
+  &__empty {
+    &-row {
+      background: transparent;
+    }
+
+    &-cell {
+      padding: 0;
+      border: none;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    &-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 40px 20px;
+      color: var(--color-gray-3);
+    }
   }
 
   // Базові стилі для комірок

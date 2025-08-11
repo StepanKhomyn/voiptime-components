@@ -1,22 +1,22 @@
 <script setup lang="ts">
   import { nextTick, onMounted, onUnmounted, ref } from 'vue';
   import VIcon from '@/components/icon/VIcon.vue';
-  import { VTableColumn, VTableColumnGroup } from './types';
+  import type { VTableColumnGroup, VTableColumnProps } from './types';
   import { modalManager } from '@/components/modal/plugin';
   import VTableColumnSelector from './VTableColumnSelector.vue';
 
   interface ColumnActionsProps {
-    column: VTableColumn;
-    allColumns: VTableColumn[]; // Додаємо всі колонки
-    columnsSelector?: VTableColumnGroup[]; // Колонки які можна додати
+    column: VTableColumnProps;
+    allColumns: VTableColumnProps[]; // Додаємо всі колонки
+    columnsSelector?: VTableColumnGroup[] | undefined; // Колонки які можна додати
   }
 
   const props = defineProps<ColumnActionsProps>();
 
   // Emit для передачі подій до батьківського компонента
   const emit = defineEmits<{
-    pin: [column: VTableColumn, position: 'left' | 'right' | 'none'];
-    'update-columns': [columns: VTableColumn[]]; // Для оновлення колонок після збереження
+    pin: [column: VTableColumnProps, position: 'left' | 'right' | 'none'];
+    'update-columns': [columns: VTableColumnProps[]]; // Для оновлення колонок після збереження
   }>();
 
   const menuRef = ref<HTMLElement>();
@@ -120,16 +120,15 @@
   };
 
   // Функція для створення групи з видалених колонок
-  const createRemovedColumnsGroup = (removedColumns: VTableColumn[]): VTableColumnGroup => ({
+  const createRemovedColumnsGroup = (removedColumns: VTableColumnProps[]): VTableColumnGroup => ({
     name: 'removed',
     label: 'Видалені колонки',
     order: 999, // Найвищий порядок, щоб відображались останніми
-    icon: 'eyeSlash',
     columns: removedColumns,
   });
 
   // Функція для оновлення доступних колонок для селектора
-  const updateAvailableColumnsForSelector = (updatedColumns: VTableColumn[]) => {
+  const updateAvailableColumnsForSelector = (updatedColumns: VTableColumnProps[]) => {
     const currentColumnProps = new Set(updatedColumns.map(col => col.prop));
     const allPossibleColumns = new Set<string>();
 
@@ -142,13 +141,13 @@
     props.allColumns.forEach(col => allPossibleColumns.add(col.prop));
 
     // Знаходимо колонки, які були видалені
-    const removedColumns: VTableColumn[] = [];
+    const removedColumns: VTableColumnProps[] = [];
 
     // Шукаємо серед усіх можливих колонок ті, що не входять в поточний список
     allPossibleColumns.forEach(prop => {
       if (!currentColumnProps.has(prop)) {
         // Шукаємо колонку в columnsSelector
-        let foundColumn: VTableColumn | undefined;
+        let foundColumn: VTableColumnProps | undefined;
 
         props.columnsSelector?.forEach(group => {
           const column = group.columns.find(col => col.prop === prop);
@@ -187,7 +186,7 @@
       props: {
         columns: props.allColumns, // Передаємо всі колонки
         columnsSelector: availableColumnsForSelector.value, // Передаємо оновлені доступні колонки
-        'onUpdate-columns': (updatedColumns: VTableColumn[]) => {
+        'onUpdate-columns': (updatedColumns: VTableColumnProps[]) => {
           console.log('ColumnActions отримав оновлені колонки:', updatedColumns);
           emit('update-columns', updatedColumns);
           // Оновлюємо availableColumnsForSelector після змін

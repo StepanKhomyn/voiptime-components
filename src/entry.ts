@@ -9,17 +9,21 @@ import VCheckbox from './components/checkbox/VCheckbox.vue';
 import VTable from './components/table/VTable.vue';
 import VTableColumn from './components/table/VTableColumn.vue';
 import './assets/main.scss';
-import { tooltipDirective } from './directives/tooltip/tooltip.ts';
+import { tooltipDirective } from './directives/tooltip/tooltip';
 import { VModalPlugin } from './components/modal/plugin';
 
-// Експортуємо компоненти з типами
+// Експортуємо компоненти
 export { VButton, VIcon, VLoader, VModal, VPagination, VCheckbox, VTable, VTableColumn };
+
+// Експортуємо директиви
 export { tooltipDirective };
 
 // Експортуємо типи для кращої підтримки TypeScript
-export type { VButtonProps, VButtonEmits, VButtonType, VButtonSize } from './components/button/types';
+export type { VButtonProps, VButtonEmits, VButtonType } from './components/button/types';
+
 export type { IconName } from './icons/index';
 export type { TooltipPlacement } from './directives/tooltip/types';
+
 export type { VModalProps, VModalEmits, VModalSize, VModalConfig, VModalInstance } from './components/modal/types';
 
 // Експортуємо типи пагінації
@@ -34,36 +38,40 @@ export type {
 // Експортуємо типи чекбоксу
 export type { VCheckboxProps, VCheckboxEmits, VCheckboxSlots } from './components/checkbox/types';
 
-// Експортуємо типи таблиці
+// Експортуємо ВСІ типи таблиці з явною типізацією
 export type {
   VTableProps,
-  VTableColumn,
-  VTableColumnGroup,
   VTableEmits,
+  VTableColumnProps,
+  VTableColumnGroup,
   VTableStyleConfig,
+  VTableRenderSlot,
   SortDirection,
   SortState,
   StickyPosition,
   ResizeState,
   SortChangeEventData,
   SelectionChangeEventData,
-  DEFAULT_COLUMN_CONFIG,
 } from './components/table/types';
+
+// Експортуємо константи
+export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 
 // Експортуємо плагін модального вікна окремо
 export { VModalPlugin, modalManager } from './components/modal/plugin';
 
-// Плагін для Vue
+// Інтерфейс для опцій плагіна
 export interface VUIPluginOptions {
   prefix?: string;
   modal?: boolean; // Чи підключати $modal глобально
 }
 
+// Головний плагін для Vue
 const VUIPlugin = {
   install(app: App, options: VUIPluginOptions = {}) {
     const { prefix = 'V', modal = true } = options;
 
-    // Реєструємо компоненти
+    // Реєструємо компоненти з явною типізацією
     app.component(`${prefix}Button`, VButton);
     app.component(`${prefix}Icon`, VIcon);
     app.component(`${prefix}Loader`, VLoader);
@@ -83,6 +91,7 @@ const VUIPlugin = {
   },
 };
 
+// Експортуємо плагін як default
 export default VUIPlugin;
 
 // Експортуємо окремо для індивідуального імпорту
@@ -91,6 +100,6 @@ export const install = VUIPlugin.install;
 // TypeScript декларації для глобальних властивостей
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $modal: VModalInstance;
+    $modal: import('./components/modal/types').VModalInstance;
   }
 }

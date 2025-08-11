@@ -1,5 +1,6 @@
 // useTableSelection.ts
-import { computed, ComputedRef, ref, watch } from 'vue';
+import type { ComputedRef } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { SelectionChangeEventData, VTableProps } from '../types';
 
 export function useTableSelection(

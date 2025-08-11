@@ -1,51 +1,69 @@
 <script setup lang="ts">
-  import { computed, onMounted, provide, reactive, ref, watch } from 'vue';
-  import { type SortDirection, SortState, VTableColumn, VTableEmits, VTableProps } from './types';
+  import { computed, onMounted, onUnmounted, provide, reactive, ref, watch } from 'vue';
+  import type { SortDirection, SortState, VTableColumnProps, VTableEmits, VTableProps } from './types';
   import { useColumnResize, useTableColumns, useTableStyles } from './functions/composables';
   import { useTableSelection } from './functions/useTableSelection';
+  import { renderTableSlot } from './functions/useTableSlots';
   import { getSortIconClasses, handleSortDirect, sortTableData } from './functions/sorting';
   import ColumnActions from '@/components/table/ColumnActions.vue';
   import VIcon from '@/components/icon/VIcon.vue';
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
 
-  // Props
-  const props = defineProps<
-    VTableProps & {
-      // Додаткові пропси для повного вибору
-      allData?: Record<string, any>[]; // всі дані для повного виділення
-    }
-  >();
+  // Явно типізуємо props з withDefaults
+  const props = withDefaults(defineProps<VTableProps>(), {
+    selectable: false,
+    selectOnClickRow: false,
+    highlightCurrentRow: false,
+    showSummary: false,
+    maxHeight: undefined,
+    selectionKey: 'id',
+    defaultSelection: () => [],
+    allData: undefined,
+    columnsSelector: () => [],
+    columns: () => [],
+  });
 
-  // defineModel для колонок (опціонально) - тепер не обов'язково
-  const modelColumns = defineModel<VTableColumn[]>('columns', { required: false });
+  // Явно типізуємо emits
+  const emit = defineEmits<VTableEmits>();
 
-  const tableEmit = defineEmits<VTableEmits>();
+  // defineModel для колонок (опціонально) - з явною типізацією
+  const modelColumns = defineModel<VTableColumnProps[] | undefined>('columns', {
+    required: false,
+    default: undefined,
+  });
+
+  // Видаляємо defineSlots - використаємо slots через useSlots
+  // defineSlots<VTableColumnSlots>();
 
   // Refs
   const columnRefs = ref<Record<string, HTMLElement>>({});
   const tableWrapperRef = ref<HTMLElement>();
 
   // Reactive state
-  const internalColumns = reactive<VTableColumn[]>([]);
+  const internalColumns = reactive<VTableColumnProps[]>([]);
   const sortState = ref<SortState | null>(props.defaultSort || null);
 
   // Computed для перевірки наявності defineModel
   const hasColumnsModel = computed(() => modelColumns.value !== undefined);
 
-  // Computed - автоматично вибирає джерело колонок
-  const currentColumns = computed(() => {
-    if (hasColumnsModel.value) {
-      return modelColumns.value || [];
-    }
-    return internalColumns;
+  // Computed для перевірки чи є дані
+  const hasData = computed(() => {
+    return props.data && props.data.length > 0;
   });
+
+  // Для затримки при інфініті scroll
+  const infinityScrollTriggered = ref(false);
+  // Для відстеження попередньої позиції скролу
+  const lastScrollTop = ref(0);
+  // Для debounce
+  let scrollTimeout: number | null = null;
 
   // Ініціалізація internal колонок з пропсів
   const initializeInternalColumns = () => {
     if (hasColumnsModel.value && modelColumns.value) {
       // Якщо є defineModel - використовуємо його
       internalColumns.splice(0, internalColumns.length, ...modelColumns.value);
-    } else if (props.columns) {
+    } else if (props.columns && props.columns.length > 0) {
       // Якщо немає defineModel, але є пропс columns
       internalColumns.splice(0, internalColumns.length, ...props.columns);
     }
@@ -74,7 +92,7 @@
   );
 
   // Provide columns для child компонентів
-  // Завжди передаємо internal колонки для VTableColumn компонентів
+  // Завжди передаємо internal колонки для VTableColumnProps компонентів
   provide('vt-table-columns', internalColumns);
 
   // Композабли
@@ -94,9 +112,7 @@
   });
 
   // Композабл для виділення (тільки якщо selectable=true)
-  const selectionComposable = props.selectable
-    ? useTableSelection(props, sortedData, tableEmit, allDataComputed)
-    : null;
+  const selectionComposable = props.selectable ? useTableSelection(props, sortedData, emit, allDataComputed) : null;
 
   // Константа для ширини колонки з чекбоксами
   const SELECTION_COLUMN_WIDTH = 50;
@@ -108,7 +124,7 @@
       minWidth: `${SELECTION_COLUMN_WIDTH}px`,
       maxWidth: `${SELECTION_COLUMN_WIDTH}px`,
       left: '0px',
-      position: 'sticky',
+      position: 'sticky' as const,
       zIndex: 10,
     };
   };
@@ -137,8 +153,76 @@
     return baseStyle;
   };
 
+  // Infinity Scroll логіка з покращеною перевіркою напрямку
+  const handleScroll = () => {
+    if (!tableWrapperRef.value || infinityScrollTriggered.value) return;
+
+    const wrapper = tableWrapperRef.value;
+    const scrollTop = wrapper.scrollTop;
+    const scrollHeight = wrapper.scrollHeight;
+    const clientHeight = wrapper.clientHeight;
+    const threshold = 30;
+
+    // Очищаємо попередній таймер
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+
+    // Використовуємо debounce для стабілізації
+    scrollTimeout = setTimeout(() => {
+      // Перевіряємо напрямок скролу з мінімальною різницею
+      const scrollDiff = scrollTop - lastScrollTop.value;
+      const isScrollingDown = scrollDiff > 1; // мінімум 1px вниз
+
+      // Перевіряємо чи ми близько до низу
+      const isNearBottom = scrollHeight - scrollTop - clientHeight <= threshold;
+
+      // Перевіряємо чи ми дійсно в самому низу (допуск ±5px)
+      const isAtBottom = scrollHeight - scrollTop - clientHeight <= 5;
+
+      // Оновлюємо попередню позицію ПІСЛЯ перевірки
+      lastScrollTop.value = scrollTop;
+
+      // Спрацьовує тільки якщо:
+      // 1. Скролимо вниз (мінімум 1px)
+      // 2. Близько до низу або в самому низу
+      // 3. Увімкнено infinity scroll
+      if (isScrollingDown && (isNearBottom || isAtBottom)) {
+        infinityScrollTriggered.value = true;
+        emit('infinity-scroll');
+
+        // Скидаємо флаг через деякий час
+        setTimeout(() => {
+          infinityScrollTriggered.value = false;
+        }, 1000);
+      }
+    }, 50); // debounce 50ms
+  };
+
+  // Метод для ручного скидання флагу infinity scroll
+  const resetInfinityScroll = () => {
+    infinityScrollTriggered.value = false;
+  };
+
+  // Додаємо обробник скролу при монтуванні
+  onMounted(() => {
+    if (tableWrapperRef.value) {
+      tableWrapperRef.value.addEventListener('scroll', handleScroll);
+    }
+  });
+
+  // Видаляємо обробник при демонтуванні
+  onUnmounted(() => {
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
+    if (tableWrapperRef.value) {
+      tableWrapperRef.value.removeEventListener('scroll', handleScroll);
+    }
+  });
+
   // Обробник сортування
-  const handleSort = (column: VTableColumn, direction: SortDirection): void => {
+  const handleSort = (column: VTableColumnProps, direction: SortDirection): void => {
     handleSortDirect(column, direction, newSortState => {
       // Якщо вже сортується по цьому напрямку — скинути
       if (sortState.value?.prop === column.prop && sortState.value.direction === direction) {
@@ -147,7 +231,7 @@
         sortState.value = newSortState;
       }
 
-      tableEmit('sort-change', {
+      emit('sort-change', {
         column,
         direction: sortState.value?.direction || null,
         prop: column.prop,
@@ -156,10 +240,8 @@
     });
   };
 
-  const handleColumnPin = (column: VTableColumn, position: 'left' | 'right' | 'none') => {
-    console.log(`Колонка "${column.label}" закріплення: ${position}`);
-
-    const updates: Partial<VTableColumn> = {
+  const handleColumnPin = (column: VTableColumnProps, position: 'left' | 'right' | 'none') => {
+    const updates: Partial<VTableColumnProps> = {
       pinnedLeft: position === 'left',
       pinnedRight: position === 'right',
     };
@@ -167,12 +249,10 @@
     updateColumn(column.prop, updates);
 
     // Емітуємо подію для батьківського компонента
-    tableEmit('column-pin', { column: { ...column, ...updates }, position });
+    emit('column-pin', { column: { ...column, ...updates }, position });
   };
 
-  const handleColumnsUpdate = (updatedColumns: VTableColumn[]) => {
-    console.log('handleColumnsUpdate викликано з колонками:', updatedColumns);
-
+  const handleColumnsUpdate = (updatedColumns: VTableColumnProps[]) => {
     // Очищаємо і оновлюємо internal колонки
     internalColumns.splice(0, internalColumns.length, ...updatedColumns);
 
@@ -182,19 +262,16 @@
     }
 
     // Емітуємо подію для батьківського компонента
-    tableEmit('columns-change', [...updatedColumns]);
+    emit('columns-change', [...updatedColumns]);
   };
 
   // Оновлена функція updateColumn
-  const updateColumn = (prop: string, updates: Partial<VTableColumn>) => {
-    console.log('updateColumn викликано:', { prop, updates, hasColumnsModel: hasColumnsModel.value });
-
-    // Завжди оновлюємо internal колонки (так як VTableColumn компоненти реєструються там)
+  const updateColumn = (prop: string, updates: Partial<VTableColumnProps>) => {
+    // Завжди оновлюємо internal колонки (так як VTableColumnProps компоненти реєструються там)
     const columnIndex = internalColumns.findIndex(col => col.prop === prop);
 
     if (columnIndex !== -1) {
       // Оновлюємо internal колонку
-      console.log('Оновлюємо internalColumns:', columnIndex, updates);
       Object.assign(internalColumns[columnIndex], updates);
 
       // Якщо є defineModel - також оновлюємо його
@@ -203,14 +280,13 @@
         if (modelColumnIndex !== -1) {
           const newColumns = [...modelColumns.value];
           newColumns[modelColumnIndex] = { ...newColumns[modelColumnIndex], ...updates };
-          console.log('Оновлюємо через defineModel:', newColumns);
           modelColumns.value = newColumns;
         }
       }
 
       // В будь-якому випадку емітуємо подію про зміну колонок
       // Використовуємо internal колонки як джерело істини
-      tableEmit('columns-change', [...internalColumns]);
+      emit('columns-change', [...internalColumns]);
     } else {
       console.error(
         'Колонку не знайдено:',
@@ -222,8 +298,8 @@
   };
 
   // Обробники кліків
-  const handleRowClick = (row: Record<string, any>, column: VTableColumn, event: Event): void => {
-    tableEmit('row-click', { row, column, event });
+  const handleRowClick = (row: Record<string, any>, column: VTableColumnProps, event: Event): void => {
+    emit('row-click', { row, column, event });
 
     // НЕ викликаємо toggleRowSelection тут, оскільки це вже робиться автоматично через select-on-click-row
     // Тільки встановлюємо поточний рядок якщо потрібно
@@ -239,10 +315,12 @@
     }
   };
 
-  const handleSelectAllChange = (isChecked: boolean, event: Event): void => {
+  const handleSelectAllChange = (value: boolean, event: Event): void => {
     event.stopPropagation();
     if (selectionComposable) {
       selectionComposable.toggleAllSelection();
+    }
+    if (value === undefined) {
     }
   };
 
@@ -253,18 +331,16 @@
     }
   };
 
-  const handleMouseDown = (e: MouseEvent, col: VTableColumn): void => {
+  const handleMouseDown = (e: MouseEvent, col: VTableColumnProps): void => {
     // Зберігаємо початкову ширину
-    const initialWidth = col.width || getDefaultColumnWidth(col.prop);
-    console.log(initialWidth);
+    const initialWidth = col.width || getDefaultColumnWidth();
 
     onMouseDown(e, col, getDefaultColumnWidth, (newWidth: number) => {
       // Оновлюємо ширину колонки
-      console.log(newWidth);
       updateColumn(col.prop, { width: newWidth });
 
       // Емітуємо подію про зміну розміру
-      tableEmit('column-resize', {
+      emit('column-resize', {
         column: { ...col, width: newWidth },
         width: newWidth,
         oldWidth: initialWidth,
@@ -272,19 +348,19 @@
     });
   };
 
-  const getColumnStyleWithContext = (col: VTableColumn, index: number) => {
+  const getColumnStyleWithContext = (col: VTableColumnProps, index: number) => {
     return getColumnStyle(col, index, getStickyOffset, getDefaultColumnWidth);
   };
 
-  const getHeaderStyleWithContext = (col: VTableColumn, index: number) => {
+  const getHeaderStyleWithContext = (col: VTableColumnProps, index: number) => {
     return getHeaderStyle(col, index, getStickyOffset, getDefaultColumnWidth);
   };
 
-  const getFooterStyleWithContext = (col: VTableColumn, index: number) => {
+  const getFooterStyleWithContext = (col: VTableColumnProps, index: number) => {
     return getFooterStyle(col, index, getStickyOffset, getDefaultColumnWidth);
   };
 
-  const getTooltipText = (row: any, col: VTableColumn): string => {
+  const getTooltipText = (row: any, col: VTableColumnProps): string => {
     if (!col || !col.prop) return '';
     const value = row[col.prop];
     return value == null ? '' : String(value);
@@ -292,7 +368,8 @@
 
   //метод для сумарного рядку
   const summaryData = computed<Record<string, any>>(() => {
-    if (!props.showSummary) return {};
+    // Не показувати summary якщо немає даних
+    if (!props.showSummary || !hasData.value) return {};
 
     // Використовуємо internal колонки як джерело істини для відображення
     const columnsToUse = internalColumns;
@@ -317,6 +394,11 @@
       },
       {} as Record<string, any>
     );
+  });
+
+  // Computed для перевірки чи показувати summary
+  const shouldShowSummary = computed(() => {
+    return props.showSummary && hasData.value;
   });
 
   // Публічні методи для зовнішнього використання
@@ -367,13 +449,14 @@
     clearSelection,
     getSelectionRows,
     setSelectionRows,
+    resetInfinityScroll, // Додаємо метод для скидання infinity scroll
   });
 </script>
 
 <template>
-  <div ref="tableWrapperRef" class="vt-table-wrapper" :style="getTableWrapperStyle()">
+  <div ref="tableWrapperRef" class="vt-table-wrapper" :style="getTableWrapperStyle()" @scroll="handleScroll">
+    <!-- Таблиця з даними -->
     <slot />
-
     <table class="vt-table">
       <thead>
         <tr>
@@ -444,10 +527,21 @@
           </th>
         </tr>
       </thead>
-
       <tbody>
+        <!-- Порожній стан в tbody -->
+        <tr v-if="!hasData" class="vt-table__empty-row">
+          <td :colspan="sortedColumns.length + (props.selectable ? 1 : 0)" class="vt-table__empty-cell">
+            <div class="vt-table__empty-content">
+              <VIcon name="empty" class="vt-table__empty-icon" />
+              <span class="vt-table__empty-text">Немає даних!</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Рядки з даними -->
         <tr
-          v-for="row in sortedData"
+          v-else
+          v-for="(row, rowIndex) in sortedData"
           :key="row.id"
           :class="[
             'vt-table__row',
@@ -494,8 +588,10 @@
               v-tooltip="col.showOverflowTooltip ? getTooltipText(row, col) : null"
             >
               <!-- Використовуємо збережений слот з колонки -->
-              <component v-if="col.renderSlot" :is="col.renderSlot" :row="row" :column="col" :value="row[col.prop]" />
-              <!-- Fallback контент якщо слот не передано -->
+              <component
+                v-if="col.renderSlot"
+                :is="() => renderTableSlot(col.renderSlot, { row, column: col, value: row[col.prop], index: rowIndex })"
+              />
               <span v-else>{{ row[col.prop] }}</span>
             </div>
             <div class="vt-table__resizer" :data-resizer="col.prop" @mousedown="e => handleMouseDown(e, col)" />
@@ -503,7 +599,7 @@
         </tr>
       </tbody>
 
-      <tfoot v-if="props.showSummary" class="vt-table__summary">
+      <tfoot v-if="shouldShowSummary" class="vt-table__summary">
         <tr>
           <!-- Колонка для checkbox в summary -->
           <td

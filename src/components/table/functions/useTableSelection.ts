@@ -1,11 +1,12 @@
 // useTableSelection.ts
-import { computed, ComputedRef, ref, watch } from 'vue';
+import type { ComputedRef } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { SelectionChangeEventData, VTableProps } from '../types';
 
 export function useTableSelection(
   props: VTableProps,
   sortedData: ComputedRef<Record<string, any>[]>,
-  emit: (event: string, payload: any) => void,
+  emit: (...args: any[]) => void,
   allData?: ComputedRef<Record<string, any>[]> // всі дані для повного виділення
 ) {
   const selectionKey = props.selectionKey || 'id';
