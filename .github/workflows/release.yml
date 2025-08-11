@@ -21,8 +21,7 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           auth-token: ${{ secrets.NPM_TOKEN }}
       - run: npm ci
-      - run: npm whoami
-      - run: npm publish --dry-run --access public || echo "Dry run publish failed, but continuing"
+      - run: npm release --dry-run --access public || echo "Dry run publish failed, but continuing"
       - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
