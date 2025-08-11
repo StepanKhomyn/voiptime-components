@@ -196,7 +196,7 @@
           infinityScrollTriggered.value = false;
         }, 1000);
       }
-    }, 50); as unknown as number; // debounce 50ms
+    }, 50); // debounce 50ms
   };
 
   // Метод для ручного скидання флагу infinity scroll
