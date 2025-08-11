@@ -21,8 +21,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
           auth-token: ${{ secrets.NPM_TOKEN }}
       - run: npm ci
-      - name: Authenticate npm
-        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: npm whoami
       - run: npm publish --dry-run --access public || echo "Dry run publish failed, but continuing"
       - run: npx semantic-release
