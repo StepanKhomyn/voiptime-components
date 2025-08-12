@@ -393,7 +393,7 @@
       );
     }
 
-    // Дефолтна реалізація — сума числових
+    // Дефолтна реалізація — сума числови
     return columnsToUse.reduce(
       (acc, col) => {
         const values = sortedData.value.map(row => row[col.prop]);
