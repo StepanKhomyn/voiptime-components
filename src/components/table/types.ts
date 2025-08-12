@@ -74,6 +74,8 @@ export interface VTableProps {
   data: Record<string, any>[];
   /** Максимальна висота таблиці (для sticky header) */
   maxHeight?: number;
+  /** Максимальна висота таблиці (для sticky header) */
+  rowKey?: string;
   /** Початкове сортування */
   defaultSort?: SortState;
   /** Показувати підсумковий рядок */

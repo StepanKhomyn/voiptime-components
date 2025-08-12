@@ -17,6 +17,7 @@
     showSummary: false,
     maxHeight: undefined,
     selectionKey: 'id',
+    rowKey: undefined,
     defaultSelection: () => [],
     allData: undefined,
     columnsSelector: () => [],
@@ -58,38 +59,12 @@
   // Для debounce
   let scrollTimeout: ReturnType<typeof setTimeout>;
 
-  // Глобальний кеш для ключів рядків
-  const rowKeyMap = new WeakMap<object, string>();
-  let globalRowId = 0;
-
-  // Функція для отримання стабільного ключа
-  const getStableRowKey = (row: any): string => {
-    // Якщо об'єкт вже має ключ - повертаємо його
-    if (rowKeyMap.has(row)) {
-      return rowKeyMap.get(row)!;
+  const getRowKey = (row: any, index: number): string => {
+    if (props.rowKey && row[props.rowKey] != null) {
+      return `row_${row[props.rowKey]}`;
     }
-
-    // Створюємо новий унікальний ключ
-    const newKey = `row_${++globalRowId}_${Date.now()}`;
-    rowKeyMap.set(row, newKey);
-
-    return newKey;
+    return `row_${index}`;
   };
-
-  // Оптимізований computed для даних з стабільними ключами
-  const optimizedSortedData = computed(() => {
-    return sortedData.value.map(row => {
-      // НЕ створюємо новий об'єкт якщо не потрібно
-      const key = getStableRowKey(row);
-
-      // Додаємо ключ тільки для Vue, але не мутуємо оригінальний об'єкт
-      return Object.defineProperty(row, '_vueKey', {
-        value: key,
-        enumerable: false, // Не показуємо в JSON.stringify
-        configurable: true,
-      });
-    });
-  });
 
   // Ініціалізація internal колонок з пропсів
   const initializeInternalColumns = () => {
@@ -574,8 +549,9 @@
         <!-- Рядки з даними -->
         <tr
           v-else
-          v-for="(row, rowIndex) in optimizedSortedData"
-          :key="row._key"
+          v-for="(row, rowIndex) in sortedData"
+          :key="getRowKey(row, rowIndex)"
+          v-memo="[row[props.rowKey]]"
           :class="[
             'vt-table__row',
             {
