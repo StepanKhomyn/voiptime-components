@@ -551,7 +551,7 @@
           v-else
           v-for="(row, rowIndex) in sortedData"
           :key="getRowKey(row, rowIndex)"
-          v-memo="[row[props.rowKey]]"
+          v-memo="[props.rowKey ? row[props.rowKey] : rowIndex]"
           :class="[
             'vt-table__row',
             {
