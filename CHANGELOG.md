@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.0...v1.0.1) (2025-08-12)
+
+
+### Bug Fixes
+
+* додано унікальні ід до таблиць ([791dc71](https://github.com/StepanKhomyn/voiptime-components/commit/791dc71d283de8dfa3a454b717f58651f1e353a3))
+
 # 1.0.0 (2025-08-11)
 
 
