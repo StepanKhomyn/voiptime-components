@@ -28,7 +28,7 @@
     "dev": "vite",
     "type-check": "vue-tsc -p tsconfig.build.json --noEmit false",
     "build": "vue-tsc -p tsconfig.build.json && vite build",
-    "build:demo": "vite build --outDir dist --base=/repo-name/",
+    "build:demo": "vite build --config vite.demo.config.ts",
     "prepare": "npm run build",
     "preview": "vite preview"
   },
