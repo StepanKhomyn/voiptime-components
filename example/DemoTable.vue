@@ -1,459 +1,326 @@
 <template>
   <div>
-    <!-- Кнопки управління виділенням -->
+    <!-- Кнопки для тестування реактивності -->
     <div class="table-controls" style="margin-bottom: 20px">
-      <button @click="selectAll" class="btn btn--primary">Виділити всі на сторінці</button>
-      <button @click="selectAbsolutelyAll" class="btn btn--primary" :disabled="!canSelectAll">
-        Виділити абсолютно всі ({{ totalItems }})
+      <button @click="changeRandomStatus" class="btn btn--primary"> 🎲 Змінити випадковий статус</button>
+      <button @click="changeRandomName" class="btn btn--info"> ✏️ Змінити випадкове ім'я</button>
+      <button @click="increaseRandomScore" class="btn btn--success"> 📈 +10 балів випадковому</button>
+      <button @click="addNewRow" class="btn btn--warning"> ➕ Додати новий рядок</button>
+      <button @click="removeLastRow" class="btn btn--danger" :disabled="tableData.length === 0">
+        ❌ Видалити останній
       </button>
-      <button @click="clearAll" class="btn btn--secondary">Зняти виділення</button>
-      <button @click="selectFirst3" class="btn btn--secondary">Виділити перші 3</button>
-      <button @click="getSelected" class="btn btn--info">Показати виділені ({{ selectedCount }})</button>
-      <button @click="refreshData" class="btn btn--warning" :disabled="loading">
-        {{ loading ? 'Завантаження...' : 'Оновити дані' }}
-      </button>
+      <button @click="shuffleAllData" class="btn btn--secondary"> 🔀 Перемішати все</button>
     </div>
 
-    <!-- Інформація про стан виділення -->
-    <div
-      class="selection-status"
-      style="margin-bottom: 15px; padding: 10px; background-color: #f0f9ff; border-radius: 4px"
-    >
-      <div><strong>Стан виділення:</strong> {{ selectionStatus }}</div>
-      <div><strong>Виділено на сторінці:</strong> {{ visibleSelectedCount }} з {{ currentPageData.length }}</div>
-      <div><strong>Всього виділено:</strong> {{ selectedCount }} з {{ totalItems }}</div>
-      <div v-if="isFullSelection"><strong>🎯 Виділені абсолютно всі записи!</strong></div>
-      <div v-if="loading" style="color: #f59e0b"><strong>⏳ Завантажуємо дані...</strong></div>
+    <!-- Статистика -->
+    <div style="margin-bottom: 15px; padding: 10px; background-color: #f0f9ff; border-radius: 4px">
+      <strong>📊 Статистика:</strong>
+      Всього: {{ tableData.length }} | Активних: {{ activeCount }} | Неактивних: {{ inactiveCount }} | В очікуванні:
+      {{ pendingCount }} | Заблокованих: {{ blockedCount }} | Середній бал: {{ averageScore }}%
     </div>
 
-    <!-- Інформація про виділення -->
-    <div
-      v-if="selectedRows.length > 0"
-      class="selection-info"
-      style="margin-bottom: 15px; padding: 10px; background-color: #f0f9ff; border-radius: 4px"
-    >
-      <strong>Виділено рядків: {{ selectedRows.length }}</strong>
-      <div style="margin-top: 5px">
-        Імена:
-        {{
-          selectedRows
-            .map(r => r.name)
-            .slice(0, 5)
-            .join(', ')
-        }}
-        <span v-if="selectedRows.length > 5">... і ще {{ selectedRows.length - 5 }}</span>
-      </div>
+    <!-- Лічильник змін -->
+    <div style="margin-bottom: 15px; padding: 10px; background-color: #fff3cd; border-radius: 4px">
+      <strong>🔄 Тест реактивності:</strong>
+      Змін даних: {{ changesCount }} | Останнє оновлення: {{ lastUpdate }}
     </div>
 
-    <!-- Таблиця БЕЗ передачі колонок через пропси -->
+    <!-- VTable -->
     <VTable
       ref="tableRef"
-      :data="currentPageData"
-      :all-data="[]"
+      :data="tableData"
       :max-height="400"
-      @sort-change="handleTableSort"
       @selection-change="handleSelectionChange"
       @row-click="handleRowClick"
-      @infinity-scroll="handleScroll"
-      @columns-change="handleColumnsChange"
       show-summary
       :summary-method="getSummaries"
       selectable
       selection-key="id"
-      :default-selection="defaultSelected"
-      :select-on-click-row="false"
       highlight-current-row
     >
-      <!-- Колонка з кастомним сортуванням -->
-      <VTableColumn prop="status" label="Статус" :width="200" show-overflow-tooltip>
-        <template #status="{ row }">
-          <span :class="'status-badge status-badge--' + row.status">
-            {{ getStatusLabel(row.status) }}
-          </span>
+      <!-- Звичайна колонка без слота для тестування -->
+      <VTableColumn prop="id" label="ID (тест)" :width="100" />
+      <VTableColumn prop="name" label="Ім'я (тест)" :width="150" />
+      <VTableColumn prop="status" label="Статус (тест)" :width="120" />
+
+      <!-- ID колонка -->
+      <VTableColumn prop="id" label="ID" :width="80" />
+
+      <!-- Ім'я з кнопкою зміни -->
+      <VTableColumn prop="name" label="Ім'я" :width="200">
+        <template #name="{ row }">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span>{{ row.name }}</span>
+            <button @click.stop="changeName(row.id)" class="btn-mini" title="Змінити ім'я"> ✏️</button>
+          </div>
         </template>
       </VTableColumn>
 
-      <!-- Звичайні колонки зі стандартним сортуванням -->
-      <VTableColumn prop="name" label="Ім'я" :width="150" :pinned-left="true" />
+      <!-- Статус з кнопкою зміни -->
+      <VTableColumn prop="status" label="Статус" :width="200">
+        <template #status="{ row }">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span :class="'status-badge status-badge--' + row.status">
+              {{ getStatusLabel(row.status) }}
+            </span>
+            <button @click.stop="toggleStatus(row.id)" class="btn-mini" title="Змінити статус"> 🔄</button>
+          </div>
+        </template>
+      </VTableColumn>
+
+      <!-- Дата -->
       <VTableColumn prop="date" label="Дата" :width="120" />
-      <!-- Колонка з кнопкою для виділення -->
-      <VTableColumn prop="custom" label="Кастомний" :width="150" :selectable="false">
-        <template #custom="{ row, column, value }">
-          <div style="font-weight: bold; color: #007bff">{{ row.score }}%</div>
+
+      <!-- Бали з кнопкою збільшення -->
+      <VTableColumn prop="score" label="Бали" :width="150">
+        <template #score="{ row }">
+          <div style="display: flex; align-items: center; gap: 8px">
+            <span :class="getScoreClass(row.score)" style="font-weight: bold"> {{ row.score }}% </span>
+            <button @click.stop="increaseScore(row.id)" class="btn-mini btn-success" title="+10 балів"> +10</button>
+          </div>
+        </template>
+      </VTableColumn>
+
+      <!-- Дії -->
+      <VTableColumn prop="actions" label="Дії" :width="100" :selectable="false">
+        <template #actions="{ row }">
+          <button @click.stop="removeRow(row.id)" class="btn-mini btn-danger" title="Видалити"> 🗑️</button>
         </template>
       </VTableColumn>
     </VTable>
 
-    <!-- Пагінація -->
-    <div style="margin-top: 20px">
-      <VPagination
-        :total-items="totalItems"
-        :page-size="pageSize"
-        :current-page="currentPage"
-        :page-size-options="[5, 10, 15, 20]"
-        @update:current-page="handlePageChange"
-        @update:page-size="handlePageSizeChange"
-        @reloadData="page => console.log(page)"
-        @page-change="handlePaginationChange"
-      />
+    <!-- Інформація про виділення -->
+    <div
+      v-if="selectedRows.length > 0"
+      style="margin-top: 15px; padding: 10px; background: #e8f5e8; border-radius: 4px"
+    >
+      <strong>Виділено: {{ selectedRows.length }} рядків</strong>
+      <div style="margin-top: 8px">
+        <button @click="changeSelectedStatus" class="btn-small btn-primary"> 🔄 Змінити статус виділених</button>
+        <button @click="increaseSelectedScores" class="btn-small btn-success"> 📈 +20 балів виділеним</button>
+        <button @click="removeSelected" class="btn-small btn-danger"> 🗑️ Видалити виділені</button>
+      </div>
     </div>
 
-    <!-- Debug інформація -->
+    <!-- Debug -->
     <div style="margin-top: 20px; padding: 10px; background: #f3f4f6; border-radius: 4px; font-size: 12px">
-      <strong>Debug:</strong><br />
-      Поточна сторінка: {{ currentPage }}<br />
-      Розмір сторінки: {{ pageSize }}<br />
-      Всього записів: {{ totalItems }}<br />
-      Завантажених сторінок: {{ Object.keys(pageCache).length }}<br />
-      Кеш сторінок: {{ Object.keys(pageCache).join(', ') }}<br />
-      <strong>Колонки змінено:</strong> {{ columnsChangeCount }} разів<br />
-      <strong>Останній стан колонок:</strong>
-      <pre v-if="lastColumnsState">{{ JSON.stringify(lastColumnsState, null, 2) }}</pre>
+      <strong>🔍 Debug реактивності:</strong><br />
+      Поточна кількість записів: {{ tableData.length }}<br />
+      Активних записів: {{ activeCount }}<br />
+      Середній бал: {{ averageScore }}%<br />
+      <strong>VTable DEBUG:</strong><br />
+      tableData передається в VTable: {{ JSON.stringify(tableData) }}<br />
+      tableData.length: {{ tableData.length }}<br />
+      Перший елемент: {{ tableData[0] ? JSON.stringify(tableData[0]) : 'Немає' }}
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed, ref, watch } from 'vue';
+  import { computed, ref } from 'vue';
   import VTable from '@/components/table/VTable.vue';
   import VTableColumn from '@/components/table/VTableColumn.vue';
-  import VPagination from '@/components/pagination/VPagination.vue';
-  import type { SelectionChangeEventData, VTableColumnProps as VTableColumnType } from '@/components/table/types';
 
-  // Референс на таблицю для доступу до методів
+  // Основний об'єкт з даними
+  const dataObject = ref({
+    1: { id: 1, name: 'Олексій', status: 'active', date: '2024-01-15', score: 85 },
+    2: { id: 2, name: 'Марія', status: 'inactive', date: '2024-02-20', score: 92 },
+    3: { id: 3, name: 'Петро', status: 'pending', date: '2024-03-10', score: 78 },
+    4: { id: 4, name: 'Анна', status: 'blocked', date: '2024-04-05', score: 95 },
+    5: { id: 5, name: 'Іван', status: 'active', date: '2024-05-12', score: 67 },
+  });
+
+  // Computed для таблиці
+  const tableData = computed(() => {
+    return Object.values(dataObject.value).sort((a, b) => a.id - b.id);
+  });
+
+  // Прості лічильники
+  const changesCount = ref(0);
+  const lastUpdate = ref(new Date().toLocaleTimeString());
+
+  // Виділені рядки
+  const selectedRows = ref<any[]>([]);
   const tableRef = ref();
 
-  // Параметри пагінації
-  const currentPage = ref(1);
-  const pageSize = ref(10);
-  const totalItems = ref(25); // Загальна кількість записів на "сервері"
-  const loading = ref(false);
+  // Статуси та імена для генерації
+  const statuses = ['active', 'inactive', 'pending', 'blocked'];
+  const names = ['Дмитро', 'Катерина', 'Володимир', 'Олена', 'Андрій', 'Юлія', 'Максим', 'Тетяна', 'Богдан', 'Оксана'];
+  let nextId = 6;
 
-  // Кеш сторінок - зберігаємо завантажені дані
-  const pageCache = ref<Record<number, any[]>>({});
+  // Computed властивості
+  const activeCount = computed(() => Object.values(dataObject.value).filter(item => item.status === 'active').length);
 
-  // Поточні дані сторінки
-  const currentPageData = ref<any[]>([]);
-  // Всі відомі нам дані (для повного виділення)
-  const allKnownData = computed(() => {
-    return Object.values(pageCache.value).flat();
+  const inactiveCount = computed(
+    () => Object.values(dataObject.value).filter(item => item.status === 'inactive').length
+  );
+
+  const pendingCount = computed(() => Object.values(dataObject.value).filter(item => item.status === 'pending').length);
+
+  const blockedCount = computed(() => Object.values(dataObject.value).filter(item => item.status === 'blocked').length);
+
+  const averageScore = computed(() => {
+    const scores = Object.values(dataObject.value).map(item => item.score);
+    if (scores.length === 0) return 0;
+    return Math.round(scores.reduce((sum, score) => sum + score, 0) / scores.length);
   });
 
-  // Стан виділених рядків (глобальний стан)
-  const selectedRows = ref<any[]>([]);
-  const isFullSelection = ref(false);
-
-  // Лічильник змін колонок для debug
-  const columnsChangeCount = ref(0);
-  const lastColumnsState = ref<VTableColumnType[] | null>(null);
-
-  // Можливість виділити всі записи (тільки якщо завантажили всі сторінки)
-  const canSelectAll = computed(() => {
-    const totalPages = Math.ceil(totalItems.value / pageSize.value);
-    const loadedPages = Object.keys(pageCache.value).length;
-    return loadedPages === totalPages;
-  });
-
-  // Рядки виділені за замовчуванням
-  const defaultSelected = ref<any[]>([]);
-
-  const new_column = ref([
-    {
-      name: 'client',
-      label: 'Дані клієнта',
-      order: 1,
-      icon: 'user',
-      color: '#3b82f6',
-      columns: [
-        { prop: 'clientName', label: "Ім'я клієнта", group: 'client' },
-        { prop: 'clientEmail', label: 'Email клієнта', group: 'client' },
-        { prop: 'clientPhone', label: 'Телефон клієнта', group: 'client' },
-      ],
-    },
-    {
-      name: 'delivery',
-      label: 'Дані доставки',
-      order: 2,
-      icon: 'truck',
-      color: '#10b981',
-      columns: [
-        { prop: 'deliveryAddress', label: 'Адреса доставки', group: 'delivery' },
-        { prop: 'deliveryDate', label: 'Дата доставки', group: 'delivery' },
-        { prop: 'deliveryMethod', label: 'Спосіб доставки', group: 'delivery' },
-      ],
-    },
-    {
-      name: 'order',
-      label: 'Дані замовлення',
-      order: 3,
-      icon: 'shoppingCart',
-      color: '#f59e0b',
-      columns: [
-        { prop: 'orderNumber', label: 'Номер замовлення', group: 'order' },
-        { prop: 'orderTotal', label: 'Сума замовлення', group: 'order' },
-        { prop: 'orderStatus', label: 'Статус замовлення', group: 'order' },
-      ],
-    },
-  ]);
-  const selectedCount = computed(() => {
-    // Якщо повне виділення активне, показуємо загальну кількість записів
-    if (isFullSelection.value) {
-      return totalItems.value;
-    }
-    return selectedRows.value.length;
-  });
-
-  const visibleSelectedCount = computed(() => {
-    return currentPageData.value.filter(row => selectedRows.value.some(selected => selected.id === row.id)).length;
-  });
-
-  const selectionStatus = computed(() => {
-    if (isFullSelection.value) return '🎯 Всі записи';
-    if (visibleSelectedCount.value === currentPageData.value.length && visibleSelectedCount.value > 0) {
-      return '✅ Всі на сторінці';
-    }
-    if (visibleSelectedCount.value > 0) return '◐ Часткове';
-    return '⬜ Нічого не вибрано';
-  });
-
-  // Обробник зміни колонок - тепер батьківський компонент ТІЛЬКИ СЛУХАЄ зміни
-  const handleColumnsChange = (columns: VTableColumnType[]) => {
-    console.log('🏗️ Колонки змінилися у таблиці:', columns);
-    columnsChangeCount.value++;
-    lastColumnsState.value = [...columns]; // Зберігаємо копію для debug
-
-    // Тут батьківський компонент може реагувати на зміни, але НЕ змінює колонки сам
-    // Наприклад:
-    // - збереження стану колонок в localStorage
-    localStorage.setItem('table-columns-state', JSON.stringify(columns));
-
-    // - відправка на сервер для збереження налаштувань користувача
-    // await saveUserTablePreferences(columns);
-
-    // - аналітика
-    // analytics.track('table_columns_changed', {
-    //   columnsCount: columns.length,
-    //   pinnedColumns: columns.filter(col => col.pinnedLeft || col.pinnedRight).length
-    // });
-
-    // - показати користувачу повідомлення про збереження
-    console.log('💾 Налаштування колонок збережено');
+  // Функція для оновлення лічильників
+  const updateCounters = () => {
+    changesCount.value++;
+    lastUpdate.value = new Date().toLocaleTimeString();
   };
 
-  // Симуляція API для завантаження даних сторінки
-  const fetchPageData = async (page: number, size: number): Promise<any[]> => {
-    // Симулюємо затримку мережі
-    await new Promise(resolve => setTimeout(resolve, 500));
+  // Функції для зміни даних
+  const toggleStatus = (id: number) => {
+    const item = dataObject.value[id];
+    if (!item) return;
 
-    const startId = (page - 1) * size + 1;
-    const data = [];
+    const currentIndex = statuses.indexOf(item.status);
+    const nextIndex = (currentIndex + 1) % statuses.length;
+    item.status = statuses[nextIndex];
 
-    const names = [
-      'Олексій',
-      'Марія',
-      'Петро',
-      'Анна',
-      'Іван',
-      'Софія',
-      'Дмитро',
-      'Катерина',
-      'Володимир',
-      'Олена',
-      'Андрій',
-      'Юлія',
-      'Максим',
-      'Тетяна',
-      'Сергій',
-      'Ірина',
-      'Богдан',
-      'Оксана',
-      'Роман',
-      'Людмила',
-      'Василь',
-      'Наталя',
-      'Олександр',
-      'Галина',
-      'Михайло',
-    ];
-
-    const statuses = ['active', 'inactive', 'pending', 'blocked'];
-
-    for (let i = 0; i < size && startId + i <= totalItems.value; i++) {
-      const id = startId + i;
-      data.push({
-        id,
-        name: names[(id - 1) % names.length],
-        status: statuses[(id - 1) % statuses.length],
-        date: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
-        score: Math.floor(Math.random() * 40) + 60, // 60-100
-        time: new Date(),
-      });
-    }
-
-    return data;
+    updateCounters();
+    console.log(`🔄 Статус "${item.name}" → "${getStatusLabel(item.status)}"`);
   };
 
-  // Завантаження даних для сторінки
-  const loadPageData = async (page: number, force = false) => {
-    if (pageCache.value[page] && !force) {
-      currentPageData.value = pageCache.value[page];
-      return;
-    }
+  const changeName = (id: number) => {
+    const item = dataObject.value[id];
+    if (!item) return;
 
-    loading.value = true;
-    try {
-      const data = await fetchPageData(page, pageSize.value);
-      pageCache.value[page] = data;
-      currentPageData.value = data;
-      console.log(`📦 Завантажено дані для сторінки ${page}:`, data);
-    } catch (error) {
-      console.error('Помилка завантаження даних:', error);
-    } finally {
-      loading.value = false;
+    const randomName = names[Math.floor(Math.random() * names.length)];
+    const oldName = item.name;
+    item.name = `${randomName} ${Math.floor(Math.random() * 100)}`;
+
+    updateCounters();
+    console.log(`✏️ Ім'я "${oldName}" → "${item.name}"`);
+  };
+
+  const increaseScore = (id: number) => {
+    const item = dataObject.value[id];
+    if (!item) return;
+
+    const oldScore = item.score;
+    item.score = Math.min(100, item.score + 10);
+
+    updateCounters();
+    console.log(`📈 Бали "${item.name}": ${oldScore}% → ${item.score}%`);
+  };
+
+  const changeRandomStatus = () => {
+    const ids = Object.keys(dataObject.value);
+    if (ids.length === 0) return;
+
+    const randomId = parseInt(ids[Math.floor(Math.random() * ids.length)]);
+    toggleStatus(randomId);
+  };
+
+  const changeRandomName = () => {
+    const ids = Object.keys(dataObject.value);
+    if (ids.length === 0) return;
+
+    const randomId = parseInt(ids[Math.floor(Math.random() * ids.length)]);
+    changeName(randomId);
+  };
+
+  const increaseRandomScore = () => {
+    const ids = Object.keys(dataObject.value);
+    if (ids.length === 0) return;
+
+    const randomId = parseInt(ids[Math.floor(Math.random() * ids.length)]);
+    increaseScore(randomId);
+  };
+
+  const addNewRow = () => {
+    const randomName = names[Math.floor(Math.random() * names.length)];
+    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    const today = new Date().toISOString().split('T')[0];
+    const randomScore = Math.floor(Math.random() * 40) + 60;
+
+    const newItem = {
+      id: nextId,
+      name: `${randomName} ${nextId}`,
+      status: randomStatus,
+      date: today,
+      score: randomScore,
+    };
+
+    dataObject.value[nextId] = newItem;
+    nextId++;
+    updateCounters();
+    console.log(`➕ Додано: "${newItem.name}"`);
+  };
+
+  const removeRow = (id: number) => {
+    const item = dataObject.value[id];
+    if (item) {
+      delete dataObject.value[id];
+      updateCounters();
+      console.log(`🗑️ Видалено: "${item.name}"`);
     }
   };
 
-  // Завантаження всіх сторінок (для повного виділення)
-  const loadAllPages = async () => {
-    const totalPages = Math.ceil(totalItems.value / pageSize.value);
-    loading.value = true;
+  const removeLastRow = () => {
+    const ids = Object.keys(dataObject.value)
+      .map(id => parseInt(id))
+      .sort((a, b) => b - a);
+    if (ids.length > 0) {
+      removeRow(ids[0]);
+    }
+  };
 
-    try {
-      const promises = [];
-      for (let page = 1; page <= totalPages; page++) {
-        if (!pageCache.value[page]) {
-          promises.push(
-            fetchPageData(page, pageSize.value).then(data => {
-              pageCache.value[page] = data;
-              console.log(`📦 Завантажено всі дані для сторінки ${page}`);
-            })
-          );
-        }
+  const shuffleAllData = () => {
+    Object.values(dataObject.value).forEach(item => {
+      item.status = statuses[Math.floor(Math.random() * statuses.length)];
+      item.score = Math.floor(Math.random() * 40) + 60;
+      item.name = `${names[Math.floor(Math.random() * names.length)]} ${Math.floor(Math.random() * 100)}`;
+    });
+    updateCounters();
+    console.log('🔀 Дані перемішано');
+  };
+
+  // Операції з виділеними рядками
+  const changeSelectedStatus = () => {
+    const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
+    selectedRows.value.forEach(row => {
+      if (dataObject.value[row.id]) {
+        dataObject.value[row.id].status = randomStatus;
       }
-
-      await Promise.all(promises);
-      console.log('🎯 Всі сторінки завантажені для повного виділення');
-    } catch (error) {
-      console.error('Помилка завантаження всіх даних:', error);
-    } finally {
-      loading.value = false;
-    }
+    });
+    updateCounters();
+    console.log(`🔄 Статус ${selectedRows.value.length} виділених → "${getStatusLabel(randomStatus)}"`);
   };
 
-  // Оновлення даних
-  const refreshData = async () => {
-    pageCache.value = {};
+  const increaseSelectedScores = () => {
+    selectedRows.value.forEach(row => {
+      if (dataObject.value[row.id]) {
+        dataObject.value[row.id].score = Math.min(100, dataObject.value[row.id].score + 20);
+      }
+    });
+    updateCounters();
+    console.log(`📈 +20 балів ${selectedRows.value.length} виділеним`);
+  };
+
+  const removeSelected = () => {
+    const count = selectedRows.value.length;
+    selectedRows.value.forEach(row => {
+      delete dataObject.value[row.id];
+    });
     selectedRows.value = [];
-    isFullSelection.value = false;
-    await loadPageData(currentPage.value, true);
-  };
-
-  // Обробники пагінації
-  const handlePageChange = async (page: number) => {
-    currentPage.value = page;
-    await loadPageData(page);
-    console.log(`📄 Перехід на сторінку ${page}`);
-  };
-
-  const handlePageSizeChange = async (size: number) => {
-    pageSize.value = size;
-    currentPage.value = 1;
-    pageCache.value = {}; // Очищаємо кеш при зміні розміру сторінки
-    await loadPageData(1, true);
-    console.log(`📏 Змінено розмір сторінки на ${size}`);
-  };
-
-  const handlePaginationChange = (data: { page: number; pageSize: number }) => {
-    console.log(`📋 Пагінація змінена:`, data);
-  };
-
-  // Методи управління виділенням
-  const selectAll = () => {
-    tableRef.value?.toggleAllSelection();
-  };
-
-  const selectAbsolutelyAll = async () => {
-    if (!canSelectAll.value) {
-      // Завантажуємо всі сторінки перед повним виділенням
-      await loadAllPages();
-    }
-    tableRef.value?.selectAbsolutelyAll();
-  };
-
-  const clearAll = () => {
-    tableRef.value?.clearSelection();
-  };
-
-  const selectFirst3 = () => {
-    const first3 = currentPageData.value.slice(0, 3);
-    tableRef.value?.setSelectionRows(first3);
-  };
-
-  const getSelected = () => {
-    const selected = tableRef.value?.getSelectionRows() || [];
-    console.log('Поточні виділені рядки:', selected);
-
-    const selectedOnCurrentPage = selected.filter(row =>
-      currentPageData.value.some(pageRow => pageRow.id === row.id)
-    ).length;
-
-    alert(`Виділено ${selected.length} рядків загалом.
-  На поточній сторінці: ${selectedOnCurrentPage}
-  Завантажено сторінок: ${Object.keys(pageCache.value).length}
-  Перевірте консоль для деталей.`);
-  };
-
-  const toggleSingleRow = (row: any) => {
-    tableRef.value?.toggleRowSelection(row);
-  };
-
-  const isRowSelected = (row: any): boolean => {
-    return selectedRows.value.some(selected => selected.id === row.id);
+    updateCounters();
+    console.log(`🗑️ Видалено ${count} виділених`);
   };
 
   // Обробники подій
-  const handleSelectionChange = (data: SelectionChangeEventData) => {
-    console.log('📋 Зміна виділення:', data);
+  const handleSelectionChange = (data: any) => {
     selectedRows.value = data.selection;
-    isFullSelection.value = data.isAllSelected || false;
-
-    if (data.row) {
-      console.log(`Рядок ${data.row.name} ${data.selected ? 'виділено' : 'знято виділення'}`);
-    }
-
-    if (data.isAllSelected) {
-      console.log('🎯 Виділені абсолютно всі записи!');
-    }
   };
 
   const handleRowClick = (data: any) => {
-    console.log('🖱️ Клік по рядку:', data.row.name);
-    if (data.event.ctrlKey || data.event.metaKey) {
-      toggleSingleRow(data.row);
-    }
-  };
-
-  const handleScroll = () => {
-    console.log('scrolled');
-  };
-
-  const handleTableSort = (data: any) => {
-    console.log('📋 Загальне сортування таблиці:', data);
-    // При сортуванні в реальному додатку треба робити запит до сервера
+    console.log('🖱️ Клік:', data.row.name);
   };
 
   // Допоміжні функції
-  const getSummaries = ({ columns, data }: { columns: any[]; data: any[] }) => {
-    return columns.map(col => {
-      if (!col.prop) return 'Σ';
-      const values = data.map(row => row[col.prop]);
-      if (values.every(val => typeof val === 'number')) {
-        return values.reduce((sum, val) => sum + val, 0);
-      }
-      return 'N/A';
-    });
-  };
-
   const getStatusLabel = (status: string): string => {
     const labels: Record<string, string> = {
       active: 'Активний',
@@ -464,27 +331,35 @@
     return labels[status] || status;
   };
 
-  // Завантажуємо першу сторінку при ініціалізації
-  loadPageData(1);
+  const getScoreClass = (score: number): string => {
+    if (score >= 90) return 'score-excellent';
+    if (score >= 80) return 'score-good';
+    if (score >= 70) return 'score-average';
+    return 'score-poor';
+  };
 
-  // Спостерігаємо за зміною розміру сторінки
-  watch(pageSize, () => {
-    // При зміні розміру сторінки потрібно перерахувати можливість повного виділення
-    if (isFullSelection.value) {
-      isFullSelection.value = false;
-      selectedRows.value = [];
-    }
-  });
+  const getSummaries = ({ columns, data }: { columns: any[]; data: any[] }) => {
+    return columns.map(col => {
+      if (col.prop === 'score') {
+        const avg = data.reduce((sum, row) => sum + row.score, 0) / data.length;
+        return `Ø ${Math.round(avg)}%`;
+      }
+      if (col.prop === 'id') return `Σ ${data.length}`;
+      return '';
+    });
+  };
 </script>
 
 <style scoped>
   .btn {
     padding: 8px 12px;
     margin-right: 8px;
+    margin-bottom: 4px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
+    transition: all 0.2s;
   }
 
   .btn--primary {
@@ -492,8 +367,8 @@
     color: white;
   }
 
-  .btn--secondary {
-    background-color: #6c757d;
+  .btn--success {
+    background-color: #28a745;
     color: white;
   }
 
@@ -507,9 +382,82 @@
     color: #212529;
   }
 
+  .btn--danger {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn--secondary {
+    background-color: #6c757d;
+    color: white;
+  }
+
   .btn:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+  }
+
+  .btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+  }
+
+  .btn-mini {
+    padding: 2px 6px;
+    font-size: 10px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-mini:hover {
+    background-color: #f8f9fa;
+    transform: scale(1.1);
+  }
+
+  .btn-mini.btn-success {
+    border-color: #28a745;
+    color: #28a745;
+  }
+
+  .btn-mini.btn-success:hover {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .btn-mini.btn-danger {
+    border-color: #dc3545;
+    color: #dc3545;
+  }
+
+  .btn-mini.btn-danger:hover {
+    background-color: #dc3545;
+    color: white;
+  }
+
+  .btn-small {
+    padding: 4px 8px;
+    margin-right: 4px;
+    font-size: 12px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .btn-small.btn-primary {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .btn-small.btn-success {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .btn-small.btn-danger {
+    background-color: #dc3545;
+    color: white;
   }
 
   .status-badge {
@@ -517,6 +465,7 @@
     border-radius: 12px;
     font-size: 12px;
     font-weight: 500;
+    transition: all 0.3s ease;
   }
 
   .status-badge--active {
@@ -537,5 +486,21 @@
   .status-badge--blocked {
     background-color: #d1ecf1;
     color: #0c5460;
+  }
+
+  .score-excellent {
+    color: #28a745;
+  }
+
+  .score-good {
+    color: #17a2b8;
+  }
+
+  .score-average {
+    color: #ffc107;
+  }
+
+  .score-poor {
+    color: #dc3545;
   }
 </style>

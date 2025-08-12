@@ -17,7 +17,7 @@
     showSummary: false,
     maxHeight: undefined,
     selectionKey: 'id',
-    rowKey: undefined,
+    rowKey: 'id',
     defaultSelection: () => [],
     allData: undefined,
     columnsSelector: () => [],
@@ -551,7 +551,6 @@
           v-else
           v-for="(row, rowIndex) in sortedData"
           :key="getRowKey(row, rowIndex)"
-          v-memo="[props.rowKey ? row[props.rowKey] : rowIndex]"
           :class="[
             'vt-table__row',
             {
