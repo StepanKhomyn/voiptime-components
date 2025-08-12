@@ -1,3 +1,12 @@
+## [1.0.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.1...v1.0.2) (2025-08-12)
+
+
+### Bug Fixes
+
+* додано унікальні ід до таблиць dbghfdktyj ([243e114](https://github.com/StepanKhomyn/voiptime-components/commit/243e11479bcef391e8702313b931d5617b9d293a))
+* правки по таблиці ([31cbbac](https://github.com/StepanKhomyn/voiptime-components/commit/31cbbac7bedc446231db9ab98af4b151693f6a24))
+* правки по таблиці 2 ([eefd863](https://github.com/StepanKhomyn/voiptime-components/commit/eefd8635b8cf9c291e935bf2e907108dcc92fa29))
+
 ## [1.0.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.0...v1.0.1) (2025-08-12)
 
 
