@@ -1,3 +1,10 @@
+## [1.0.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.14...v1.0.15) (2025-08-12)
+
+
+### Bug Fixes
+
+* Add v-memo on table td ([96537ad](https://github.com/StepanKhomyn/voiptime-components/commit/96537adb4511618b26d6b93041ac4b8b21776a62))
+
 ## [1.0.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.13...v1.0.14) (2025-08-12)
 
 
