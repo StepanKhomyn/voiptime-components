@@ -1,3 +1,10 @@
+## [1.0.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.7...v1.0.8) (2025-08-12)
+
+
+### Bug Fixes
+
+* деплой на гіті 6 ([42d2f6b](https://github.com/StepanKhomyn/voiptime-components/commit/42d2f6b9a45b21483fb298444121e3c69f8ebe23))
+
 ## [1.0.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.6...v1.0.7) (2025-08-12)
 
 
