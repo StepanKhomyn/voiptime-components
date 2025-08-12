@@ -23,15 +23,3 @@ dist-ssr
 *.sln
 *.sw?
 
-
-# Patch версія (0.0.29 → 0.0.30)
-git commit -m "fix: виправлено помилку з компонентом"
-
-# Minor версія (0.0.29 → 0.1.0)
-git commit -m "feat: додано новий компонент Button"
-
-# Major версія (0.0.29 → 1.0.0)
-git commit -m "feat!: змінено API компонента
-BREAKING CHANGE: параметр color тепер приймає тільки hex значення"
-
-git push origin main
