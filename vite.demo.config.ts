@@ -3,7 +3,7 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
 export default defineConfig({
-  base: '/vue-component-lib/',
+  base: '/voiptime-components/',
   root: path.resolve(__dirname, 'example'),
   resolve: {
     alias: {
