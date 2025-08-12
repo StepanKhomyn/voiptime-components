@@ -1,3 +1,10 @@
+## [1.0.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.13...v1.0.14) (2025-08-12)
+
+
+### Bug Fixes
+
+* ров кій на таблиці ([9d7abef](https://github.com/StepanKhomyn/voiptime-components/commit/9d7abef727e01423e13e562628bc03876af7dc9b))
+
 ## [1.0.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.12...v1.0.13) (2025-08-12)
 
 
