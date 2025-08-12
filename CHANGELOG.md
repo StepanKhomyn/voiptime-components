@@ -1,3 +1,10 @@
+## [1.0.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.12...v1.0.13) (2025-08-12)
+
+
+### Bug Fixes
+
+* додано на cdn ([db25ee7](https://github.com/StepanKhomyn/voiptime-components/commit/db25ee7f6f426c318311e9028c71bf277cf6ed35))
+
 ## [1.0.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.11...v1.0.12) (2025-08-12)
 
 
