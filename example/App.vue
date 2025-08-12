@@ -20,7 +20,7 @@
   <div class="container">
     <header class="header">
       <h1 class="title">Vue Components Documentation</h1>
-      <p class="subtitle">Документація кастомних компонентів Vue 3.5 !!!</p>
+      <p class="subtitle">Документація кастомних компонентів Vue 3.5 !!!11</p>
     </header>
 
     <div class="section-list">
