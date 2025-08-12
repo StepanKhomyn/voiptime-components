@@ -134,7 +134,6 @@
 
   // Поточні дані сторінки
   const currentPageData = ref<any[]>([]);
-
   // Всі відомі нам дані (для повного виділення)
   const allKnownData = computed(() => {
     return Object.values(pageCache.value).flat();
@@ -287,6 +286,7 @@
         status: statuses[(id - 1) % statuses.length],
         date: `2024-${String(Math.floor(Math.random() * 12) + 1).padStart(2, '0')}-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
         score: Math.floor(Math.random() * 40) + 60, // 60-100
+        time: new Date(),
       });
     }
 
