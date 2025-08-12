@@ -8,6 +8,8 @@
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
+  "unpkg": "dist/index.umd.js",
+  "jsdelivr": "dist/index.umd.js",
   "style": "dist/index.css",
   "types": "dist/index.d.ts",
   "files": [
@@ -18,7 +20,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.es.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/index.cjs",
+      "default": "./dist/index.umd.js"
     },
     "./index.css": "./dist/index.css",
     "./scss/mixins": "./src/assets/_mixins.scss"

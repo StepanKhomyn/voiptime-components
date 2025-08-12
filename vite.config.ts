@@ -27,25 +27,22 @@ export default defineConfig({
       copyDtsFiles: false,
       staticImport: true,
       beforeWriteFile: (filePath, content) => {
-        return {
-          filePath,
-          content,
-        };
+        return { filePath, content };
       },
     }),
   ],
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/entry.ts'),
-      name: 'VoiptimeComponents',
+      name: 'VoiptimeComponents', // глобальне ім'я для window
       fileName: format => `index.${format}.js`,
-      formats: ['es', 'cjs'],
+      formats: ['es', 'cjs', 'umd'], // ДОДАНО umd
     },
     rollupOptions: {
-      external: ['vue'],
+      external: ['vue'], // не включаємо Vue у бандл
       output: {
         globals: {
-          vue: 'Vue',
+          vue: 'Vue', // Vue глобально в браузері
         },
         assetFileNames: assetInfo => {
           if (assetInfo.name?.endsWith('.css')) return 'index.css';
