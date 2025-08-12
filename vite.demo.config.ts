@@ -3,11 +3,11 @@ import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
 export default defineConfig({
-  base: '/repo-name/',
+  base: '/vue-component-lib/',
   root: path.resolve(__dirname, 'example'),
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'),
+      '@': path.resolve(__dirname, 'src'), // щоб працювало імпортування компонентів
     },
   },
   build: {
