@@ -1,3 +1,4 @@
+<!-- VDropdown.vue - З правильною типізацією і provide/inject -->
 <script setup lang="ts">
   import { nextTick, onMounted, onUnmounted, provide, ref, useSlots } from 'vue';
   import type { DropdownContext, DropdownEmits, DropdownExpose, DropdownProps } from './types';
@@ -21,7 +22,7 @@
   const triggerRef = ref<HTMLElement>();
   const menuRef = ref<HTMLElement>();
   const visible = ref(false);
-  const timeoutPending = ref<NodeJS.Timeout | null>(null);
+  const timeoutPending = ref<number | null>(null);
 
   // Стилі для позиціонування
   const menuStyle = ref({
@@ -93,7 +94,7 @@
     if (props.disabled || visible.value) return;
 
     clearTimeout();
-    timeoutPending.value = setTimeout(
+    timeoutPending.value = window.setTimeout(
       async () => {
         visible.value = true;
         await updatePopper();
@@ -108,7 +109,7 @@
     if (!visible.value) return;
 
     clearTimeout();
-    timeoutPending.value = setTimeout(
+    timeoutPending.value = window.setTimeout(
       () => {
         visible.value = false;
         emit('visible-change', false);
@@ -120,7 +121,7 @@
   // Очистити таймаути
   const clearTimeout = (): void => {
     if (timeoutPending.value) {
-      globalThis.clearTimeout(timeoutPending.value);
+      window.clearTimeout(timeoutPending.value);
       timeoutPending.value = null;
     }
   };
