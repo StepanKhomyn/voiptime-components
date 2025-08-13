@@ -2,6 +2,7 @@
   import { ref } from 'vue';
   import ButtonTest from './ButtonTest.vue';
   import DemoTable from './DemoTable.vue';
+  import IconsDemo from './IconsDemo.vue';
 
   const activeSlot = ref(null);
 
@@ -34,40 +35,6 @@
         <div class="section-name">{{ section.name }}</div>
       </div>
     </div>
-    <div class="section-list">
-      <div
-        v-for="section in sections"
-        :key="section.id"
-        @click="() => (activeSlot = section.id)"
-        :class="['section-item', activeSlot === section.id ? 'active' : '']"
-      >
-        <div class="section-icon">{{ section.icon }}</div>
-        <div class="section-name">{{ section.name }}</div>
-      </div>
-    </div>
-    <div class="section-list">
-      <div
-        v-for="section in sections"
-        :key="section.id"
-        @click="() => (activeSlot = section.id)"
-        :class="['section-item', activeSlot === section.id ? 'active' : '']"
-      >
-        <div class="section-icon">{{ section.icon }}</div>
-        <div class="section-name">{{ section.name }}</div>
-      </div>
-    </div>
-    <div class="section-list">
-      <div
-        v-for="section in sections"
-        :key="section.id"
-        @click="() => (activeSlot = section.id)"
-        :class="['section-item', activeSlot === section.id ? 'active' : '']"
-      >
-        <div class="section-icon">{{ section.icon }}</div>
-        <div class="section-name">{{ section.name }}</div>
-      </div>
-    </div>
-
     <button v-if="activeSlot" class="back-button" @click="activeSlot = null"> ← Повернутися до розділів</button>
 
     <div style="margin-top: 20px">
@@ -78,6 +45,7 @@
       <!-- Компоненти -->
       <ButtonTest v-if="activeSlot === 1" />
       <DemoTable v-if="activeSlot === 2" />
+      <IconsDemo v-if="activeSlot === 4" />
       <!-- і т.д. -->
     </div>
   </div>

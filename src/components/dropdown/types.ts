@@ -9,6 +9,7 @@ export interface DropdownProps {
   showTimeout?: number;
   hideTimeout?: number;
   tabindex?: number;
+  maxHeight?: string | number;
 }
 
 export interface DropdownItemProps {

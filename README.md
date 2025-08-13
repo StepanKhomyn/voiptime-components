@@ -7,6 +7,8 @@ the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-scrip
 Learn more about the recommended Project Setup and IDE Support in
 the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
 
+ПРАВИЛА ПУШУ НА ГІТ ХАБ
+
 # Patch версія (0.0.29 → 0.0.30)
 
 git commit -m "fix: виправлено помилку з компонентом"
@@ -21,3 +23,8 @@ git commit -m "feat!: змінено API компонента
 BREAKING CHANGE: параметр color тепер приймає тільки hex значення"
 
 git push origin main
+
+ПІСЛЯ ЦЬОГО ВЕСІЯ АВТОМАТИЧНО МІНЯЄТЬСЯ, БІЛДАЄТЬСЯ ТА ДЕПЛОЇТЬСЯ, А ТАКОЖ ВИСАВЛЯЄТЬСЯ НА NPM
+
+генерування іконок
+npm run generate-icons

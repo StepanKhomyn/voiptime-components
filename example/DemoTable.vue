@@ -86,6 +86,39 @@
                 <VIcon name="columnInsert" />
                 <div>Колонки</div>
               </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
             </template>
           </VDropdown>
         </template>

@@ -1,6 +1,5 @@
-<!-- VDropdown.vue - З правильною типізацією і provide/inject -->
 <script setup lang="ts">
-  import { nextTick, onMounted, onUnmounted, provide, ref, useSlots } from 'vue';
+  import { computed, nextTick, onMounted, onUnmounted, provide, ref, useSlots } from 'vue';
   import type { DropdownContext, DropdownEmits, DropdownExpose, DropdownProps } from './types';
   import { DropdownContextKey } from './types';
 
@@ -13,6 +12,7 @@
     showTimeout: 250,
     hideTimeout: 150,
     tabindex: 0,
+    maxHeight: '200',
   });
 
   const emit = defineEmits<DropdownEmits>();
@@ -31,14 +31,20 @@
   const parentVisible = ref(true);
   const wasVisibleBeforeHiding = ref(false);
 
-  // Стилі для позиціонування
-  const menuStyle = ref({
+  // Базові стилі для позиціонування (без maxHeight)
+  const baseMenuStyle = ref({
     position: 'absolute' as const,
     top: '0px',
     left: '0px',
     zIndex: 2000,
     transformOrigin: 'center top',
   });
+
+  // Computed стиль з maxHeight
+  const menuStyle = computed(() => ({
+    ...baseMenuStyle.value,
+    maxHeight: typeof props.maxHeight === 'number' ? `${props.maxHeight}px` : `${props.maxHeight}px`,
+  }));
 
   // Слоти
   const slots = useSlots();
@@ -111,6 +117,7 @@
       }
     }
   };
+
   const getScrollableParents = (element: Element): Element[] => {
     const parents: Element[] = [];
     let parent = element.parentElement;
@@ -188,27 +195,24 @@
     }
     if (top < window.scrollY + 10) top = window.scrollY + 10;
 
-    menuStyle.value.top = `${top}px`;
-    menuStyle.value.left = `${left}px`;
+    // Оновлюємо тільки позицію, maxHeight залишається через computed
+    baseMenuStyle.value.top = `${top}px`;
+    baseMenuStyle.value.left = `${left}px`;
   };
 
-  // Додавання слухачів скролу до всіх батьківських елементів
+  // Решта коду залишається без змін...
   const addScrollListeners = (): void => {
     if (!triggerRef.value) return;
 
-    // Знаходимо всі скролабельні батьки
     scrollableParents.value = getScrollableParents(triggerRef.value);
 
-    // Додаємо слухачі для кожного батька
     scrollableParents.value.forEach(parent => {
       parent.addEventListener('scroll', handleScroll, { passive: true });
     });
 
-    // Додаємо слухач для resize
     window.addEventListener('resize', handleScroll);
   };
 
-  // Видалення слухачів скролу
   const removeScrollListeners = (): void => {
     scrollableParents.value.forEach(parent => {
       parent.removeEventListener('scroll', handleScroll);
@@ -217,11 +221,9 @@
     scrollableParents.value = [];
   };
 
-  // Показати меню
   const show = (): void => {
     if (props.disabled || visible.value) return;
 
-    // Перевіряємо видимість батьківського елемента перед показом
     if (!triggerRef.value || !isElementVisible(triggerRef.value)) {
       return;
     }
@@ -233,14 +235,13 @@
         parentVisible.value = true;
         wasVisibleBeforeHiding.value = false;
         await updatePopper();
-        addScrollListeners(); // Додаємо слухачі після показу меню
+        addScrollListeners();
         emit('visible-change', true);
       },
       props.trigger === 'hover' ? props.showTimeout : 0
     );
   };
 
-  // Сховати меню
   const hide = (): void => {
     if (!visible.value) return;
 
@@ -248,15 +249,14 @@
     timeoutPending.value = window.setTimeout(
       () => {
         visible.value = false;
-        wasVisibleBeforeHiding.value = false; // Скидаємо стан при ручному закритті
-        removeScrollListeners(); // Видаляємо слухачі при закритті меню
+        wasVisibleBeforeHiding.value = false;
+        removeScrollListeners();
         emit('visible-change', false);
       },
       props.trigger === 'hover' ? props.hideTimeout : 0
     );
   };
 
-  // Очистити таймаути
   const clearTimeout = (): void => {
     if (timeoutPending.value) {
       window.clearTimeout(timeoutPending.value);
@@ -264,26 +264,21 @@
     }
   };
 
-  // Обробник команд від дочірніх елементів
   const handleCommand = (command: string | number): void => {
-    console.log('VDropdown handleCommand called:', command); // Debug log
     emit('command', command);
     if (props.hideOnClick) {
       hide();
     }
   };
 
-  // Provide контексту для VDropdownItem
   provide<DropdownContext>(DropdownContextKey, {
     handleCommand,
     hideOnClick: props.hideOnClick,
   });
 
-  // Обробники подій
   const handleClick = (event: MouseEvent): void => {
     if (props.disabled) return;
 
-    console.log('VDropdown click triggered'); // Debug log
     emit('click', event);
 
     if (props.trigger === 'click') {
@@ -319,7 +314,6 @@
     }
   };
 
-  // Закриття при кліку поза
   const handleClickOutside = (event: MouseEvent): void => {
     if (!visible.value) return;
 
@@ -331,7 +325,6 @@
     hide();
   };
 
-  // Оновлення позиції при скролі
   const handleScroll = (): void => {
     if (visible.value || wasVisibleBeforeHiding.value) {
       checkParentVisibility();
@@ -341,7 +334,6 @@
     }
   };
 
-  // Expose для використання ззовні
   defineExpose<DropdownExpose>({
     show,
     hide,

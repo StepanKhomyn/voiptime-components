@@ -1,56 +1,93 @@
+// Цей файл згенеровано автоматично. Не редагуйте вручну!
+// Для оновлення запустіть: node scripts/generate-icons.js
+
+import CircleCheckedIcon from './actions/CircleCheckedIcon.vue';
+import CircleCloseIcon from './actions/CircleCloseIcon.vue';
+import CloseIcon from './actions/CloseIcon.vue';
+import DeleteIcon from './actions/DeleteIcon.vue';
+import EditIcon from './actions/EditIcon.vue';
+import GoToIcon from './actions/GoToIcon.vue';
+import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
+import ListBulletIcon from './actions/ListBulletIcon.vue';
+import PlusRoundIcon from './actions/PlusRoundIcon.vue';
+import PromptIcon from './actions/PromptIcon.vue';
+import PrompterIcon from './actions/PrompterIcon.vue';
+import SaveIcon from './actions/SaveIcon.vue';
+import StatusChange2Icon from './actions/StatusChange2Icon.vue';
+import StatusChangeIcon from './actions/StatusChangeIcon.vue';
+import UsersGroupIcon from './actions/UsersGroupIcon.vue';
 import ArrowDownIcon from './arrow/ArrowDownIcon.vue';
-import ArrowTopIcon from './arrow/ArrowTopIcon.vue';
+import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
 import ArrowReloadIcon from './arrow/ArrowReloadIcon.vue';
 import ArrowRightIcon from './arrow/ArrowRightIcon.vue';
-import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
-import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
-import FreezeIcon from './table/FreezeIcon.vue';
-import UnfreezeIcon from './table/UnfreezeIcon.vue';
-import EmptyIcon from './table/EmptyIcon.vue';
-import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
-import ListBulletIcon from './actions/ListBulletIcon.vue';
-import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
-import CloseIcon from './actions/CloseIcon.vue';
-import FilterSaveIcon from './filter/FilterSaveIcon.vue';
-import FilterResetIcon from './filter/FilterResetIcon.vue';
-import FilterNewIcon from './filter/FilterNewIcon.vue';
-import FilterMultiselectIcon from './filter/FilterMultiselectIcon.vue';
-import FilterExchangeIcon from './filter/FilterExchangeIcon.vue';
-import FilterEditIcon from './filter/FilterEditIcon.vue';
-import FilterDateCheckIcon from './filter/FilterDateCheckIcon.vue';
-import FilterAdvancedIcon from './filter/FilterAdvancedIcon.vue';
+import ArrowTopIcon from './arrow/ArrowTopIcon.vue';
 import FilterAddIcon from './filter/FilterAddIcon.vue';
+import FilterAdvancedIcon from './filter/FilterAdvancedIcon.vue';
+import FilterDateCheckIcon from './filter/FilterDateCheckIcon.vue';
+import FilterEditIcon from './filter/FilterEditIcon.vue';
+import FilterExchangeIcon from './filter/FilterExchangeIcon.vue';
+import FilterMultiselectIcon from './filter/FilterMultiselectIcon.vue';
+import FilterNewIcon from './filter/FilterNewIcon.vue';
+import FilterResetIcon from './filter/FilterResetIcon.vue';
+import FilterSaveIcon from './filter/FilterSaveIcon.vue';
+import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
+import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
+import EmptyIcon from './table/EmptyIcon.vue';
+import ExcelIcon from './table/ExcelIcon.vue';
+import FreezeIcon from './table/FreezeIcon.vue';
+import ListAddIcon from './table/ListAddIcon.vue';
+import TableSettingsIcon from './table/TableSettingsIcon.vue';
+import TwoColumnsIcon from './table/TwoColumnsIcon.vue';
+import TwoRowsIcon from './table/TwoRowsIcon.vue';
+import UnfreezeIcon from './table/UnfreezeIcon.vue';
 
 export const icons = {
+  // actions icons
+  circleChecked: CircleCheckedIcon,
+  circleClose: CircleCloseIcon,
+  close: CloseIcon,
+  delete: DeleteIcon,
+  edit: EditIcon,
+  goTo: GoToIcon,
+  listBulletHorizontal: ListBulletHorizontalIcon,
+  listBullet: ListBulletIcon,
+  plusRound: PlusRoundIcon,
+  prompt: PromptIcon,
+  prompter: PrompterIcon,
+  save: SaveIcon,
+  statusChange2: StatusChange2Icon,
+  statusChange: StatusChangeIcon,
+  usersGroup: UsersGroupIcon,
+
   // arrow icons
   arrowDown: ArrowDownIcon,
-  arrowTop: ArrowTopIcon,
-  arrowRight: ArrowRightIcon,
   arrowLeft: ArrowLeftIcon,
   arrowReload: ArrowReloadIcon,
+  arrowRight: ArrowRightIcon,
+  arrowTop: ArrowTopIcon,
+
+  // filter icons
+  filterAdd: FilterAddIcon,
+  filterAdvanced: FilterAdvancedIcon,
+  filterDateCheck: FilterDateCheckIcon,
+  filterEdit: FilterEditIcon,
+  filterExchange: FilterExchangeIcon,
+  filterMultiselect: FilterMultiselectIcon,
+  filterNew: FilterNewIcon,
+  filterReset: FilterResetIcon,
+  filterSave: FilterSaveIcon,
 
   // table icons
   columnInsert: ColumnInsertIcon,
-  freeze: FreezeIcon,
-  unfreeze: UnfreezeIcon,
   columnsMove: ColumnsMoveIcon,
   empty: EmptyIcon,
-
-  // actions icons
-  listBullet: ListBulletIcon,
-  listBulletHorizontal: ListBulletHorizontalIcon,
-  close: CloseIcon,
-
-  // filter icons
-  filterSave: FilterSaveIcon,
-  filterReset: FilterResetIcon,
-  filterNew: FilterNewIcon,
-  filterMultiselect: FilterMultiselectIcon,
-  filterExchange: FilterExchangeIcon,
-  filterEdit: FilterEditIcon,
-  filterDateCheck: FilterDateCheckIcon,
-  filterAdvanced: FilterAdvancedIcon,
-  filterAdd: FilterAddIcon,
+  excel: ExcelIcon,
+  freeze: FreezeIcon,
+  listAdd: ListAddIcon,
+  tableSettings: TableSettingsIcon,
+  twoColumns: TwoColumnsIcon,
+  twoRows: TwoRowsIcon,
+  unfreeze: UnfreezeIcon,
 } as const;
 
 export type IconName = keyof typeof icons;
