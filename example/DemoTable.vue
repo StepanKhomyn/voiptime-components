@@ -30,12 +30,8 @@
       ref="tableRef"
       :data="tableData"
       :max-height="400"
-      @selection-change="handleSelectionChange"
-      @row-click="handleRowClick"
       show-summary
       :summary-method="getSummaries"
-      selectable
-      selection-key="id"
       highlight-current-row
     >
       <!-- Звичайна колонка без слота для тестування -->
@@ -74,10 +70,24 @@
       <!-- Бали з кнопкою збільшення -->
       <VTableColumn prop="score" label="Бали" :width="150">
         <template #score="{ row }">
-          <div style="display: flex; align-items: center; gap: 8px">
-            <span :class="getScoreClass(row.score)" style="font-weight: bold"> {{ row.score }}% </span>
-            <button @click.stop="increaseScore(row.id)" class="btn-mini btn-success" title="+10 балів"> +10</button>
-          </div>
+          <VDropdown trigger="click" placement="bottom-start">
+            <!-- Trigger -->
+            <div class="vt-table-header-actions">
+              <VIcon name="listBullet" />
+            </div>
+
+            <!-- Dropdown Menu -->
+            <template #dropdown>
+              <VDropdownItem :command="'pin'">
+                <VIcon name="unfreeze" />
+                <div>Заморозити</div>
+              </VDropdownItem>
+              <VDropdownItem :command="'columns'">
+                <VIcon name="columnInsert" />
+                <div>Колонки</div>
+              </VDropdownItem>
+            </template>
+          </VDropdown>
         </template>
       </VTableColumn>
 
@@ -120,6 +130,9 @@
   import { computed, ref } from 'vue';
   import VTable from '@/components/table/VTable.vue';
   import VTableColumn from '@/components/table/VTableColumn.vue';
+  import VDropdown from '@/components/dropdown/VDropdown.vue';
+  import VDropdownItem from '@/components/dropdown/VDropdownItem.vue';
+  import VIcon from '@/components/icon/VIcon.vue';
 
   // Основний об'єкт з даними
   const dataObject = ref({

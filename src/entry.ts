@@ -1,4 +1,4 @@
-// index.ts - оновлений головний файл бібліотеки з підтримкою таблиці
+// index.ts - оновлений головний файл бібліотеки з підтримкою таблиці та dropdown
 import type { App } from 'vue';
 import VButton from './components/button/VButton.vue';
 import VIcon from './components/icon/VIcon.vue';
@@ -8,12 +8,14 @@ import VPagination from './components/pagination/VPagination.vue';
 import VCheckbox from './components/checkbox/VCheckbox.vue';
 import VTable from './components/table/VTable.vue';
 import VTableColumn from './components/table/VTableColumn.vue';
+import VDropdown from './components/dropdown/VDropdown.vue';
+import VDropdownItem from './components/dropdown/VDropdownItem.vue';
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
 import { VModalPlugin } from './components/modal/plugin';
 
 // Експортуємо компоненти
-export { VButton, VIcon, VLoader, VModal, VPagination, VCheckbox, VTable, VTableColumn };
+export { VButton, VIcon, VLoader, VModal, VPagination, VCheckbox, VTable, VTableColumn, VDropdown, VDropdownItem };
 
 // Експортуємо директиви
 export { tooltipDirective };
@@ -54,8 +56,21 @@ export type {
   SelectionChangeEventData,
 } from './components/table/types';
 
+// Експортуємо типи dropdown з явною типізацією
+export type {
+  DropdownProps,
+  DropdownItemProps,
+  DropdownEmits,
+  DropdownItemEmits,
+  DropdownExpose,
+  DropdownContext,
+  DropdownTriggerType,
+  DropdownPlacement,
+} from './components/dropdown/types';
+
 // Експортуємо константи
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
+export { DropdownContextKey } from './components/dropdown/types';
 
 // Експортуємо плагін модального вікна окремо
 export { VModalPlugin, modalManager } from './components/modal/plugin';
@@ -80,6 +95,8 @@ const VUIPlugin = {
     app.component(`${prefix}Checkbox`, VCheckbox);
     app.component(`${prefix}Table`, VTable);
     app.component(`${prefix}TableColumn`, VTableColumn);
+    app.component(`${prefix}Dropdown`, VDropdown);
+    app.component(`${prefix}DropdownItem`, VDropdownItem);
 
     // Реєструємо директиви
     app.directive('tooltip', tooltipDirective);

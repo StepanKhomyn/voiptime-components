@@ -331,14 +331,6 @@
     return value == null ? '' : String(value);
   };
 
-  // ОПТИМІЗАЦІЯ: Створюємо мемо-ключ для кожної комірки
-  const getCellMemoKey = (row: any, col: VTableColumnProps, rowIndex: number) => {
-    // Включаємо тільки значення колонки і стан виділення (якщо потрібно)
-    const cellValue = row[col.prop];
-    const isSelected = selectionComposable?.isRowSelected(row) || false;
-    return [cellValue, isSelected];
-  };
-
   //метод для сумарного рядку
   const summaryData = computed<Record<string, any>>(() => {
     if (!props.showSummary || !hasData.value) return {};
@@ -533,7 +525,6 @@
             </div>
           </td>
 
-          <!-- КРИТИЧНА ОПТИМІЗАЦІЯ: v-memo з точними залежностями -->
           <td
             v-for="(col, colIndex) in sortedColumns"
             :key="`${createRowKey(row, rowIndex)}-${col.prop}`"
@@ -546,7 +537,6 @@
                 'vt-table__td--pinned-right': col.pinnedRight,
               },
             ]"
-            v-memo="getCellMemoKey(row, col, rowIndex)"
           >
             <div
               class="vt-table__cell-content vt-table__cell-content--ellipsis"

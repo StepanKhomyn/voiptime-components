@@ -1,0 +1,63 @@
+@use '../../assets/fonts' as *;
+
+.v-dropdown {
+  display: inline-block;
+  position: relative;
+
+  &__trigger {
+    cursor: pointer;
+  }
+
+  &-menu {
+    @include vt-typography('vt-dropdown');
+    background: #FFFFFF;
+    border: 1px solid var(--color-gray-5);
+    box-shadow: 2px 2px 10px 0px #00000026;
+    border-radius: var(--radius-main);
+    padding: var(--vt-padding-base);
+    margin: 0;
+    min-width: 100px;
+    animation: dropdown-fade-in 0.2s ease;
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    gap: var(--vt-gap-sm);
+    padding: var(--vt-padding-sm);
+    border-radius: var(--radius-main);
+    flex-direction: row;
+    list-style: none;
+    cursor: pointer;
+    outline: none;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: var(--color-gray-2);
+
+    &:hover:not(.is-disabled) {
+      background: var(--color-gray-6);
+    }
+
+    &.is-disabled {
+      cursor: not-allowed;
+      color: #bbb;
+    }
+
+    &.v-dropdown-item--divided {
+      border-top: 1px solid #ebeef5;
+    }
+  }
+}
+
+
+@keyframes dropdown-fade-in {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
+}
