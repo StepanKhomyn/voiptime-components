@@ -1,8 +1,13 @@
 <script setup>
   import { ref } from 'vue';
-  import ButtonTest from './ButtonTest.vue';
+  import DemoButton from './DemoButton.vue';
   import DemoTable from './DemoTable.vue';
-  import IconsDemo from './IconsDemo.vue';
+  import DemoIcons from './DemoIcons.vue';
+  import DemoCheckbox from './DemoCheckbox.vue';
+  import DemoModal from './DemoModal.vue';
+  import DemoTooltip from './DemoTooltip.vue';
+  import DemoPagination from './DemoPagination.vue';
+  import DemoDropDown from './DemoDropDown.vue';
 
   const activeSlot = ref(null);
 
@@ -13,15 +18,20 @@
     { id: 4, name: 'Іконки', icon: '🎨' },
     { id: 5, name: 'Модальні вікна', icon: '🪟' },
     { id: 6, name: 'Пагінація', icon: '📄' },
-    { id: 7, name: 'Директиви', icon: '⚡' },
+    { id: 7, name: 'Тултіпи', icon: '💬' },
+    { id: 8, name: 'Дропдавн', icon: '⬇️' },
   ];
 </script>
 
 <template>
   <div class="container">
     <header class="header">
-      <h1 class="title">Vue Components Documentation</h1>
-      <p class="subtitle">Документація кастомних компонентів Vue 3.5 !!!11</p>
+      <h1 class="title">VoIPTime Components Documentation</h1>
+      <p class="subtitle">Документація кастомних компонентів Vue 3.5!</p>
+      <h3> Встановлення через NPM: <code>npm install voiptime-components</code></h3>
+      <h3>Встановлення через CDN:</h3>
+      <pre><code>&lt;script src="https://unpkg.com/voiptime-components/dist/index.umd.js"&gt;&lt;/script&gt;</code></pre>
+      <h3>Для роботи потрібно також імпортувати Vue з мінімальною версією 3.5</h3>
     </header>
 
     <div class="section-list">
@@ -43,9 +53,14 @@
       </div>
 
       <!-- Компоненти -->
-      <ButtonTest v-if="activeSlot === 1" />
+      <DemoButton v-if="activeSlot === 1" />
       <DemoTable v-if="activeSlot === 2" />
-      <IconsDemo v-if="activeSlot === 4" />
+      <DemoCheckbox v-if="activeSlot === 3" />
+      <DemoIcons v-if="activeSlot === 4" />
+      <DemoModal v-if="activeSlot === 5" />
+      <DemoPagination v-if="activeSlot === 6" />
+      <DemoTooltip v-if="activeSlot === 7" />
+      <DemoDropDown v-if="activeSlot === 8" />
       <!-- і т.д. -->
     </div>
   </div>

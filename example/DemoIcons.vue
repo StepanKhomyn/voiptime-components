@@ -130,14 +130,6 @@
               <VIcon name="filterSave" color="#ff6600" />
             </div>
           </div>
-
-          <div class="example">
-            <div class="example-title">Прямокутні іконки:</div>
-            <div class="example-content">
-              <VIcon name="arrowRight" :width="48" :height="24" />
-              <VIcon name="arrowRight" :width="32" :height="16" />
-            </div>
-          </div>
         </div>
       </div>
     </div>
