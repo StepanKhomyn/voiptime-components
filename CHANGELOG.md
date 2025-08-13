@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.20...v1.1.0) (2025-08-13)
+
+
+### Features
+
+* додано нові іконки змінено максимальну висоту дропдауну ([ffb600d](https://github.com/StepanKhomyn/voiptime-components/commit/ffb600d0b5cdd81b4554f0d3cbb2bb31693430e9))
+
 ## [1.0.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.19...v1.0.20) (2025-08-13)
 
 
