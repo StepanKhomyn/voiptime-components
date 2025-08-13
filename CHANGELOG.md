@@ -1,3 +1,10 @@
+## [1.0.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.18...v1.0.19) (2025-08-13)
+
+
+### Bug Fixes
+
+* fixed dropdown ([d152178](https://github.com/StepanKhomyn/voiptime-components/commit/d15217832feafa844225fea3d679abbbc6c8e1fb))
+
 ## [1.0.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.17...v1.0.18) (2025-08-13)
 
 
