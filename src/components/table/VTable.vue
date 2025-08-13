@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, onMounted, onUnmounted, provide, reactive, ref, watch } from 'vue';
+  import { computed, markRaw, onMounted, onUnmounted, provide, reactive, ref, shallowRef, watch } from 'vue';
   import type { SortDirection, SortState, VTableColumnProps, VTableEmits, VTableProps } from './types';
   import { useColumnResize, useTableColumns, useTableStyles } from './functions/composables';
   import { useTableSelection } from './functions/useTableSelection';
@@ -33,9 +33,6 @@
     default: undefined,
   });
 
-  // Видаляємо defineSlots - використаємо slots через useSlots
-  // defineSlots<VTableColumnSlots>();
-
   // Refs
   const columnRefs = ref<Record<string, HTMLElement>>({});
   const tableWrapperRef = ref<HTMLElement>();
@@ -44,12 +41,56 @@
   const internalColumns = reactive<VTableColumnProps[]>([]);
   const sortState = ref<SortState | null>(props.defaultSort || null);
 
+  // ОПТИМІЗАЦІЯ: Використовуємо shallowRef для даних, щоб уникнути глибокої реактивності
+  const internalData = shallowRef<any[]>([]);
+
+  // ОПТИМІЗАЦІЯ: Кешуємо хеші рядків для відстеження змін
+  const rowHashes = ref<Map<string, string>>(new Map());
+
+  // ОПТИМІЗАЦІЯ: Створюємо стабільні ключі для рядків
+  const createRowKey = (row: any, index: number): string => {
+    if (props.rowKey && row[props.rowKey] != null) {
+      return String(row[props.rowKey]);
+    }
+    return String(index);
+  };
+
+  // ОПТИМІЗАЦІЯ: Функція для створення хешу рядка
+  const createRowHash = (row: any): string => {
+    return JSON.stringify(row);
+  };
+
+  // ОПТИМІЗАЦІЯ: Оновлюємо внутрішні дані з відстеженням змін
+  const updateInternalData = (newData: any[]) => {
+    const newHashes = new Map<string, string>();
+
+    newData.forEach((row, index) => {
+      const key = createRowKey(row, index);
+      const hash = createRowHash(row);
+      newHashes.set(key, hash);
+    });
+
+    rowHashes.value = newHashes;
+    internalData.value = markRaw([...newData]); // markRaw для уникнення глибокої реактивності
+  };
+
+  // Слідкуємо за змінами в props.data
+  watch(
+    () => props.data,
+    newData => {
+      if (newData) {
+        updateInternalData(newData);
+      }
+    },
+    { immediate: true }
+  );
+
   // Computed для перевірки наявності defineModel
   const hasColumnsModel = computed(() => modelColumns.value !== undefined);
 
   // Computed для перевірки чи є дані
   const hasData = computed(() => {
-    return props.data && props.data.length > 0;
+    return internalData.value && internalData.value.length > 0;
   });
 
   // Для затримки при інфініті scroll
@@ -110,13 +151,13 @@
 
   // Computed - відсортовані дані
   const sortedData = computed(() => {
-    // Використовуємо internal колонки для сортування
-    return sortTableData(props.data, sortState.value, internalColumns);
+    // Використовуємо internal дані замість props.data
+    return sortTableData(internalData.value, sortState.value, internalColumns);
   });
 
   // Computed - всі дані для повного виділення
   const allDataComputed = computed(() => {
-    return props.allData || props.data;
+    return props.allData || internalData.value;
   });
 
   // Композабл для виділення (тільки якщо selectable=true)
@@ -374,6 +415,14 @@
     return value == null ? '' : String(value);
   };
 
+  // ОПТИМІЗАЦІЯ: Функція для перевірки, чи змінився рядок
+  const hasRowChanged = (row: any, index: number): boolean => {
+    const key = createRowKey(row, index);
+    const currentHash = createRowHash(row);
+    const previousHash = rowHashes.value.get(key);
+    return currentHash !== previousHash;
+  };
+
   //метод для сумарного рядку
   const summaryData = computed<Record<string, any>>(() => {
     // Не показувати summary якщо немає даних
@@ -444,6 +493,19 @@
     }
   };
 
+  // ОПТИМІЗАЦІЯ: Метод для оновлення конкретного рядка
+  const updateRow = (rowKey: string, updatedRow: any) => {
+    const currentData = [...internalData.value];
+    const rowIndex = currentData.findIndex((row, index) => {
+      return createRowKey(row, index) === rowKey;
+    });
+
+    if (rowIndex !== -1) {
+      currentData[rowIndex] = markRaw(updatedRow);
+      updateInternalData(currentData);
+    }
+  };
+
   // Ініціалізація при монтуванні
   onMounted(() => {
     initializeInternalColumns();
@@ -458,6 +520,7 @@
     getSelectionRows,
     setSelectionRows,
     resetInfinityScroll, // Додаємо метод для скидання infinity scroll
+    updateRow, // ОПТИМІЗАЦІЯ: Додаємо метод для оновлення конкретного рядка
   });
 </script>
 
@@ -546,11 +609,11 @@
           </td>
         </tr>
 
-        <!-- Рядки з даними -->
+        <!-- ОПТИМІЗАЦІЯ: Рядки з даними з покращеним мемоізуванням -->
         <tr
           v-else
           v-for="(row, rowIndex) in sortedData"
-          :key="getRowKey(row, rowIndex)"
+          :key="createRowKey(row, rowIndex)"
           :class="[
             'vt-table__row',
             {
@@ -578,9 +641,10 @@
             </div>
           </td>
 
+          <!-- ОПТИМІЗАЦІЯ: Покращене мемоізування колонок -->
           <td
             v-for="(col, colIndex) in sortedColumns"
-            :key="col.prop"
+            :key="`${createRowKey(row, rowIndex)}-${col.prop}`"
             :ref="el => setColumnRef(el as HTMLElement, col.prop)"
             :style="getColumnStyleWithContext(col, colIndex)"
             :class="[
@@ -590,7 +654,6 @@
                 'vt-table__td--pinned-right': col.pinnedRight,
               },
             ]"
-            v-memo="[row[col.prop]]"
           >
             <div
               class="vt-table__cell-content vt-table__cell-content--ellipsis"
