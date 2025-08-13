@@ -24,6 +24,9 @@
   const visible = ref(false);
   const timeoutPending = ref<number | null>(null);
 
+  // Масив для зберігання всіх скролабельних батьків
+  const scrollableParents = ref<Element[]>([]);
+
   // Стилі для позиціонування
   const menuStyle = ref({
     position: 'absolute' as const,
@@ -35,6 +38,35 @@
 
   // Слоти
   const slots = useSlots();
+
+  // Знаходження всіх скролабельних батьківських елементів
+  const getScrollableParents = (element: Element): Element[] => {
+    const parents: Element[] = [];
+    let parent = element.parentElement;
+
+    while (parent && parent !== document.body) {
+      const computedStyle = window.getComputedStyle(parent);
+      const overflowY = computedStyle.overflowY;
+      const overflowX = computedStyle.overflowX;
+
+      // Перевіряємо чи елемент може скролитися
+      if (
+        ['scroll', 'auto'].includes(overflowY) ||
+        ['scroll', 'auto'].includes(overflowX) ||
+        parent.scrollHeight > parent.clientHeight ||
+        parent.scrollWidth > parent.clientWidth
+      ) {
+        parents.push(parent);
+      }
+
+      parent = parent.parentElement;
+    }
+
+    // Додаємо window як останній "батьківський" елемент
+    parents.push(window as any);
+
+    return parents;
+  };
 
   // Позиціонування меню
   const updatePopper = async (): Promise<void> => {
@@ -80,13 +112,38 @@
     }
     if (left < 10) left = 10;
 
-    if (top + menuRect.height > window.innerHeight) {
+    if (top + menuRect.height > window.innerHeight + window.scrollY) {
       top = triggerRect.top + window.scrollY - menuRect.height - 5;
     }
-    if (top < 10) top = 10;
+    if (top < window.scrollY + 10) top = window.scrollY + 10;
 
     menuStyle.value.top = `${top}px`;
     menuStyle.value.left = `${left}px`;
+  };
+
+  // Додавання слухачів скролу до всіх батьківських елементів
+  const addScrollListeners = (): void => {
+    if (!triggerRef.value) return;
+
+    // Знаходимо всі скролабельні батьки
+    scrollableParents.value = getScrollableParents(triggerRef.value);
+
+    // Додаємо слухачі для кожного батька
+    scrollableParents.value.forEach(parent => {
+      parent.addEventListener('scroll', handleScroll, { passive: true });
+    });
+
+    // Додаємо слухач для resize
+    window.addEventListener('resize', handleScroll);
+  };
+
+  // Видалення слухачів скролу
+  const removeScrollListeners = (): void => {
+    scrollableParents.value.forEach(parent => {
+      parent.removeEventListener('scroll', handleScroll);
+    });
+    window.removeEventListener('resize', handleScroll);
+    scrollableParents.value = [];
   };
 
   // Показати меню
@@ -98,6 +155,7 @@
       async () => {
         visible.value = true;
         await updatePopper();
+        addScrollListeners(); // Додаємо слухачі після показу меню
         emit('visible-change', true);
       },
       props.trigger === 'hover' ? props.showTimeout : 0
@@ -112,6 +170,7 @@
     timeoutPending.value = window.setTimeout(
       () => {
         visible.value = false;
+        removeScrollListeners(); // Видаляємо слухачі при закритті меню
         emit('visible-change', false);
       },
       props.trigger === 'hover' ? props.hideTimeout : 0
@@ -209,14 +268,11 @@
 
   onMounted(() => {
     document.addEventListener('click', handleClickOutside);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleScroll);
   });
 
   onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside);
-    window.removeEventListener('scroll', handleScroll);
-    window.removeEventListener('resize', handleScroll);
+    removeScrollListeners();
     clearTimeout();
   });
 </script>
@@ -224,13 +280,13 @@
 <template>
   <div
     ref="dropdownRef"
-    class="v-dropdown"
+    class="vt-dropdown"
     @click="handleClick"
     @mouseenter="handleMouseEnter"
     @mouseleave="handleMouseLeave"
   >
     <!-- Trigger slot (default) -->
-    <div ref="triggerRef" class="v-dropdown__trigger">
+    <div ref="triggerRef" class="vt-dropdown__trigger">
       <slot />
     </div>
 
@@ -239,7 +295,7 @@
       <div
         ref="menuRef"
         :style="menuStyle"
-        class="v-dropdown-menu"
+        class="vt-dropdown-menu"
         @mouseenter="handleMenuMouseEnter"
         @mouseleave="handleMenuMouseLeave"
         @click.stop

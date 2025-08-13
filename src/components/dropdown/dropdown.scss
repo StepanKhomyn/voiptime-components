@@ -1,6 +1,6 @@
 @use '../../assets/fonts' as *;
 
-.v-dropdown {
+.vt-dropdown {
   display: inline-block;
   position: relative;
 
@@ -44,7 +44,7 @@
       color: #bbb;
     }
 
-    &.v-dropdown-item--divided {
+    &.vt-dropdown-item--divided {
       border-top: 1px solid #ebeef5;
     }
   }

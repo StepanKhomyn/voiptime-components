@@ -32,14 +32,14 @@
 
 <template>
   <li
-    class="v-dropdown-item"
+    class="vt-dropdown-item"
     :class="{
       'is-disabled': disabled,
-      'v-dropdown-item--divided': divided,
+      'vt-dropdown-item--divided': divided,
     }"
     @click="handleClick"
   >
-    <i v-if="icon" :class="icon" class="v-dropdown-item__icon"></i>
+    <i v-if="icon" :class="icon" class="vt-dropdown-item__icon"></i>
     <slot />
   </li>
 </template>
