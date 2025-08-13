@@ -1,3 +1,12 @@
+## [1.0.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.17...v1.0.18) (2025-08-13)
+
+
+### Bug Fixes
+
+* add dropdown component ([9981333](https://github.com/StepanKhomyn/voiptime-components/commit/9981333ea7624548fd41a76cae85ad64a3c91478))
+* add v-memo ([0a76d30](https://github.com/StepanKhomyn/voiptime-components/commit/0a76d30788f3110a37ac699989cc4e77328845a8))
+* add v-memo ([9e5e50f](https://github.com/StepanKhomyn/voiptime-components/commit/9e5e50f53455be6e8ed25ed1683b6cc7a0cc4e03))
+
 ## [1.0.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.16...v1.0.17) (2025-08-13)
 
 
