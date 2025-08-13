@@ -27,6 +27,10 @@
   // Масив для зберігання всіх скролабельних батьків
   const scrollableParents = ref<Element[]>([]);
 
+  // Стан видимості батьківського елемента
+  const parentVisible = ref(true);
+  const wasVisibleBeforeHiding = ref(false);
+
   // Стилі для позиціонування
   const menuStyle = ref({
     position: 'absolute' as const,
@@ -39,7 +43,74 @@
   // Слоти
   const slots = useSlots();
 
-  // Знаходження всіх скролабельних батьківських елементів
+  // Перевірка видимості trigger елемента
+  const isElementVisible = (element: Element): boolean => {
+    if (!element) return false;
+
+    const rect = element.getBoundingClientRect();
+
+    // Перевіряємо чи елемент взагалі має розміри
+    if (rect.width === 0 && rect.height === 0) return false;
+
+    // Перевіряємо чи елемент в межах вікна
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+    const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+
+    const isInViewport = rect.top < windowHeight && rect.bottom > 0 && rect.left < windowWidth && rect.right > 0;
+
+    if (!isInViewport) return false;
+
+    // Перевіряємо чи елемент не перекритий батьківськими контейнерами
+    let parent = element.parentElement;
+    while (parent && parent !== document.body) {
+      const parentRect = parent.getBoundingClientRect();
+      const parentStyle = window.getComputedStyle(parent);
+
+      // Якщо батьківський контейнер має overflow: hidden і елемент виходить за його межі
+      if (
+        parentStyle.overflow === 'hidden' ||
+        parentStyle.overflowY === 'hidden' ||
+        parentStyle.overflowX === 'hidden'
+      ) {
+        if (
+          rect.top >= parentRect.bottom ||
+          rect.bottom <= parentRect.top ||
+          rect.left >= parentRect.right ||
+          rect.right <= parentRect.left
+        ) {
+          return false;
+        }
+      }
+
+      parent = parent.parentElement;
+    }
+
+    return true;
+  };
+
+  // Перевірка видимості та управління станом дропдауну
+  const checkParentVisibility = (): void => {
+    if (!triggerRef.value) return;
+
+    const isVisible = isElementVisible(triggerRef.value);
+
+    if (parentVisible.value !== isVisible) {
+      parentVisible.value = isVisible;
+
+      if (!isVisible && visible.value) {
+        // Батьківський елемент став невидимим, ховаємо дропдаун
+        wasVisibleBeforeHiding.value = true;
+        visible.value = false;
+        emit('visible-change', false);
+      } else if (isVisible && wasVisibleBeforeHiding.value && !visible.value) {
+        // Батьківський елемент знову став видимим, показуємо дропдаун якщо він був відкритий
+        wasVisibleBeforeHiding.value = false;
+        visible.value = true;
+        updatePopper();
+        emit('visible-change', true);
+      }
+    }
+  };
   const getScrollableParents = (element: Element): Element[] => {
     const parents: Element[] = [];
     let parent = element.parentElement;
@@ -150,10 +221,17 @@
   const show = (): void => {
     if (props.disabled || visible.value) return;
 
+    // Перевіряємо видимість батьківського елемента перед показом
+    if (!triggerRef.value || !isElementVisible(triggerRef.value)) {
+      return;
+    }
+
     clearTimeout();
     timeoutPending.value = window.setTimeout(
       async () => {
         visible.value = true;
+        parentVisible.value = true;
+        wasVisibleBeforeHiding.value = false;
         await updatePopper();
         addScrollListeners(); // Додаємо слухачі після показу меню
         emit('visible-change', true);
@@ -170,6 +248,7 @@
     timeoutPending.value = window.setTimeout(
       () => {
         visible.value = false;
+        wasVisibleBeforeHiding.value = false; // Скидаємо стан при ручному закритті
         removeScrollListeners(); // Видаляємо слухачі при закритті меню
         emit('visible-change', false);
       },
@@ -254,8 +333,11 @@
 
   // Оновлення позиції при скролі
   const handleScroll = (): void => {
-    if (visible.value) {
-      updatePopper();
+    if (visible.value || wasVisibleBeforeHiding.value) {
+      checkParentVisibility();
+      if (visible.value) {
+        updatePopper();
+      }
     }
   };
 
@@ -291,7 +373,7 @@
     </div>
 
     <!-- Menu через Teleport -->
-    <Teleport to="body" v-if="visible">
+    <Teleport to="body" v-if="visible && parentVisible">
       <div
         ref="menuRef"
         :style="menuStyle"
