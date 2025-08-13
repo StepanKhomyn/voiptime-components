@@ -537,6 +537,7 @@
                 'vt-table__td--pinned-right': col.pinnedRight,
               },
             ]"
+            v-memo="row[col.prop]"
           >
             <div
               class="vt-table__cell-content vt-table__cell-content--ellipsis"
