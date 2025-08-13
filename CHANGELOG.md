@@ -1,3 +1,10 @@
+## [1.0.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.15...v1.0.16) (2025-08-13)
+
+
+### Bug Fixes
+
+* change vtable reactivity ([b364965](https://github.com/StepanKhomyn/voiptime-components/commit/b3649655c4bc9c2848c2670f15df584b6db3ea34))
+
 ## [1.0.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.14...v1.0.15) (2025-08-12)
 
 
