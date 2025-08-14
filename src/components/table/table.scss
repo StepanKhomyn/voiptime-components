@@ -289,7 +289,7 @@
     }
 
     &-active {
-      color: var(--color-primary-main);
+      color: var(--color-primary-main) !important;
     }
   }
 }

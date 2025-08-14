@@ -1,13 +1,13 @@
 <script setup>
   import { ref } from 'vue';
   import DemoButton from './DemoButton.vue';
-  import DemoTable from './DemoTable.vue';
   import DemoIcons from './DemoIcons.vue';
   import DemoCheckbox from './DemoCheckbox.vue';
   import DemoModal from './DemoModal.vue';
   import DemoTooltip from './DemoTooltip.vue';
   import DemoPagination from './DemoPagination.vue';
   import DemoDropDown from './DemoDropDown.vue';
+  import DemoTable from './DemoTable.vue';
 
   const activeSlot = ref(null);
 
