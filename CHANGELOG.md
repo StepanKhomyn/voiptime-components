@@ -1,3 +1,10 @@
+## [1.1.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.1.0...v1.1.1) (2025-08-13)
+
+
+### Bug Fixes
+
+* додано деякі компоненти на опис документації ([e95c24a](https://github.com/StepanKhomyn/voiptime-components/commit/e95c24a11920a4288f29f3aa23269ccab45f60f7))
+
 # [1.1.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.0.20...v1.1.0) (2025-08-13)
 
 
