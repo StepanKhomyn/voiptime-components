@@ -220,16 +220,7 @@
 
     // Якщо передана користувацька іконка, підсвічуємо її кольором стану
     if (props.prefixIcon) {
-      switch (iconStatus) {
-        case 'error':
-          return `${baseClass} vt-input__icon--error`;
-        case 'warning':
-          return `${baseClass} vt-input__icon--warning`;
-        case 'success':
-          return `${baseClass} vt-input__icon--success`;
-        default:
-          return baseClass;
-      }
+      return baseClass;
     }
 
     // Для дефолтних іконок стану
@@ -279,7 +270,7 @@
 
   const inputClasses = computed(() => [
     'vt-input',
-    `vt-input--${props.size}`,
+    props.size ? `vt-input--${props.size}` : 'vt-input--medium',
     `vt-input--${currentStatus.value}`,
     {
       'vt-input--disabled': props.disabled,
@@ -545,6 +536,7 @@
   onUnmounted(() => {
     if (resizeObserver) {
       resizeObserver.disconnect();
+      resizeObserver = null;
     }
   });
 </script>

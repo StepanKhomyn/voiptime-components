@@ -1,35 +1,59 @@
-import type { IconName } from '../../icons';
+export type VtInputSize = 'small' | 'medium' | 'large';
+export type VtInputStatus = 'default' | 'success' | 'error' | 'warning';
+export type VtInputType = 'text' | 'email' | 'password' | 'number' | 'url' | 'tel' | 'search' | 'textarea';
+export type VtInputResize = 'none' | 'both' | 'horizontal' | 'vertical';
 
-export type InputType = 'text' | 'password' | 'email' | 'number' | 'url' | 'textarea';
-export type InputStatus = 'default' | 'error' | 'success' | 'warning';
+export interface VtInputAutosizeConfig {
+  minRows?: number;
+  maxRows?: number;
+}
 
-export interface ValidationResult {
+export interface VtInputValidationResult {
   isValid: boolean;
   errors: string[];
 }
 
 export interface VtInputProps {
-  // Основні пропси
+  // Основні властивості
   modelValue?: string | number;
-  type?: InputType;
-  placeholder?: string;
+  type?: VtInputType;
+  size?: VtInputSize;
+  status?: VtInputStatus;
+
+  // Стани
   disabled?: boolean;
   clearable?: boolean;
+  showPassword?: boolean;
 
-  // Розміри та вигляд
-  status?: InputStatus;
+  // Текст і лейбли
+  label?: string;
+  placeholder?: string;
+  helperText?: string;
+  errorMessage?: string;
+
+  // HTML атрибути
+  id?: string;
+  name?: string;
+  tabindex?: number;
+  autocomplete?: string;
 
   // Іконки
-  prefixIcon?: IconName;
-  suffixIcon?: IconName;
+  prefixIcon?: string;
+  suffixIcon?: string;
 
-  // Валідація та обмеження
-  maxlength?: number;
-  minlength?: number;
+  // Textarea специфічні
+  rows?: number;
+  cols?: number;
+  resize?: VtInputResize;
+  autosize?: boolean | VtInputAutosizeConfig;
+
+  // Валідація
   required?: boolean;
-  pattern?: string;
+  validateOnInput?: boolean;
+  validateOnBlur?: boolean;
+  showAllErrors?: boolean;
 
-  // Валідаційні повідомлення
+  // Повідомлення валідації
   requiredMessage?: string;
   emailMessage?: string;
   urlMessage?: string;
@@ -41,48 +65,24 @@ export interface VtInputProps {
   patternMessage?: string;
   customValidatorMessage?: string;
 
-  // Валідаційні налаштування
-  validateOnInput?: boolean;
-  validateOnBlur?: boolean;
-  showAllErrors?: boolean;
-
-  // Кастомний валідатор
-  customValidator?: (value: string | number) => boolean;
-
-  // Textarea специфічні
-  rows?: number;
-  cols?: number;
-  autosize?: boolean | { minRows?: number; maxRows?: number };
-  resize?: 'none' | 'both' | 'horizontal' | 'vertical';
-
-  // Password специфічні
-  showPassword?: boolean;
-
-  // Number специфічні
+  // Валідаційні правила
+  minlength?: number;
+  maxlength?: number;
   min?: number;
   max?: number;
   step?: number;
-
-  // Додаткові атрибути
-  autocomplete?: string;
-  name?: string;
-  id?: string;
-  tabindex?: number;
-
-  // Стилізація
-  label?: string;
-  helperText?: string;
-  errorMessage?: string;
+  pattern?: string;
+  customValidator?: (value: string | number) => boolean;
 }
 
 export interface VtInputEmits {
   'update:modelValue': [value: string | number];
-  focus: [event: FocusEvent];
-  blur: [event: FocusEvent];
   input: [event: Event];
   change: [event: Event];
+  focus: [event: FocusEvent];
+  blur: [event: FocusEvent];
   clear: [];
-  validation: [result: ValidationResult];
+  validation: [result: VtInputValidationResult];
   keydown: [event: KeyboardEvent];
   keyup: [event: KeyboardEvent];
   keypress: [event: KeyboardEvent];
@@ -90,25 +90,19 @@ export interface VtInputEmits {
 }
 
 export interface VtInputMethods {
-  focus: () => void;
-  blur: () => void;
-  select: () => void;
-  clear: () => void;
-  validate: () => boolean;
-  clearValidation: () => void;
-  getInputElement: () => HTMLInputElement | HTMLTextAreaElement | null;
-  getValidationState: () => ValidationResult;
-}
+  focus(): void;
 
-// Утилітні типи для валідації
-export interface ValidationRule {
-  validator: (value: string | number) => boolean;
-  message: string;
-}
+  blur(): void;
 
-export interface ValidationConfig {
-  rules?: ValidationRule[];
-  validateOnInput?: boolean;
-  validateOnBlur?: boolean;
-  showAllErrors?: boolean;
+  select(): void;
+
+  clear(): void;
+
+  validate(): boolean;
+
+  clearValidation(): void;
+
+  getInputElement(): HTMLInputElement | HTMLTextAreaElement | null;
+
+  getValidationState(): VtInputValidationResult;
 }
