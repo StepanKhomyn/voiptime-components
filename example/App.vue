@@ -8,6 +8,8 @@
   import DemoPagination from './DemoPagination.vue';
   import DemoDropDown from './DemoDropDown.vue';
   import DemoTable from './DemoTable.vue';
+  import DemoDatePicker from './DemoDatePicker.vue';
+  import DemoInput from './DemoInput.vue';
 
   const activeSlot = ref(null);
 
@@ -20,6 +22,8 @@
     { id: 6, name: 'Пагінація', icon: '📄' },
     { id: 7, name: 'Тултіпи', icon: '💬' },
     { id: 8, name: 'Дропдавн', icon: '⬇️' },
+    { id: 9, name: 'Дата пікер', icon: '⬇️' },
+    { id: 10, name: 'Інпут', icon: '⬇️' },
   ];
 </script>
 
@@ -61,6 +65,8 @@
       <DemoPagination v-if="activeSlot === 6" />
       <DemoTooltip v-if="activeSlot === 7" />
       <DemoDropDown v-if="activeSlot === 8" />
+      <DemoDatePicker v-if="activeSlot === 9" />
+      <DemoInput v-if="activeSlot === 10" />
       <!-- і т.д. -->
     </div>
   </div>

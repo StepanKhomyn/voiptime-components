@@ -37,16 +37,23 @@
         transform: scale(0.98);
       }
 
-      &--drop-before {
-        border-top: 3px solid var(--color-primary-main, #409eff);
-        margin-top: -2px;
-        padding-top: calc(var(--vt-padding-sm) - 1px);
+      &--drop-before::before,
+      &--drop-after::after {
+        content: '';
+        position: absolute;
+        left: 4px; // трохи відступити, щоб видно було закруглення
+        right: 4px;
+        height: 3px;
+        background-color: var(--color-primary-main, #409eff);
+        border-radius: 3px; // закруглені краї лінії
       }
 
-      &--drop-after {
-        border-bottom: 3px solid var(--color-primary-main, #409eff);
-        margin-bottom: -2px;
-        padding-bottom: calc(var(--vt-padding-sm) - 1px);
+      &--drop-before::before {
+        top: 0;
+      }
+
+      &--drop-after::after {
+        bottom: 0;
       }
 
       &-icon {

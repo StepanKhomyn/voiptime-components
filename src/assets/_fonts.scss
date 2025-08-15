@@ -64,6 +64,13 @@
   --vt-checkbox-font-size: var(--font-size-base);
   --vt-checkbox-line-height: 100%;
   --vt-checkbox-letter-spacing: 0%;
+
+  // Input
+  --vt-input-font-family: var(--font-secondary);
+  --vt-input-font-weight: var(--font-weight-regular);
+  --vt-input-font-size: var(--font-size-sm);
+  --vt-input-line-height: 100%;
+  --vt-input-letter-spacing: 0%;
 }
 
 @font-face {

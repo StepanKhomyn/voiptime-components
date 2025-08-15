@@ -30,6 +30,13 @@ import FilterMultiselectIcon from './filter/FilterMultiselectIcon.vue';
 import FilterNewIcon from './filter/FilterNewIcon.vue';
 import FilterResetIcon from './filter/FilterResetIcon.vue';
 import FilterSaveIcon from './filter/FilterSaveIcon.vue';
+import AlertCircleIcon from './input/AlertCircleIcon.vue';
+import AlertTriangleIcon from './input/AlertTriangleIcon.vue';
+import CheckCircleIcon from './input/CheckCircleIcon.vue';
+import EmailIcon from './input/EmailIcon.vue';
+import EyeClosedIcon from './input/EyeClosedIcon.vue';
+import EyeOpenedIcon from './input/EyeOpenedIcon.vue';
+import UrlIcon from './input/UrlIcon.vue';
 import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
 import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
 import EmptyIcon from './table/EmptyIcon.vue';
@@ -76,6 +83,15 @@ export const icons = {
   filterNew: FilterNewIcon,
   filterReset: FilterResetIcon,
   filterSave: FilterSaveIcon,
+
+  // input icons
+  alertCircle: AlertCircleIcon,
+  alertTriangle: AlertTriangleIcon,
+  checkCircle: CheckCircleIcon,
+  email: EmailIcon,
+  eyeClosed: EyeClosedIcon,
+  eyeOpened: EyeOpenedIcon,
+  url: UrlIcon,
 
   // table icons
   columnInsert: ColumnInsertIcon,
