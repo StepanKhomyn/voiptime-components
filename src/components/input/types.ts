@@ -1,3 +1,5 @@
+import type { IconName } from '@/icons';
+
 export type VtInputSize = 'small' | 'medium' | 'large';
 export type VtInputStatus = 'default' | 'success' | 'error' | 'warning';
 export type VtInputType = 'text' | 'email' | 'password' | 'number' | 'url' | 'tel' | 'search' | 'textarea';
@@ -38,8 +40,8 @@ export interface VtInputProps {
   autocomplete?: string;
 
   // Іконки
-  prefixIcon?: string;
-  suffixIcon?: string;
+  prefixIcon?: IconName;
+  suffixIcon?: IconName;
 
   // Textarea специфічні
   rows?: number;
