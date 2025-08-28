@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.1.2...v1.2.0) (2025-08-15)
+
+
+### Bug Fixes
+
+* виправлено білд інпуту ([ad2df70](https://github.com/StepanKhomyn/voiptime-components/commit/ad2df704be15f1510e81bc2242d98d6e825f995e))
+* виправлено білд інпуту 2 ([e3f4caf](https://github.com/StepanKhomyn/voiptime-components/commit/e3f4caf93f99939dcba1fd9beb0bd3785a3f2c45))
+
+
+### Features
+
+* Додано компонент інпута ([ee6be66](https://github.com/StepanKhomyn/voiptime-components/commit/ee6be66f2262b79cc81a4205d78b9453f660c235))
+
 ## [1.1.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.1.1...v1.1.2) (2025-08-14)
 
 
