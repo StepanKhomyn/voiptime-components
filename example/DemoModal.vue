@@ -8,10 +8,10 @@
         <pre class="code">
           // main.ts
           import { createApp } from 'vue';
-          import { VModalPlugin } from '@/components/modal/plugin';
+          import VoiptimeComponents from 'voiptime-components';
 
           const app = createApp(App);
-          app.use(VModalPlugin);
+          app.use(VoiptimeComponents, { modal: true });
           app.mount('#app');`);
         </pre>
 
@@ -251,18 +251,18 @@
       </ul>
     </VModal>
 
-    <VModal v-model="modals.noClose" title="Без кнопки X" :showCloseButton="false">
+    <VModal v-model="modals.noClose" :showCloseButton="false" title="Без кнопки X">
       <p>Це вікно без кнопки закриття. Клікніть поза вікном для закриття.</p>
     </VModal>
 
-    <VModal v-model="modals.noBackdrop" title="Без backdrop" :closeOnBackdropClick="false">
+    <VModal v-model="modals.noBackdrop" :closeOnBackdropClick="false" title="Без backdrop">
       <p>Це вікно не закривається при кліку поза ним.</p>
       <VButton type="danger" @click="modals.noBackdrop = false">Закрити</VButton>
     </VModal>
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { getCurrentInstance, reactive, ref } from 'vue';
   import VModal from '@/components/modal/VModal.vue';
   import VButton from '@/components/button/VButton.vue';
