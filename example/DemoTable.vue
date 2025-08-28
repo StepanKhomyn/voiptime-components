@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, ref, watch } from 'vue';
   import VTable from '@/components/table/VTable.vue';
   import VTableColumn from '@/components/table/VTableColumn.vue';
@@ -661,23 +661,23 @@
         <h3>Дефолтна таблиця</h3>
         <div class="table-block">
           <VTable :data="currentPageData.slice(0, 5)">
-            <VTableColumn prop="id" label="ID" />
-            <VTableColumn prop="name" label="Ім'я">
+            <VTableColumn label="ID" prop="id" />
+            <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">
                 <div style="color: #0c5460">
                   {{ row.name }}
                 </div>
               </template>
             </VTableColumn>
-            <VTableColumn prop="status" label="Статус" />
-            <VTableColumn prop="date" label="Дата" />
-            <VTableColumn prop="score" label="Рахунок" />
+            <VTableColumn label="Статус" prop="status" />
+            <VTableColumn label="Дата" prop="date" />
+            <VTableColumn label="Рахунок" prop="score" />
           </VTable>
         </div>
       </div>
       <div class="container-item-example">
         <h3 :class="{ collapsed: codeCollapsed.defaultTable }" @click="toggleCode('defaultTable')"> Код </h3>
-        <div class="container-item-code" :class="{ collapsed: codeCollapsed.defaultTable }">
+        <div :class="{ collapsed: codeCollapsed.defaultTable }" class="container-item-code">
           <pre class="code"><code>&lt;VTable :data="dataTable"&gt;
   &lt;VTableColumn prop="id" label="ID" /&gt;
   &lt;VTableColumn prop="name" label="Ім'я"&gt;
@@ -726,39 +726,39 @@
         <div class="table-block">
           <VTable
             ref="tableRef"
-            :data="currentPageData"
             :all-data="[]"
+            :data="currentPageData"
             :max-height="400"
+            :summary-method="getSummaries"
             selectable
             selection-key="id"
             show-summary
-            :summary-method="getSummaries"
             @selection-change="handleSelectionChange"
             @row-click="handleRowClick"
             @sort-change="handleTableSort"
             @columns-change="handleColumnsChange"
           >
-            <VTableColumn prop="id" label="ID" />
-            <VTableColumn prop="name" label="Ім'я">
+            <VTableColumn label="ID" prop="id" />
+            <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">
                 <div style="color: #0c5460; font-weight: 600">
                   {{ row.name }}
                 </div>
               </template>
             </VTableColumn>
-            <VTableColumn prop="status" label="Статус">
+            <VTableColumn label="Статус" prop="status">
               <template #status="{ row }">
-                <span class="status-badge" :class="`status-${row.status}`">
+                <span :class="`status-${row.status}`" class="status-badge">
                   {{ getStatusLabel(row.status) }}
                 </span>
               </template>
             </VTableColumn>
-            <VTableColumn prop="date" label="Дата" />
-            <VTableColumn prop="score" label="Рахунок">
+            <VTableColumn label="Дата" prop="date" />
+            <VTableColumn label="Рахунок" prop="score">
               <template #score="{ row }">
                 <div class="score-cell">
                   <div class="score-bar">
-                    <div class="score-fill" :style="{ width: `${row.score}%` }"></div>
+                    <div :style="{ width: `${row.score}%` }" class="score-fill"></div>
                   </div>
                   <span class="score-text">{{ row.score }}</span>
                 </div>
@@ -770,10 +770,10 @@
         <!-- Пагінація -->
         <div class="pagination-container">
           <VPagination
-            :total-items="totalItems"
-            :page-size="pageSize"
             :current-page="currentPage"
+            :page-size="pageSize"
             :page-size-options="[5, 10, 15, 20]"
+            :total-items="totalItems"
             @update:current-page="handlePageChange"
             @update:page-size="handlePageSizeChange"
             @page-change="handlePaginationChange"
@@ -783,7 +783,7 @@
 
       <div class="container-item-example">
         <h3 :class="{ collapsed: codeCollapsed.paginatedTable }" @click="toggleCode('paginatedTable')"> Код </h3>
-        <div class="container-item-code" :class="{ collapsed: codeCollapsed.paginatedTable }">
+        <div :class="{ collapsed: codeCollapsed.paginatedTable }" class="container-item-code">
           <pre class="code"><code>&lt;!-- Кнопки управління --&gt;
 &lt;div class="table-controls"&gt;
   &lt;button @click="selectAll"&gt;Виділити всі на сторінці&lt;/button&gt;
@@ -868,28 +868,28 @@ const handleSelectionChange = (data: SelectionChangeEventData) => {
         <h3>Управління колонками таблиці</h3>
         <div class="table-block">
           <VTable
-            :data="sampleColumnData"
             :columns-selector="columnGroups"
+            :data="sampleColumnData"
             @column-pin="columnPinMethod"
             @column-resize="columnResizeMethod"
             @column-visibility="columnVisibilityMethod"
             @columns-change="columnChangeMethod"
           >
-            <VTableColumn prop="id" label="ID" />
-            <VTableColumn prop="name" label="Ім'я">
+            <VTableColumn label="ID" prop="id" />
+            <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">
                 <div style="color: #0c5460">
                   {{ row.name }}
                 </div>
               </template>
             </VTableColumn>
-            <VTableColumn prop="email" label="Email" />
+            <VTableColumn label="Email" prop="email" />
           </VTable>
         </div>
       </div>
       <div class="container-item-example">
         <h3 :class="{ collapsed: codeCollapsed.columnActionTable }" @click="toggleCode('columnActionTable')"> Код </h3>
-        <div class="container-item-code" :class="{ collapsed: codeCollapsed.columnActionTable }">
+        <div :class="{ collapsed: codeCollapsed.columnActionTable }" class="container-item-code">
           <pre class="code">
 &lt;template&gt;
   &lt;VTable
@@ -1194,6 +1194,16 @@ const columnChangeMethod = (columns) => {
               <td><code>Record&lt;string, any&gt;[]</code></td>
               <td>-</td>
               <td>Всі дані для повного виділення (якщо відрізняються від data)</td>
+            </tr>
+            <tr>
+              <td>
+                <code>hideHeader</code>
+              </td>
+              <td>
+                <code>boolean</code>
+              </td>
+              <td> false </td>
+              <td> Приховує повністю хедер таблиці </td>
             </tr>
           </tbody>
         </table>

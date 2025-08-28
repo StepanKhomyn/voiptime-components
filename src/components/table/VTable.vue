@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, onMounted, onUnmounted, provide, reactive, ref, watch } from 'vue';
   import type { SortDirection, SortState, VTableColumnProps, VTableEmits, VTableProps } from './types';
   import { useColumnResize, useTableColumns, useTableStyles } from './functions/composables';
@@ -18,6 +18,7 @@
     maxHeight: undefined,
     selectionKey: 'id',
     rowKey: 'id',
+    hideHeader: false,
     defaultSelection: () => [],
     allData: undefined,
     columnsSelector: () => [],
@@ -413,19 +414,19 @@
 </script>
 
 <template>
-  <div ref="tableWrapperRef" class="vt-table-wrapper" :style="getTableWrapperStyle()" @scroll="handleScroll">
+  <div ref="tableWrapperRef" :style="getTableWrapperStyle()" class="vt-table-wrapper" @scroll="handleScroll">
     <slot />
     <table class="vt-table">
-      <thead>
+      <thead v-if="!props.hideHeader">
         <tr>
           <th
             v-if="props.selectable"
-            class="vt-table__th vt-table__th--selection"
-            :style="getSelectionColumnHeaderStyle()"
             :class="{
               'vt-table__th--sticky': props.maxHeight,
               'vt-table__th--pinned-left': true,
             }"
+            :style="getSelectionColumnHeaderStyle()"
+            class="vt-table__th vt-table__th--selection"
           >
             <div class="vt-th__content">
               <VCheckbox
@@ -441,7 +442,6 @@
             v-for="(col, index) in sortedColumns"
             :key="col.prop"
             :ref="el => setColumnRef(el as HTMLElement, col.prop)"
-            :style="getHeaderStyleWithContext(col, index)"
             :class="[
               'vt-table__th',
               {
@@ -451,6 +451,7 @@
                 'vt-table__th--sortable': col.sortable,
               },
             ]"
+            :style="getHeaderStyleWithContext(col, index)"
           >
             <div class="vt-th__content">
               <div class="vt-th__label">
@@ -459,28 +460,28 @@
 
               <div v-if="col.sortable" class="vt-th__sortable">
                 <VIcon
-                  name="arrowTop"
                   :class="getSortIconClasses(col, sortState).asc"
+                  name="arrowTop"
                   @click.stop="handleSort(col, 'asc')"
                 />
                 <VIcon
-                  name="arrowDown"
                   :class="getSortIconClasses(col, sortState).desc"
+                  name="arrowDown"
                   @click.stop="handleSort(col, 'desc')"
                 />
               </div>
 
               <ColumnActions
                 v-if="col.actionColumn"
-                :column="col"
                 :all-columns="sortedColumns"
+                :column="col"
                 :columnsSelector="props.columnsSelector"
                 @pin="handleColumnPin"
                 @update-columns="handleColumnsUpdate"
               />
             </div>
 
-            <div class="vt-table__resizer" :data-resizer="col.prop" @mousedown="e => handleMouseDown(e, col)" />
+            <div :data-resizer="col.prop" class="vt-table__resizer" @mousedown="e => handleMouseDown(e, col)" />
           </th>
         </tr>
       </thead>
@@ -488,7 +489,7 @@
         <tr v-if="!hasData" class="vt-table__empty-row">
           <td :colspan="sortedColumns.length + (props.selectable ? 1 : 0)" class="vt-table__empty-cell">
             <div class="vt-table__empty-content">
-              <VIcon name="empty" class="vt-table__empty-icon" />
+              <VIcon class="vt-table__empty-icon" name="empty" />
               <span class="vt-table__empty-text">Немає даних!</span>
             </div>
           </td>
@@ -496,8 +497,8 @@
 
         <!-- МАКСИМАЛЬНА ОПТИМІЗАЦІЯ: Рядки з точною мемоізацією -->
         <tr
-          v-else
           v-for="(row, rowIndex) in sortedData"
+          v-else
           :key="createRowKey(row, rowIndex)"
           :class="[
             'vt-table__row',
@@ -511,11 +512,11 @@
         >
           <td
             v-if="props.selectable"
-            class="vt-table__td vt-table__td--selection"
-            :style="getSelectionColumnStyle()"
             :class="{
               'vt-table__td--pinned-left': true,
             }"
+            :style="getSelectionColumnStyle()"
+            class="vt-table__td vt-table__td--selection"
           >
             <div class="vt-table__cell-content">
               <VCheckbox
@@ -529,7 +530,6 @@
             v-for="(col, colIndex) in sortedColumns"
             :key="`${createRowKey(row, rowIndex)}-${col.prop}`"
             :ref="el => setColumnRef(el as HTMLElement, col.prop)"
-            :style="getColumnStyleWithContext(col, colIndex)"
             :class="[
               'vt-table__td',
               {
@@ -537,18 +537,19 @@
                 'vt-table__td--pinned-right': col.pinnedRight,
               },
             ]"
+            :style="getColumnStyleWithContext(col, colIndex)"
           >
             <div
-              class="vt-table__cell-content vt-table__cell-content--ellipsis"
               v-tooltip="col.showOverflowTooltip ? getTooltipText(row, col) : null"
+              class="vt-table__cell-content vt-table__cell-content--ellipsis"
             >
               <component
-                v-if="col.renderSlot"
                 :is="() => renderTableSlot(col.renderSlot, { row, column: col, value: row[col.prop], index: rowIndex })"
+                v-if="col.renderSlot"
               />
               <span v-else>{{ row[col.prop] }}</span>
             </div>
-            <div class="vt-table__resizer" :data-resizer="col.prop" @mousedown="e => handleMouseDown(e, col)" />
+            <div :data-resizer="col.prop" class="vt-table__resizer" @mousedown="e => handleMouseDown(e, col)" />
           </td>
         </tr>
       </tbody>
@@ -557,11 +558,11 @@
         <tr>
           <td
             v-if="props.selectable"
-            class="vt-table__td"
-            :style="getSelectionColumnFooterStyle()"
             :class="{
               'vt-table__td--pinned-left': true,
             }"
+            :style="getSelectionColumnFooterStyle()"
+            class="vt-table__td"
           >
             <div class="vt-table__cell-content vt-table__cell-content--summary"></div>
           </td>
@@ -569,7 +570,6 @@
           <td
             v-for="(col, colIndex) in sortedColumns"
             :key="col.prop"
-            :style="getFooterStyleWithContext(col, colIndex)"
             :class="[
               'vt-table__td',
               {
@@ -577,6 +577,7 @@
                 'vt-table__td--pinned-right': col.pinnedRight,
               },
             ]"
+            :style="getFooterStyleWithContext(col, colIndex)"
           >
             <div class="vt-table__cell-content vt-table__cell-content--summary">
               {{ summaryData[col.prop] }}

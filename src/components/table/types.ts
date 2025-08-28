@@ -104,6 +104,8 @@ export interface VTableProps {
   // Опціональний v-model для колонок
   /** Конфігурація колонок */
   columns?: VTableColumnProps[];
+
+  hideHeader?: boolean;
 }
 
 // Явно типізуємо emits interface
