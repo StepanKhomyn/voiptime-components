@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.2.0...v1.3.0) (2025-08-28)
+
+
+### Features
+
+* Додано селект та багато іконок ([1202d53](https://github.com/StepanKhomyn/voiptime-components/commit/1202d53e8e3c5d4a00fa11331bd5cf75f573cb53))
+
 # [1.2.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.1.2...v1.2.0) (2025-08-15)
 
 
