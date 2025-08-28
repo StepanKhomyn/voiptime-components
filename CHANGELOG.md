@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.1...v1.3.2) (2025-08-28)
+
+
+### Bug Fixes
+
+* додано hideHeader - для приховування хедеру таблиці ([3f8e848](https://github.com/StepanKhomyn/voiptime-components/commit/3f8e84870ed906721510f0a61ab77829bf73932f))
+
 ## [1.3.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.0...v1.3.1) (2025-08-28)
 
 
