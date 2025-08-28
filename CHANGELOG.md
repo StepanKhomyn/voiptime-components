@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.0...v1.3.1) (2025-08-28)
+
+
+### Bug Fixes
+
+* додано до реєстрації інпут та селект ([2a787eb](https://github.com/StepanKhomyn/voiptime-components/commit/2a787eb7d0d7d4bfc0bab8de3bfe1e8a1565d431))
+
 # [1.3.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.2.0...v1.3.0) (2025-08-28)
 
 
