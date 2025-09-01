@@ -69,6 +69,7 @@
   --vt-input-font-family: var(--font-secondary);
   --vt-input-font-weight: var(--font-weight-regular);
   --vt-input-font-size: var(--font-size-sm);
+  --vt-input-line-height: 100%;
   --vt-input-letter-spacing: 0%;
 }
 
@@ -100,6 +101,7 @@
   font-family: var(--#{$prefix}-font-family);
   font-weight: var(--#{$prefix}-font-weight);
   font-size: var(--#{$prefix}-font-size);
+  line-height: var(--#{$prefix}-line-height);
   letter-spacing: var(--#{$prefix}-letter-spacing);
   vertical-align: var(--#{$prefix}-vertical-align);
 }
