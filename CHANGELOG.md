@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.3...v1.3.4) (2025-09-01)
+
+
+### Bug Fixes
+
+* Add line height to input ([a2a7686](https://github.com/StepanKhomyn/voiptime-components/commit/a2a768623fd1f3f6b3a3fcda71541911c7fadce7))
+
 ## [1.3.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.2...v1.3.3) (2025-09-01)
 
 
