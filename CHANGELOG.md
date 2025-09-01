@@ -1,3 +1,10 @@
+## [1.3.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.5...v1.3.6) (2025-09-01)
+
+
+### Bug Fixes
+
+* додано min-height на інпут2 ([f156c51](https://github.com/StepanKhomyn/voiptime-components/commit/f156c51dde5463ccf8d19b0335f84e0a6a64554b))
+
 ## [1.3.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.4...v1.3.5) (2025-09-01)
 
 
