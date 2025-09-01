@@ -1,3 +1,10 @@
+## [1.3.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.2...v1.3.3) (2025-09-01)
+
+
+### Bug Fixes
+
+* виправелно висоту інпута ([6c63cd0](https://github.com/StepanKhomyn/voiptime-components/commit/6c63cd0c30074b480f6341ab6a8200bde9e08330))
+
 ## [1.3.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.1...v1.3.2) (2025-08-28)
 
 
