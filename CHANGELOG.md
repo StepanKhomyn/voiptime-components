@@ -1,3 +1,11 @@
+## [1.4.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.4.1...v1.4.2) (2025-09-09)
+
+
+### Bug Fixes
+
+* виправлено реактивнісь опцій селекту ([65e99d9](https://github.com/StepanKhomyn/voiptime-components/commit/65e99d90246c1bcf30320bed15d8f2aeb7def873))
+* виправлено реактивнісь опцій селекту2 ([2663977](https://github.com/StepanKhomyn/voiptime-components/commit/26639777a506a97e4853003b16f49fa6ccf02133))
+
 ## [1.4.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.4.0...v1.4.1) (2025-09-09)
 
 
