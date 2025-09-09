@@ -103,7 +103,7 @@ export interface VtSelectContext {
   handleOptionClick: (option: VtSelectOption) => void;
   isOptionSelected: (value: string | number) => boolean;
   isOptionVisible: (option: VtSelectOption) => boolean;
-  registerOption: (option: VtSelectOption) => void;
+  registerOption: (option: VtSelectOption, slotContent?: any) => void;
   unregisterOption: (value: string | number) => void;
 }
 

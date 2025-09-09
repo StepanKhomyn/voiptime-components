@@ -17,6 +17,12 @@ export interface VtDatePickerProps {
   status?: DatePickerStatus;
   disabled?: boolean;
   clearable?: boolean;
+
+  readonly?: boolean;
+  size?: string;
+  maxHeight?: number;
+  separator?: string;
+
   format?: string;
   valueFormat?: string;
   placement?: DatePickerPlacement;

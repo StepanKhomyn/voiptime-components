@@ -1210,6 +1210,11 @@ const columnChangeMethod = (columns) => {
             <VTableColumn label="Відділ" prop="department" />
           </VTable>
         </div>
+
+        <div>
+          export type VTableRowHighlightType = 'default' | 'success' | 'warning' | 'danger' | 'custom'; export interface
+          VTableRowHighlight { type: VTableRowHighlightType; className?: string; // для кастомних стилів }
+        </div>
       </div>
       <div class="container-item-example">
         <h3 :class="{ collapsed: codeCollapsed.highlightTable }" @click="toggleCode('highlightTable')"> Код </h3>
