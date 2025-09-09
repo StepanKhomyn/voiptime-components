@@ -5,8 +5,6 @@ export interface VtSelectOption {
   label: string;
   value: string | number;
   disabled?: boolean;
-  icon?: string;
-  group?: string;
 }
 
 export interface VtSelectProps {
@@ -21,8 +19,8 @@ export interface VtSelectProps {
   disabled?: boolean;
   clearable?: boolean;
   filterable?: boolean;
-  remote?: boolean;
   loading?: boolean;
+  infiniteScroll?: boolean;
 
   // Текст і лейбли
   label?: string;
@@ -61,6 +59,7 @@ export interface VtSelectEmits {
   'remove-tag': [value: string | number];
   filter: [query: string];
   validation: [result: { isValid: boolean; errors: string[] }];
+  scrolled: [];
 }
 
 export interface VtSelectMethods {

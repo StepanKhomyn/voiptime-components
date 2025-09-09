@@ -398,6 +398,33 @@
     }
   };
 
+  // Функція для отримання класів підсвічування рядка
+  const getRowHighlightClasses = (row: any, rowIndex: number): string[] => {
+    if (!props.rowHighlight) return [];
+
+    try {
+      const highlightResult = props.rowHighlight(row, rowIndex);
+      if (!highlightResult) return [];
+
+      const classes: string[] = [];
+
+      // Додаємо клас за типом (тільки якщо не custom або немає className)
+      if (highlightResult.type !== 'custom' || !highlightResult.className) {
+        classes.push(`vt-table__row--highlight-${highlightResult.type}`);
+      }
+
+      // Додаємо кастомний клас
+      if (highlightResult.className) {
+        classes.push(highlightResult.className);
+      }
+
+      return classes;
+    } catch (error) {
+      console.warn('Помилка у функції підсвічування рядків:', error);
+      return [];
+    }
+  };
+
   onMounted(() => {
     initializeInternalColumns();
   });
@@ -507,6 +534,7 @@
               'vt-table__row--current': selectionComposable?.currentRow.value === row,
               'vt-table__row--clickable': props.selectOnClickRow || props.highlightCurrentRow,
             },
+            ...getRowHighlightClasses(row, rowIndex),
           ]"
           @click="handleRowClick(row, sortedColumns[0], $event)"
         >

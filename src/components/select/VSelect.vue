@@ -25,6 +25,7 @@
     placement: 'bottom-start',
     validateOnInput: true,
     validateOnBlur: true,
+    infiniteScroll: false,
   });
 
   // Емітери
@@ -40,6 +41,8 @@
   const filterInputRef = ref<HTMLInputElement>();
   const containerRef = ref<HTMLElement>();
   const tagRefs = ref<HTMLElement[]>([]);
+  const sentinelRef = ref<HTMLElement>();
+  let observer: IntersectionObserver | null = null;
 
   // Реактивні змінні стану
   const isFocused = ref(false);
@@ -104,12 +107,8 @@
       return selectedOptions.value;
     }
 
-    // Для collapsed tags показуємо тільки видимі теги + індикатор якщо потрібно
+    // Для collapsed tags показуємо тільки видимі теги
     const visible = selectedOptions.value.slice(0, visibleCount.value);
-
-    if (visibleCount.value < selectedOptions.value.length) {
-      return [...visible, { label: `+${selectedOptions.value.length - visibleCount.value}`, value: '__collapsed' }];
-    }
 
     return visible;
   });
@@ -147,6 +146,10 @@
     zIndex: 2000,
     maxHeight: `${props.maxHeight}px`,
   }));
+
+  const shouldShowSentinel = computed(() => {
+    return props.infiniteScroll && !props.loading && filteredOptions.value.length > 0;
+  });
 
   // Валідація
   const validateValue = (): void => {
@@ -384,6 +387,7 @@
     nextTick(() => {
       updateDropdownPosition();
       addScrollListeners();
+      initScrollBottom();
 
       if (props.filterable && filterInputRef.value) {
         filterInputRef.value.focus();
@@ -400,6 +404,12 @@
     filterQuery.value = '';
     wasVisibleBeforeHiding.value = false;
     removeScrollListeners();
+
+    if (observer && sentinelRef.value) {
+      observer.unobserve(sentinelRef.value);
+      observer.disconnect();
+      observer = null;
+    }
 
     if (props.validateOnBlur) {
       validateValue();
@@ -514,33 +524,66 @@
     nextTick(() => {
       if (!containerRef.value) return;
 
-      const containerWidth = containerRef.value.offsetWidth - 40; // Резерв для іконки і паддингів
+      const containerRect = containerRef.value.getBoundingClientRect();
+      const containerWidth = containerRect.width - 60; // Резерв для іконки і паддингів
       let totalWidth = 0;
       let count = 0;
-      const collapsedTagWidth = 60; // Приблизна ширина "+N" тегу
+      const tagGap = 4; // Gap між тегами
+      const collapsedTagMinWidth = 40; // Мінімальна ширина "+N" тегу
 
-      // Вимірюємо ширину кожного тегу
+      // Тимчасово створюємо елемент для вимірювання "+N" тегу
+      const measureElement = document.createElement('div');
+      measureElement.className = 'vt-select__tag vt-select__tag--collapsed';
+      measureElement.style.visibility = 'hidden';
+      measureElement.style.position = 'absolute';
+      measureElement.innerHTML = `<span class="vt-select__tag-text">+${selectedOptions.value.length}</span>`;
+      document.body.appendChild(measureElement);
+      const collapsedTagWidth = measureElement.offsetWidth;
+      document.body.removeChild(measureElement);
+
+      // Проходимо по всіх тегах і рахуємо скільки влізе
       for (let i = 0; i < selectedOptions.value.length; i++) {
         const tagElement = tagRefs.value[i];
-        if (!tagElement) break;
+        if (!tagElement) {
+          // Якщо елемент ще не відрендерився, припускаємо середню ширину
+          const estimatedWidth = selectedOptions.value[i].label.length * 8 + 30; // Приблизний розрахунок
 
-        const tagWidth = tagElement.offsetWidth + 4; // +4 для margin
+          // Перевіряємо чи влізе цей тег + потенційний collapsed тег
+          if (i < selectedOptions.value.length - 1) {
+            if (totalWidth + estimatedWidth + tagGap + collapsedTagWidth > containerWidth) {
+              break;
+            }
+          } else {
+            // Останній тег - перевіряємо без collapsed
+            if (totalWidth + estimatedWidth > containerWidth) {
+              break;
+            }
+          }
 
-        // Якщо це не останній тег і додавання поточного тегу + collapsed індикатор перевищить ширину
-        if (i < selectedOptions.value.length - 1 && totalWidth + tagWidth + collapsedTagWidth > containerWidth) {
-          break;
-        }
-
-        // Якщо це останній тег або він влізе без collapsed індикатора
-        if (totalWidth + tagWidth <= containerWidth) {
-          totalWidth += tagWidth;
+          totalWidth += estimatedWidth + tagGap;
           count++;
-        } else {
-          break;
+          continue;
         }
+
+        const tagWidth = tagElement.offsetWidth;
+
+        // Якщо це не останній тег, перевіряємо чи влізе він + collapsed індикатор
+        if (i < selectedOptions.value.length - 1) {
+          if (totalWidth + tagWidth + tagGap + collapsedTagWidth > containerWidth) {
+            break;
+          }
+        } else {
+          // Якщо це останній тег, перевіряємо чи влізе він без collapsed індикатора
+          if (totalWidth + tagWidth > containerWidth) {
+            break;
+          }
+        }
+
+        totalWidth += tagWidth + tagGap;
+        count++;
       }
 
-      // Якщо всі теги влізають, показуємо всі
+      // Якщо всі теги влазять, показуємо всі
       if (count >= selectedOptions.value.length) {
         visibleCount.value = selectedOptions.value.length;
       } else {
@@ -549,6 +592,19 @@
       }
     });
   };
+
+  const collapsedCount = computed(() => {
+    return selectedOptions.value.length - visibleCount.value;
+  });
+
+  const showCollapsedIndicator = computed(() => {
+    return (
+      props.collapsedTags &&
+      props.multiple &&
+      selectedOptions.value.length > 0 &&
+      visibleCount.value < selectedOptions.value.length
+    );
+  });
 
   // Створюємо контекст для дочірніх компонентів
   const selectContext: VtSelectContext = {
@@ -561,6 +617,26 @@
     isOptionVisible,
     registerOption,
     unregisterOption,
+  };
+
+  const initScrollBottom = () => {
+    if (props.infiniteScroll && sentinelRef.value) {
+      observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && !props.loading) {
+              emit('scrolled');
+            }
+          });
+        },
+        {
+          root: null, // Використовуємо viewport замість dropdownRef
+          rootMargin: '20px', // Збільшуємо margin для кращого спрацювання
+          threshold: 0.1, // Зменшуємо threshold
+        }
+      );
+      observer.observe(sentinelRef.value);
+    }
   };
 
   provide<VtSelectContext>(VtSelectContextKey, selectContext);
@@ -605,6 +681,11 @@
       isValid: isValid.value,
       errors: [...validationErrors.value],
     };
+  };
+
+  // Перерахуємо при зміні розміру вікна
+  const resizeHandler = () => {
+    calcVisibleCount();
   };
 
   // Експортуємо методи
@@ -663,25 +744,21 @@
     // Ініціалізація з затримкою для правильного відрендерування
     nextTick(() => {
       calcVisibleCount();
+      initScrollBottom();
     });
-
-    // Перерахуємо при зміні розміру вікна
-    const resizeHandler = () => {
-      calcVisibleCount();
-    };
 
     window.addEventListener('resize', resizeHandler);
     document.addEventListener('click', handleClickOutside);
-
-    // Cleanup function для resize handler
-    onUnmounted(() => {
-      window.removeEventListener('resize', resizeHandler);
-    });
   });
 
   onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside);
+    window.removeEventListener('resize', resizeHandler);
     removeScrollListeners();
+    if (observer && sentinelRef.value) {
+      observer.unobserve(sentinelRef.value);
+    }
+    observer = null;
   });
 </script>
 
@@ -701,29 +778,32 @@
         <div v-if="multiple && selectedOptions.length > 0" ref="containerRef" class="vt-select__tags">
           <!-- Відображаємо видимі теги -->
           <div
-            v-for="(option, index) in selectedOptions.slice(0, visibleCount)"
-            :key="`tag-${option.value}`"
+            v-for="(option, index) in visibleTags"
+            :key="`tag-${option.value}-${index}`"
             :ref="el => el && (tagRefs[index] = el as HTMLElement)"
             class="vt-select__tag"
           >
             <span class="vt-select__tag-text">{{ option.label }}</span>
-            <button
-              :disabled="props.disabled"
+            <VIcon
+              v-if="!props.disabled"
               class="vt-select__tag-close"
-              type="button"
+              name="close"
               @click.stop="handleRemoveTag(option.value)"
-              >"""""
-              <VIcon name="close" />
-            </button>
+            />
           </div>
 
           <!-- Collapsed tags indicator -->
           <div
-            v-if="collapsedTags && visibleCount < selectedOptions.length"
-            :title="`Вибрано ще ${selectedOptions.length - visibleCount} опцій`"
+            v-if="showCollapsedIndicator"
+            v-tooltip="
+              `Вибрано ще ${collapsedCount} ${collapsedCount === 1 ? 'опція' : collapsedCount < 5 ? 'опції' : 'опцій'}: ${selectedOptions
+                .slice(visibleCount)
+                .map(o => o.label)
+                .join(', ')}`
+            "
             class="vt-select__tag vt-select__tag--collapsed"
           >
-            <span class="vt-select__tag-text"> +{{ selectedOptions.length - visibleCount }} </span>
+            <span class="vt-select__tag-text">+{{ collapsedCount }}</span>
           </div>
         </div>
 
@@ -819,7 +899,7 @@
           </div>
 
           <!-- Options -->
-          <div v-else class="vt-select-dropdown__options">
+          <div v-else ref="scrollContainer" class="vt-select-dropdown__options">
             <div
               v-for="option in filteredOptions"
               :key="`option-${option.value}`"
@@ -849,6 +929,10 @@
                 <component :is="getOptionSlot(option.value)" v-if="getOptionSlot(option.value)" />
                 <span v-else>{{ option.label }}</span>
               </span>
+            </div>
+            <!-- Sentinel елемент для IntersectionObserver -->
+            <div v-if="shouldShowSentinel" ref="sentinelRef" aria-hidden="true" class="vt-select__sentinel">
+              <!-- Цей елемент невидимий і служить тільки як тригер -->
             </div>
           </div>
         </div>

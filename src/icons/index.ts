@@ -40,6 +40,7 @@ import FilterResetIcon from './filter/FilterResetIcon.vue';
 import FilterSaveIcon from './filter/FilterSaveIcon.vue';
 import AlertCircleIcon from './input/AlertCircleIcon.vue';
 import AlertTriangleIcon from './input/AlertTriangleIcon.vue';
+import CalendarIcon from './input/CalendarIcon.vue';
 import CheckCircleIcon from './input/CheckCircleIcon.vue';
 import EyeClosedIcon from './input/EyeClosedIcon.vue';
 import EyeOpenedIcon from './input/EyeOpenedIcon.vue';
@@ -113,6 +114,7 @@ export const icons = {
   // input icons
   alertCircle: AlertCircleIcon,
   alertTriangle: AlertTriangleIcon,
+  calendar: CalendarIcon,
   checkCircle: CheckCircleIcon,
   eyeClosed: EyeClosedIcon,
   eyeOpened: EyeOpenedIcon,

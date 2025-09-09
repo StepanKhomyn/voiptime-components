@@ -47,9 +47,9 @@
         <div class="demo-item">
           <h4>Базова пагінація</h4>
           <VPagination
-            :totalItems="demoData.basic.totalItems"
             v-model:currentPage="demoData.basic.currentPage"
             v-model:pageSize="demoData.basic.pageSize"
+            :totalItems="demoData.basic.totalItems"
             @pageChange="onBasicPageChange"
             @reloadData="onBasicReload"
           />
@@ -58,33 +58,33 @@
         <div class="demo-item">
           <h4>Малий набір даних</h4>
           <VPagination
-            :totalItems="25"
             v-model:currentPage="demoData.small.currentPage"
             v-model:pageSize="demoData.small.pageSize"
-            :pageSizeOptions="[5, 10, 25]"
             :maxVisiblePages="5"
+            :pageSizeOptions="[5, 10, 25]"
+            :totalItems="25"
           />
         </div>
 
         <div class="demo-item">
           <h4>Великий набір даних</h4>
           <VPagination
-            :totalItems="10000"
             v-model:currentPage="demoData.large.currentPage"
             v-model:pageSize="demoData.large.pageSize"
-            :pageSizeOptions="[10, 25, 50, 100]"
             :maxVisiblePages="8"
+            :pageSizeOptions="[10, 25, 50, 100]"
+            :totalItems="10000"
           />
         </div>
 
         <div class="demo-item">
           <h4>Кастомні опції</h4>
           <VPagination
-            :totalItems="500"
             v-model:currentPage="demoData.custom.currentPage"
             v-model:pageSize="demoData.custom.pageSize"
-            :pageSizeOptions="[3, 7, 15, 30]"
             :maxVisiblePages="4"
+            :pageSizeOptions="[3, 7, 15, 30]"
+            :totalItems="500"
           />
         </div>
       </div>
@@ -402,7 +402,7 @@ const handlePaginationChange = ({ page, pageSize }) => {
             {{ demoData.basic.totalItems }}</span
           >
         </div>
-        <div class="info-item" v-if="lastPageChangeEvent">
+        <div v-if="lastPageChangeEvent" class="info-item">
           <strong>Остання подія:</strong>
           <span>{{ lastPageChangeEvent }}</span>
         </div>
@@ -411,7 +411,7 @@ const handlePaginationChange = ({ page, pageSize }) => {
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { reactive, ref } from 'vue';
   import VPagination from '@/components/pagination/VPagination.vue';
   // Дані для демонстрації
@@ -495,6 +495,7 @@ const handlePaginationChange = ({ page, pageSize }) => {
 
   .demo-grid {
     display: grid;
+    grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
@@ -696,10 +697,6 @@ const handlePaginationChange = ({ page, pageSize }) => {
   @media (max-width: 768px) {
     .showcase {
       padding: 1rem;
-    }
-
-    .demo-grid {
-      grid-template-columns: 1fr;
     }
 
     .vt-pagination-demo {

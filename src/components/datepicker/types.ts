@@ -1,261 +1,133 @@
 // types.ts
-export interface DateObject {
-  year: number;
-  month: number;
-  day: number;
-  date: Date;
-  isPrevMonth?: boolean;
-  isNextMonth?: boolean;
-  isToday?: boolean;
-}
+export type DatePickerStatus = 'default' | 'success' | 'warning' | 'error';
+export type DatePickerType = 'date' | 'week' | 'month' | 'year' | 'datetime';
+export type DatePickerPlacement = 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
 
-export interface Shortcut {
-  text: string;
-  value: () => Date | [Date, Date];
-}
+export type DatePickerValue = string | Date | number | null;
+export type DatePickerRangeValue = [DatePickerValue, DatePickerValue] | null;
+export type DatePickerModelValue = DatePickerValue | DatePickerRangeValue;
 
-export type DatePickerType = 'date' | 'daterange';
-export type DatePickerSize = 'large' | 'default' | 'small';
-
-export interface DatePickerProps {
-  modelValue?: Date | [Date, Date] | null;
+export interface VtDatePickerProps {
+  modelValue?: DatePickerModelValue;
   type?: DatePickerType;
-  format?: string;
-  valueFormat?: string;
   placeholder?: string;
-  rangeSeparator?: string;
   startPlaceholder?: string;
   endPlaceholder?: string;
-  clearable?: boolean;
+  rangeSeparator?: string;
+  status?: DatePickerStatus;
   disabled?: boolean;
-  readonly?: boolean;
-  editable?: boolean;
-  size?: DatePickerSize;
-  disabledDate?: (date: Date) => boolean;
-  shortcuts?: Shortcut[];
+  clearable?: boolean;
+  format?: string;
+  valueFormat?: string;
+  placement?: DatePickerPlacement;
+  label?: string;
+  required?: boolean;
+  requiredMessage?: string;
+  validateOnInput?: boolean;
+  validateOnBlur?: boolean;
+  minDate?: DatePickerValue;
+  maxDate?: DatePickerValue;
+  range?: boolean;
+  shortcuts?: DateShortcut[];
   firstDayOfWeek?: number;
   unlinkPanels?: boolean;
-  showFooter?: boolean;
-  teleportTo?: string;
-  minDate?: Date;
-  maxDate?: Date;
-  appendToBody?: boolean;
-  popperClass?: string;
-  defaultTime?: Date | [Date, Date];
-  defaultValue?: Date | [Date, Date];
-  validateEvent?: boolean;
-  prefixIcon?: string;
-  suffixIcon?: string;
-  timeArrowControl?: boolean;
-  name?: string;
-  id?: string;
-  autocomplete?: string;
-  tabindex?: string | number;
-  label?: string;
-  ariaLabel?: string;
+  defaultValue?: DatePickerModelValue;
+  defaultTime?: string | [string, string];
+  disabledDate?: (date: Date) => boolean;
+  cellClassName?: (date: Date) => string;
 }
 
-export interface DatePickerEmits {
-  'update:modelValue': [value: Date | [Date, Date] | null];
-  change: [value: Date | [Date, Date] | null];
+export interface VtDatePickerEmits {
+  'update:modelValue': [value: DatePickerModelValue];
+  change: [value: DatePickerModelValue];
   blur: [event: FocusEvent];
   focus: [event: FocusEvent];
-  'calendar-change': [date: [Date, Date]];
-  'panel-change': [date: Date, mode: string, view: string];
   'visible-change': [visible: boolean];
   clear: [];
+  'calendar-change': [date: Date];
+  'panel-change': [date: Date, mode: string, view: string];
+  validation: [result: ValidationResult];
 }
 
-export interface DatePickerExpose {
-  focus: () => void;
-  blur: () => void;
-  handleOpen: () => void;
-  handleClose: () => void;
-  getPicker: () => HTMLElement | undefined;
+export interface DateShortcut {
+  text: string;
+  value: DatePickerModelValue | (() => DatePickerModelValue);
+}
+
+export interface ValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
+
+export interface CalendarDay {
+  date: Date;
+  day: number;
+  month: number;
+  year: number;
+  isCurrentMonth: boolean;
+  isPrevMonth: boolean;
+  isNextMonth: boolean;
+  isSelected: boolean;
+  isInRange: boolean;
+  isRangeStart: boolean;
+  isRangeEnd: boolean;
+  isToday: boolean;
+  isDisabled: boolean;
+  isHovered: boolean;
+  className?: string;
+}
+
+export interface CalendarWeek {
+  weekNumber: number;
+  year: number;
+  startDate: Date;
+  endDate: Date;
+  isSelected: boolean;
+  isDisabled: boolean;
+  isHovered: boolean;
+}
+
+export interface CalendarMonth {
+  month: number;
+  year: number;
+  name: string;
+  shortName: string;
+  isSelected: boolean;
+  isDisabled: boolean;
+  isCurrent: boolean;
+  isHovered: boolean;
+}
+
+export interface CalendarYear {
+  year: number;
+  isSelected: boolean;
+  isDisabled: boolean;
+  isCurrent: boolean;
+  isHovered: boolean;
 }
 
 export interface DropdownPosition {
   top: string;
   left: string;
-  position: string;
-  zIndex: number;
-  minWidth?: string;
-}
-
-export interface CalendarDate extends DateObject {
-  isSelected?: boolean;
-  isInRange?: boolean;
-  isRangeStart?: boolean;
-  isRangeEnd?: boolean;
-  isDisabled?: boolean;
-  isHover?: boolean;
-  isWeekend?: boolean;
-}
-
-export interface DatePickerState {
-  isVisible: boolean;
-  currentYear: number;
-  currentMonth: number;
-  selectedDates: Date[];
-  hoveredDate: Date | null;
-  tempSelection: Date[];
-  inputValue: string;
-  userInput: boolean;
-  dropdownStyle: DropdownPosition | {};
-  pickerVisible: boolean;
-  rangeState: {
-    endDate: Date | null;
-    selecting: boolean;
-    row: number | null;
-    column: number | null;
-  };
-}
-
-export interface MonthTableProps {
-  date: Date;
-  defaultValue?: Date | [Date, Date];
-  minDate?: Date;
-  maxDate?: Date;
-  parsedValue?: Date | [Date, Date];
-  rangeState?: DatePickerState['rangeState'];
-  disabledDate?: (date: Date) => boolean;
-}
-
-export interface YearTableProps {
-  date: Date;
-  defaultValue?: Date | [Date, Date];
-  minDate?: Date;
-  maxDate?: Date;
-  parsedValue?: Date | [Date, Date];
-  disabledDate?: (date: Date) => boolean;
-}
-
-export const WEEK_DAYS = {
-  0: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'], // Sunday first
-  1: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Нд'], // Monday first
-} as const;
-
-export const MONTH_NAMES = [
-  'Січень',
-  'Лютий',
-  'Березень',
-  'Квітень',
-  'Травень',
-  'Червень',
-  'Липень',
-  'Серпень',
-  'Вересень',
-  'Жовтень',
-  'Листопад',
-  'Грудень',
-] as const;
-
-export const MONTH_NAMES_SHORT = [
-  'Січ',
-  'Лют',
-  'Бер',
-  'Кві',
-  'Тра',
-  'Чер',
-  'Лип',
-  'Сер',
-  'Вер',
-  'Жов',
-  'Лис',
-  'Гру',
-] as const;
-
-// Predefined shortcuts
-export const DEFAULT_SHORTCUTS: Shortcut[] = [
-  {
-    text: 'Сьогодні',
-    value: () => new Date(),
-  },
-  {
-    text: 'Вчора',
-    value: () => {
-      const date = new Date();
-      date.setDate(date.getDate() - 1);
-      return date;
-    },
-  },
-  {
-    text: 'Останні 7 днів',
-    value: () => {
-      const end = new Date();
-      const start = new Date();
-      start.setDate(start.getDate() - 6);
-      return [start, end] as [Date, Date];
-    },
-  },
-  {
-    text: 'Останні 30 днів',
-    value: () => {
-      const end = new Date();
-      const start = new Date();
-      start.setDate(start.getDate() - 29);
-      return [start, end] as [Date, Date];
-    },
-  },
-  {
-    text: 'Цей місяць',
-    value: () => {
-      const now = new Date();
-      const start = new Date(now.getFullYear(), now.getMonth(), 1);
-      const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-      return [start, end] as [Date, Date];
-    },
-  },
-  {
-    text: 'Минулий місяць',
-    value: () => {
-      const now = new Date();
-      const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const end = new Date(now.getFullYear(), now.getMonth(), 0);
-      return [start, end] as [Date, Date];
-    },
-  },
-];
-
-// Date format patterns
-export const DATE_FORMAT_PATTERNS = {
-  'yyyy-MM-dd': /^\d{4}-\d{2}-\d{2}$/,
-  'dd/MM/yyyy': /^\d{2}\/\d{2}\/\d{4}$/,
-  'MM/dd/yyyy': /^\d{2}\/\d{2}\/\d{4}$/,
-  'dd.MM.yyyy': /^\d{2}\.\d{2}\.\d{4}$/,
-  'yyyy/MM/dd': /^\d{4}\/\d{2}\/\d{2}$/,
-  'dd-MM-yyyy': /^\d{2}-\d{2}-\d{4}$/,
-} as const;
-
-export type DateFormatPattern = keyof typeof DATE_FORMAT_PATTERNS;
-
-// Validation helpers
-export interface ValidationResult {
-  isValid: boolean;
-  error?: string;
-  date?: Date;
-}
-
-export interface DateRange {
-  start: Date;
-  end: Date;
+  minWidth: string;
+  transformOrigin: string;
 }
 
 export interface DatePickerLocale {
-  months: readonly string[];
-  monthsShort: readonly string[];
-  weekdays: readonly string[];
-  weekdaysShort: readonly string[];
-  weekdaysMin: readonly string[];
+  months: string[];
+  monthsShort: string[];
+  weekdays: string[];
+  weekdaysShort: string[];
+  weekdaysMin: string[];
+  firstDayOfWeek: number;
+  weekHeader: string;
+  dateFormat: string;
+  timeFormat: string;
   today: string;
   clear: string;
   confirm: string;
-  cancel: string;
-  selectDate: string;
   selectTime: string;
-  startDate: string;
-  endDate: string;
-  rangeSeparator: string;
+  selectDate: string;
   year: string;
   month: string;
   week: string;
@@ -263,30 +135,80 @@ export interface DatePickerLocale {
   hour: string;
   minute: string;
   second: string;
-  now: string;
+  am: string;
+  pm: string;
 }
 
-export const DEFAULT_LOCALE: DatePickerLocale = {
-  months: MONTH_NAMES,
-  monthsShort: MONTH_NAMES_SHORT,
-  weekdays: ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота'],
-  weekdaysShort: ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'],
-  weekdaysMin: ['Н', 'П', 'В', 'С', 'Ч', 'П', 'С'],
-  today: 'Сьогодні',
-  clear: 'Очистити',
-  confirm: 'Підтвердити',
-  cancel: 'Скасувати',
-  selectDate: 'Оберіть дату',
-  selectTime: 'Оберіть час',
-  startDate: 'Початкова дата',
-  endDate: 'Кінцева дата',
-  rangeSeparator: ' - ',
-  year: 'рік',
-  month: 'місяць',
-  week: 'тиждень',
-  day: 'день',
-  hour: 'година',
-  minute: 'хвилина',
-  second: 'секунда',
-  now: 'Зараз',
-};
+export interface DatePickerConfig {
+  locale: DatePickerLocale;
+  zIndex: number;
+  appendToBody: boolean;
+  popperOptions: any;
+}
+
+// Enum для типів форматування
+export enum FormatType {
+  DISPLAY = 'display',
+  VALUE = 'value',
+  INPUT = 'input',
+}
+
+// Інтерфейс для парсингу формату
+export interface FormatToken {
+  type: 'literal' | 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'ampm';
+  value: string;
+  length: number;
+  escape?: boolean;
+}
+
+// Типи для внутрішнього стану компонента
+export interface DatePickerState {
+  isFocused: boolean;
+  isDropdownVisible: boolean;
+  currentView: 'date' | 'month' | 'year' | 'time';
+  currentDate: Date;
+  displayDate: Date;
+  selectedDate: Date | null;
+  selectedRange: [Date | null, Date | null];
+  hoveredDate: Date | null;
+  rangeState: 'start' | 'end' | null;
+  inputValue: string;
+  validationErrors: string[];
+  isValid: boolean;
+}
+
+export interface TimePickerState {
+  hours: number;
+  minutes: number;
+  seconds: number;
+  ampm: 'AM' | 'PM';
+}
+
+// Допоміжні типи для календаря
+export type CalendarViewType = 'date' | 'week' | 'month' | 'year';
+export type NavigationDirection = 'prev' | 'next';
+
+export interface CalendarNavigation {
+  canGoPrev: boolean;
+  canGoNext: boolean;
+  prevLabel: string;
+  nextLabel: string;
+  currentLabel: string;
+}
+
+// Типи для шорткатів
+export type ShortcutHandler = () => DatePickerModelValue;
+
+export interface PredefinedShortcuts {
+  today: ShortcutHandler;
+  yesterday: ShortcutHandler;
+  thisWeek: ShortcutHandler;
+  lastWeek: ShortcutHandler;
+  thisMonth: ShortcutHandler;
+  lastMonth: ShortcutHandler;
+  thisYear: ShortcutHandler;
+  lastYear: ShortcutHandler;
+  last7Days: ShortcutHandler;
+  last30Days: ShortcutHandler;
+  last3Months: ShortcutHandler;
+}

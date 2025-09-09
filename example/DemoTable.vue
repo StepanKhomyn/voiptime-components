@@ -4,6 +4,7 @@
   import VTableColumn from '@/components/table/VTableColumn.vue';
   import VPagination from '@/components/pagination/VPagination.vue';
   import type { SelectionChangeEventData, VTableColumnProps as VTableColumnType } from '@/components/table/types';
+  import VInput from '@/components/input/VInput.vue';
 
   // Референс на таблицю для доступу до методів
   const tableRef = ref();
@@ -31,6 +32,7 @@
     defaultTable: true,
     paginatedTable: true,
     columnActionTable: true,
+    highlightTable: true,
   });
 
   // Можливість виділити всі записи (тільки якщо завантажили всі сторінки)
@@ -651,6 +653,84 @@
     console.log('Total columns:', columns);
     console.groupEnd();
   };
+
+  const highlightTableData = ref([
+    {
+      id: 1,
+      name: 'Олексій Петренко',
+      status: 'active',
+      priority: 'high',
+      salary: 55000,
+      department: 'IT',
+      isVip: false,
+    },
+    {
+      id: 2,
+      name: 'Марія Коваленко',
+      status: 'inactive',
+      priority: 'medium',
+      salary: 45000,
+      department: 'HR',
+      isVip: false,
+    },
+    {
+      id: 3,
+      name: 'Іван Шевченко',
+      status: 'pending',
+      priority: 'low',
+      salary: 40000,
+      department: 'Marketing',
+      isVip: false,
+    },
+    {
+      id: 4,
+      name: 'Анна Мельник',
+      status: 'active',
+      priority: 'medium',
+      salary: 60000,
+      department: 'Finance',
+      isVip: true,
+    },
+    {
+      id: 5,
+      name: 'Петро Сидоренко',
+      status: 'error',
+      priority: 'critical',
+      salary: 35000,
+      department: 'Support',
+      isVip: false,
+    },
+  ]);
+
+  const highlightFunction = (row, index) => {
+    // VIP клієнти мають найвищий пріоритет
+    if (row.isVip) {
+      return {
+        type: 'custom',
+        className: 'vip-customer',
+      };
+    }
+
+    // Підсвічування за статусом
+    if (row.status === 'active') {
+      return { type: 'success' };
+    }
+
+    if (row.status === 'inactive') {
+      return { type: 'danger' };
+    }
+
+    if (row.status === 'pending') {
+      return { type: 'warning' };
+    }
+
+    // Підсвічування за пріоритетом
+    if (row.priority === 'critical') {
+      return { type: 'default' };
+    }
+
+    return null;
+  };
 </script>
 
 <template>
@@ -664,9 +744,7 @@
             <VTableColumn label="ID" prop="id" />
             <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">
-                <div style="color: #0c5460">
-                  {{ row.name }}
-                </div>
+                <VInput v-model="row.name" />
               </template>
             </VTableColumn>
             <VTableColumn label="Статус" prop="status" />
@@ -1097,6 +1175,178 @@ const columnChangeMethod = (columns) => {
       </div>
     </div>
 
+    <div class="container-item">
+      <div class="container-item-table">
+        <h3>Підсвічування рядків таблиці</h3>
+        <div class="table-block">
+          <VTable :data="highlightTableData" :max-height="400" :row-highlight="highlightFunction">
+            <VTableColumn label="ID" prop="id" />
+            <VTableColumn label="Ім'я" prop="name">
+              <template #name="{ row }">
+                <div style="font-weight: 600">
+                  {{ row.name }}
+                </div>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Статус" prop="status">
+              <template #status="{ row }">
+                <span :class="`status-${row.status}`" class="status-badge">
+                  {{ getStatusLabel(row.status) }}
+                </span>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Пріоритет" prop="priority">
+              <template #priority="{ row }">
+                <span :class="`priority-${row.priority}`" class="priority-badge">
+                  {{ row.priority }}
+                </span>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Зарплата" prop="salary">
+              <template #salary="{ row }">
+                <div class="salary-cell"> ${{ row.salary.toLocaleString() }}</div>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Відділ" prop="department" />
+          </VTable>
+        </div>
+      </div>
+      <div class="container-item-example">
+        <h3 :class="{ collapsed: codeCollapsed.highlightTable }" @click="toggleCode('highlightTable')"> Код </h3>
+        <div :class="{ collapsed: codeCollapsed.highlightTable }" class="container-item-code">
+          <pre class="code"><code>&lt;template&gt;
+  &lt;VTable
+    :data="highlightTableData"
+    :row-highlight="highlightFunction"
+  &gt;
+    &lt;VTableColumn prop="id" label="ID" /&gt;
+    &lt;VTableColumn prop="name" label="Ім'я" /&gt;
+    &lt;VTableColumn prop="status" label="Статус" /&gt;
+    &lt;VTableColumn prop="priority" label="Пріоритет" /&gt;
+    &lt;VTableColumn prop="salary" label="Зарплата" /&gt;
+    &lt;VTableColumn prop="department" label="Відділ" /&gt;
+  &lt;/VTable&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref } from 'vue';
+
+// Дані з різними статусами для демонстрації
+const highlightTableData = ref([
+  {
+    id: 1,
+    name: 'Олексій Петренко',
+    status: 'active',
+    priority: 'high',
+    salary: 55000,
+    department: 'IT',
+    isVip: false
+  },
+  {
+    id: 2,
+    name: 'Марія Коваленко',
+    status: 'inactive',
+    priority: 'medium',
+    salary: 45000,
+    department: 'HR',
+    isVip: false
+  },
+  {
+    id: 3,
+    name: 'Іван Шевченко',
+    status: 'pending',
+    priority: 'low',
+    salary: 40000,
+    department: 'Marketing',
+    isVip: false
+  },
+  {
+    id: 4,
+    name: 'Анна Мельник',
+    status: 'active',
+    priority: 'medium',
+    salary: 60000,
+    department: 'Finance',
+    isVip: true // VIP клієнт
+  },
+  {
+    id: 5,
+    name: 'Петро Сидоренко',
+    status: 'error',
+    priority: 'critical',
+    salary: 35000,
+    department: 'Support',
+    isVip: false
+  }
+]);
+
+// Функція підсвічування рядків
+const highlightFunction = (row, index) => {
+  // VIP клієнти мають найвищий пріоритет
+  if (row.isVip) {
+    return {
+      type: 'custom',
+      className: 'vip-customer'
+    };
+  }
+
+  // Підсвічування за статусом
+  if (row.status === 'active') {
+    return { type: 'success' };
+  }
+
+  if (row.status === 'inactive' || row.status === 'error') {
+    return { type: 'danger' };
+  }
+
+  if (row.status === 'pending') {
+    return { type: 'warning' };
+  }
+
+  // Підсвічування за пріоритетом
+  if (row.priority === 'high' || row.priority === 'critical') {
+    return { type: 'info' };
+  }
+
+  return null;
+};
+&lt;/script&gt;
+
+&lt;style lang="scss"&gt;
+// Стилі для підсвічування рядків
+:deep(.vt-table__row) {
+  &--highlight-success {
+    background-color: #e8f5e8;
+    border-left: 3px solid #4caf50;
+  }
+
+  &--highlight-danger {
+    background-color: #ffebee;
+    border-left: 3px solid #f44336;
+  }
+
+  &--highlight-warning {
+    background-color: #fff8e1;
+    border-left: 3px solid #ff9800;
+  }
+
+  &--highlight-info {
+    background-color: #e3f2fd;
+    border-left: 3px solid #2196f3;
+  }
+}
+
+// Кастомний стиль для VIP клієнтів
+ .vip-customer {
+    background: linear-gradient(45deg, #ffd700, #ffed4a);
+    border-left: 4px solid #f59e0b;
+    font-weight: 600;
+  }
+&lt;/style&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
     <!-- Властивості -->
     <section class="section">
       <h2>Властивості</h2>
@@ -1202,8 +1452,15 @@ const columnChangeMethod = (columns) => {
               <td>
                 <code>boolean</code>
               </td>
-              <td> false </td>
-              <td> Приховує повністю хедер таблиці </td>
+              <td> false</td>
+              <td> Приховує повністю хедер таблиці</td>
+            </tr>
+
+            <tr>
+              <td><code>rowHighlight</code></td>
+              <td><code>Function</code></td>
+              <td>-</td>
+              <td>Метод для підсвічування поточного рядка</td>
             </tr>
           </tbody>
         </table>
@@ -2206,5 +2463,11 @@ const columnChangeMethod = (columns) => {
       padding: 0.5rem;
       font-size: 0.9rem;
     }
+  }
+
+  .vip-customer {
+    background: linear-gradient(45deg, #ffd700, #ffed4a);
+    border-left: 4px solid #f59e0b;
+    font-weight: 600;
   }
 </style>

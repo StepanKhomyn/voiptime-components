@@ -68,6 +68,15 @@ export interface VTableColumnProps {
   sortMethod?: Function;
 }
 
+export type VTableRowHighlightType = 'default' | 'success' | 'warning' | 'danger' | 'custom';
+
+export interface VTableRowHighlight {
+  type: VTableRowHighlightType;
+  className?: string; // для кастомних стилів
+}
+
+export type VTableRowHighlightFunction = (row: any, index: number) => VTableRowHighlight | null;
+
 // Явно типізуємо props interface
 export interface VTableProps {
   /** Масив даних для відображення в таблиці */
@@ -106,6 +115,9 @@ export interface VTableProps {
   columns?: VTableColumnProps[];
 
   hideHeader?: boolean;
+
+  // Функція для підсвічування рядків
+  rowHighlight?: VTableRowHighlightFunction;
 }
 
 // Явно типізуємо emits interface

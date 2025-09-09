@@ -1,4 +1,4 @@
-// index.ts - оновлений головний файл бібліотеки з підтримкою input, select, таблиці та dropdown
+// index.ts - оновлений головний файл бібліотеки з повними експортами
 import type { App } from 'vue';
 import VButton from './components/button/VButton.vue';
 import VIcon from './components/icon/VIcon.vue';
@@ -69,6 +69,9 @@ export type {
   ResizeState,
   SortChangeEventData,
   SelectionChangeEventData,
+  VTableRowHighlightType,
+  VTableRowHighlight,
+  VTableRowHighlightFunction,
 } from './components/table/types';
 
 // Dropdown
@@ -83,7 +86,6 @@ export type {
   DropdownPlacement,
 } from './components/dropdown/types';
 
-// Input
 export type {
   VtInputProps,
   VtInputEmits,
@@ -96,7 +98,6 @@ export type {
   VtInputResize,
 } from './components/input/types';
 
-// Select
 export type {
   VtSelectProps,
   VtSelectEmits,
@@ -104,9 +105,9 @@ export type {
   VtSelectOption,
   VtSelectSize,
   VtSelectStatus,
+  VtSelectContext,
   VtOptionProps,
   VtOptionEmits,
-  VtSelectContext,
 } from './components/select/types';
 
 // ----------------- Експортуємо константи -----------------

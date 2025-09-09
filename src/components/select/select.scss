@@ -30,10 +30,18 @@
     background-color: #ffffff;
     transition: all 0.2s ease-in-out;
     cursor: pointer;
+    min-height: 36px;
 
     &:hover {
       border-color: var(--color-primary-hover);
     }
+  }
+
+  &__sentinel {
+    height: 1px;
+    width: 100%;
+    opacity: 0;
+    pointer-events: none;
   }
 
   &__placeholder {
@@ -147,10 +155,12 @@
 
   &__tags {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 4px;
     padding: 4px 8px;
     flex: 1;
+    overflow: hidden;
+    align-items: center;
   }
 
   &__tag {
@@ -163,6 +173,16 @@
     font-size: 12px;
     color: var(--color-gray-2);
     max-width: 150px;
+    flex-shrink: 0;
+
+    &--collapsed {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+      font-weight: 500;
+      cursor: help;
+      min-width: 30px;
+      justify-content: center;
+    }
 
     &-text {
       overflow: hidden;

@@ -1,9 +1,717 @@
-.vt-date-picker {
-  &-container {
+// VDatePicker.scss
+@use '../../assets/fonts' as *;
+@use '../../assets/scrollbar' as *;
 
+.vt-date-picker {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+
+  &__label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    color: var(--color-gray-2);
   }
 
-  &-body {
+  &__required {
+    color: var(--color-danger-main);
+    margin-left: 2px;
+  }
 
+  &__container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    border: 1px solid var(--color-gray-5);
+    border-radius: var(--radius-main);
+    background-color: #ffffff;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    min-height: 36px;
+
+    &:hover:not(.vt-date-picker--disabled .vt-date-picker__container) {
+      border-color: var(--color-primary-hover);
+    }
+  }
+
+  &__field {
+    @include vt-typography('vt-input');
+    flex: 1;
+    width: 100%;
+    padding: var(--padding-input);
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--color-gray-2);
+    cursor: pointer;
+    user-select: none;
+
+    &--editable {
+      cursor: text;
+      user-select: auto;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      color: var(--color-gray-4);
+    }
+  }
+
+  &__display-text {
+    color: var(--color-gray-2);
+  }
+
+  &__placeholder {
+    color: var(--color-gray-4);
+  }
+
+  &__prefix {
+    display: flex;
+    align-items: center;
+    padding-right: 12px;
+    gap: 4px;
+  }
+
+  &__suffix {
+    display: flex;
+    align-items: center;
+    padding-right: 12px;
+  }
+
+  &__icon {
+    color: var(--color-gray-4);
+    transition: all 0.2s ease-in-out;
+
+    &--calendar {
+      font-size: 16px;
+    }
+  }
+
+  &__arrow {
+    transition: transform 0.2s ease-in-out;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__clear-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: transparent;
+    color: var(--color-gray-4);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: var(--color-gray-6);
+      color: var(--color-gray-3);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    .vt-icon {
+      font-size: 12px;
+    }
+  }
+
+  &__help {
+    margin-top: 4px;
+  }
+
+  &__error {
+    color: var(--color-danger-main);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  // Range input container
+  &__range-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__range-input {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__range-separator {
+    color: var(--color-gray-4);
+    font-size: 14px;
+    white-space: nowrap;
+    padding: 0 4px;
+  }
+
+  // Statuses
+  &--focused {
+    .vt-date-picker__container {
+      border-color: var(--color-primary-main);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+  }
+
+  &--success {
+    .vt-date-picker__container {
+      border-color: var(--color-success-main);
+    }
+
+    &.vt-date-picker--focused .vt-date-picker__container {
+      box-shadow: 0 0 0 2px var(--color-success-light);
+    }
+  }
+
+  &--warning {
+    .vt-date-picker__container {
+      border-color: var(--color-warning-main);
+    }
+
+    &.vt-date-picker--focused .vt-date-picker__container {
+      box-shadow: 0 0 0 2px var(--color-warning-light);
+    }
+  }
+
+  &--error {
+    .vt-date-picker__container {
+      border-color: var(--color-danger-main);
+    }
+
+    &.vt-date-picker--focused .vt-date-picker__container {
+      box-shadow: 0 0 0 2px var(--color-danger-light);
+    }
+  }
+
+  &--disabled {
+    .vt-date-picker__container {
+      background-color: var(--color-gray-7);
+      border-color: var(--color-gray-6);
+      cursor: not-allowed;
+    }
+
+    .vt-date-picker__field {
+      background-color: transparent;
+      color: var(--color-gray-4);
+    }
+
+    .vt-date-picker__icon {
+      color: var(--color-gray-5);
+    }
+  }
+
+
+  // Dropdown
+  &-dropdown {
+    background: white;
+    border: 1px solid var(--color-gray-5);
+    border-radius: var(--radius-main);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    min-width: 280px;
+    z-index: 2000;
+    animation: vt-date-picker-dropdown-enter 0.2s ease-out;
+
+    &--range {
+      min-width: 560px;
+    }
+  }
+}
+
+// Calendar Styles
+.vt-calendar {
+  padding: 16px;
+  background: white;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--color-gray-6);
+  }
+
+  &__nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    color: var(--color-gray-3);
+
+    &:hover {
+      background-color: var(--color-gray-6);
+      color: var(--color-gray-2);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+      color: var(--color-gray-5);
+    }
+
+    .vt-icon {
+      font-size: 16px;
+    }
+  }
+
+  &__month-year {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-gray-2);
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: var(--color-gray-6);
+    }
+  }
+
+  &__body {
+    min-height: 240px;
+  }
+
+  &__weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  &__weekday {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-gray-4);
+    text-transform: uppercase;
+  }
+
+  &__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+  }
+
+  &__day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    color: var(--color-gray-2);
+
+    &:hover:not(&--disabled) {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+    }
+
+    &--other-month {
+      color: var(--color-gray-5);
+    }
+
+    &--today {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+      font-weight: 600;
+    }
+
+    &--selected {
+      background-color: var(--color-primary-main);
+      color: white;
+      font-weight: 600;
+
+      &:hover {
+        background-color: var(--color-primary-dark);
+      }
+    }
+
+    &--in-range {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+    }
+
+    &--range-start,
+    &--range-end {
+      background-color: var(--color-primary-main);
+      color: white;
+      font-weight: 600;
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+      color: var(--color-gray-5);
+      background-color: transparent;
+
+      &:hover {
+        background-color: transparent;
+        color: var(--color-gray-5);
+      }
+    }
+  }
+
+  &__footer {
+    padding-top: 12px;
+    border-top: 1px solid var(--color-gray-6);
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+  }
+
+  &__today-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--color-primary-main);
+    background: transparent;
+    color: var(--color-primary-main);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: var(--color-primary-main);
+      color: white;
+    }
+  }
+
+  // Month/Year picker styles
+  &__months,
+  &__years {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  &__month,
+  &__year {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    color: var(--color-gray-2);
+
+    &:hover:not(&--disabled) {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+    }
+
+    &--current {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+      font-weight: 600;
+    }
+
+    &--selected {
+      background-color: var(--color-primary-main);
+      color: white;
+      font-weight: 600;
+
+      &:hover {
+        background-color: var(--color-primary-dark);
+      }
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+      color: var(--color-gray-5);
+
+      &:hover {
+        background-color: transparent;
+        color: var(--color-gray-5);
+      }
+    }
+  }
+
+  // Week picker styles
+  &__weeks {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__week {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    color: var(--color-gray-2);
+
+    &:hover:not(&--disabled) {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+    }
+
+    &--selected {
+      background-color: var(--color-primary-main);
+      color: white;
+
+      &:hover {
+        background-color: var(--color-primary-dark);
+      }
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+      color: var(--color-gray-5);
+
+      &:hover {
+        background-color: transparent;
+        color: var(--color-gray-5);
+      }
+    }
+  }
+
+  &__week-number {
+    font-weight: 600;
+    margin-right: 12px;
+    min-width: 40px;
+  }
+
+  &__week-range {
+    font-size: 13px;
+    color: var(--color-gray-4);
+  }
+
+  // Range picker styles
+  &--range {
+    display: flex;
+
+    .vt-calendar__panel {
+      flex: 1;
+
+      &:not(:last-child) {
+        border-right: 1px solid var(--color-gray-6);
+        padding-right: 16px;
+        margin-right: 16px;
+      }
+    }
+  }
+}
+
+// Time picker styles
+.vt-time-picker {
+  padding: 16px;
+  border-top: 1px solid var(--color-gray-6);
+
+  &__header {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-gray-2);
+    margin-bottom: 12px;
+  }
+
+  &__inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__input {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__label {
+    font-size: 12px;
+    color: var(--color-gray-4);
+    text-transform: uppercase;
+  }
+
+  &__field {
+    width: 50px;
+    height: 32px;
+    border: 1px solid var(--color-gray-5);
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--color-gray-2);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary-main);
+      box-shadow: 0 0 0 2px var(--color-primary-light);
+    }
+  }
+
+  &__separator {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-gray-4);
+    margin: 0 4px;
+  }
+
+  &__ampm {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    button {
+      padding: 4px 8px;
+      border: 1px solid var(--color-gray-5);
+      background: white;
+      color: var(--color-gray-3);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+      transition: all 0.2s ease-in-out;
+
+      &:hover {
+        background-color: var(--color-gray-6);
+      }
+
+      &.active {
+        background-color: var(--color-primary-main);
+        color: white;
+        border-color: var(--color-primary-main);
+      }
+    }
+  }
+}
+
+// Shortcuts panel
+.vt-shortcuts {
+  padding: 12px;
+  border-right: 1px solid var(--color-gray-6);
+  background-color: var(--color-gray-7);
+  min-width: 140px;
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__item {
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: var(--color-gray-3);
+    text-align: left;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-main);
+    }
+
+    &--active {
+      background-color: var(--color-primary-main);
+      color: white;
+    }
+  }
+}
+
+// Animations
+@keyframes vt-date-picker-dropdown-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// Transitions
+.dropdown-enter-active,
+.dropdown-leave-active {
+  transition: all 0.2s ease-out;
+}
+
+.dropdown-enter-from {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+}
+
+.dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-8px) scale(0.95);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .vt-date-picker-dropdown {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    width: calc(100vw - 32px);
+    max-width: 400px;
+    max-height: calc(100vh - 64px);
+    overflow-y: auto;
+
+    &--range {
+      .vt-calendar--range {
+        flex-direction: column;
+
+        .vt-calendar__panel {
+          border-right: none;
+          border-bottom: 1px solid var(--color-gray-6);
+          padding-right: 16px;
+          padding-bottom: 16px;
+          margin-right: 0;
+          margin-bottom: 16px;
+
+          &:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
   }
 }

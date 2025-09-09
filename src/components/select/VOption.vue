@@ -1,3 +1,4 @@
+// VOption.vue - виправлена версія
 <script lang="ts" setup>
   import { computed, inject, onBeforeUnmount, onMounted, useSlots } from 'vue';
   import type { VtOptionEmits, VtOptionProps, VtSelectContext } from './types';
@@ -30,9 +31,9 @@
   // Реєструємо опцію при монтуванні
   onMounted(() => {
     if (selectContext) {
-      // Передаємо слот якщо є
-      const slotContent = slots.default;
-      selectContext.registerOption(option.value);
+      // ВИПРАВЛЕННЯ: правильно передаємо слот контент
+      const slotContent = slots.default ? () => slots.default!() : null;
+      selectContext.registerOption(option.value, slotContent);
     }
   });
 

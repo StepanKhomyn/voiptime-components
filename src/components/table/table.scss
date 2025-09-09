@@ -178,6 +178,52 @@
         background-color: var(--color-primary-light);
       }
     }
+
+    &--highlight {
+      &-default {
+        .vt-table__td {
+          background-color: var(--color-primary-light);
+        }
+
+        .vt-table__td--pinned-left,
+        .vt-table__td--pinned-right {
+          background-color: var(--color-primary-light);
+        }
+      }
+
+      &-success {
+        .vt-table__td {
+          background-color: var(--color-success-focus);
+        }
+
+        .vt-table__td--pinned-left,
+        .vt-table__td--pinned-right {
+          background-color: var(--color-success-focus);
+        }
+      }
+
+      &-warning {
+        .vt-table__td {
+          background-color: var(--color-warning-focus);
+        }
+
+        .vt-table__td--pinned-left,
+        .vt-table__td--pinned-right {
+          background-color: var(--color-warning-focus);
+        }
+      }
+
+      &-danger {
+        .vt-table__td {
+          background-color: var(--color-danger-focus);
+        }
+
+        .vt-table__td--pinned-left,
+        .vt-table__td--pinned-right {
+          background-color: var(--color-danger-focus);
+        }
+      }
+    }
   }
 
   // Ресайзер колонок
