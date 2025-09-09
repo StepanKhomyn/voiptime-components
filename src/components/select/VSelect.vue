@@ -91,7 +91,7 @@
     });
   });
 
-  const selectedOptions = computed(() => {
+  const selectedOptions = computed((): VtSelectOption[] => {
     if (isMultiple.value) {
       const values = Array.isArray(props.modelValue) ? props.modelValue : [];
       const foundOptions = allOptions.value.filter(option => values.includes(option.value));
@@ -100,8 +100,8 @@
       const foundValues = foundOptions.map(option => option.value);
       const missingValues = values.filter(value => !foundValues.includes(value));
 
-      const missingOptions = missingValues.map(value => ({
-        value,
+      const missingOptions: VtSelectOption[] = missingValues.map(value => ({
+        value: value as string | number,
         label: String(value),
         disabled: false,
       }));
@@ -114,10 +114,15 @@
       }
 
       // Якщо опція не знайдена, але є modelValue - створюємо тимчасову опцію
-      if (props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '') {
+      if (
+        props.modelValue !== undefined &&
+        props.modelValue !== null &&
+        props.modelValue !== '' &&
+        !Array.isArray(props.modelValue)
+      ) {
         return [
           {
-            value: props.modelValue,
+            value: props.modelValue as string | number,
             label: String(props.modelValue),
             disabled: false,
           },
@@ -150,7 +155,12 @@
     }
 
     // Якщо опція не знайдена, але є modelValue - показуємо його
-    if (props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '') {
+    if (
+      props.modelValue !== undefined &&
+      props.modelValue !== null &&
+      props.modelValue !== '' &&
+      !Array.isArray(props.modelValue)
+    ) {
       return String(props.modelValue);
     }
 
