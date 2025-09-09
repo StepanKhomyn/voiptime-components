@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.6...v1.4.0) (2025-09-09)
+
+
+### Features
+
+* виправлено білд ([8d7be20](https://github.com/StepanKhomyn/voiptime-components/commit/8d7be2067c38d1e568060931017fb0d88e8cc52c))
+* Дороблено селект ([b13f0f4](https://github.com/StepanKhomyn/voiptime-components/commit/b13f0f41db1a4a93be8f2199aa74fbebe5c24f52))
+
 ## [1.3.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.3.5...v1.3.6) (2025-09-01)
 
 
