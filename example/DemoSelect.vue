@@ -568,8 +568,8 @@ onMounted(() => {
   </div>
 </template>
 
-<script lang="ts" setup>
-  import { reactive, ref } from 'vue';
+<script setup lang="ts">
+  import { computed, reactive, ref } from 'vue';
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
 
@@ -691,6 +691,98 @@ onMounted(() => {
   };
 
   simulateLoading();
+
+  const mapping = ref('');
+  const mapping2 = ref('A');
+
+  const fieldsForFirst = computed(() =>
+    Object.values(TelemarketClientImportFields).filter(field => field !== mapping2.value)
+  );
+
+  const fieldsForSecond = computed(() => []);
+
+  const enum TelemarketClientImportFields {
+    A = 'A',
+    B = 'B',
+    C = 'C',
+    D = 'D',
+    E = 'E',
+    F = 'F',
+    G = 'G',
+    H = 'H',
+    I = 'I',
+    J = 'J',
+    K = 'K',
+    L = 'L',
+    M = 'M',
+    N = 'N',
+    O = 'O',
+    P = 'P',
+    Q = 'Q',
+    R = 'R',
+    S = 'S',
+    T = 'T',
+    U = 'U',
+    V = 'V',
+    W = 'W',
+    X = 'X',
+    Y = 'Y',
+    Z = 'Z',
+
+    AA = 'AA',
+    AB = 'AB',
+    AC = 'AC',
+    AD = 'AD',
+    AE = 'AE',
+    AF = 'AF',
+    AG = 'AG',
+    AH = 'AH',
+    AI = 'AI',
+    AJ = 'AJ',
+    AK = 'AK',
+    AL = 'AL',
+    AM = 'AM',
+    AN = 'AN',
+    AO = 'AO',
+    AP = 'AP',
+    AQ = 'AQ',
+    AR = 'AR',
+    AS = 'AS',
+    AT = 'AT',
+    AU = 'AU',
+    AV = 'AV',
+    AW = 'AW',
+    AX = 'AX',
+    AY = 'AY',
+    AZ = 'AZ',
+
+    BA = 'BA',
+    BB = 'BB',
+    BC = 'BC',
+    BD = 'BD',
+    BE = 'BE',
+    BF = 'BF',
+    BG = 'BG',
+    BH = 'BH',
+    BI = 'BI',
+    BJ = 'BJ',
+    BK = 'BK',
+    BL = 'BL',
+    BM = 'BM',
+    BN = 'BN',
+    BO = 'BO',
+    BP = 'BP',
+    BQ = 'BQ',
+    BR = 'BR',
+    BS = 'BS',
+    BT = 'BT',
+    BU = 'BU',
+    BV = 'BV',
+    BW = 'BW',
+    BX = 'BX',
+    BY = 'BY',
+    BZ = 'BZ',
+  }
 </script>
 
 <style scoped>

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, nextTick, onMounted, onUnmounted, provide, reactive, ref, useSlots, watch } from 'vue';
+  import { computed, nextTick, onMounted, onUnmounted, provide, ref, useSlots, watch } from 'vue';
   import type { VtSelectContext, VtSelectEmits, VtSelectMethods, VtSelectOption, VtSelectProps } from './types';
   import { VtSelectContextKey } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -52,10 +52,9 @@
   const isValid = ref(true);
   const visibleCount = ref(0);
 
-  // ВИПРАВЛЕННЯ 1: Використовуємо reactive для Map і додаємо triggerRef для форсування реактивності
-  const registeredOptions = reactive(new Map<string | number, VtSelectOption>());
-  const optionSlots = reactive(new Map<string | number, any>());
-  const optionsVersion = ref(0); // Лічильник для форсування оновлень
+  // Реєстр опцій
+  const registeredOptions = ref<Map<string | number, VtSelectOption>>(new Map());
+  const optionSlots = ref<Map<string | number, any>>(new Map());
 
   // Позиціонування
   const dropdownPosition = ref({
@@ -73,12 +72,7 @@
   // Обчислювані властивості
   const isMultiple = computed(() => props.multiple);
 
-  // ВИПРАВЛЕННЯ 2: Додаємо залежність від optionsVersion для форсування реактивності
-  const allOptions = computed(() => {
-    // Читаємо optionsVersion щоб створити залежність
-    optionsVersion.value;
-    return Array.from(registeredOptions.values());
-  });
+  const allOptions = computed(() => Array.from(registeredOptions.value.values()));
 
   const filteredOptions = computed(() => {
     if (!filterQuery.value || !props.filterable) {
@@ -100,9 +94,37 @@
   const selectedOptions = computed(() => {
     if (isMultiple.value) {
       const values = Array.isArray(props.modelValue) ? props.modelValue : [];
-      return allOptions.value.filter(option => values.includes(option.value));
+      const foundOptions = allOptions.value.filter(option => values.includes(option.value));
+
+      // Додаємо опції для значень, які не знайдені в зареєстрованих опціях
+      const foundValues = foundOptions.map(option => option.value);
+      const missingValues = values.filter(value => !foundValues.includes(value));
+
+      const missingOptions = missingValues.map(value => ({
+        value,
+        label: String(value),
+        disabled: false,
+      }));
+
+      return [...foundOptions, ...missingOptions];
     } else {
-      return allOptions.value.filter(option => option.value === props.modelValue);
+      const foundOption = allOptions.value.find(option => option.value === props.modelValue);
+      if (foundOption) {
+        return [foundOption];
+      }
+
+      // Якщо опція не знайдена, але є modelValue - створюємо тимчасову опцію
+      if (props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '') {
+        return [
+          {
+            value: props.modelValue,
+            label: String(props.modelValue),
+            disabled: false,
+          },
+        ];
+      }
+
+      return [];
     }
   });
 
@@ -121,8 +143,18 @@
 
   const displayText = computed(() => {
     if (isMultiple.value) return '';
+
     const selected = selectedOptions.value[0];
-    return selected ? selected.label : '';
+    if (selected) {
+      return selected.label;
+    }
+
+    // Якщо опція не знайдена, але є modelValue - показуємо його
+    if (props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '') {
+      return String(props.modelValue);
+    }
+
+    return '';
   });
 
   const showClearButton = computed(() => {
@@ -180,43 +212,22 @@
     emit('validation', { isValid: isValid.value, errors });
   };
 
-  // ВИПРАВЛЕННЯ 3: Оновлена реєстрація опцій з форсуванням реактивності
+  // Реєстрація опцій
   const registerOption = (option: VtSelectOption, slotContent?: any): void => {
-    console.log('Registering option:', option); // Для дебагу
-
-    registeredOptions.set(option.value, option);
+    registeredOptions.value.set(option.value, option);
 
     if (slotContent) {
-      optionSlots.set(option.value, slotContent);
+      optionSlots.value.set(option.value, slotContent);
     }
-
-    // Інкрементуємо версію щоб форсувати оновлення computed
-    optionsVersion.value++;
-
-    // Також можемо викликати nextTick для гарантії оновлення
-    nextTick(() => {
-      // Якщо потрібно, додаткові дії після реєстрації
-    });
   };
 
   const unregisterOption = (value: string | number): void => {
-    console.log('Unregistering option:', value); // Для дебагу
-
-    const wasDeleted = registeredOptions.delete(value);
-    optionSlots.delete(value);
-
-    if (wasDeleted) {
-      // Інкрементуємо версію щоб форсувати оновлення computed
-      optionsVersion.value++;
-    }
-
-    nextTick(() => {
-      // Якщо потрібно, додаткові дії після видалення
-    });
+    registeredOptions.value.delete(value);
+    optionSlots.value.delete(value);
   };
 
   const getOptionSlot = (value: string | number) => {
-    return optionSlots.get(value);
+    return optionSlots.value.get(value);
   };
 
   // Утиліти видимості
@@ -633,12 +644,12 @@
     );
   });
 
-  // ВИПРАВЛЕННЯ 4: Оновлений контекст з реактивними методами
+  // Створюємо контекст для дочірніх компонентів
   const selectContext: VtSelectContext = {
-    selectValue: computed(() => props.modelValue || (isMultiple.value ? [] : '')),
+    selectValue: props.modelValue || (isMultiple.value ? [] : ''),
     multiple: isMultiple.value,
     filterable: props.filterable,
-    filterQuery: computed(() => filterQuery.value),
+    filterQuery: filterQuery.value,
     handleOptionClick,
     isOptionSelected,
     isOptionVisible,
@@ -727,14 +738,6 @@
     registerOption,
     unregisterOption,
   });
-
-  // ВИПРАВЛЕННЯ 5: Додаємо watcher для відслідковування змін в Map
-  watch(
-    () => optionsVersion.value,
-    () => {
-      console.log('Options changed, total count:', registeredOptions.size); // Для дебагу
-    }
-  );
 
   // Watchers
   watch(

@@ -1,58 +1,65 @@
-// types.ts - Оновлені типи
-import type { ComputedRef, InjectionKey } from 'vue';
+export type VtSelectSize = 'small' | 'medium' | 'large';
+export type VtSelectStatus = 'default' | 'success' | 'error' | 'warning';
 
 export interface VtSelectOption {
   label: string;
   value: string | number;
   disabled?: boolean;
-  group?: string;
 }
 
-export type VtSelectStatus = 'default' | 'success' | 'warning' | 'error';
-
 export interface VtSelectProps {
-  modelValue?: string | number | (string | number)[];
-  options?: VtSelectOption[];
-  placeholder?: string;
+  // Основні властивості
+  modelValue?: string | number | Array<string | number>;
+  multiple?: boolean;
+  collapsedTags?: boolean;
+  size?: VtSelectSize;
+  status?: VtSelectStatus;
+
+  // Стани
   disabled?: boolean;
   clearable?: boolean;
   filterable?: boolean;
-  multiple?: boolean;
-  collapsedTags?: boolean;
-  size?: 'small' | 'medium' | 'large';
-  status?: VtSelectStatus;
   loading?: boolean;
-  loadingText?: string;
+  infiniteScroll?: boolean;
+
+  // Текст і лейбли
+  label?: string;
+  placeholder?: string;
+  helperText?: string;
+  errorMessage?: string;
   noDataText?: string;
   noMatchText?: string;
-  maxHeight?: number;
-  placement?: 'top' | 'top-start' | 'top-end' | 'bottom' | 'bottom-start' | 'bottom-end';
+  loadingText?: string;
+
+  // HTML атрибути
+  id?: string;
+  name?: string;
+  tabindex?: number;
+  // Випадайка
+  maxHeight?: number | string;
+  placement?: 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
+
+  // Фільтрація
   filterMethod?: (query: string, option: VtSelectOption) => boolean;
+
+  // Валідація
+  required?: boolean;
   validateOnInput?: boolean;
   validateOnBlur?: boolean;
-  required?: boolean;
   requiredMessage?: string;
-  infiniteScroll?: boolean;
-  label?: string;
-  id?: string;
 }
 
 export interface VtSelectEmits {
-  (e: 'update:modelValue', value: string | number | (string | number)[]): void;
-
-  (e: 'change', value: string | number | (string | number)[]): void;
-
-  (e: 'clear'): void;
-
-  (e: 'visible-change', visible: boolean): void;
-
-  (e: 'remove-tag', value: string | number): void;
-
-  (e: 'filter', query: string): void;
-
-  (e: 'scrolled'): void;
-
-  (e: 'validation', result: { isValid: boolean; errors: string[] }): void;
+  'update:modelValue': [value: string | number | Array<string | number>];
+  change: [value: string | number | Array<string | number>];
+  focus: [event: FocusEvent];
+  blur: [event: FocusEvent];
+  clear: [];
+  'visible-change': [visible: boolean];
+  'remove-tag': [value: string | number];
+  filter: [query: string];
+  validation: [result: { isValid: boolean; errors: string[] }];
+  scrolled: [];
 }
 
 export interface VtSelectMethods {
@@ -70,17 +77,29 @@ export interface VtSelectMethods {
 
   getValidationState(): { isValid: boolean; errors: string[] };
 
-  registerOption(option: VtSelectOption, slotContent?: any): void;
+  registerOption(option: VtSelectOption): void;
 
   unregisterOption(value: string | number): void;
 }
 
-// ВИПРАВЛЕННЯ: Оновлений контекст з computed властивостями
+export interface VtOptionProps {
+  label: string;
+  value: string | number;
+  disabled?: boolean;
+  icon?: string;
+  group?: string;
+}
+
+export interface VtOptionEmits {
+  click: [option: VtSelectOption];
+}
+
+// Context для передачі даних від Select до Option
 export interface VtSelectContext {
-  selectValue: ComputedRef<string | number | (string | number)[]>;
+  selectValue: string | number | Array<string | number>;
   multiple: boolean;
   filterable: boolean;
-  filterQuery: ComputedRef<string>;
+  filterQuery: string;
   handleOptionClick: (option: VtSelectOption) => void;
   isOptionSelected: (value: string | number) => boolean;
   isOptionVisible: (option: VtSelectOption) => boolean;
@@ -88,15 +107,4 @@ export interface VtSelectContext {
   unregisterOption: (value: string | number) => void;
 }
 
-export interface VtOptionProps {
-  label: string;
-  value: string | number;
-  disabled?: boolean;
-  group?: string;
-}
-
-export interface VtOptionEmits {
-  (e: 'click', option: VtSelectOption): void;
-}
-
-export const VtSelectContextKey: InjectionKey<VtSelectContext> = Symbol('VtSelectContext');
+export const VtSelectContextKey = Symbol('VtSelectContext');
