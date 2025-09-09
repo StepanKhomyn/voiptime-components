@@ -1,3 +1,11 @@
+## [1.4.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.4.2...v1.4.3) (2025-09-09)
+
+
+### Bug Fixes
+
+* fixed select ([84d7bb5](https://github.com/StepanKhomyn/voiptime-components/commit/84d7bb5a222beef595f512696592d46dfb6f0d83))
+* fixed select2 ([07fdd1c](https://github.com/StepanKhomyn/voiptime-components/commit/07fdd1c87dd1146de3038f4f8d442229ac41c076))
+
 ## [1.4.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.4.1...v1.4.2) (2025-09-09)
 
 
