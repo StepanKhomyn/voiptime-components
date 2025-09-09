@@ -8,6 +8,8 @@ export interface VtSelectOption {
   group?: string;
 }
 
+export type VtSelectStatus = 'default' | 'success' | 'warning' | 'error';
+
 export interface VtSelectProps {
   modelValue?: string | number | (string | number)[];
   options?: VtSelectOption[];
@@ -18,7 +20,7 @@ export interface VtSelectProps {
   multiple?: boolean;
   collapsedTags?: boolean;
   size?: 'small' | 'medium' | 'large';
-  status?: 'default' | 'success' | 'warning' | 'error';
+  status?: VtSelectStatus;
   loading?: boolean;
   loadingText?: string;
   noDataText?: string;
