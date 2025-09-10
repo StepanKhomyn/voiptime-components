@@ -37,7 +37,7 @@
     noDataText: 'Немає даних',
     noMatchText: 'Співпадінь не знайдено',
     loadingText: 'Завантаження...',
-    maxHeight: 200,
+    maxHeight: 220,
     placement: 'bottom-start',
     validateOnInput: true,
     validateOnBlur: true,

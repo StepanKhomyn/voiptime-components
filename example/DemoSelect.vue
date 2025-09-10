@@ -650,6 +650,15 @@ onMounted(() => {
     { label: 'Опція 4', value: 'opt4' },
     { label: 'Опція 5', value: 'opt5' },
     { label: 'Опція 6', value: 'opt6' },
+    { label: 'Опція 6', value: 'opt7' },
+    { label: 'Опція 6', value: 'opt8' },
+    { label: 'Опція 6', value: 'opt9' },
+    { label: 'Опція 6', value: 'opt10' },
+    { label: 'Опція 6', value: 'opt11' },
+    { label: 'Опція 6', value: 'opt12' },
+    { label: 'Опція 6', value: 'opt13' },
+    { label: 'Опція 6', value: 'opt14' },
+    { label: 'Опція 6', value: 'opt15' },
   ];
 
   const infiniteOptions = ref([
