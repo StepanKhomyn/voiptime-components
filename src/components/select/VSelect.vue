@@ -7,6 +7,22 @@
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
   import VLoader from '@/components/loader/VLoader.vue';
 
+  // Імпортуємо хелпери
+  import {
+    calculateDropdownPosition,
+    calculateVisibleTagsCount,
+    createCollapsedTooltip,
+    defaultFilterMethod,
+    getEmptyValue,
+    getScrollableParents,
+    getSelectedOptions,
+    handleOptionSelection,
+    isElementVisible,
+    isOptionSelected,
+    removeTagFromValue,
+    validateSelectValue,
+  } from './helpers';
+
   // Пропси з дефолтними значеннями
   const props = withDefaults(defineProps<VtSelectProps>(), {
     size: 'medium',
@@ -79,58 +95,12 @@
       return allOptions.value;
     }
 
-    if (props.filterMethod) {
-      return allOptions.value.filter(option => props.filterMethod!(filterQuery.value, option));
-    }
-
-    const query = filterQuery.value.toLowerCase().trim();
-    return allOptions.value.filter(option => {
-      const labelMatch = option.label.toLowerCase().includes(query);
-      const valueMatch = String(option.value).toLowerCase().includes(query);
-      return labelMatch || valueMatch;
-    });
+    const filterMethod = props.filterMethod || defaultFilterMethod;
+    return allOptions.value.filter(option => filterMethod(filterQuery.value, option));
   });
 
   const selectedOptions = computed((): VtSelectOption[] => {
-    if (isMultiple.value) {
-      const values = Array.isArray(props.modelValue) ? props.modelValue : [];
-      const foundOptions = allOptions.value.filter(option => values.includes(option.value));
-
-      // Додаємо опції для значень, які не знайдені в зареєстрованих опціях
-      const foundValues = foundOptions.map(option => option.value);
-      const missingValues = values.filter(value => !foundValues.includes(value));
-
-      const missingOptions: VtSelectOption[] = missingValues.map(value => ({
-        value: value as string | number,
-        label: String(value),
-        disabled: false,
-      }));
-
-      return [...foundOptions, ...missingOptions];
-    } else {
-      const foundOption = allOptions.value.find(option => option.value === props.modelValue);
-      if (foundOption) {
-        return [foundOption];
-      }
-
-      // Якщо опція не знайдена, але є modelValue - створюємо тимчасову опцію
-      if (
-        props.modelValue !== undefined &&
-        props.modelValue !== null &&
-        props.modelValue !== '' &&
-        !Array.isArray(props.modelValue)
-      ) {
-        return [
-          {
-            value: props.modelValue as string | number,
-            label: String(props.modelValue),
-            disabled: false,
-          },
-        ];
-      }
-
-      return [];
-    }
+    return getSelectedOptions(props.modelValue, allOptions.value, isMultiple.value);
   });
 
   const visibleTags = computed(() => {
@@ -140,10 +110,7 @@
       return selectedOptions.value;
     }
 
-    // Для collapsed tags показуємо тільки видимі теги
-    const visible = selectedOptions.value.slice(0, visibleCount.value);
-
-    return visible;
+    return selectedOptions.value.slice(0, visibleCount.value);
   });
 
   const displayText = computed(() => {
@@ -199,27 +166,39 @@
     return props.infiniteScroll && !props.loading && filteredOptions.value.length > 0;
   });
 
-  // Валідація
+  const collapsedCount = computed(() => {
+    return selectedOptions.value.length - visibleCount.value;
+  });
+
+  const showCollapsedIndicator = computed(() => {
+    return (
+      props.collapsedTags &&
+      props.multiple &&
+      selectedOptions.value.length > 0 &&
+      visibleCount.value < selectedOptions.value.length
+    );
+  });
+
+  const collapsedTooltip = computed(() => {
+    if (!showCollapsedIndicator.value) return '';
+
+    const hiddenOptions = selectedOptions.value.slice(visibleCount.value);
+    return createCollapsedTooltip(collapsedCount.value, hiddenOptions);
+  });
+
+  // Валідація з використанням хелпера
   const validateValue = (): void => {
-    const errors: string[] = [];
+    const validation = validateSelectValue(
+      props.modelValue,
+      isMultiple.value,
+      props.required || false,
+      props.requiredMessage
+    );
 
-    if (props.required) {
-      if (isMultiple.value) {
-        const values = Array.isArray(props.modelValue) ? props.modelValue : [];
-        if (values.length === 0) {
-          errors.push(props.requiredMessage || "Це поле є обов'язковим");
-        }
-      } else {
-        if (!props.modelValue) {
-          errors.push(props.requiredMessage || "Це поле є обов'язковим");
-        }
-      }
-    }
+    validationErrors.value = validation.errors;
+    isValid.value = validation.isValid;
 
-    validationErrors.value = errors;
-    isValid.value = errors.length === 0;
-
-    emit('validation', { isValid: isValid.value, errors });
+    emit('validation', { isValid: isValid.value, errors: validation.errors });
   };
 
   // Реєстрація опцій
@@ -241,46 +220,6 @@
   };
 
   // Утиліти видимості
-  const isElementVisible = (element: Element): boolean => {
-    if (!element) return false;
-
-    const rect = element.getBoundingClientRect();
-
-    if (rect.width === 0 && rect.height === 0) return false;
-
-    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-    const windowWidth = window.innerWidth || document.documentElement.clientWidth;
-
-    const isInViewport = rect.top < windowHeight && rect.bottom > 0 && rect.left < windowWidth && rect.right > 0;
-
-    if (!isInViewport) return false;
-
-    let parent = element.parentElement;
-    while (parent && parent !== document.body) {
-      const parentRect = parent.getBoundingClientRect();
-      const parentStyle = window.getComputedStyle(parent);
-
-      if (
-        parentStyle.overflow === 'hidden' ||
-        parentStyle.overflowY === 'hidden' ||
-        parentStyle.overflowX === 'hidden'
-      ) {
-        if (
-          rect.top >= parentRect.bottom ||
-          rect.bottom <= parentRect.top ||
-          rect.left >= parentRect.right ||
-          rect.right <= parentRect.left
-        ) {
-          return false;
-        }
-      }
-
-      parent = parent.parentElement;
-    }
-
-    return true;
-  };
-
   const checkParentVisibility = (): void => {
     if (!triggerRef.value) return;
 
@@ -302,32 +241,7 @@
     }
   };
 
-  const getScrollableParents = (element: Element): Element[] => {
-    const parents: Element[] = [];
-    let parent = element.parentElement;
-
-    while (parent && parent !== document.body) {
-      const computedStyle = window.getComputedStyle(parent);
-      const overflowY = computedStyle.overflowY;
-      const overflowX = computedStyle.overflowX;
-
-      if (
-        ['scroll', 'auto'].includes(overflowY) ||
-        ['scroll', 'auto'].includes(overflowX) ||
-        parent.scrollHeight > parent.clientHeight ||
-        parent.scrollWidth > parent.clientWidth
-      ) {
-        parents.push(parent);
-      }
-
-      parent = parent.parentElement;
-    }
-
-    parents.push(window as any);
-    return parents;
-  };
-
-  // Позиціонування випадайки
+  // Позиціонування випадайки з використанням хелпера
   const updateDropdownPosition = async (): Promise<void> => {
     await nextTick();
     if (!triggerRef.value || !dropdownRef.value) return;
@@ -335,64 +249,15 @@
     const triggerRect = triggerRef.value.getBoundingClientRect();
     const dropdownRect = dropdownRef.value.getBoundingClientRect();
 
-    let top = 0;
-    let left = 0;
-    let transformOrigin = 'center top';
-
-    // Базова логіка розміщення за placement
-    switch (props.placement) {
-      case 'bottom':
-        top = triggerRect.bottom + window.scrollY + 5;
-        left = triggerRect.left + window.scrollX + (triggerRect.width - dropdownRect.width) / 2;
-        break;
-      case 'bottom-start':
-        top = triggerRect.bottom + window.scrollY + 5;
-        left = triggerRect.left + window.scrollX;
-        break;
-      case 'bottom-end':
-        top = triggerRect.bottom + window.scrollY + 5;
-        left = triggerRect.right + window.scrollX - dropdownRect.width;
-        break;
-      case 'top':
-        top = triggerRect.top + window.scrollY - dropdownRect.height - 5;
-        left = triggerRect.left + window.scrollX + (triggerRect.width - dropdownRect.width) / 2;
-        transformOrigin = 'center bottom';
-        break;
-      case 'top-start':
-        top = triggerRect.top + window.scrollY - dropdownRect.height - 5;
-        left = triggerRect.left + window.scrollX;
-        transformOrigin = 'center bottom';
-        break;
-      case 'top-end':
-        top = triggerRect.top + window.scrollY - dropdownRect.height - 5;
-        left = triggerRect.right + window.scrollX - dropdownRect.width;
-        transformOrigin = 'center bottom';
-        break;
-    }
-
-    // Корекція меж екрана (горизонтально)
-    const maxLeft = window.innerWidth - dropdownRect.width - 10;
-    left = Math.max(10, Math.min(left, maxLeft));
-
-    // Корекція меж екрана (вертикально)
-    if (top + dropdownRect.height > window.innerHeight + window.scrollY) {
-      top = triggerRect.top + window.scrollY - dropdownRect.height - 5;
-      transformOrigin = 'center bottom';
-    }
-    if (top < window.scrollY + 10) {
-      top = triggerRect.bottom + window.scrollY + 5;
-      transformOrigin = 'center top';
-    }
+    const position = calculateDropdownPosition(triggerRect, dropdownRect, props.placement);
 
     dropdownPosition.value = {
-      top: `${top}px`,
-      left: `${left}px`,
+      ...position,
       minWidth: `${triggerRect.width}px`,
-      transformOrigin,
     };
   };
 
-  // Scroll listeners
+  // Scroll listeners з використанням хелпера
   const addScrollListeners = (): void => {
     if (!triggerRef.value) return;
 
@@ -432,8 +297,9 @@
     parentVisible.value = true;
     wasVisibleBeforeHiding.value = false;
 
-    nextTick(() => {
-      updateDropdownPosition();
+    nextTick(async () => {
+      // Розраховуємо позицію після того, як елемент вже видимий
+      await updateDropdownPosition();
       addScrollListeners();
       initScrollBottom();
 
@@ -466,7 +332,7 @@
     emit('visible-change', false);
   };
 
-  // Event handlers
+  // Event handlers з використанням хелперів
   const handleClickOutside = (event: MouseEvent): void => {
     if (!isDropdownVisible.value) return;
 
@@ -486,21 +352,12 @@
   const handleOptionClick = (option: VtSelectOption): void => {
     if (option.disabled) return;
 
-    if (isMultiple.value) {
-      const currentValues = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
-      const index = currentValues.indexOf(option.value);
+    const newValue = handleOptionSelection(option, props.modelValue, isMultiple.value);
 
-      if (index > -1) {
-        currentValues.splice(index, 1);
-      } else {
-        currentValues.push(option.value);
-      }
+    emit('update:modelValue', newValue);
+    emit('change', newValue);
 
-      emit('update:modelValue', currentValues);
-      emit('change', currentValues);
-    } else {
-      emit('update:modelValue', option.value);
-      emit('change', option.value);
+    if (!isMultiple.value) {
       hideDropdown();
     }
 
@@ -520,7 +377,7 @@
   };
 
   const handleClear = (): void => {
-    const emptyValue = isMultiple.value ? [] : '';
+    const emptyValue = getEmptyValue(isMultiple.value);
     emit('update:modelValue', emptyValue);
     emit('change', emptyValue);
     emit('clear');
@@ -534,28 +391,20 @@
   const handleRemoveTag = (value: string | number): void => {
     if (!isMultiple.value) return;
 
-    const currentValues = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
-    const index = currentValues.indexOf(value);
+    const newValue = removeTagFromValue(value, props.modelValue);
 
-    if (index > -1) {
-      currentValues.splice(index, 1);
-      emit('update:modelValue', currentValues);
-      emit('change', currentValues);
-      emit('remove-tag', value);
+    emit('update:modelValue', newValue);
+    emit('change', newValue);
+    emit('remove-tag', value);
 
-      if (props.validateOnInput) {
-        validateValue();
-      }
+    if (props.validateOnInput) {
+      validateValue();
     }
   };
 
-  // Utilities
-  const isOptionSelected = (value: string | number): boolean => {
-    if (isMultiple.value) {
-      const values = Array.isArray(props.modelValue) ? props.modelValue : [];
-      return values.includes(value);
-    }
-    return props.modelValue === value;
+  // Utilities з використанням хелперів
+  const isOptionSelectedHelper = (value: string | number): boolean => {
+    return isOptionSelected(value, props.modelValue, isMultiple.value);
   };
 
   const isOptionVisible = (option: VtSelectOption): boolean => {
@@ -572,87 +421,11 @@
     nextTick(() => {
       if (!containerRef.value) return;
 
-      const containerRect = containerRef.value.getBoundingClientRect();
-      const containerWidth = containerRect.width - 60; // Резерв для іконки і паддингів
-      let totalWidth = 0;
-      let count = 0;
-      const tagGap = 4; // Gap між тегами
-      const collapsedTagMinWidth = 40; // Мінімальна ширина "+N" тегу
+      const count = calculateVisibleTagsCount(containerRef.value, tagRefs.value, selectedOptions.value.length);
 
-      // Тимчасово створюємо елемент для вимірювання "+N" тегу
-      const measureElement = document.createElement('div');
-      measureElement.className = 'vt-select__tag vt-select__tag--collapsed';
-      measureElement.style.visibility = 'hidden';
-      measureElement.style.position = 'absolute';
-      measureElement.innerHTML = `<span class="vt-select__tag-text">+${selectedOptions.value.length}</span>`;
-      document.body.appendChild(measureElement);
-      const collapsedTagWidth = measureElement.offsetWidth;
-      document.body.removeChild(measureElement);
-
-      // Проходимо по всіх тегах і рахуємо скільки влізе
-      for (let i = 0; i < selectedOptions.value.length; i++) {
-        const tagElement = tagRefs.value[i];
-        if (!tagElement) {
-          // Якщо елемент ще не відрендерився, припускаємо середню ширину
-          const estimatedWidth = selectedOptions.value[i].label.length * 8 + 30; // Приблизний розрахунок
-
-          // Перевіряємо чи влізе цей тег + потенційний collapsed тег
-          if (i < selectedOptions.value.length - 1) {
-            if (totalWidth + estimatedWidth + tagGap + collapsedTagWidth > containerWidth) {
-              break;
-            }
-          } else {
-            // Останній тег - перевіряємо без collapsed
-            if (totalWidth + estimatedWidth > containerWidth) {
-              break;
-            }
-          }
-
-          totalWidth += estimatedWidth + tagGap;
-          count++;
-          continue;
-        }
-
-        const tagWidth = tagElement.offsetWidth;
-
-        // Якщо це не останній тег, перевіряємо чи влізе він + collapsed індикатор
-        if (i < selectedOptions.value.length - 1) {
-          if (totalWidth + tagWidth + tagGap + collapsedTagWidth > containerWidth) {
-            break;
-          }
-        } else {
-          // Якщо це останній тег, перевіряємо чи влізе він без collapsed індикатора
-          if (totalWidth + tagWidth > containerWidth) {
-            break;
-          }
-        }
-
-        totalWidth += tagWidth + tagGap;
-        count++;
-      }
-
-      // Якщо всі теги влазять, показуємо всі
-      if (count >= selectedOptions.value.length) {
-        visibleCount.value = selectedOptions.value.length;
-      } else {
-        // Інакше показуємо стільки, скільки влізає + залишаємо місце для "+N"
-        visibleCount.value = Math.max(1, count);
-      }
+      visibleCount.value = count;
     });
   };
-
-  const collapsedCount = computed(() => {
-    return selectedOptions.value.length - visibleCount.value;
-  });
-
-  const showCollapsedIndicator = computed(() => {
-    return (
-      props.collapsedTags &&
-      props.multiple &&
-      selectedOptions.value.length > 0 &&
-      visibleCount.value < selectedOptions.value.length
-    );
-  });
 
   // Створюємо контекст для дочірніх компонентів
   const selectContext: VtSelectContext = {
@@ -661,7 +434,7 @@
     filterable: props.filterable,
     filterQuery: filterQuery.value,
     handleOptionClick,
-    isOptionSelected,
+    isOptionSelected: isOptionSelectedHelper,
     isOptionVisible,
     registerOption,
     unregisterOption,
@@ -678,9 +451,9 @@
           });
         },
         {
-          root: null, // Використовуємо viewport замість dropdownRef
-          rootMargin: '20px', // Збільшуємо margin для кращого спрацювання
-          threshold: 0.1, // Зменшуємо threshold
+          root: null,
+          rootMargin: '20px',
+          threshold: 0.1,
         }
       );
       observer.observe(sentinelRef.value);
@@ -720,7 +493,7 @@
     emit('validation', { isValid: true, errors: [] });
   };
 
-  const getSelectedOptions = (): VtSelectOption[] => {
+  const getSelectedOptionsMethod = (): VtSelectOption[] => {
     return selectedOptions.value;
   };
 
@@ -743,7 +516,7 @@
     clear,
     validate,
     clearValidation,
-    getSelectedOptions,
+    getSelectedOptions: getSelectedOptionsMethod,
     getValidationState,
     registerOption,
     unregisterOption,
@@ -762,13 +535,11 @@
   watch(
     selectedOptions,
     () => {
-      // Викликаємо пересчет видимих тегів при зміні вибраних опцій
       calcVisibleCount();
     },
     { deep: true }
   );
 
-  // Слідкуємо за змінами розміру контейнера
   watch(
     () => containerRef.value,
     () => {
@@ -789,7 +560,6 @@
       validateValue();
     }
 
-    // Ініціалізація з затримкою для правильного відрендерування
     nextTick(() => {
       calcVisibleCount();
       initScrollBottom();
@@ -843,12 +613,7 @@
           <!-- Collapsed tags indicator -->
           <div
             v-if="showCollapsedIndicator"
-            v-tooltip="
-              `Вибрано ще ${collapsedCount} ${collapsedCount === 1 ? 'опція' : collapsedCount < 5 ? 'опції' : 'опцій'}: ${selectedOptions
-                .slice(visibleCount)
-                .map(o => o.label)
-                .join(', ')}`
-            "
+            v-tooltip="collapsedTooltip"
             class="vt-select__tag vt-select__tag--collapsed"
           >
             <span class="vt-select__tag-text">+{{ collapsedCount }}</span>
@@ -952,11 +717,11 @@
               v-for="option in filteredOptions"
               :key="`option-${option.value}`"
               :aria-disabled="option.disabled"
-              :aria-selected="isOptionSelected(option.value)"
+              :aria-selected="isOptionSelectedHelper(option.value)"
               :class="[
                 'vt-option',
                 {
-                  'vt-option--selected': isOptionSelected(option.value),
+                  'vt-option--selected': isOptionSelectedHelper(option.value),
                   'vt-option--disabled': option.disabled,
                 },
               ]"
@@ -966,7 +731,7 @@
               <!-- Checkbox для мульти-селекту -->
               <VCheckbox
                 v-if="isMultiple"
-                :checked="isOptionSelected(option.value)"
+                :checked="isOptionSelectedHelper(option.value)"
                 :disabled="option.disabled"
                 class="vt-option__checkbox"
                 tabindex="-1"

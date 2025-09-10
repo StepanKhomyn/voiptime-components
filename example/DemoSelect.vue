@@ -85,6 +85,7 @@
 
           <VSelect
             v-model="demoData.multiple"
+            collapsed-tags
             label="Множинний вибір"
             multiple
             placeholder="Оберіть технології..."
@@ -140,6 +141,7 @@
           <VSelect
             v-model="demoData.collapsedTags"
             collapsed-tags
+            infinite-scroll
             label="Багато опцій"
             multiple
             placeholder="Виберіть багато опцій..."
@@ -568,7 +570,7 @@ onMounted(() => {
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, reactive, ref } from 'vue';
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
@@ -608,6 +610,9 @@ onMounted(() => {
     { label: 'React', value: 'react' },
     { label: 'Angular', value: 'angular' },
     { label: 'Svelte', value: 'svelte' },
+    { label: 'Svelte3', value: 'svelte23' },
+    { label: 'Svelte33', value: 'svelte233' },
+    { label: 'Svelte3вці3', value: 'svelte2313' },
   ];
 
   const countries = [
