@@ -1,8 +1,13 @@
 <script lang="ts" setup>
   import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
   import { useDropdown } from './useDropdown';
-  import type { DropdownContext, DropdownEmits, DropdownProps } from './types';
-  import { DropdownContextKey } from './types';
+  import {
+    type DropdownContext,
+    DropdownContextKey,
+    type DropdownEmits,
+    type DropdownProps,
+    type DropdownTriggerType,
+  } from './types';
 
   const props = withDefaults(defineProps<DropdownProps>(), {
     trigger: 'hover',
@@ -31,7 +36,7 @@
     triggerRef,
     menuRef,
     {
-      trigger: props.trigger,
+      trigger: props.trigger as DropdownTriggerType,
       placement: props.placement,
       showTimeout: props.showTimeout,
       hideTimeout: props.hideTimeout,

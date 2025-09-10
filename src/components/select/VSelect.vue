@@ -1,116 +1,102 @@
-// Виправлений VSelect компонент
-
-<template>
-  <div ref="selectRef" :class="selectClasses">
-    <!-- Label -->
-    <label v-if="label" class="vt-select__label">
-      {{ label }}
-    </label>
-
-    <!-- Trigger -->
-    <div
-      ref="triggerRef"
-      class="vt-select__container"
-      tabindex="0"
-      @blur="handleBlur"
-      @click="toggle"
-      @focus="handleFocus"
-      @keydown="handleKeydown"
-    >
-      <!-- Display Field -->
-      <div class="vt-select__field">
-        <!-- Selected value display -->
-        <span v-if="displayText" class="vt-select__display-text">
-          {{ displayText }}
-        </span>
-
-        <!-- Placeholder -->
-        <span v-else class="vt-select__placeholder">
-          {{ placeholder }}
-        </span>
-      </div>
-
-      <!-- Arrow icon -->
-      <div class="vt-select__suffix">
-        <VIcon
-          :class="{ 'vt-select__arrow--open': visible }"
-          class="vt-select__icon vt-select__arrow"
-          name="arrowDown"
-        />
-      </div>
-    </div>
-
-    <!-- Helper text -->
-    <div v-if="helperText" class="vt-select__help">
-      {{ helperText }}
-    </div>
-
-    <!-- Hidden slot for option registration -->
-    <div style="display: none">
-      <slot />
-    </div>
-
-    <!-- Dropdown -->
-    <Teleport v-if="visible && parentVisible" to="body">
-      <transition name="dropdown">
-        <div ref="dropdownRef" :style="dropdownStyle" class="vt-select-dropdown" @mousedown.prevent>
-          <!-- Options -->
-          <div class="vt-select-dropdown__options">
-            <div
-              v-for="option in registeredOptions"
-              :key="option.value"
-              :class="['vt-option', { 'vt-option--selected': option.value === modelValue }]"
-              @click="selectOption(option)"
-              @mousedown.prevent
-            >
-              <span class="vt-option__text">{{ option.label }}</span>
-            </div>
-          </div>
-        </div>
-      </transition>
-    </Teleport>
-  </div>
-</template>
-
 <script lang="ts" setup>
   import { computed, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue';
   import VIcon from '@/components/icon/VIcon.vue';
+  import VCheckbox from '@/components/checkbox/VCheckbox.vue';
+  import VLoader from '@/components/loader/VLoader.vue';
   import { useDropdown } from '@/components/dropdown/useDropdown';
+  import type {
+    VtSelectContext,
+    VtSelectEmits,
+    VtSelectMethods,
+    VtSelectOption,
+    VtSelectProps,
+  } from '@/components/select/types';
+  import { VtSelectContextKey } from '@/components/select/types';
 
-  interface VSelectOption {
-    value: string | number;
-    label: string;
-  }
+  import {
+    calculateVisibleTagsCount,
+    createCollapsedTooltip,
+    getEmptyValue,
+    getSelectedOptions,
+    handleOptionSelection,
+    isOptionSelected,
+    removeTagFromValue,
+    validateSelectValue,
+  } from '@/components/select/helpers';
 
-  interface Props {
-    modelValue?: string | number;
-    placeholder?: string;
-    label?: string;
-    helperText?: string;
-    status?: 'default' | 'success' | 'error' | 'warning';
-  }
-
-  const props = withDefaults(defineProps<Props>(), {
-    placeholder: 'Оберіть опцію',
+  // ===== PROPS & DEFAULTS =====
+  const props = withDefaults(defineProps<VtSelectProps>(), {
     status: 'default',
+    disabled: false,
+    clearable: false,
+    loading: false,
+    multiple: false,
+    collapsedTags: false,
+    placeholder: 'Оберіть опцію',
+    noDataText: 'Немає даних',
+    loadingText: 'Завантаження...',
+    maxHeight: 220,
+    validateOnInput: true,
+    validateOnBlur: true,
+    placement: 'bottom-start',
+    trigger: 'click',
+    showTimeout: 0,
+    hideTimeout: 0,
   });
 
-  const emit = defineEmits<{
-    'update:modelValue': [value: string | number];
-    change: [value: string | number];
-    'visible-change': [visible: boolean];
-  }>();
+  // ===== EMITS =====
+  const emit = defineEmits<VtSelectEmits>();
 
-  // Refs
+  // ===== TEMPLATE REFS =====
   const selectRef = ref<HTMLElement>();
   const triggerRef = ref<HTMLElement>();
   const dropdownRef = ref<HTMLElement>();
-  const registeredOptions = ref<VSelectOption[]>([]);
-  const isSelecting = ref(false); // Флаг для відстеження процесу вибору
+  const containerRef = ref<HTMLElement>();
+  const tagRefs = ref<HTMLElement[]>([]);
+  const scrollContainerRef = ref<HTMLElement>();
 
-  // Dropdown integration
+  // ===== STATE =====
+  const state = {
+    isFocused: ref(false),
+    validationErrors: ref<string[]>([]),
+    isValid: ref(true),
+    visibleCount: ref(0),
+  };
+
+  // ===== OPTIONS REGISTRY =====
+  const registeredOptions = ref<VtSelectOption[]>([]);
+  const optionSlots = ref<Map<string | number, any>>(new Map());
+
+  const registerOption = (option: VtSelectOption, slotContent?: any) => {
+    // Видаляємо існуючий варіант з тим же значенням
+    const existingIndex = registeredOptions.value.findIndex(o => o.value === option.value);
+    if (existingIndex > -1) {
+      registeredOptions.value.splice(existingIndex, 1);
+    }
+
+    // Додаємо новий варіант
+    registeredOptions.value.push(option);
+
+    if (slotContent) {
+      optionSlots.value.set(option.value, slotContent);
+    }
+  };
+
+  const unregisterOption = (value: string | number) => {
+    const index = registeredOptions.value.findIndex(o => o.value === value);
+    if (index > -1) {
+      registeredOptions.value.splice(index, 1);
+    }
+    optionSlots.value.delete(value);
+  };
+
+  const getOptionSlot = (value: string | number) => {
+    return optionSlots.value.get(value);
+  };
+
+  // ===== DROPDOWN INTEGRATION =====
   const {
-    visible,
+    visible: isDropdownVisible,
     parentVisible,
     dropdownPosition,
     show: showDropdown,
@@ -120,52 +106,128 @@
   } = useDropdown(triggerRef, dropdownRef, {
     trigger: 'click',
     placement: 'bottom-start',
+    showTimeout: 250,
+    hideTimeout: 150,
+    disabled: props.disabled,
     hideOnClick: false,
-    onVisibleChange: isVisible => {
-      emit('visible-change', isVisible);
+    onVisibleChange: visible => {
+      if (visible) {
+        nextTick(async () => {
+          await updatePosition();
+          scrollHandler.init();
+        });
+      } else {
+        if (props.validateOnBlur) {
+          validation.validate();
+        }
+      }
+
+      emit('visible-change', visible);
     },
   });
 
-  // Watcher для оновлення позиції коли dropdown стає видимим
-  watch(visible, async newVisible => {
-    if (newVisible) {
-      await nextTick();
-      updatePosition();
-    }
-  });
+  // ===== VALIDATION =====
+  const validation = {
+    validate() {
+      const result = validateSelectValue(
+        props.modelValue,
+        isMultiple.value,
+        props.required || false,
+        props.requiredMessage
+      );
 
-  // Methods for option registration
-  const registerOption = (option: VSelectOption) => {
-    if (!registeredOptions.value.find(o => o.value === option.value)) {
-      registeredOptions.value.push(option);
-    }
+      state.validationErrors.value = result.errors;
+      state.isValid.value = result.isValid;
+
+      emit('validation', { isValid: state.isValid.value, errors: result.errors });
+    },
+
+    clear() {
+      state.validationErrors.value = [];
+      state.isValid.value = true;
+      emit('validation', { isValid: true, errors: [] });
+    },
   };
 
-  const unregisterOption = (value: string | number) => {
-    const index = registeredOptions.value.findIndex(o => o.value === value);
-    if (index > -1) {
-      registeredOptions.value.splice(index, 1);
-    }
+  // ===== SCROLL HANDLER =====
+  const scrollHandler = {
+    init() {
+      if (scrollContainerRef.value) {
+        scrollContainerRef.value.addEventListener('scroll', this.handleOptionsScroll, { passive: true });
+      }
+    },
+
+    handleOptionsScroll(event: Event) {
+      if (props.loading) return;
+
+      const target = event.target as HTMLElement;
+      if (!target) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = target;
+      const scrollThreshold = 50;
+      const isNearBottom = scrollHeight - scrollTop - clientHeight <= scrollThreshold;
+
+      if (isNearBottom && registeredOptions.value.length > 0) {
+        emit('scrolled');
+      }
+    },
   };
 
-  // Provide context for VOption components
-  provide('vt-select-context', {
-    registerOption,
-    unregisterOption,
-    selectedValue: computed(() => props.modelValue),
+  // ===== COMPUTED VALUES =====
+  const isMultiple = computed(() => props.multiple);
+
+  const selectedOptions = computed((): VtSelectOption[] => {
+    if (!registeredOptions.value.length) return [];
+
+    return getSelectedOptions(props.modelValue, registeredOptions.value, isMultiple.value);
   });
 
-  // Computed
+  const visibleTags = computed(() => {
+    if (!props.multiple || selectedOptions.value.length === 0) return [];
+
+    if (!props.collapsedTags) {
+      return selectedOptions.value;
+    }
+
+    return selectedOptions.value.slice(0, state.visibleCount.value);
+  });
+
   const displayText = computed(() => {
-    const selected = registeredOptions.value.find(option => option.value === props.modelValue);
-    return selected?.label || props.modelValue || '';
+    if (isMultiple.value) return '';
+
+    const selected = selectedOptions.value[0];
+    if (selected) return selected.label;
+
+    if (
+      props.modelValue !== undefined &&
+      props.modelValue !== null &&
+      props.modelValue !== '' &&
+      !Array.isArray(props.modelValue)
+    ) {
+      return String(props.modelValue);
+    }
+
+    return '';
+  });
+
+  const showClearButton = computed(() => {
+    return props.clearable && !props.disabled && selectedOptions.value.length > 0;
+  });
+
+  const currentStatus = computed(() => {
+    if (props.status !== 'default') return props.status;
+    if (!state.isValid.value) return 'error';
+    return 'default';
   });
 
   const selectClasses = computed(() => [
     'vt-select',
-    `vt-select--${props.status}`,
+    `vt-select--${currentStatus.value}`,
     {
-      'vt-select--open': visible.value,
+      'vt-select--disabled': props.disabled,
+      'vt-select--focused': state.isFocused.value,
+      'vt-select--multiple': isMultiple.value,
+      'vt-select--open': isDropdownVisible.value,
     },
   ]);
 
@@ -173,41 +235,32 @@
     ...dropdownPosition.value,
     position: 'absolute' as const,
     zIndex: 2000,
+    maxHeight: `${props.maxHeight}px`,
   }));
 
-  // Methods
-  const toggle = async () => {
-    if (!isSelecting.value) {
-      toggleDropdown();
-    }
-  };
+  const collapsedCount = computed(() => {
+    return selectedOptions.value.length - state.visibleCount.value;
+  });
 
-  const selectOption = async (option: VSelectOption) => {
-    console.log('Selecting option:', option.value);
+  const showCollapsedIndicator = computed(() => {
+    return (
+      props.collapsedTags &&
+      props.multiple &&
+      selectedOptions.value.length > 0 &&
+      state.visibleCount.value < selectedOptions.value.length
+    );
+  });
 
-    // Встановлюємо флаг що ми в процесі вибору
-    isSelecting.value = true;
+  const collapsedTooltip = computed(() => {
+    if (!showCollapsedIndicator.value) return '';
 
-    try {
-      // Оновлюємо значення
-      emit('update:modelValue', option.value);
-      emit('change', option.value);
+    const hiddenOptions = selectedOptions.value.slice(state.visibleCount.value);
+    return createCollapsedTooltip(collapsedCount.value, hiddenOptions);
+  });
 
-      // Даємо час для оновлення
-      await nextTick();
-
-      // Закриваємо dropdown
-      hideDropdown();
-    } finally {
-      // Скидаємо флаг після короткої затримки
-      setTimeout(() => {
-        isSelecting.value = false;
-      }, 50);
-    }
-  };
-
+  // ===== EVENT HANDLERS =====
   const handleClickOutside = (event: MouseEvent) => {
-    if (!visible.value || isSelecting.value) return;
+    if (!isDropdownVisible.value) return;
 
     const target = event.target as Node;
     if (selectRef.value?.contains(target) || dropdownRef.value?.contains(target)) {
@@ -217,56 +270,381 @@
     hideDropdown();
   };
 
-  const handleFocus = () => {
-    // Focus styles handled by CSS
+  const handleOptionClick = (option: VtSelectOption) => {
+    if (!option || option.disabled) return;
+
+    const newValue = handleOptionSelection(option, props.modelValue, isMultiple.value);
+
+    emit('update:modelValue', newValue);
+    emit('change', newValue);
+
+    if (!isMultiple.value) {
+      hideDropdown();
+    }
+
+    if (props.validateOnInput) {
+      validation.validate();
+    }
   };
 
-  const handleBlur = (event: FocusEvent) => {
-    // Якщо зараз відбувається вибір опції, не закриваємо dropdown
-    if (isSelecting.value) {
-      event.preventDefault();
-      return;
-    }
+  const handleClear = () => {
+    const emptyValue = getEmptyValue(isMultiple.value);
+    emit('update:modelValue', emptyValue);
+    emit('change', emptyValue);
+    emit('clear');
 
+    validation.clear();
+  };
+
+  const handleRemoveTag = (value: string | number) => {
+    if (!isMultiple.value) return;
+
+    const newValue = removeTagFromValue(value, props.modelValue);
+
+    emit('update:modelValue', newValue);
+    emit('change', newValue);
+    emit('remove-tag', value);
+
+    if (props.validateOnInput) {
+      validation.validate();
+    }
+  };
+
+  const handleTriggerClick = () => {
+    if (props.disabled) return;
+    toggleDropdown();
+  };
+
+  const handleFocus = () => {
+    state.isFocused.value = true;
+    emit('focus');
+  };
+
+  const handleBlur = (event?: FocusEvent) => {
     // Перевіряємо, чи фокус не переходить на dropdown
-    const relatedTarget = event.relatedTarget as Node;
-    if (dropdownRef.value?.contains(relatedTarget)) {
+    if (event?.relatedTarget && dropdownRef.value?.contains(event.relatedTarget as Node)) {
       return;
     }
 
-    // Скорочуємо timeout і додаємо перевірку флагу
+    state.isFocused.value = false;
+    emit('blur');
+
+    // Затримка для dropdown
     setTimeout(() => {
-      if (!isSelecting.value && !dropdownRef.value?.contains(document.activeElement)) {
+      if (!dropdownRef.value?.contains(document.activeElement)) {
         hideDropdown();
       }
-    }, 50);
+    }, 100);
   };
 
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
-      toggle();
-    } else if (event.key === 'Escape' && visible.value) {
+      handleTriggerClick();
+    } else if (event.key === 'Escape' && isDropdownVisible.value) {
       event.preventDefault();
       hideDropdown();
     }
   };
 
-  // Lifecycle
+  // ===== UTILITIES =====
+  const isOptionSelectedUtil = (value: string | number): boolean => {
+    return isOptionSelected(value, props.modelValue, isMultiple.value);
+  };
+
+  const calcVisibleCount = () => {
+    if (!props.collapsedTags || !containerRef.value || selectedOptions.value.length === 0) {
+      state.visibleCount.value = selectedOptions.value.length;
+      return;
+    }
+
+    nextTick(() => {
+      if (!containerRef.value) return;
+
+      const count = calculateVisibleTagsCount(containerRef.value, tagRefs.value, selectedOptions.value.length);
+
+      state.visibleCount.value = count;
+    });
+  };
+
+  // ===== CONTEXT PROVIDER =====
+  const selectContext: VtSelectContext = {
+    selectValue: computed(() => props.modelValue || (isMultiple.value ? [] : '')).value,
+    multiple: isMultiple.value,
+    handleOptionClick: handleOptionClick,
+    isOptionSelected: isOptionSelectedUtil,
+    registerOption: registerOption,
+    unregisterOption: unregisterOption,
+  };
+
+  provide<VtSelectContext>(VtSelectContextKey, selectContext);
+
+  // ===== PUBLIC METHODS =====
+  const publicMethods = {
+    focus() {
+      if (!isDropdownVisible.value) {
+        showDropdown();
+      }
+    },
+
+    blur() {
+      hideDropdown();
+    },
+
+    clear() {
+      handleClear();
+    },
+
+    validate(): boolean {
+      validation.validate();
+      return state.isValid.value;
+    },
+
+    clearValidation() {
+      validation.clear();
+    },
+
+    getSelectedOptions(): VtSelectOption[] {
+      return selectedOptions.value;
+    },
+
+    getValidationState() {
+      return {
+        isValid: state.isValid.value,
+        errors: [...state.validationErrors.value],
+      };
+    },
+  };
+
+  defineExpose<VtSelectMethods>({
+    ...publicMethods,
+    registerOption: registerOption,
+    unregisterOption: unregisterOption,
+  });
+
+  // ===== WATCHERS =====
+  watch(
+    () => props.modelValue,
+    () => {
+      if (props.validateOnInput) {
+        validation.validate();
+      }
+    }
+  );
+
+  watch(
+    selectedOptions,
+    () => {
+      calcVisibleCount();
+    },
+    { deep: true }
+  );
+
+  watch(
+    () => containerRef.value,
+    () => {
+      if (containerRef.value) {
+        calcVisibleCount();
+      }
+    }
+  );
+
+  watch(isDropdownVisible, async newVisible => {
+    if (newVisible) {
+      await nextTick();
+      updatePosition();
+    }
+  });
+
+  // ===== LIFECYCLE HOOKS =====
   onMounted(() => {
+    // Initial validation
+    if (
+      props.modelValue !== undefined &&
+      props.modelValue !== '' &&
+      (!Array.isArray(props.modelValue) || props.modelValue.length > 0)
+    ) {
+      validation.validate();
+    }
+
+    nextTick(() => {
+      calcVisibleCount();
+    });
+
+    window.addEventListener('resize', calcVisibleCount);
     document.addEventListener('click', handleClickOutside);
   });
 
   onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside);
-  });
-
-  // Expose methods for parent components
-  defineExpose({
-    show: showDropdown,
-    hide: hideDropdown,
-    toggle,
-    visible,
-    updatePosition,
+    window.removeEventListener('resize', calcVisibleCount);
   });
 </script>
+
+<template>
+  <div ref="selectRef" :class="selectClasses">
+    <!-- Label -->
+    <label v-if="label" :for="id" class="vt-select__label">
+      {{ label }}
+      <span v-if="required" class="vt-select__required">*</span>
+    </label>
+
+    <!-- Trigger -->
+    <div
+      ref="triggerRef"
+      class="vt-select__container"
+      tabindex="0"
+      @blur="handleBlur"
+      @click="handleTriggerClick"
+      @focus="handleFocus"
+      @keydown="handleKeydown"
+    >
+      <!-- Display Field -->
+      <div class="vt-select__field">
+        <!-- Multiple selected tags -->
+        <div v-if="multiple && selectedOptions.length > 0" ref="containerRef" class="vt-select__tags">
+          <!-- Visible tags -->
+          <div
+            v-for="(option, index) in visibleTags"
+            :key="`tag-${option.value}-${index}`"
+            :ref="el => el && (tagRefs[index] = el as HTMLElement)"
+            class="vt-select__tag"
+          >
+            <span class="vt-select__tag-text">{{ option.label }}</span>
+            <VIcon
+              v-if="!props.disabled"
+              class="vt-select__tag-close"
+              name="close"
+              @click.stop="handleRemoveTag(option.value)"
+            />
+          </div>
+
+          <!-- Collapsed tags indicator -->
+          <div
+            v-if="showCollapsedIndicator"
+            v-tooltip="collapsedTooltip"
+            class="vt-select__tag vt-select__tag--collapsed"
+          >
+            <span class="vt-select__tag-text">+{{ collapsedCount }}</span>
+          </div>
+        </div>
+
+        <!-- Single select display -->
+        <span v-else-if="!multiple && displayText" class="vt-select__display-text">
+          {{ displayText }}
+        </span>
+
+        <!-- Placeholder -->
+        <span v-else class="vt-select__placeholder">
+          {{ placeholder }}
+        </span>
+      </div>
+
+      <!-- Suffix icons -->
+      <div class="vt-select__suffix">
+        <!-- Loading spinner -->
+        <VLoader v-if="loading" class="vt-select__loading" />
+
+        <!-- Clear button -->
+        <button
+          v-else-if="showClearButton"
+          :disabled="props.disabled"
+          class="vt-select__clear-btn"
+          type="button"
+          @click.stop="handleClear"
+        >
+          <VIcon name="close" />
+        </button>
+
+        <!-- Arrow icon -->
+        <VIcon
+          v-else
+          :class="{ 'vt-select__arrow--open': isDropdownVisible }"
+          class="vt-select__icon vt-select__arrow"
+          name="arrowDown"
+        />
+      </div>
+    </div>
+
+    <!-- Validation messages -->
+    <transition name="fade">
+      <div v-if="state.validationErrors" class="vt-select__help">
+        <div v-for="(error, index) in state.validationErrors.value" :key="`error-${index}`" class="vt-select__error">
+          {{ error }}
+        </div>
+      </div>
+    </transition>
+
+    <!-- Hidden slot for option registration -->
+    <div aria-hidden="true" style="display: none">
+      <slot />
+    </div>
+
+    <!-- Dropdown via Teleport -->
+    <Teleport v-if="isDropdownVisible && parentVisible" to="body">
+      <transition name="dropdown">
+        <div
+          ref="dropdownRef"
+          :aria-multiselectable="multiple"
+          :style="dropdownStyle"
+          class="vt-select-dropdown"
+          role="listbox"
+          @click.stop
+          @mousedown.prevent
+        >
+          <!-- Loading state -->
+          <div v-if="loading" class="vt-select-dropdown__loading">
+            <VLoader class="vt-select-dropdown__loading-icon" />
+            {{ loadingText }}
+          </div>
+
+          <!-- No Data -->
+          <div v-else-if="registeredOptions.length === 0" class="vt-select-dropdown__empty">
+            {{ noDataText }}
+          </div>
+
+          <!-- Options -->
+          <div v-else ref="scrollContainerRef" class="vt-select-dropdown__options">
+            <div
+              v-for="option in registeredOptions"
+              :key="`option-${option.value}`"
+              :aria-disabled="option.disabled || false"
+              :aria-selected="isOptionSelectedUtil(option.value)"
+              :class="[
+                'vt-option',
+                {
+                  'vt-option--selected': isOptionSelectedUtil(option.value),
+                  'vt-option--disabled': option.disabled || false,
+                },
+              ]"
+              role="option"
+              @click="handleOptionClick(option)"
+              @mousedown.prevent
+            >
+              <!-- Checkbox for multi-select -->
+              <VCheckbox
+                v-if="isMultiple"
+                :checked="isOptionSelectedUtil(option.value)"
+                :disabled="option.disabled || false"
+                class="vt-option__checkbox"
+                tabindex="-1"
+              />
+
+              <!-- Option content -->
+              <span class="vt-option__text">
+                <component :is="getOptionSlot(option.value)" v-if="getOptionSlot(option.value)" />
+                <span v-else>{{ option.label || option.value }}</span>
+              </span>
+            </div>
+
+            <!-- Loading more indicator -->
+            <div v-if="loading" class="vt-select-dropdown__loading-more">
+              <VLoader class="vt-select-dropdown__loading-icon" />
+              {{ props.loadingText }}
+            </div>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
+  </div>
+</template>

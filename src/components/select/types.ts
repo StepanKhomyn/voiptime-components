@@ -46,8 +46,8 @@ export interface VtSelectProps {
 export interface VtSelectEmits {
   'update:modelValue': [value: string | number | Array<string | number>];
   change: [value: string | number | Array<string | number>];
-  focus: [event: FocusEvent];
-  blur: [event: FocusEvent];
+  focus: [];
+  blur: [];
   clear: [];
   'visible-change': [visible: boolean];
   'remove-tag': [value: string | number];
@@ -76,14 +76,6 @@ export interface VtSelectMethods {
   unregisterOption(value: string | number): void;
 }
 
-export interface VtOptionProps {
-  label: string;
-  value: string | number;
-  disabled?: boolean;
-  icon?: string;
-  group?: string;
-}
-
 export interface VtOptionEmits {
   click: [option: VtSelectOption];
 }
@@ -92,11 +84,8 @@ export interface VtOptionEmits {
 export interface VtSelectContext {
   selectValue: string | number | Array<string | number>;
   multiple: boolean;
-  filterable: boolean;
-  filterQuery: string;
   handleOptionClick: (option: VtSelectOption) => void;
   isOptionSelected: (value: string | number) => boolean;
-  isOptionVisible: (option: VtSelectOption) => boolean;
   registerOption: (option: VtSelectOption, slotContent?: any) => void;
   unregisterOption: (value: string | number) => void;
 }

@@ -105,7 +105,6 @@ export type {
   VtSelectOption,
   VtSelectStatus,
   VtSelectContext,
-  VtOptionProps,
   VtOptionEmits,
 } from './components/select/types';
 

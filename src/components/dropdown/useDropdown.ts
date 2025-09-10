@@ -190,14 +190,6 @@ export function useDropdown(
     transformOrigin: 'center top',
   });
 
-  // Helper methods
-  const clearTimeout = (): void => {
-    if (timeoutPending.value) {
-      window.clearTimeout(timeoutPending.value);
-      timeoutPending.value = null;
-    }
-  };
-
   const checkParentVisibility = (): void => {
     if (!triggerRef.value) return;
 
@@ -271,7 +263,6 @@ export function useDropdown(
       return;
     }
 
-    clearTimeout();
     timeoutPending.value = window.setTimeout(
       async () => {
         visible.value = true;
@@ -288,7 +279,6 @@ export function useDropdown(
   const hide = (): void => {
     if (!visible.value) return;
 
-    clearTimeout();
     timeoutPending.value = window.setTimeout(
       () => {
         visible.value = false;
@@ -308,7 +298,6 @@ export function useDropdown(
   // Lifecycle
   onUnmounted(() => {
     removeScrollListeners();
-    clearTimeout();
   });
 
   return {
@@ -323,7 +312,6 @@ export function useDropdown(
     hide,
     toggle,
     updatePosition,
-    clearTimeout,
 
     // Internal methods
     checkParentVisibility,

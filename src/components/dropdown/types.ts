@@ -1,10 +1,10 @@
 import type { InjectionKey, Ref } from 'vue';
 
 export type DropdownPlacement = 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
-export type DropdownTriggerType = 'click' | 'hover' | 'contextmenu';
+export type DropdownTriggerType = 'click' | 'hover';
 
 export interface DropdownProps {
-  trigger?: 'click' | 'hover' | 'contextmenu';
+  trigger?: DropdownTriggerType;
   placement?: DropdownPlacement;
   disabled?: boolean;
   splitButton?: boolean;

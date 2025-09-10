@@ -4,7 +4,19 @@
     {{ mapping }}
     <br />
     {{ fields }}
-    <VSelect v-model="mapping.first" placeholder="Оберіть користувача...">
+    <VSelect
+      v-model="mapping.first"
+      clearable
+      placeholder="Оберіть користувача..."
+      required
+      @blur="event => console.log('blur', event)"
+      @clear="result => console.log('clear', result)"
+      @focus="event => console.log('focus', event)"
+      @scrolled="() => console.log('FFFFFFF')"
+      @validation="result => console.log('validation', result)"
+      @remove-tag="value => console.log('remove-tag', value)"
+      @visible-change="result => console.log('visible-change', result)"
+    >
       <VOption v-for="item in fields" :key="item" :label="item" :value="item" />
       <VOption label="asd" value="dsa">
         <VIcon name="email" />

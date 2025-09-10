@@ -1,37 +1,53 @@
-<!-- VOption.vue -->
+// VOption.vue - виправлена версія
 <script lang="ts" setup>
-  import { inject, onMounted, onUnmounted } from 'vue';
+  import { computed, inject, onBeforeUnmount, onMounted, useSlots } from 'vue';
+  import type { VtOptionEmits, VtSelectContext, VtSelectOption } from './types';
+  import { VtSelectContextKey } from './types';
 
-  interface Props {
-    value: string | number;
-    label: string;
+  // Пропси
+  const props = defineProps<VtSelectOption>();
+
+  // Емітери
+  const emit = defineEmits<VtOptionEmits>();
+
+  // Слоти
+  const slots = useSlots();
+
+  // Інжектимо контекст від батьківського Select
+  const selectContext = inject<VtSelectContext>(VtSelectContextKey);
+
+  if (!selectContext) {
+    console.warn('VOption повинен використовуватися всередині VSelect');
   }
 
-  const props = defineProps<Props>();
+  // Створюємо об'єкт опції
+  const option = computed(() => ({
+    label: props.label,
+    value: props.value,
+    disabled: props.disabled || false,
+  }));
 
-  // Get context from VSelect
-  const context = inject('vt-select-context') as {
-    registerOption: (option: { value: string | number; label: string }) => void;
-    unregisterOption: (value: string | number) => void;
-    selectedValue: any;
-  } | null;
-
+  // Реєструємо опцію при монтуванні
   onMounted(() => {
-    if (context) {
-      context.registerOption({
-        value: props.value,
-        label: props.label,
-      });
+    if (selectContext) {
+      // ВИПРАВЛЕННЯ: правильно передаємо слот контент
+      const slotContent = slots.default ? () => slots.default!() : null;
+      selectContext.registerOption(option.value, slotContent);
     }
   });
 
-  onUnmounted(() => {
-    if (context) {
-      context.unregisterOption(props.value);
+  // Видаляємо опцію при демонтуванні
+  onBeforeUnmount(() => {
+    if (selectContext) {
+      selectContext.unregisterOption(props.value);
     }
   });
 </script>
 
 <template>
-  <!-- VOption не рендерить нічого в DOM, тільки реєструється в VSelect -->
+  <!-- VOption тепер тільки реєструється, але не рендериться -->
+  <!-- Рендеринг відбувається в VtSelect через v-for -->
+  <div style="display: none">
+    <slot />
+  </div>
 </template>
