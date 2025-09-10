@@ -103,7 +103,6 @@ export type {
   VtSelectEmits,
   VtSelectMethods,
   VtSelectOption,
-  VtSelectSize,
   VtSelectStatus,
   VtSelectContext,
   VtOptionProps,

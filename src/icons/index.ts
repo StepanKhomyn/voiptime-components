@@ -54,6 +54,11 @@ import EmailNewIcon from './mail/EmailNewIcon.vue';
 import EmailOutgoingIcon from './mail/EmailOutgoingIcon.vue';
 import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
+import IvrIcon from './others/IvrIcon.vue';
+import PredictiveIcon from './others/PredictiveIcon.vue';
+import PreviewIcon from './others/PreviewIcon.vue';
+import ProgressiveIcon from './others/ProgressiveIcon.vue';
+import SmsIcon from './others/SmsIcon.vue';
 import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
 import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
 import EmptyIcon from './table/EmptyIcon.vue';
@@ -130,6 +135,13 @@ export const icons = {
   emailOutgoing: EmailOutgoingIcon,
   emailQueue: EmailQueueIcon,
   emailSpam: EmailSpamIcon,
+
+  // others icons
+  ivr: IvrIcon,
+  predictive: PredictiveIcon,
+  preview: PreviewIcon,
+  progressive: ProgressiveIcon,
+  sms: SmsIcon,
 
   // table icons
   columnInsert: ColumnInsertIcon,
