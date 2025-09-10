@@ -1,5 +1,5 @@
 // helpers/selectHelpers.ts
-import type { VtSelectOption } from '../types';
+import type { VtSelectOption } from './types';
 
 /**
  * Перевіряє чи елемент видимий в viewport та не прихований батьківськими контейнерами
@@ -121,6 +121,7 @@ export const calculateDropdownPosition = (
   return {
     top: `${top}px`,
     left: `${left}px`,
+    transformOrigin: 'center bottom',
   };
 };
 
