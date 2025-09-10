@@ -57,8 +57,7 @@
   const filterInputRef = ref<HTMLInputElement>();
   const containerRef = ref<HTMLElement>();
   const tagRefs = ref<HTMLElement[]>([]);
-  const sentinelRef = ref<HTMLElement>();
-  let observer: IntersectionObserver | null = null;
+  const scrollContainerRef = ref<HTMLElement>();
 
   // Реактивні змінні стану
   const isFocused = ref(false);
@@ -84,6 +83,10 @@
   const scrollableParents = ref<Element[]>([]);
   const parentVisible = ref(true);
   const wasVisibleBeforeHiding = ref(false);
+
+  // Змінні для infinite scroll
+  const isLoadingMore = ref(false);
+  const scrollThreshold = 50; // пікселів до кінця для тригера
 
   // Обчислювані властивості
   const isMultiple = computed(() => props.multiple);
@@ -161,10 +164,6 @@
     zIndex: 2000,
     maxHeight: `${props.maxHeight}px`,
   }));
-
-  const shouldShowSentinel = computed(() => {
-    return props.infiniteScroll && !props.loading && filteredOptions.value.length > 0;
-  });
 
   const collapsedCount = computed(() => {
     return selectedOptions.value.length - visibleCount.value;
@@ -285,6 +284,43 @@
     }
   };
 
+  // Infinite scroll з використанням onscroll
+  const handleOptionsScroll = (event: Event): void => {
+    if (!props.infiniteScroll || props.loading || isLoadingMore.value) return;
+
+    const target = event.target as HTMLElement;
+    const { scrollTop, scrollHeight, clientHeight } = target;
+
+    // Перевіряємо чи користувач досяг кінця списку (з урахуванням threshold)
+    const isNearBottom = scrollHeight - scrollTop - clientHeight <= scrollThreshold;
+
+    if (isNearBottom && filteredOptions.value.length > 0) {
+      isLoadingMore.value = true;
+
+      // Емітуємо подію для завантаження додаткових даних
+      emit('scrolled');
+
+      // Скидаємо флаг після короткої затримки
+      // В реальному застосуванні це буде скинуто після завантаження даних
+      setTimeout(() => {
+        isLoadingMore.value = false;
+      }, 300);
+    }
+  };
+
+  // Додаємо scroll listener для options container
+  const initScrollListeners = (): void => {
+    if (props.infiniteScroll && scrollContainerRef.value) {
+      scrollContainerRef.value.addEventListener('scroll', handleOptionsScroll, { passive: true });
+    }
+  };
+
+  const removeScrollListeners = (): void => {
+    if (scrollContainerRef.value) {
+      scrollContainerRef.value.removeEventListener('scroll', handleOptionsScroll);
+    }
+  };
+
   // Керування випадайкою
   const showDropdown = (): void => {
     if (props.disabled || isDropdownVisible.value) return;
@@ -301,7 +337,7 @@
       // Розраховуємо позицію після того, як елемент вже видимий
       await updateDropdownPosition();
       addScrollListeners();
-      initScrollBottom();
+      initScrollListeners();
 
       if (props.filterable && filterInputRef.value) {
         filterInputRef.value.focus();
@@ -318,12 +354,6 @@
     filterQuery.value = '';
     wasVisibleBeforeHiding.value = false;
     removeScrollListeners();
-
-    if (observer && sentinelRef.value) {
-      observer.unobserve(sentinelRef.value);
-      observer.disconnect();
-      observer = null;
-    }
 
     if (props.validateOnBlur) {
       validateValue();
@@ -440,26 +470,6 @@
     unregisterOption,
   };
 
-  const initScrollBottom = () => {
-    if (props.infiniteScroll && sentinelRef.value) {
-      observer = new IntersectionObserver(
-        entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && !props.loading) {
-              emit('scrolled');
-            }
-          });
-        },
-        {
-          root: null,
-          rootMargin: '20px',
-          threshold: 0.1,
-        }
-      );
-      observer.observe(sentinelRef.value);
-    }
-  };
-
   provide<VtSelectContext>(VtSelectContextKey, selectContext);
 
   // Публічні методи
@@ -549,6 +559,15 @@
     }
   );
 
+  watch(
+    () => props.loading,
+    newLoading => {
+      if (!newLoading) {
+        isLoadingMore.value = false;
+      }
+    }
+  );
+
   // Lifecycle hooks
   onMounted(() => {
     // Ініціальна валідація
@@ -562,7 +581,6 @@
 
     nextTick(() => {
       calcVisibleCount();
-      initScrollBottom();
     });
 
     window.addEventListener('resize', resizeHandler);
@@ -573,10 +591,6 @@
     document.removeEventListener('click', handleClickOutside);
     window.removeEventListener('resize', resizeHandler);
     removeScrollListeners();
-    if (observer && sentinelRef.value) {
-      observer.unobserve(sentinelRef.value);
-    }
-    observer = null;
   });
 </script>
 
@@ -712,7 +726,7 @@
           </div>
 
           <!-- Options -->
-          <div v-else ref="scrollContainer" class="vt-select-dropdown__options">
+          <div v-else ref="scrollContainerRef" class="vt-select-dropdown__options">
             <div
               v-for="option in filteredOptions"
               :key="`option-${option.value}`"
@@ -743,9 +757,11 @@
                 <span v-else>{{ option.label }}</span>
               </span>
             </div>
-            <!-- Sentinel елемент для IntersectionObserver -->
-            <div v-if="shouldShowSentinel" ref="sentinelRef" aria-hidden="true" class="vt-select__sentinel">
-              <!-- Цей елемент невидимий і служить тільки як тригер -->
+
+            <!-- Loading more indicator -->
+            <div v-if="isLoadingMore && props.infiniteScroll" class="vt-select-dropdown__loading-more">
+              <VLoader class="vt-select-dropdown__loading-icon" />
+              {{ props.loadingText }}
             </div>
           </div>
         </div>
