@@ -315,12 +315,6 @@
     }
   };
 
-  const removeScrollListeners = (): void => {
-    if (scrollContainerRef.value) {
-      scrollContainerRef.value.removeEventListener('scroll', handleOptionsScroll);
-    }
-  };
-
   // Керування випадайкою
   const showDropdown = (): void => {
     if (props.disabled || isDropdownVisible.value) return;
