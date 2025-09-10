@@ -1,8 +1,11 @@
 import type { InjectionKey, Ref } from 'vue';
 
+export type DropdownPlacement = 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
+export type DropdownTriggerType = 'click' | 'hover' | 'contextmenu';
+
 export interface DropdownProps {
   trigger?: 'click' | 'hover' | 'contextmenu';
-  placement?: 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
+  placement?: DropdownPlacement;
   disabled?: boolean;
   splitButton?: boolean;
   hideOnClick?: boolean;
@@ -42,7 +45,3 @@ export interface DropdownContext {
 }
 
 export const DropdownContextKey = Symbol('dropdown-context') as InjectionKey<DropdownContext>;
-
-// Утилітарні типи
-export type DropdownTriggerType = 'click' | 'hover' | 'contextmenu';
-export type DropdownPlacement = 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';

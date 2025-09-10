@@ -293,18 +293,7 @@
   padding: var(--vt-padding-base) 0;
   min-width: 100px;
   z-index: 2000;
-  animation: vt-select-dropdown-enter 0.2s ease-out;
-
-  @keyframes vt-select-dropdown-enter {
-    from {
-      opacity: 0;
-      transform: translateY(-8px) scale(0.95);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
+  animation: dropdown-fade-in 0.2s ease;
 
   &__search {
     padding: 0 var(--vt-padding-base) var(--vt-padding-base) var(--vt-padding-base);
@@ -397,4 +386,15 @@
 // Scroll styles
 .vt-select-dropdown__options {
   @include vt-scrollbar;
+}
+
+@keyframes dropdown-fade-in {
+  from {
+    opacity: 0;
+    transform: scaleY(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 }

@@ -11,6 +11,7 @@
   import DemoDatePicker from './DemoDatePicker.vue';
   import DemoInput from './DemoInput.vue';
   import DemoSelect from './DemoSelect.vue';
+  import DemoSelect2 from './DemoSelect2.vue';
 
   const activeSlot = ref(null);
 
@@ -26,6 +27,7 @@
     { id: 9, name: 'Дата пікер', icon: '⬇️' },
     { id: 10, name: 'Інпут', icon: '⬇️' },
     { id: 11, name: 'Селект', icon: '⬇️' },
+    { id: 12, name: 'Селект2', icon: '⬇️' },
   ];
 </script>
 
@@ -44,8 +46,8 @@
       <div
         v-for="section in sections"
         :key="section.id"
-        @click="() => (activeSlot = section.id)"
         :class="['section-item', activeSlot === section.id ? 'active' : '']"
+        @click="() => (activeSlot = section.id)"
       >
         <div class="section-icon">{{ section.icon }}</div>
         <div class="section-name">{{ section.name }}</div>
@@ -70,6 +72,7 @@
       <DemoDatePicker v-if="activeSlot === 9" />
       <DemoInput v-if="activeSlot === 10" />
       <DemoSelect v-if="activeSlot === 11" />
+      <DemoSelect2 v-if="activeSlot === 12" />
       <!-- і т.д. -->
     </div>
   </div>

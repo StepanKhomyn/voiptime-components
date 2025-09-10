@@ -1,4 +1,3 @@
-export type VtSelectSize = 'small' | 'medium' | 'large';
 export type VtSelectStatus = 'default' | 'success' | 'error' | 'warning';
 
 export interface VtSelectOption {
@@ -12,7 +11,6 @@ export interface VtSelectProps {
   modelValue?: string | number | Array<string | number>;
   multiple?: boolean;
   collapsedTags?: boolean;
-  size?: VtSelectSize;
   status?: VtSelectStatus;
 
   // Стани
@@ -20,13 +18,10 @@ export interface VtSelectProps {
   clearable?: boolean;
   filterable?: boolean;
   loading?: boolean;
-  infiniteScroll?: boolean;
 
   // Текст і лейбли
   label?: string;
   placeholder?: string;
-  helperText?: string;
-  errorMessage?: string;
   noDataText?: string;
   noMatchText?: string;
   loadingText?: string;
@@ -37,7 +32,6 @@ export interface VtSelectProps {
   tabindex?: number;
   // Випадайка
   maxHeight?: number | string;
-  placement?: 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
 
   // Фільтрація
   filterMethod?: (query: string, option: VtSelectOption) => boolean;
