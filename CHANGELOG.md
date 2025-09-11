@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.2...v1.6.3) (2025-09-11)
+
+
+### Bug Fixes
+
+* нові іконки дій ([748ede0](https://github.com/StepanKhomyn/voiptime-components/commit/748ede035732efbc8b90e6d38e91a1e0d2cb6e9f))
+
 ## [1.6.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.1...v1.6.2) (2025-09-11)
 
 
