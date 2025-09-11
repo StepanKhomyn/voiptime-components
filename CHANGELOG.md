@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.5.0...v1.6.0) (2025-09-11)
+
+
+### Features
+
+* Додано Радіобокс3 ([5a91bd0](https://github.com/StepanKhomyn/voiptime-components/commit/5a91bd0835eb56637e51ab2a33bbee40c2c60c1a))
+
 # [1.5.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.4.6...v1.5.0) (2025-09-11)
 
 
