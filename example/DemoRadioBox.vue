@@ -242,7 +242,7 @@ const customLabel = ref('custom');
         <thead>
           <tr>
             <th>Назва</th>
-            <th>Опиc</th>
+            <th>Опис</th>
           </tr>
         </thead>
         <tbody>
