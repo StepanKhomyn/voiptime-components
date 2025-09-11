@@ -1,3 +1,17 @@
+# [1.5.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.4.6...v1.5.0) (2025-09-11)
+
+
+### Bug Fixes
+
+* merge ([cf688a7](https://github.com/StepanKhomyn/voiptime-components/commit/cf688a7021093d30faa5de7284f379d177a3086c))
+* виправлено селект ([29f584b](https://github.com/StepanKhomyn/voiptime-components/commit/29f584baa23f2a690a6529d04e7981105ef2a198))
+
+
+### Features
+
+* Додано Радіобокс ([a881d5a](https://github.com/StepanKhomyn/voiptime-components/commit/a881d5a775902dc0ac4323ec8a6c9d1eabc98b81))
+* Додано Радіобокс3 ([e51f87a](https://github.com/StepanKhomyn/voiptime-components/commit/e51f87a15cdd9a235bcf00a5fe461dc987348178))
+
 ## [1.4.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.4.5...v1.4.6) (2025-09-10)
 
 
