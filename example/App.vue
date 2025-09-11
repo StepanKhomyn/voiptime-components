@@ -12,6 +12,7 @@
   import DemoInput from './DemoInput.vue';
   import DemoSelect from './DemoSelect.vue';
   import DemoSelect2 from './DemoSelect2.vue';
+  import DemoRadioBox from './DemoRadioBox.vue';
 
   const activeSlot = ref(null);
 
@@ -19,6 +20,7 @@
     { id: 1, name: 'Кнопки', icon: '🔘' },
     { id: 2, name: 'Таблиці', icon: '📋' },
     { id: 3, name: 'Чекбокси', icon: '☑️' },
+    { id: 13, name: 'Радіобокс', icon: '☑️' },
     { id: 4, name: 'Іконки', icon: '🎨' },
     { id: 5, name: 'Модальні вікна', icon: '🪟' },
     { id: 6, name: 'Пагінація', icon: '📄' },
@@ -73,6 +75,7 @@
       <DemoInput v-if="activeSlot === 10" />
       <DemoSelect v-if="activeSlot === 11" />
       <DemoSelect2 v-if="activeSlot === 12" />
+      <DemoRadioBox v-if="activeSlot === 13" />
       <!-- і т.д. -->
     </div>
   </div>

@@ -1,0 +1,155 @@
+@use '../../assets/fonts' as *;
+
+@mixin radiobox-variant($variant-name, $color-prefix) {
+  &--#{$variant-name} {
+    .vt-radiobox__circle--checked {
+      border-color: var(--color-#{$color-prefix}-main);
+    }
+
+    .vt-radiobox__dot--checked {
+      background-color: var(--color-#{$color-prefix}-main);
+    }
+
+    &:not(.vt-radiobox--disabled):hover {
+      .vt-radiobox__circle--checked {
+        border-color: var(--color-#{$color-prefix}-hover);
+      }
+
+      .vt-radiobox__dot--checked {
+        background-color: var(--color-#{$color-prefix}-hover);
+      }
+    }
+
+    // Hover effects for unchecked state
+    &:not(.vt-radiobox--disabled):hover {
+      .vt-radiobox__circle:not(.vt-radiobox__circle--checked) {
+        border-color: var(--color-#{$color-prefix}-hover);
+      }
+    }
+  }
+}
+
+.vt-radiobox {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+
+  &--disabled {
+    cursor: not-allowed;
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:focus + .vt-radiobox__circle {
+      //box-shadow: 0 0 0 2px var(--color-primary-focus);
+      outline: none;
+    }
+  }
+
+  &__circle {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid var(--color-gray-4);
+    border-radius: 50%; // Кругла форма для радіо
+    background-color: white;
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+
+    &--checked {
+      border-color: var(--color-primary-main);
+    }
+
+    &--disabled {
+      background-color: var(--color-gray-5);
+      border-color: var(--color-gray-4);
+    }
+  }
+
+  &__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: all 0.2s ease-in-out;
+    transform: scale(0);
+
+    &--checked {
+      background-color: var(--color-primary-main);
+      transform: scale(1);
+    }
+  }
+
+  &__label {
+    margin-left: 8px;
+    @include vt-typography('vt-checkbox'); // Використовуємо ту ж типографіку
+    color: var(--color-gray-1);
+
+    &--disabled {
+      color: var(--color-gray-3);
+    }
+  }
+
+  // Size variants
+  &--small {
+    .vt-radiobox__circle {
+      width: 14px;
+      height: 14px;
+    }
+
+    .vt-radiobox__dot {
+      width: 6px;
+      height: 6px;
+    }
+
+    .vt-radiobox__label {
+      margin-left: 6px;
+    }
+  }
+
+  &--large {
+    .vt-radiobox__circle {
+      width: 22px;
+      height: 22px;
+    }
+
+    .vt-radiobox__dot {
+      width: 10px;
+      height: 10px;
+    }
+
+    .vt-radiobox__label {
+      margin-left: 10px;
+    }
+  }
+
+  // Hover effect for unchecked state
+  &:not(.vt-radiobox--disabled):hover {
+    .vt-radiobox__circle:not(.vt-radiobox__circle--checked) {
+      border-color: var(--color-primary-hover);
+    }
+  }
+
+  // Disabled state for dot
+  &--disabled {
+    .vt-radiobox__dot--checked {
+      background-color: var(--color-gray-3);
+    }
+  }
+
+  // Color variants using mixin
+  @include radiobox-variant('primary', 'primary');
+  @include radiobox-variant('success', 'success');
+  @include radiobox-variant('warning', 'warning');
+  @include radiobox-variant('danger', 'danger');
+  @include radiobox-variant('info', 'yellow');
+}
