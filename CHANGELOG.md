@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.0...v1.6.1) (2025-09-11)
+
+
+### Bug Fixes
+
+* Додано Радіобокс22 ([3010f62](https://github.com/StepanKhomyn/voiptime-components/commit/3010f6210bca0b9f3129fbbb455d6ab8b0bd3739))
+
 # [1.6.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.5.0...v1.6.0) (2025-09-11)
 
 
