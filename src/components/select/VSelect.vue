@@ -183,25 +183,6 @@
     return registeredOptions.value.filter(option => filterOption(option, state.filterQuery.value));
   });
 
-  // Опціонально: очищення неактивних опцій час від часу
-  const cleanupInactiveOptions = () => {
-    const keysToDelete: string[] = [];
-
-    for (const key of allRegisteredOptions.value.keys()) {
-      if (!activeOptionKeys.value.has(key)) {
-        keysToDelete.push(key);
-      }
-    }
-
-    // Видаляємо тільки після тривалої неактивності
-    if (keysToDelete.length > 50) {
-      // або інший поріг
-      keysToDelete.forEach(key => {
-        allRegisteredOptions.value.delete(key);
-      });
-    }
-  };
-
   // ===== DROPDOWN INTEGRATION =====
   const {
     visible: isDropdownVisible,
@@ -766,12 +747,11 @@
           <div v-if="filterable" class="vt-select-dropdown__search">
             <VInput
               ref="filterInputRef"
-              :model-value="state.filterQuery.value"
+              v-model="state.filterQuery.value"
               :placeholder="filterPlaceholder"
               clearable
               suffix-icon="search"
               type="text"
-              @update:model-value="handleFilterInput"
             />
           </div>
 
