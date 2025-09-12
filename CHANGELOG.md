@@ -1,3 +1,16 @@
+# [1.7.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.3...v1.7.0) (2025-09-12)
+
+
+### Bug Fixes
+
+* виправлено типізацію датапікеру ([d7e0ac0](https://github.com/StepanKhomyn/voiptime-components/commit/d7e0ac08e1f532719899ec73198da6d30490c5be))
+* додано до селекту можливість працбвати з обєктами ([6daed50](https://github.com/StepanKhomyn/voiptime-components/commit/6daed50ba31938e5fe5b3a973c0b780cacdef4ce))
+
+
+### Features
+
+* created date picker ([ef46ed2](https://github.com/StepanKhomyn/voiptime-components/commit/ef46ed22bb7a6d4f29cd2ab78aea5a36553611e7))
+
 ## [1.6.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.2...v1.6.3) (2025-09-11)
 
 
