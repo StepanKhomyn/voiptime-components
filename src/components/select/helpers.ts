@@ -1,153 +1,122 @@
-// helpers/selectHelpers.ts
+// helpers.ts - оновлені хелпери для підтримки об'єктів
+
 import type { VtSelectOption } from './types';
 
 /**
- * Стандартний метод фільтрації опцій
+ * Порівнює два значення, враховуючи можливість об'єктів
  */
-export const defaultFilterMethod = (query: string, option: VtSelectOption): boolean => {
-  const queryLower = query.toLowerCase().trim();
-  const labelMatch = option.label.toLowerCase().includes(queryLower);
-  const valueMatch = String(option.value).toLowerCase().includes(queryLower);
-  return labelMatch || valueMatch;
-};
-
-/**
- * Створює тимчасову опцію для значення, яке не знайдено в зареєстрованих опціях
- */
-export const createMissingOption = (value: string | number): VtSelectOption => ({
-  value,
-  label: String(value),
-  disabled: false,
-});
-
-/**
- * Отримує вибрані опції для single або multiple режимів
- */
-export const getSelectedOptions = (
-  modelValue: any,
-  allOptions: VtSelectOption[],
-  isMultiple: boolean
-): VtSelectOption[] => {
-  if (isMultiple) {
-    const values = Array.isArray(modelValue) ? modelValue : [];
-    const foundOptions = allOptions.filter(option => values.includes(option.value));
-
-    // Додаємо опції для значень, які не знайдені в зареєстрованих опціях
-    const foundValues = foundOptions.map(option => option.value);
-    const missingValues = values.filter(value => !foundValues.includes(value));
-    const missingOptions = missingValues.map(createMissingOption);
-
-    return [...foundOptions, ...missingOptions];
-  } else {
-    const foundOption = allOptions.find(option => option.value === modelValue);
-    if (foundOption) {
-      return [foundOption];
-    }
-
-    // Якщо опція не знайдена, але є modelValue - створюємо тимчасову опцію
-    if (modelValue !== undefined && modelValue !== null && modelValue !== '' && !Array.isArray(modelValue)) {
-      return [createMissingOption(modelValue as string | number)];
-    }
-
-    return [];
-  }
-};
-
-/**
- * Обчислює кількість видимих тегів для collapsed режиму
- */
-export const calculateVisibleTagsCount = (
-  containerElement: HTMLElement | null,
-  tagElements: HTMLElement[],
-  totalOptionsCount: number
-): number => {
-  if (!containerElement || totalOptionsCount === 0) {
-    return totalOptionsCount;
+export function compareValues(a: any, b: any, valueKey?: string): boolean {
+  if (valueKey && typeof a === 'object' && typeof b === 'object') {
+    return a?.[valueKey] === b?.[valueKey];
   }
 
-  const containerRect = containerElement.getBoundingClientRect();
-  const containerWidth = containerRect.width - 60; // Резерв для іконки і паддингів
-  let totalWidth = 0;
-  let count = 0;
-  const tagGap = 4; // Gap між тегами
-
-  // Тимчасово створюємо елемент для вимірювання "+N" тегу
-  const measureElement = document.createElement('div');
-  measureElement.className = 'vt-select__tag vt-select__tag--collapsed';
-  measureElement.style.visibility = 'hidden';
-  measureElement.style.position = 'absolute';
-  measureElement.innerHTML = `<span class="vt-select__tag-text">+${totalOptionsCount}</span>`;
-  document.body.appendChild(measureElement);
-  const collapsedTagWidth = measureElement.offsetWidth;
-  document.body.removeChild(measureElement);
-
-  // Проходимо по всіх тегах і рахуємо скільки влізе
-  for (let i = 0; i < totalOptionsCount; i++) {
-    const tagElement = tagElements[i];
-    let tagWidth = 0;
-
-    if (!tagElement) {
-      // Якщо елемент ще не відрендерився, припускаємо середню ширину
-      tagWidth = 80; // Приблизний розрахунок
-    } else {
-      tagWidth = tagElement.offsetWidth;
-    }
-
-    // Якщо це не останній тег, перевіряємо чи влізе він + collapsed індикатор
-    if (i < totalOptionsCount - 1) {
-      if (totalWidth + tagWidth + tagGap + collapsedTagWidth > containerWidth) {
-        break;
-      }
-    } else {
-      // Якщо це останній тег, перевіряємо чи влізе він без collapsed індикатора
-      if (totalWidth + tagWidth > containerWidth) {
-        break;
-      }
-    }
-
-    totalWidth += tagWidth + tagGap;
-    count++;
+  if (typeof a === 'object' && typeof b === 'object') {
+    return JSON.stringify(a) === JSON.stringify(b);
   }
 
-  // Якщо всі теги влазять, показуємо всі
-  if (count >= totalOptionsCount) {
-    return totalOptionsCount;
-  } else {
-    // Інакше показуємо стільки, скільки влазить + залишаємо місце для "+N"
-    return Math.max(1, count);
-  }
-};
+  return a === b;
+}
 
 /**
- * Створює tooltip текст для collapsed тегів
+ * Знаходить опцію в масиві за значенням
  */
-export const createCollapsedTooltip = (collapsedCount: number, hiddenOptions: VtSelectOption[]): string => {
-  const pluralForm = collapsedCount === 1 ? 'опція' : collapsedCount < 5 ? 'опції' : 'опцій';
-  const optionsText = hiddenOptions.map(o => o.label).join(', ');
-  return `Вибрано ще ${collapsedCount} ${pluralForm}: ${optionsText}`;
-};
-
-/**
- * Валідація значення select компонента
- */
-export const validateSelectValue = (
+export function findOptionByValue(
   value: any,
-  isMultiple: boolean,
+  options: VtSelectOption[],
+  valueKey?: string
+): VtSelectOption | undefined {
+  return options.find(option => compareValues(option.value, value, valueKey));
+}
+
+/**
+ * Перевіряє, чи обрана опція
+ */
+export function isOptionSelected(value: any, modelValue: any, multiple: boolean, valueKey?: string): boolean {
+  if (multiple) {
+    if (!Array.isArray(modelValue)) return false;
+    return modelValue.some(item => compareValues(item, value, valueKey));
+  }
+
+  return compareValues(modelValue, value, valueKey);
+}
+
+/**
+ * Отримує обрані опції
+ */
+export function getSelectedOptions(
+  modelValue: any,
+  options: VtSelectOption[],
+  multiple: boolean,
+  valueKey?: string
+): VtSelectOption[] {
+  if (!options.length) return [];
+
+  if (multiple) {
+    if (!Array.isArray(modelValue)) return [];
+    return modelValue.map(value => findOptionByValue(value, options, valueKey)).filter(Boolean) as VtSelectOption[];
+  }
+
+  const selected = findOptionByValue(modelValue, options, valueKey);
+  return selected ? [selected] : [];
+}
+
+/**
+ * Обробляє вибір опції
+ */
+export function handleOptionSelection(
+  option: VtSelectOption,
+  modelValue: any,
+  multiple: boolean,
+  valueKey?: string
+): any {
+  if (multiple) {
+    const currentValues = Array.isArray(modelValue) ? modelValue : [];
+    const isSelected = currentValues.some(item => compareValues(item, option.value, valueKey));
+
+    if (isSelected) {
+      return currentValues.filter(item => !compareValues(item, option.value, valueKey));
+    } else {
+      return [...currentValues, option.value];
+    }
+  }
+
+  return option.value;
+}
+
+/**
+ * Видаляє тег зі значення
+ */
+export function removeTagFromValue(value: any, modelValue: any, valueKey?: string): any {
+  if (!Array.isArray(modelValue)) return modelValue;
+
+  return modelValue.filter(item => !compareValues(item, value, valueKey));
+}
+
+/**
+ * Отримує порожнє значення
+ */
+export function getEmptyValue(multiple: boolean): any {
+  return multiple ? [] : undefined;
+}
+
+/**
+ * Валідація значення селекта
+ */
+export function validateSelectValue(
+  value: any,
+  multiple: boolean,
   required: boolean,
   requiredMessage?: string
-): { isValid: boolean; errors: string[] } => {
+): { isValid: boolean; errors: string[] } {
   const errors: string[] = [];
 
   if (required) {
-    if (isMultiple) {
-      const values = Array.isArray(value) ? value : [];
-      if (values.length === 0) {
-        errors.push(requiredMessage || "Це поле є обов'язковим");
-      }
-    } else {
-      if (!value) {
-        errors.push(requiredMessage || "Це поле є обов'язковим");
-      }
+    const isEmpty = multiple
+      ? !Array.isArray(value) || value.length === 0
+      : value === undefined || value === null || value === '';
+
+    if (isEmpty) {
+      errors.push(requiredMessage || "Це поле є обов'язковим");
     }
   }
 
@@ -155,60 +124,41 @@ export const validateSelectValue = (
     isValid: errors.length === 0,
     errors,
   };
-};
+}
 
 /**
- * Перевіряє чи опція вибрана
+ * Розрахунок кількості видимих тегів
  */
-export const isOptionSelected = (value: string | number, modelValue: any, isMultiple: boolean): boolean => {
-  if (isMultiple) {
-    const values = Array.isArray(modelValue) ? modelValue : [];
-    return values.includes(value);
-  }
-  return modelValue === value;
-};
+export function calculateVisibleTagsCount(
+  container: HTMLElement,
+  tagElements: HTMLElement[],
+  totalCount: number
+): number {
+  if (!container || !tagElements.length) return totalCount;
 
-/**
- * Обробляє клік по опції та повертає нове значення
- */
-export const handleOptionSelection = (option: VtSelectOption, currentValue: any, isMultiple: boolean): any => {
-  if (option.disabled) return currentValue;
+  const containerWidth = container.offsetWidth;
+  const reservedSpace = 100; // Простір для кнопки "+N"
+  let usedWidth = 0;
+  let visibleCount = 0;
 
-  if (isMultiple) {
-    const currentValues = Array.isArray(currentValue) ? [...currentValue] : [];
-    const index = currentValues.indexOf(option.value);
+  for (let i = 0; i < tagElements.length && i < totalCount; i++) {
+    const tagWidth = tagElements[i]?.offsetWidth || 0;
 
-    if (index > -1) {
-      currentValues.splice(index, 1);
+    if (usedWidth + tagWidth + reservedSpace <= containerWidth) {
+      usedWidth += tagWidth;
+      visibleCount++;
     } else {
-      currentValues.push(option.value);
+      break;
     }
-
-    return currentValues;
-  } else {
-    return option.value;
-  }
-};
-
-/**
- * Видаляє тег з множинного вибору
- */
-export const removeTagFromValue = (tagValue: string | number, currentValue: any): any => {
-  if (!Array.isArray(currentValue)) return currentValue;
-
-  const currentValues = [...currentValue];
-  const index = currentValues.indexOf(tagValue);
-
-  if (index > -1) {
-    currentValues.splice(index, 1);
   }
 
-  return currentValues;
-};
+  return Math.max(1, visibleCount);
+}
 
 /**
- * Повертає порожнє значення для clear операції
+ * Створює текст для collapsed tooltip
  */
-export const getEmptyValue = (isMultiple: boolean): any => {
-  return isMultiple ? [] : '';
-};
+export function createCollapsedTooltip(count: number, options: VtSelectOption[]): string {
+  const labels = options.map(opt => opt.label).join(', ');
+  return `Ще ${count}: ${labels}`;
+}

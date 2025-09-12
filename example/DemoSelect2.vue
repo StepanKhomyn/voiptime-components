@@ -27,6 +27,11 @@
     <VSelect v-model="mapping.second" placeholder="Оберіть користувача...">
       <VOption v-for="item in fields" :key="item" :label="item" :value="item" />
     </VSelect>
+
+    {{ select }}
+    <VSelect v-model="select" placeholder="Оберіть користувача...">
+      <VOption v-for="item in selectVal" :key="item.id" :label="item.val" :value="item" />
+    </VSelect>
   </div>
 </template>
 
@@ -40,6 +45,12 @@
     first: '',
     second: '',
   });
+
+  const select = ref({ id: 2, val: 3 });
+  const selectVal = [
+    { id: 1, val: 2 },
+    { id: 2, val: 3 },
+  ];
 
   const fields = computed(() =>
     Array.from(Object.keys(TelemarketClientImportFields)).filter(f => !Object.values(mapping?.value).includes(f))

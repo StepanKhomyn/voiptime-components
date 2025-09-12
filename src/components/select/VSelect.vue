@@ -15,6 +15,7 @@
 
   import {
     calculateVisibleTagsCount,
+    compareValues,
     createCollapsedTooltip,
     getEmptyValue,
     getSelectedOptions,
@@ -65,11 +66,11 @@
 
   // ===== OPTIONS REGISTRY =====
   const registeredOptions = ref<VtSelectOption[]>([]);
-  const optionSlots = ref<Map<string | number, any>>(new Map());
+  const optionSlots = ref<Map<any, any>>(new Map());
 
   const registerOption = (option: VtSelectOption, slotContent?: any) => {
     // Видаляємо існуючий варіант з тим же значенням
-    const existingIndex = registeredOptions.value.findIndex(o => o.value === option.value);
+    const existingIndex = registeredOptions.value.findIndex(o => compareValues(o.value, option.value, props.valueKey));
     if (existingIndex > -1) {
       registeredOptions.value.splice(existingIndex, 1);
     }
@@ -82,16 +83,22 @@
     }
   };
 
-  const unregisterOption = (value: string | number) => {
-    const index = registeredOptions.value.findIndex(o => o.value === value);
+  const unregisterOption = (value: any) => {
+    const index = registeredOptions.value.findIndex(o => compareValues(o.value, value, props.valueKey));
     if (index > -1) {
       registeredOptions.value.splice(index, 1);
     }
     optionSlots.value.delete(value);
   };
 
-  const getOptionSlot = (value: string | number) => {
-    return optionSlots.value.get(value);
+  const getOptionSlot = (value: any) => {
+    // Для об'єктів шукаємо по ключу порівняння або по JSON
+    for (const [key, slot] of optionSlots.value.entries()) {
+      if (compareValues(key, value, props.valueKey)) {
+        return slot;
+      }
+    }
+    return undefined;
   };
 
   // ===== DROPDOWN INTEGRATION =====
@@ -179,7 +186,7 @@
   const selectedOptions = computed((): VtSelectOption[] => {
     if (!registeredOptions.value.length) return [];
 
-    return getSelectedOptions(props.modelValue, registeredOptions.value, isMultiple.value);
+    return getSelectedOptions(props.modelValue, registeredOptions.value, isMultiple.value, props.valueKey);
   });
 
   const visibleTags = computed(() => {
@@ -197,6 +204,13 @@
 
     const selected = selectedOptions.value[0];
     if (selected) return selected.label;
+
+    // Для об'єктів спробуємо показати label, якщо є
+    if (props.modelValue && typeof props.modelValue === 'object') {
+      if (props.modelValue.label) return props.modelValue.label;
+      if (props.modelValue.name) return props.modelValue.name;
+      return JSON.stringify(props.modelValue);
+    }
 
     if (
       props.modelValue !== undefined &&
@@ -273,7 +287,7 @@
   const handleOptionClick = (option: VtSelectOption) => {
     if (!option || option.disabled) return;
 
-    const newValue = handleOptionSelection(option, props.modelValue, isMultiple.value);
+    const newValue = handleOptionSelection(option, props.modelValue, isMultiple.value, props.valueKey);
 
     emit('update:modelValue', newValue);
     emit('change', newValue);
@@ -296,10 +310,10 @@
     validation.clear();
   };
 
-  const handleRemoveTag = (value: string | number) => {
+  const handleRemoveTag = (value: any) => {
     if (!isMultiple.value) return;
 
-    const newValue = removeTagFromValue(value, props.modelValue);
+    const newValue = removeTagFromValue(value, props.modelValue, props.valueKey);
 
     emit('update:modelValue', newValue);
     emit('change', newValue);
@@ -348,8 +362,8 @@
   };
 
   // ===== UTILITIES =====
-  const isOptionSelectedUtil = (value: string | number): boolean => {
-    return isOptionSelected(value, props.modelValue, isMultiple.value);
+  const isOptionSelectedUtil = (value: any): boolean => {
+    return isOptionSelected(value, props.modelValue, isMultiple.value, props.valueKey);
   };
 
   const calcVisibleCount = () => {
@@ -369,8 +383,9 @@
 
   // ===== CONTEXT PROVIDER =====
   const selectContext: VtSelectContext = {
-    selectValue: computed(() => props.modelValue || (isMultiple.value ? [] : '')).value,
+    selectValue: computed(() => props.modelValue || (isMultiple.value ? [] : undefined)).value,
     multiple: isMultiple.value,
+    valueKey: props.valueKey,
     handleOptionClick: handleOptionClick,
     isOptionSelected: isOptionSelectedUtil,
     registerOption: registerOption,
@@ -506,7 +521,7 @@
           <!-- Visible tags -->
           <div
             v-for="(option, index) in visibleTags"
-            :key="`tag-${option.value}-${index}`"
+            :key="`tag-${typeof option.value === 'object' ? JSON.stringify(option.value) : option.value}-${index}`"
             :ref="el => el && (tagRefs[index] = el as HTMLElement)"
             class="vt-select__tag"
           >
@@ -607,7 +622,7 @@
           <div v-else ref="scrollContainerRef" class="vt-select-dropdown__options">
             <div
               v-for="option in registeredOptions"
-              :key="`option-${option.value}`"
+              :key="`option-${typeof option.value === 'object' ? JSON.stringify(option.value) : option.value}`"
               :aria-disabled="option.disabled || false"
               :aria-selected="isOptionSelectedUtil(option.value)"
               :class="[

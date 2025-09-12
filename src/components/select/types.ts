@@ -1,62 +1,78 @@
-export type VtSelectStatus = 'default' | 'success' | 'error' | 'warning';
+// types.ts - оновлені типи для підтримки об'єктів
 
 export interface VtSelectOption {
-  label: string;
-  value: string | number;
+  label: any;
+  value: any;
   disabled?: boolean;
+
+  [key: string]: any; // Додаткові властивості
 }
 
 export interface VtSelectProps {
-  // Основні властивості
-  modelValue?: string | number | Array<string | number>;
+  modelValue?: any; // Змінено для підтримки будь-яких значень
+  options?: VtSelectOption[];
   multiple?: boolean;
-  collapsedTags?: boolean;
-  status?: VtSelectStatus;
-
-  // Стани
   disabled?: boolean;
   clearable?: boolean;
-  filterable?: boolean;
   loading?: boolean;
-
-  // Текст і лейбли
-  label?: string;
   placeholder?: string;
   noDataText?: string;
-  noMatchText?: string;
   loadingText?: string;
-
-  // HTML атрибути
-  id?: string;
-  name?: string;
-  tabindex?: number;
-  // Випадайка
-  maxHeight?: number | string;
-
-  // Фільтрація
-  filterMethod?: (query: string, option: VtSelectOption) => boolean;
-
-  // Валідація
-  required?: boolean;
+  maxHeight?: number;
+  collapsedTags?: boolean;
   validateOnInput?: boolean;
   validateOnBlur?: boolean;
+  placement?: string;
+  trigger?: string;
+  showTimeout?: number;
+  hideTimeout?: number;
+  status?: 'default' | 'success' | 'warning' | 'error';
+  label?: string;
+  id?: string;
+  required?: boolean;
   requiredMessage?: string;
+  // Нова опція для порівняння об'єктів
+  valueKey?: string; // Ключ для порівняння об'єктів (наприклад, 'id')
 }
 
 export interface VtSelectEmits {
-  'update:modelValue': [value: string | number | Array<string | number>];
-  change: [value: string | number | Array<string | number>];
-  focus: [];
-  blur: [];
-  clear: [];
-  'visible-change': [visible: boolean];
-  'remove-tag': [value: string | number];
-  filter: [query: string];
-  validation: [result: { isValid: boolean; errors: string[] }];
-  scrolled: [];
+  (e: 'update:modelValue', value: any): void;
+
+  (e: 'change', value: any): void;
+
+  (e: 'clear'): void;
+
+  (e: 'focus'): void;
+
+  (e: 'blur'): void;
+
+  (e: 'visible-change', visible: boolean): void;
+
+  (e: 'validation', result: { isValid: boolean; errors: string[] }): void;
+
+  (e: 'scrolled'): void;
+
+  (e: 'remove-tag', value: any): void;
+}
+
+export interface VtOptionEmits {
+  click: [option: VtSelectOption];
+}
+
+export interface VtSelectContext {
+  selectValue: any;
+  multiple: boolean;
+  valueKey?: string;
+  handleOptionClick: (option: VtSelectOption) => void;
+  isOptionSelected: (value: any) => boolean;
+  registerOption: (option: VtSelectOption, slotContent?: any) => void;
+  unregisterOption: (value: any) => void;
 }
 
 export interface VtSelectMethods {
+  registerOption: (option: VtSelectOption, slotContent?: any) => void;
+  unregisterOption: (value: any) => void;
+
   focus(): void;
 
   blur(): void;
@@ -70,24 +86,6 @@ export interface VtSelectMethods {
   getSelectedOptions(): VtSelectOption[];
 
   getValidationState(): { isValid: boolean; errors: string[] };
-
-  registerOption(option: VtSelectOption): void;
-
-  unregisterOption(value: string | number): void;
 }
 
-export interface VtOptionEmits {
-  click: [option: VtSelectOption];
-}
-
-// Context для передачі даних від Select до Option
-export interface VtSelectContext {
-  selectValue: string | number | Array<string | number>;
-  multiple: boolean;
-  handleOptionClick: (option: VtSelectOption) => void;
-  isOptionSelected: (value: string | number) => boolean;
-  registerOption: (option: VtSelectOption, slotContent?: any) => void;
-  unregisterOption: (value: string | number) => void;
-}
-
-export const VtSelectContextKey = Symbol('VtSelectContext');
+export const VtSelectContextKey = Symbol('VtSelectContext') as InjectionKey<VtSelectContext>;
