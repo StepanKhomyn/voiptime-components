@@ -1,4 +1,7 @@
+import type { InjectionKey } from 'vue';
+
 // types.ts - оновлені типи для підтримки об'єктів
+export type VtSelectStatus = 'default' | 'success' | 'error' | 'warning';
 
 export interface VtSelectOption {
   label: any;

@@ -52,6 +52,7 @@
     outputFormat,
     parsedValue,
     displayText,
+    hasDisplayValue,
     formatOutput,
     validate,
     formatDate,
@@ -632,7 +633,7 @@
           <VIcon name="calendar" />
         </div>
 
-        <span v-if="displayText" class="vt-datepicker__text">
+        <div v-if="hasDisplayValue" class="vt-datepicker__text">
           <template v-if="isRange">
             <span>
               {{ displayText[0] }}
@@ -647,7 +648,7 @@
           <template v-else>
             {{ displayText }}
           </template>
-        </span>
+        </div>
         <div v-else class="vt-datepicker__placeholder">
           <template v-if="isRange">
             <span>

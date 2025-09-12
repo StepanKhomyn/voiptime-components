@@ -30,7 +30,7 @@
       </div>
 
       <div class="demo-container-item-row-item">
-        <VDatePicker v-model="dateRange" end-placeholder="End date" start-placeholder="Start date" type="daterange" />
+        <VDatePicker v-model="dateRange" type="daterange" />
       </div>
       <div class="demo-container-item-row-item">
         <VButton type="primary">Heello!</VButton>

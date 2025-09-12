@@ -143,14 +143,27 @@ export const useDatePicker = (
     }
   });
 
+  const hasDisplayValue = computed(() => {
+    if (isRange.value) {
+      const [start, end] = displayText.value as [string, string];
+      return start || end; // Показуємо текст якщо є хоча б одна дата
+    } else {
+      return !!displayText.value; // Для одиночного значення просто перевіряємо truthiness
+    }
+  });
+
   const formatOutput = (date: Date | Date[]): DatePickerValue => {
     if (Array.isArray(date)) {
+      // Переконуємося, що масив має принаймні 2 елементи, доповнюємо якщо потрібно
+      const startDate = date[0];
+      const endDate = date[1] || date[0] || new Date(); // Fallback до першої дати або поточної
+
       if (valueFormat.value === 'timestamp') {
-        return date.map(d => d.getTime());
+        return [startDate.getTime(), endDate.getTime()] as [number, number];
       } else if (valueFormat.value) {
-        return date.map(d => formatDate(d, outputFormat.value));
+        return [formatDate(startDate, outputFormat.value), formatDate(endDate, outputFormat.value)] as [string, string];
       }
-      return date;
+      return [startDate, endDate] as [Date, Date];
     } else {
       if (valueFormat.value === 'timestamp') {
         return date.getTime();
@@ -171,6 +184,7 @@ export const useDatePicker = (
     outputFormat,
     parsedValue,
     displayText,
+    hasDisplayValue,
     formatOutput,
     validate,
     formatDate,

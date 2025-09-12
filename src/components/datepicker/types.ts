@@ -1,12 +1,20 @@
 // types/VDatePicker.ts
 
-export type DatePickerType = 'year' | 'month' | 'date' | 'daterange' | 'monthrange' | 'yearrange';
+export type DatePickerType =
+  | 'date'
+  | 'datetime'
+  | 'daterange'
+  | 'datetimerange'
+  | 'month'
+  | 'monthrange'
+  | 'year'
+  | 'yearrange';
 
 export type DatePickerSize = 'small' | 'default' | 'large';
 
-export type DateValue = Date | string | number;
+export type DateValue = string | number | Date;
 export type DateRangeValue = [DateValue, DateValue];
-export type DatePickerValue = DateValue | DateRangeValue | null;
+export type DatePickerValue = DateValue | DateRangeValue | null | undefined;
 
 export interface VDatePickerProps {
   modelValue?: DatePickerValue;
@@ -111,35 +119,33 @@ export const FORMAT_TOKENS: Record<string, FormatToken> = {
 
 // Month names for formatting
 export const MONTH_NAMES = [
-  'January',
-  'February',
-  'March',
-  'April',
-  'May',
-  'June',
-  'July',
-  'August',
-  'September',
-  'October',
-  'November',
-  'December',
+  'Січень',
+  'Лютий',
+  'Березень',
+  'Квітень',
+  'Травень',
+  'Червень',
+  'Липень',
+  'Серпень',
+  'Вересень',
+  'Жовтень',
+  'Листопад',
+  'Грудень',
 ];
 
-export const MONTH_NAMES_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-export const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-export const WEEKDAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+export const MONTH_NAMES_SHORT = ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'];
+export const WEEKDAY_NAMES = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота'];
+export const WEEKDAY_NAMES_SHORT = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
 
 // Default formats for different picker types
 export const DEFAULT_FORMATS: Record<DatePickerType, string> = {
-  year: 'yyyy',
-  month: 'yyyy-MM',
   date: 'yyyy-MM-dd',
   datetime: 'yyyy-MM-dd HH:mm:ss',
-  datetimerange: 'yyyy-MM-dd HH:mm:ss',
   daterange: 'yyyy-MM-dd',
+  datetimerange: 'yyyy-MM-dd HH:mm:ss',
+  month: 'yyyy-MM',
   monthrange: 'yyyy-MM',
+  year: 'yyyy',
   yearrange: 'yyyy',
 };
 
@@ -148,44 +154,6 @@ export interface DateValidationResult {
   isValid: boolean;
   errors: string[];
 }
-
-export const validateDateValue = (
-  value: DatePickerValue,
-  type: DatePickerType,
-  required?: boolean
-): DateValidationResult => {
-  const errors: string[] = [];
-
-  if (required && (!value || (Array.isArray(value) && value.length === 0))) {
-    errors.push("Це поле є обов'язковим");
-  }
-
-  if (value) {
-    const isRange = ['datetimerange', 'daterange', 'monthrange', 'yearrange'].includes(type);
-
-    if (isRange && !Array.isArray(value)) {
-      errors.push('Для діапазону очікується масив з двох дат');
-    } else if (!isRange && Array.isArray(value)) {
-      errors.push('Для одиночного вибору очікується одна дата');
-    }
-
-    // Validate date format
-    if (Array.isArray(value)) {
-      value.forEach((v, index) => {
-        if (v && !isValidDate(v)) {
-          errors.push(`Некоректний формат дати ${index + 1}`);
-        }
-      });
-    } else if (!isValidDate(value)) {
-      errors.push('Некоректний формат дати');
-    }
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-  };
-};
 
 export const isValidDate = (value: any): boolean => {
   if (value instanceof Date) {
@@ -198,4 +166,69 @@ export const isValidDate = (value: any): boolean => {
   }
 
   return false;
+};
+
+// Перевірка чи є значення порожнім для range типів
+const isEmptyRangeValue = (value: any): boolean => {
+  if (!Array.isArray(value)) return false;
+
+  // Перевіряємо чи масив порожній або містить тільки null/undefined значення
+  return value.length === 0 || value.every(item => !item);
+};
+
+export const validateDateValue = (
+  value: DatePickerValue | null | undefined,
+  type: DatePickerType,
+  required?: boolean
+): DateValidationResult => {
+  const errors: string[] = [];
+  const isRange = ['daterange', 'datetimerange', 'monthrange', 'yearrange'].includes(type);
+
+  // Перевірка на обов'язковість
+  if (required) {
+    if (!value) {
+      errors.push("Це поле є обов'язковим");
+    } else if (isRange && isEmptyRangeValue(value)) {
+      errors.push("Це поле є обов'язковим");
+    }
+  }
+
+  // Якщо значення є, валідуємо його структуру та формат
+  if (value) {
+    if (isRange && !Array.isArray(value)) {
+      errors.push('Для діапазону очікується масив з двох дат');
+    } else if (!isRange && Array.isArray(value)) {
+      errors.push('Для одиночного вибору очікується одна дата');
+    }
+
+    // Валідація формату дати
+    if (Array.isArray(value)) {
+      // Для range перевіряємо кожен елемент
+      if (value.length !== 2) {
+        errors.push('Діапазон повинен містити дві дати');
+      } else {
+        value.forEach((v, index) => {
+          if (v && !isValidDate(v)) {
+            errors.push(`Некоректний формат дати ${index + 1}`);
+          }
+        });
+
+        // Перевіряємо що початкова дата не пізніше кінцевої
+        if (value[0] && value[1]) {
+          const startDate = new Date(value[0]);
+          const endDate = new Date(value[1]);
+          if (startDate > endDate) {
+            errors.push('Початкова дата не може бути пізніше кінцевої');
+          }
+        }
+      }
+    } else if (!isValidDate(value)) {
+      errors.push('Некоректний формат дати');
+    }
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
 };
