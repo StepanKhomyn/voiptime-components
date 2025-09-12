@@ -26,7 +26,7 @@
       </div>
 
       <div class="demo-container-item-row-item">
-        <VInput v-model="inputModel" />
+        <VInput v-model="inputModel" clearable />
       </div>
 
       <div class="demo-container-item-row-item">

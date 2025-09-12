@@ -1,6 +1,6 @@
 import type { InjectionKey } from 'vue';
 
-// types.ts - оновлені типи для підтримки об'єктів
+// types.ts - оновлені типи для підтримки об'єктів та фільтрації
 export type VtSelectStatus = 'default' | 'success' | 'error' | 'warning';
 
 export interface VtSelectOption {
@@ -17,6 +17,7 @@ export interface VtSelectProps {
   multiple?: boolean;
   disabled?: boolean;
   clearable?: boolean;
+  filterable?: boolean;
   loading?: boolean;
   placeholder?: string;
   noDataText?: string;
@@ -34,8 +35,12 @@ export interface VtSelectProps {
   id?: string;
   required?: boolean;
   requiredMessage?: string;
-  // Нова опція для порівняння об'єктів
+  // Опція для порівняння об'єктів
   valueKey?: string; // Ключ для порівняння об'єктів (наприклад, 'id')
+
+  // Нові пропи для фільтрації
+  filterPlaceholder?: string; // Плейсхолдер для поля фільтрації
+  allowRemoteFilter?: boolean; // Чи дозволяти віддалену фільтрацію (не фільтрувати локально)
 }
 
 export interface VtSelectEmits {
@@ -56,6 +61,9 @@ export interface VtSelectEmits {
   (e: 'scrolled'): void;
 
   (e: 'remove-tag', value: any): void;
+
+  (e: 'filter', query: string): void; // Еміт при зміні фільтра
+  (e: 'filter-clear'): void; // Еміт при очищенні фільтра
 }
 
 export interface VtOptionEmits {
@@ -89,6 +97,11 @@ export interface VtSelectMethods {
   getSelectedOptions(): VtSelectOption[];
 
   getValidationState(): { isValid: boolean; errors: string[] };
+
+  // Нові методи для фільтрації
+  setFilter(query: string): void; // Встановити фільтр програмно
+  clearFilter(): void; // Очистити фільтр програмно
+  getFilterQuery(): string; // Отримати поточний запит фільтра
 }
 
 export const VtSelectContextKey = Symbol('VtSelectContext') as InjectionKey<VtSelectContext>;

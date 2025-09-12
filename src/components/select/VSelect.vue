@@ -24,6 +24,7 @@
     removeTagFromValue,
     validateSelectValue,
   } from '@/components/select/helpers';
+  import VInput from '@/components/input/VInput.vue';
 
   // ===== PROPS & DEFAULTS =====
   const props = withDefaults(defineProps<VtSelectProps>(), {
@@ -32,6 +33,7 @@
     clearable: false,
     loading: false,
     multiple: false,
+    filterable: false,
     collapsedTags: false,
     placeholder: 'Оберіть опцію',
     noDataText: 'Немає даних',
@@ -43,6 +45,8 @@
     trigger: 'click',
     showTimeout: 0,
     hideTimeout: 0,
+    filterPlaceholder: 'Пошук...',
+    allowRemoteFilter: false,
   });
 
   // ===== EMITS =====
@@ -55,6 +59,7 @@
   const containerRef = ref<HTMLElement>();
   const tagRefs = ref<HTMLElement[]>([]);
   const scrollContainerRef = ref<HTMLElement>();
+  const filterInputRef = ref<InstanceType<typeof VInput>>();
 
   // ===== STATE =====
   const state = {
@@ -62,6 +67,7 @@
     validationErrors: ref<string[]>([]),
     isValid: ref(true),
     visibleCount: ref(0),
+    filterQuery: ref(''),
   };
 
   // ===== OPTIONS REGISTRY =====
@@ -111,6 +117,43 @@
     return undefined;
   };
 
+  // ===== FILTER HELPERS =====
+  const normalizeString = (str: string): string => {
+    return str.toLowerCase().trim();
+  };
+
+  const filterOption = (option: VtSelectOption, query: string): boolean => {
+    if (!query) return true;
+
+    const normalizedQuery = normalizeString(query);
+
+    // Пошук по label
+    if (option.label && typeof option.label === 'string') {
+      if (normalizeString(option.label).includes(normalizedQuery)) {
+        return true;
+      }
+    }
+
+    // Пошук по value (якщо це строка)
+    if (typeof option.value === 'string') {
+      if (normalizeString(option.value).includes(normalizedQuery)) {
+        return true;
+      }
+    }
+
+    // Додатковий пошук по всім string властивостям об'єкта value
+    if (typeof option.value === 'object' && option.value !== null) {
+      const searchableFields = Object.values(option.value).filter(val => typeof val === 'string');
+      for (const field of searchableFields) {
+        if (normalizeString(field as string).includes(normalizedQuery)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
   // Computed для отримання тільки активних опцій у правильному порядку
   const registeredOptions = computed(() => {
     const result: VtSelectOption[] = [];
@@ -122,6 +165,22 @@
     }
 
     return result;
+  });
+
+  // Фільтровані опції
+  const filteredOptions = computed((): VtSelectOption[] => {
+    if (!props.filterable || !state.filterQuery.value.trim()) {
+      return registeredOptions.value;
+    }
+
+    // Якщо використовується remote фільтрація, просто повертаємо всі опції
+    // оскільки фільтрація відбувається на сервері
+    if (props.allowRemoteFilter) {
+      return registeredOptions.value;
+    }
+
+    // Локальна фільтрація
+    return registeredOptions.value.filter(option => filterOption(option, state.filterQuery.value));
   });
 
   // Опціонально: очищення неактивних опцій час від часу
@@ -164,8 +223,18 @@
         nextTick(async () => {
           await updatePosition();
           scrollHandler.init();
+
+          // Фокус на input фільтра, якщо доступний
+          if (props.filterable && filterInputRef.value) {
+            filterInputRef.value.focus();
+          }
         });
       } else {
+        // Очищаємо фільтр при закритті dropdown
+        if (state.filterQuery.value) {
+          handleFilterClear();
+        }
+
         if (props.validateOnBlur) {
           validation.validate();
         }
@@ -216,7 +285,7 @@
       const scrollThreshold = 50;
       const isNearBottom = scrollHeight - scrollTop - clientHeight <= scrollThreshold;
 
-      if (isNearBottom && registeredOptions.value.length > 0) {
+      if (isNearBottom && filteredOptions.value.length > 0) {
         emit('scrolled');
       }
     },
@@ -267,7 +336,20 @@
   });
 
   const showClearButton = computed(() => {
-    return props.clearable && !props.disabled && selectedOptions.value.length > 0;
+    if (!props.clearable || props.disabled) return false;
+
+    // Для множинного вибору перевіряємо довжину масиву
+    if (isMultiple.value) {
+      return selectedOptions.value.length > 0;
+    }
+
+    // Для одиночного вибору перевіряємо наявність значення
+    return (
+      props.modelValue !== undefined &&
+      props.modelValue !== null &&
+      props.modelValue !== '' &&
+      (!Array.isArray(props.modelValue) || props.modelValue.length > 0)
+    );
   });
 
   const currentStatus = computed(() => {
@@ -393,6 +475,23 @@
     }, 100);
   };
 
+  const handleFilterInput = (value: string) => {
+    state.filterQuery.value = value;
+    emit('filter', value);
+
+    // Для remote фільтрації можна додати debounce
+    if (props.allowRemoteFilter) {
+      // Тут можна додати debounce логіку
+      console.log('Remote filter query:', value);
+    }
+  };
+
+  const handleFilterClear = () => {
+    state.filterQuery.value = '';
+    emit('filter', '');
+    emit('filter-clear');
+  };
+
   const handleKeydown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
@@ -470,6 +569,20 @@
         isValid: state.isValid.value,
         errors: [...state.validationErrors.value],
       };
+    },
+
+    // Нові методи для фільтрації
+    setFilter(query: string) {
+      state.filterQuery.value = query;
+      emit('filter', query);
+    },
+
+    clearFilter() {
+      handleFilterClear();
+    },
+
+    getFilterQuery(): string {
+      return state.filterQuery.value;
     },
   };
 
@@ -649,6 +762,19 @@
           @click.stop
           @mousedown.prevent
         >
+          <!-- Search Input -->
+          <div v-if="filterable" class="vt-select-dropdown__search">
+            <VInput
+              ref="filterInputRef"
+              :model-value="state.filterQuery.value"
+              :placeholder="filterPlaceholder"
+              clearable
+              suffix-icon="search"
+              type="text"
+              @update:model-value="handleFilterInput"
+            />
+          </div>
+
           <!-- Loading state -->
           <div v-if="loading" class="vt-select-dropdown__loading">
             <VLoader class="vt-select-dropdown__loading-icon" />
@@ -656,14 +782,15 @@
           </div>
 
           <!-- No Data -->
-          <div v-else-if="registeredOptions.length === 0" class="vt-select-dropdown__empty">
-            {{ noDataText }}
+          <div v-else-if="filteredOptions.length === 0" class="vt-select-dropdown__empty">
+            <span v-if="state.filterQuery.value">Немає результатів для "{{ state.filterQuery.value }}"</span>
+            <span v-else>{{ noDataText }}</span>
           </div>
 
           <!-- Options -->
           <div v-else ref="scrollContainerRef" class="vt-select-dropdown__options">
             <div
-              v-for="option in registeredOptions"
+              v-for="option in filteredOptions"
               :key="`option-${typeof option.value === 'object' ? JSON.stringify(option.value) : option.value}`"
               :aria-disabled="option.disabled || false"
               :aria-selected="isOptionSelectedUtil(option.value)"
