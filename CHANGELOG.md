@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.0...v1.7.1) (2025-09-12)
+
+
+### Bug Fixes
+
+* виправлено реєстрацію та дереєстрацію опцій в селекті ([07f449e](https://github.com/StepanKhomyn/voiptime-components/commit/07f449e8635ee57839249cc72960e80d0bda379d))
+
 # [1.7.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.3...v1.7.0) (2025-09-12)
 
 
