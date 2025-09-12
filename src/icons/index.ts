@@ -12,14 +12,17 @@ import GoToIcon from './actions/GoToIcon.vue';
 import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
 import ListBulletIcon from './actions/ListBulletIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
+import PauseIcon from './actions/PauseIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
 import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
+import StartIcon from './actions/StartIcon.vue';
 import StatusChange2Icon from './actions/StatusChange2Icon.vue';
 import StatusChangeIcon from './actions/StatusChangeIcon.vue';
+import StopIcon from './actions/StopIcon.vue';
 import UsersGroupIcon from './actions/UsersGroupIcon.vue';
 import ArrowDownIcon from './arrow/ArrowDownIcon.vue';
 import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
@@ -83,14 +86,17 @@ export const icons = {
   listBulletHorizontal: ListBulletHorizontalIcon,
   listBullet: ListBulletIcon,
   paperClip: PaperClipIcon,
+  pause: PauseIcon,
   plusRound: PlusRoundIcon,
   prompt: PromptIcon,
   prompter: PrompterIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   star: StarIcon,
+  start: StartIcon,
   statusChange2: StatusChange2Icon,
   statusChange: StatusChangeIcon,
+  stop: StopIcon,
   usersGroup: UsersGroupIcon,
 
   // arrow icons

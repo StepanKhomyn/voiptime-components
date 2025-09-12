@@ -1,3 +1,24 @@
+## [1.6.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.2...v1.6.3) (2025-09-11)
+
+
+### Bug Fixes
+
+* нові іконки дій ([748ede0](https://github.com/StepanKhomyn/voiptime-components/commit/748ede035732efbc8b90e6d38e91a1e0d2cb6e9f))
+
+## [1.6.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.1...v1.6.2) (2025-09-11)
+
+
+### Bug Fixes
+
+* нові іконки дій ([65c43e6](https://github.com/StepanKhomyn/voiptime-components/commit/65c43e6f2d29e3b1fc97e6c2c19c78d5aa247951))
+
+## [1.6.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.6.0...v1.6.1) (2025-09-11)
+
+
+### Bug Fixes
+
+* Додано Радіобокс22 ([3010f62](https://github.com/StepanKhomyn/voiptime-components/commit/3010f6210bca0b9f3129fbbb455d6ab8b0bd3739))
+
 # [1.6.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.5.0...v1.6.0) (2025-09-11)
 
 
