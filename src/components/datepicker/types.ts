@@ -1,220 +1,201 @@
-// types.ts
-export type DatePickerStatus = 'default' | 'success' | 'warning' | 'error';
-export type DatePickerType = 'date' | 'week' | 'month' | 'year' | 'datetime';
-export type DatePickerPlacement = 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
+// types/VDatePicker.ts
 
-export type DatePickerValue = string | Date | number | null;
-export type DatePickerRangeValue = [DatePickerValue, DatePickerValue] | null;
-export type DatePickerModelValue = DatePickerValue | DatePickerRangeValue;
+export type DatePickerType = 'year' | 'month' | 'date' | 'daterange' | 'monthrange' | 'yearrange';
 
-export interface VtDatePickerProps {
-  modelValue?: DatePickerModelValue;
+export type DatePickerSize = 'small' | 'default' | 'large';
+
+export type DateValue = Date | string | number;
+export type DateRangeValue = [DateValue, DateValue];
+export type DatePickerValue = DateValue | DateRangeValue | null;
+
+export interface VDatePickerProps {
+  modelValue?: DatePickerValue;
   type?: DatePickerType;
   placeholder?: string;
   startPlaceholder?: string;
   endPlaceholder?: string;
   rangeSeparator?: string;
-  status?: DatePickerStatus;
-  disabled?: boolean;
-  clearable?: boolean;
-
-  readonly?: boolean;
-  size?: string;
-  maxHeight?: number;
-  separator?: string;
-
   format?: string;
   valueFormat?: string;
-  placement?: DatePickerPlacement;
-  label?: string;
-  required?: boolean;
-  requiredMessage?: string;
-  validateOnInput?: boolean;
-  validateOnBlur?: boolean;
-  minDate?: DatePickerValue;
-  maxDate?: DatePickerValue;
-  range?: boolean;
-  shortcuts?: DateShortcut[];
-  firstDayOfWeek?: number;
-  unlinkPanels?: boolean;
-  defaultValue?: DatePickerModelValue;
-  defaultTime?: string | [string, string];
+  disabled?: boolean;
+  clearable?: boolean;
+  size?: DatePickerSize;
   disabledDate?: (date: Date) => boolean;
-  cellClassName?: (date: Date) => string;
+  shortcuts?: DatePickerShortcut[];
+  unlinkPanels?: boolean; // For range pickers
+  defaultValue?: DatePickerValue;
+  defaultTime?: string | string[];
 }
 
-export interface VtDatePickerEmits {
-  'update:modelValue': [value: DatePickerModelValue];
-  change: [value: DatePickerModelValue];
-  blur: [event: FocusEvent];
-  focus: [event: FocusEvent];
-  'visible-change': [visible: boolean];
-  clear: [];
-  'calendar-change': [date: Date];
-  'panel-change': [date: Date, mode: string, view: string];
-  validation: [result: ValidationResult];
+export interface VDatePickerEmits {
+  (e: 'update:modelValue', value: DatePickerValue): void;
+
+  (e: 'change', value: DatePickerValue): void;
+
+  (e: 'blur', instance: any): void;
+
+  (e: 'focus', instance: any): void;
+
+  (e: 'calendar-change', value: [Date, Date | null]): void;
+
+  (e: 'panel-change', value: Date, mode: string, view: string): void;
 }
 
-export interface DateShortcut {
+export interface DatePickerShortcut {
   text: string;
-  value: DatePickerModelValue | (() => DatePickerModelValue);
+  value: () => DatePickerValue;
 }
 
-export interface ValidationResult {
+export interface VDatePickerMethods {
+  focus(): void;
+
+  blur(): void;
+
+  handleOpen(): void;
+
+  handleClose(): void;
+}
+
+// Format tokens mapping
+export interface FormatToken {
+  pattern: RegExp;
+  replacement: (date: Date) => string;
+}
+
+export const FORMAT_TOKENS: Record<string, FormatToken> = {
+  yyyy: {
+    pattern: /yyyy/g,
+    replacement: (date: Date) => String(date.getFullYear()),
+  },
+  MM: {
+    pattern: /MM/g,
+    replacement: (date: Date) => String(date.getMonth() + 1).padStart(2, '0'),
+  },
+  M: {
+    pattern: /(?<!M)M(?!M)/g,
+    replacement: (date: Date) => String(date.getMonth() + 1),
+  },
+  dd: {
+    pattern: /dd/g,
+    replacement: (date: Date) => String(date.getDate()).padStart(2, '0'),
+  },
+  d: {
+    pattern: /(?<!d)d(?!d)/g,
+    replacement: (date: Date) => String(date.getDate()),
+  },
+  HH: {
+    pattern: /HH/g,
+    replacement: (date: Date) => String(date.getHours()).padStart(2, '0'),
+  },
+  H: {
+    pattern: /(?<!H)H(?!H)/g,
+    replacement: (date: Date) => String(date.getHours()),
+  },
+  mm: {
+    pattern: /mm/g,
+    replacement: (date: Date) => String(date.getMinutes()).padStart(2, '0'),
+  },
+  m: {
+    pattern: /(?<!m)m(?!m)/g,
+    replacement: (date: Date) => String(date.getMinutes()),
+  },
+  ss: {
+    pattern: /ss/g,
+    replacement: (date: Date) => String(date.getSeconds()).padStart(2, '0'),
+  },
+  s: {
+    pattern: /(?<!s)s(?!s)/g,
+    replacement: (date: Date) => String(date.getSeconds()),
+  },
+};
+
+// Month names for formatting
+export const MONTH_NAMES = [
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
+];
+
+export const MONTH_NAMES_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+export const WEEKDAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export const WEEKDAY_NAMES_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+// Default formats for different picker types
+export const DEFAULT_FORMATS: Record<DatePickerType, string> = {
+  year: 'yyyy',
+  month: 'yyyy-MM',
+  date: 'yyyy-MM-dd',
+  datetime: 'yyyy-MM-dd HH:mm:ss',
+  datetimerange: 'yyyy-MM-dd HH:mm:ss',
+  daterange: 'yyyy-MM-dd',
+  monthrange: 'yyyy-MM',
+  yearrange: 'yyyy',
+};
+
+// Validation utilities
+export interface DateValidationResult {
   isValid: boolean;
   errors: string[];
 }
 
-export interface CalendarDay {
-  date: Date;
-  day: number;
-  month: number;
-  year: number;
-  isCurrentMonth: boolean;
-  isPrevMonth: boolean;
-  isNextMonth: boolean;
-  isSelected: boolean;
-  isInRange: boolean;
-  isRangeStart: boolean;
-  isRangeEnd: boolean;
-  isToday: boolean;
-  isDisabled: boolean;
-  isHovered: boolean;
-  className?: string;
-}
+export const validateDateValue = (
+  value: DatePickerValue,
+  type: DatePickerType,
+  required?: boolean
+): DateValidationResult => {
+  const errors: string[] = [];
 
-export interface CalendarWeek {
-  weekNumber: number;
-  year: number;
-  startDate: Date;
-  endDate: Date;
-  isSelected: boolean;
-  isDisabled: boolean;
-  isHovered: boolean;
-}
+  if (required && (!value || (Array.isArray(value) && value.length === 0))) {
+    errors.push("Це поле є обов'язковим");
+  }
 
-export interface CalendarMonth {
-  month: number;
-  year: number;
-  name: string;
-  shortName: string;
-  isSelected: boolean;
-  isDisabled: boolean;
-  isCurrent: boolean;
-  isHovered: boolean;
-}
+  if (value) {
+    const isRange = ['datetimerange', 'daterange', 'monthrange', 'yearrange'].includes(type);
 
-export interface CalendarYear {
-  year: number;
-  isSelected: boolean;
-  isDisabled: boolean;
-  isCurrent: boolean;
-  isHovered: boolean;
-}
+    if (isRange && !Array.isArray(value)) {
+      errors.push('Для діапазону очікується масив з двох дат');
+    } else if (!isRange && Array.isArray(value)) {
+      errors.push('Для одиночного вибору очікується одна дата');
+    }
 
-export interface DropdownPosition {
-  top: string;
-  left: string;
-  minWidth: string;
-  transformOrigin: string;
-}
+    // Validate date format
+    if (Array.isArray(value)) {
+      value.forEach((v, index) => {
+        if (v && !isValidDate(v)) {
+          errors.push(`Некоректний формат дати ${index + 1}`);
+        }
+      });
+    } else if (!isValidDate(value)) {
+      errors.push('Некоректний формат дати');
+    }
+  }
 
-export interface DatePickerLocale {
-  months: string[];
-  monthsShort: string[];
-  weekdays: string[];
-  weekdaysShort: string[];
-  weekdaysMin: string[];
-  firstDayOfWeek: number;
-  weekHeader: string;
-  dateFormat: string;
-  timeFormat: string;
-  today: string;
-  clear: string;
-  confirm: string;
-  selectTime: string;
-  selectDate: string;
-  year: string;
-  month: string;
-  week: string;
-  day: string;
-  hour: string;
-  minute: string;
-  second: string;
-  am: string;
-  pm: string;
-}
+  return {
+    isValid: errors.length === 0,
+    errors,
+  };
+};
 
-export interface DatePickerConfig {
-  locale: DatePickerLocale;
-  zIndex: number;
-  appendToBody: boolean;
-  popperOptions: any;
-}
+export const isValidDate = (value: any): boolean => {
+  if (value instanceof Date) {
+    return !isNaN(value.getTime());
+  }
 
-// Enum для типів форматування
-export enum FormatType {
-  DISPLAY = 'display',
-  VALUE = 'value',
-  INPUT = 'input',
-}
+  if (typeof value === 'string' || typeof value === 'number') {
+    const date = new Date(value);
+    return !isNaN(date.getTime());
+  }
 
-// Інтерфейс для парсингу формату
-export interface FormatToken {
-  type: 'literal' | 'year' | 'month' | 'week' | 'day' | 'hour' | 'minute' | 'second' | 'ampm';
-  value: string;
-  length: number;
-  escape?: boolean;
-}
-
-// Типи для внутрішнього стану компонента
-export interface DatePickerState {
-  isFocused: boolean;
-  isDropdownVisible: boolean;
-  currentView: 'date' | 'month' | 'year' | 'time';
-  currentDate: Date;
-  displayDate: Date;
-  selectedDate: Date | null;
-  selectedRange: [Date | null, Date | null];
-  hoveredDate: Date | null;
-  rangeState: 'start' | 'end' | null;
-  inputValue: string;
-  validationErrors: string[];
-  isValid: boolean;
-}
-
-export interface TimePickerState {
-  hours: number;
-  minutes: number;
-  seconds: number;
-  ampm: 'AM' | 'PM';
-}
-
-// Допоміжні типи для календаря
-export type CalendarViewType = 'date' | 'week' | 'month' | 'year';
-export type NavigationDirection = 'prev' | 'next';
-
-export interface CalendarNavigation {
-  canGoPrev: boolean;
-  canGoNext: boolean;
-  prevLabel: string;
-  nextLabel: string;
-  currentLabel: string;
-}
-
-// Типи для шорткатів
-export type ShortcutHandler = () => DatePickerModelValue;
-
-export interface PredefinedShortcuts {
-  today: ShortcutHandler;
-  yesterday: ShortcutHandler;
-  thisWeek: ShortcutHandler;
-  lastWeek: ShortcutHandler;
-  thisMonth: ShortcutHandler;
-  lastMonth: ShortcutHandler;
-  thisYear: ShortcutHandler;
-  lastYear: ShortcutHandler;
-  last7Days: ShortcutHandler;
-  last30Days: ShortcutHandler;
-  last3Months: ShortcutHandler;
-}
+  return false;
+};

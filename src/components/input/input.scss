@@ -112,7 +112,7 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: #f3f4f6;
+      background-color: var(--color-gray-7);
     }
 
     &:active {

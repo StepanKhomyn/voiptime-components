@@ -568,7 +568,7 @@
 
     <!-- Validation messages -->
     <transition name="fade">
-      <div v-if="state.validationErrors" class="vt-select__help">
+      <div v-if="state.validationErrors && state.validationErrors.value.length" class="vt-select__help">
         <div v-for="(error, index) in state.validationErrors.value" :key="`error-${index}`" class="vt-select__error">
           {{ error }}
         </div>

@@ -2144,7 +2144,7 @@ const highlightFunction = (row, index) => {
   .debug-info {
     margin-top: 1rem;
     padding: 1rem;
-    background: #f3f4f6;
+    background: var(--color-gray-7);
     border-radius: 8px;
     font-size: 0.75rem;
     color: #6b7280;

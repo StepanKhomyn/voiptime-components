@@ -141,11 +141,12 @@
     border: none;
     background: transparent;
     border-radius: var(--radius-main);
+    color: var(--color-gray-4);
     cursor: pointer;
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: #f3f4f6;
+      background-color: var(--color-gray-7);
     }
 
     &:active {
@@ -278,7 +279,7 @@
     }
 
     .vt-select__icon {
-      color: #9ca3af !important;
+      color: var(--color-gray-4);
     }
   }
 }

@@ -2,14 +2,14 @@
   <div>
     <!-- Кнопки для тестування реактивності -->
     <div class="table-controls" style="margin-bottom: 20px">
-      <button @click="changeRandomStatus" class="btn btn--primary"> 🎲 Змінити випадковий статус</button>
-      <button @click="changeRandomName" class="btn btn--info"> ✏️ Змінити випадкове ім'я</button>
-      <button @click="increaseRandomScore" class="btn btn--success"> 📈 +10 балів випадковому</button>
-      <button @click="addNewRow" class="btn btn--warning"> ➕ Додати новий рядок</button>
-      <button @click="removeLastRow" class="btn btn--danger" :disabled="tableData.length === 0">
+      <button class="btn btn--primary" @click="changeRandomStatus"> 🎲 Змінити випадковий статус</button>
+      <button class="btn btn--info" @click="changeRandomName"> ✏️ Змінити випадкове ім'я</button>
+      <button class="btn btn--success" @click="increaseRandomScore"> 📈 +10 балів випадковому</button>
+      <button class="btn btn--warning" @click="addNewRow"> ➕ Додати новий рядок</button>
+      <button :disabled="tableData.length === 0" class="btn btn--danger" @click="removeLastRow">
         ❌ Видалити останній
       </button>
-      <button @click="shuffleAllData" class="btn btn--secondary"> 🔀 Перемішати все</button>
+      <button class="btn btn--secondary" @click="shuffleAllData"> 🔀 Перемішати все</button>
     </div>
 
     <!-- Статистика -->
@@ -30,47 +30,47 @@
       ref="tableRef"
       :data="tableData"
       :max-height="400"
-      show-summary
       :summary-method="getSummaries"
       highlight-current-row
+      show-summary
     >
       <!-- Звичайна колонка без слота для тестування -->
-      <VTableColumn prop="id" label="ID (тест)" :width="100" />
-      <VTableColumn prop="name" label="Ім'я (тест)" :width="150" />
-      <VTableColumn prop="status" label="Статус (тест)" :width="120" />
+      <VTableColumn :width="100" label="ID (тест)" prop="id" />
+      <VTableColumn :width="150" label="Ім'я (тест)" prop="name" />
+      <VTableColumn :width="120" label="Статус (тест)" prop="status" />
 
       <!-- ID колонка -->
-      <VTableColumn prop="id" label="ID" :width="80" />
+      <VTableColumn :width="80" label="ID" prop="id" />
 
       <!-- Ім'я з кнопкою зміни -->
-      <VTableColumn prop="name" label="Ім'я" :width="200">
+      <VTableColumn :width="200" label="Ім'я" prop="name">
         <template #name="{ row }">
           <div style="display: flex; align-items: center; gap: 8px">
             <span>{{ row.name }}</span>
-            <button @click.stop="changeName(row.id)" class="btn-mini" title="Змінити ім'я"> ✏️</button>
+            <button class="btn-mini" title="Змінити ім'я" @click.stop="changeName(row.id)"> ✏️</button>
           </div>
         </template>
       </VTableColumn>
 
       <!-- Статус з кнопкою зміни -->
-      <VTableColumn prop="status" label="Статус" :width="200">
+      <VTableColumn :width="200" label="Статус" prop="status">
         <template #status="{ row }">
           <div style="display: flex; align-items: center; gap: 8px">
             <span :class="'status-badge status-badge--' + row.status">
               {{ getStatusLabel(row.status) }}
             </span>
-            <button @click.stop="toggleStatus(row.id)" class="btn-mini" title="Змінити статус"> 🔄</button>
+            <button class="btn-mini" title="Змінити статус" @click.stop="toggleStatus(row.id)"> 🔄</button>
           </div>
         </template>
       </VTableColumn>
 
       <!-- Дата -->
-      <VTableColumn prop="date" label="Дата" :width="120" />
+      <VTableColumn :width="120" label="Дата" prop="date" />
 
       <!-- Бали з кнопкою збільшення -->
-      <VTableColumn prop="score" label="Бали" :width="150">
+      <VTableColumn :width="150" label="Бали" prop="score">
         <template #score="{ row }">
-          <VDropdown trigger="click" placement="bottom-start">
+          <VDropdown placement="bottom-start" trigger="click">
             <!-- Trigger -->
             <div class="vt-table-header-actions">
               <VIcon name="listBullet" />
@@ -125,9 +125,9 @@
       </VTableColumn>
 
       <!-- Дії -->
-      <VTableColumn prop="actions" label="Дії" :width="100" :selectable="false">
+      <VTableColumn :selectable="false" :width="100" label="Дії" prop="actions">
         <template #actions="{ row }">
-          <button @click.stop="removeRow(row.id)" class="btn-mini btn-danger" title="Видалити"> 🗑️</button>
+          <button class="btn-mini btn-danger" title="Видалити" @click.stop="removeRow(row.id)"> 🗑️</button>
         </template>
       </VTableColumn>
     </VTable>
@@ -139,14 +139,14 @@
     >
       <strong>Виділено: {{ selectedRows.length }} рядків</strong>
       <div style="margin-top: 8px">
-        <button @click="changeSelectedStatus" class="btn-small btn-primary"> 🔄 Змінити статус виділених</button>
-        <button @click="increaseSelectedScores" class="btn-small btn-success"> 📈 +20 балів виділеним</button>
-        <button @click="removeSelected" class="btn-small btn-danger"> 🗑️ Видалити виділені</button>
+        <button class="btn-small btn-primary" @click="changeSelectedStatus"> 🔄 Змінити статус виділених</button>
+        <button class="btn-small btn-success" @click="increaseSelectedScores"> 📈 +20 балів виділеним</button>
+        <button class="btn-small btn-danger" @click="removeSelected"> 🗑️ Видалити виділені</button>
       </div>
     </div>
 
     <!-- Debug -->
-    <div style="margin-top: 20px; padding: 10px; background: #f3f4f6; border-radius: 4px; font-size: 12px">
+    <div style="margin-top: 20px; padding: 10px; background: var(--color-gray-7); border-radius: 4px; font-size: 12px">
       <strong>🔍 Debug реактивності:</strong><br />
       Поточна кількість записів: {{ tableData.length }}<br />
       Активних записів: {{ activeCount }}<br />
@@ -159,7 +159,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, ref } from 'vue';
   import VTable from '@/components/table/VTable.vue';
   import VTableColumn from '@/components/table/VTableColumn.vue';

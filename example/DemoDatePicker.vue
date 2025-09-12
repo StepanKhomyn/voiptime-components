@@ -1,443 +1,798 @@
-<script lang="ts" setup>
-  import { reactive, ref } from 'vue';
-  import VDatePicker from '@/components/datepicker/VDatePicker.vue';
-  import type { DateShortcut } from '@/components/datepicker/types';
-
-  // Reactive data object as requested
-  const dataValue = reactive({
-    value1: '', // Single date
-    value2: '', // Week picker
-    value3: '', // Month picker
-    value4: '', // Year picker
-    value5: null as [string, string] | null, // Date range
-  });
-
-  // Additional examples
-  const examples = reactive({
-    datetime: '',
-    withValidation: '',
-    customFormat: '',
-    minMaxDate: '',
-    disabledDates: '',
-  });
-
-  // Date range shortcuts
-  const shortcuts: DateShortcut[] = [
-    {
-      text: 'Сьогодні',
-      value: () => [new Date(), new Date()],
-    },
-    {
-      text: 'Вчора',
-      value: () => {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        return [yesterday, yesterday];
-      },
-    },
-    {
-      text: 'Останні 7 днів',
-      value: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setDate(end.getDate() - 6);
-        return [start, end];
-      },
-    },
-    {
-      text: 'Останні 30 днів',
-      value: () => {
-        const end = new Date();
-        const start = new Date();
-        start.setDate(end.getDate() - 29);
-        return [start, end];
-      },
-    },
-    {
-      text: 'Цей місяць',
-      value: () => {
-        const now = new Date();
-        const start = new Date(now.getFullYear(), now.getMonth(), 1);
-        const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-        return [start, end];
-      },
-    },
-    {
-      text: 'Минулий місяць',
-      value: () => {
-        const now = new Date();
-        const start = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-        const end = new Date(now.getFullYear(), now.getMonth(), 0);
-        return [start, end];
-      },
-    },
-  ];
-
-  // Min/Max dates for validation example
-  const minDate = ref(new Date());
-  const maxDate = ref(() => {
-    const date = new Date();
-    date.setMonth(date.getMonth() + 3);
-    return date;
-  });
-
-  // Custom disabled dates function
-  const disabledDate = (date: Date): boolean => {
-    // Disable weekends
-    const day = date.getDay();
-    return day === 0 || day === 6;
-  };
-
-  // Validation handlers
-  const handleValidation = (result: { isValid: boolean; errors: string[] }) => {
-    console.log('Validation result:', result);
-  };
-
-  const handleChange = (value: any) => {
-    console.log('Date changed:', value);
-  };
-
-  const handleVisibleChange = (visible: boolean) => {
-    console.log('Dropdown visible:', visible);
-  };
-
-  const handleClear = () => {
-    console.log('Date cleared');
-  };
-</script>
-
 <template>
-  <div class="date-picker-examples">
-    <h2>VDatePicker Examples</h2>
+  <div class="demo-datepicker">
+    <h1 class="demo-title">VDatePicker Component Demo</h1>
 
-    <!-- Basic Examples as requested -->
-    <div class="example-section">
-      <h3>Основні типи</h3>
+    <!-- API Documentation -->
+    <section class="demo-section">
+      <h2>API Documentation</h2>
 
-      <div class="example-row">
+      <div class="api-docs">
+        <h3>Props</h3>
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Type</th>
+              <th>Default</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>modelValue</code></td>
+              <td><code>Date | Date[] | string | string[] | number</code></td>
+              <td><code>undefined</code></td>
+              <td>Binding value</td>
+            </tr>
+            <tr>
+              <td><code>type</code></td>
+              <td
+                ><code
+                  >'year' | 'month' | 'date' | 'datetime' | 'datetimerange' | 'daterange' | 'monthrange' |
+                  'yearrange'</code
+                ></td
+              >
+              <td><code>'date'</code></td>
+              <td>Type of picker</td>
+            </tr>
+            <tr>
+              <td><code>placeholder</code></td>
+              <td><code>string</code></td>
+              <td><code>'Оберіть дату'</code></td>
+              <td>Placeholder text</td>
+            </tr>
+            <tr>
+              <td><code>startPlaceholder</code></td>
+              <td><code>string</code></td>
+              <td><code>'Початкова дата'</code></td>
+              <td>Start date placeholder for range picker</td>
+            </tr>
+            <tr>
+              <td><code>endPlaceholder</code></td>
+              <td><code>string</code></td>
+              <td><code>'Кінцева дата'</code></td>
+              <td>End date placeholder for range picker</td>
+            </tr>
+            <tr>
+              <td><code>rangeSeparator</code></td>
+              <td><code>string</code></td>
+              <td><code>' - '</code></td>
+              <td>Range separator</td>
+            </tr>
+            <tr>
+              <td><code>format</code></td>
+              <td><code>string</code></td>
+              <td><code>''</code></td>
+              <td>Display format</td>
+            </tr>
+            <tr>
+              <td><code>valueFormat</code></td>
+              <td><code>string</code></td>
+              <td><code>''</code></td>
+              <td>Value format for binding</td>
+            </tr>
+            <tr>
+              <td><code>disabled</code></td>
+              <td><code>boolean</code></td>
+              <td><code>false</code></td>
+              <td>Whether picker is disabled</td>
+            </tr>
+            <tr>
+              <td><code>clearable</code></td>
+              <td><code>boolean</code></td>
+              <td><code>true</code></td>
+              <td>Whether to show clear button</td>
+            </tr>
+            <tr>
+              <td><code>size</code></td>
+              <td><code>'small' | 'default' | 'large'</code></td>
+              <td><code>'default'</code></td>
+              <td>Size of the picker</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Events</h3>
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Description</th>
+              <th>Parameters</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>change</code></td>
+              <td>Triggers when user confirms the value</td>
+              <td>Component's binding value</td>
+            </tr>
+            <tr>
+              <td><code>blur</code></td>
+              <td>Triggers when Input blurs</td>
+              <td>Component instance</td>
+            </tr>
+            <tr>
+              <td><code>focus</code></td>
+              <td>Triggers when Input focuses</td>
+              <td>Component instance</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>Date Formats</h3>
+        <table class="api-table">
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Meaning</th>
+              <th>Note</th>
+              <th>Example</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>yyyy</code></td>
+              <td>year</td>
+              <td></td>
+              <td>2017</td>
+            </tr>
+            <tr>
+              <td><code>M</code></td>
+              <td>month</td>
+              <td>no leading 0</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td><code>MM</code></td>
+              <td>month</td>
+              <td></td>
+              <td>01</td>
+            </tr>
+            <tr>
+              <td><code>MMM</code></td>
+              <td>month</td>
+              <td></td>
+              <td>Jan</td>
+            </tr>
+            <tr>
+              <td><code>MMMM</code></td>
+              <td>month</td>
+              <td></td>
+              <td>January</td>
+            </tr>
+            <tr>
+              <td><code>d</code></td>
+              <td>day</td>
+              <td>no leading 0</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td><code>dd</code></td>
+              <td>day</td>
+              <td></td>
+              <td>02</td>
+            </tr>
+            <tr>
+              <td><code>H</code></td>
+              <td>hour</td>
+              <td>24-hour clock; no leading 0</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td><code>HH</code></td>
+              <td>hour</td>
+              <td>24-hour clock</td>
+              <td>03</td>
+            </tr>
+            <tr>
+              <td><code>h</code></td>
+              <td>hour</td>
+              <td>12-hour clock; must be used with A or a; no leading 0</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td><code>hh</code></td>
+              <td>hour</td>
+              <td>12-hour clock; must be used with A or a</td>
+              <td>03</td>
+            </tr>
+            <tr>
+              <td><code>m</code></td>
+              <td>minute</td>
+              <td>no leading 0</td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td><code>mm</code></td>
+              <td>minute</td>
+              <td></td>
+              <td>04</td>
+            </tr>
+            <tr>
+              <td><code>s</code></td>
+              <td>second</td>
+              <td>no leading 0</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td><code>ss</code></td>
+              <td>second</td>
+              <td></td>
+              <td>05</td>
+            </tr>
+            <tr>
+              <td><code>A</code></td>
+              <td>AM/PM</td>
+              <td>only for format, uppercased</td>
+              <td>AM</td>
+            </tr>
+            <tr>
+              <td><code>a</code></td>
+              <td>am/pm</td>
+              <td>only for format, lowercase</td>
+              <td>am</td>
+            </tr>
+            <tr>
+              <td><code>timestamp</code></td>
+              <td>JS timestamp</td>
+              <td>only for value-format; binding value will be a number</td>
+              <td>1483326245000</td>
+            </tr>
+            <tr>
+              <td><code>[MM]</code></td>
+              <td>No escape characters</td>
+              <td>To escape characters, wrap them in square brackets</td>
+              <td>MM</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Basic Examples -->
+    <section class="demo-section">
+      <h2>Basic Examples</h2>
+
+      <!-- Date Picker -->
+      <div class="demo-item">
+        <h3>Date Picker</h3>
+        <p>Basic date selection</p>
         <VDatePicker
-          v-model="dataValue.value1"
-          clearable
-          label="Дата"
-          placeholder="Виберіть день"
+          v-model="basicDate"
+          placeholder="Select date"
           type="date"
-          @change="handleChange"
-          @validation="handleValidation"
+          @change="handleChange('Basic Date', $event)"
         />
+        <p class="demo-result">Selected: {{ basicDate || 'None' }}</p>
       </div>
 
-      <div class="example-row">
+      <!-- Month Picker -->
+      <div class="demo-item">
+        <h3>Month Picker</h3>
+        <p>Select month and year</p>
         <VDatePicker
-          v-model="dataValue.value2"
-          clearable
-          format="yyyy-WW"
-          label="Тиждень"
-          placeholder="Виберіть тиждень"
-          type="week"
-          @change="handleChange"
-        />
-      </div>
-
-      <div class="example-row">
-        <VDatePicker
-          v-model="dataValue.value3"
-          clearable
-          format="MM.yyyy"
-          label="Місяць"
-          placeholder="Виберіть місяць"
+          v-model="monthDate"
+          placeholder="Select month"
           type="month"
-          @change="handleChange"
+          @change="handleChange('Month', $event)"
         />
+        <p class="demo-result">Selected: {{ monthDate || 'None' }}</p>
       </div>
 
-      <div class="example-row">
+      <!-- Year Picker -->
+      <div class="demo-item">
+        <h3>Year Picker</h3>
+        <p>Select year only</p>
+        <VDatePicker v-model="yearDate" placeholder="Select year" type="year" @change="handleChange('Year', $event)" />
+        <p class="demo-result">Selected: {{ yearDate || 'None' }}</p>
+      </div>
+    </section>
+
+    <!-- Range Pickers -->
+    <section class="demo-section">
+      <h2>Range Pickers</h2>
+
+      <!-- Date Range -->
+      <div class="demo-item">
+        <h3>Date Range</h3>
+        <p>Select date range</p>
         <VDatePicker
-          v-model="dataValue.value4"
-          clearable
-          format="yyyy"
-          label="Рік"
-          placeholder="Виберіть рік"
-          type="year"
-          @change="handleChange"
+          v-model="dateRange"
+          end-placeholder="End date"
+          range-separator=" to "
+          start-placeholder="Start date"
+          type="daterange"
+          @change="handleChange('Date Range', $event)"
         />
+        <p class="demo-result">Selected: {{ dateRange ? `[${dateRange[0]}, ${dateRange[1]}]` : 'None' }}</p>
       </div>
 
-      <div class="example-row">
+      <!-- Month Range -->
+      <div class="demo-item">
+        <h3>Month Range</h3>
+        <p>Select month range</p>
         <VDatePicker
-          v-model="dataValue.value5"
-          :shortcuts="shortcuts"
-          clearable
-          end-placeholder="Кінцева дата"
-          label="Діапазон дат"
-          range
-          range-separator="до"
-          start-placeholder="Початкова дата"
-          type="date"
-          @change="handleChange"
+          v-model="monthRange"
+          end-placeholder="End month"
+          start-placeholder="Start month"
+          type="monthrange"
+          @change="handleChange('Month Range', $event)"
         />
-      </div>
-    </div>
-
-    <!-- Advanced Examples -->
-    <div class="example-section">
-      <h3>Розширені можливості</h3>
-
-      <div class="example-row">
-        <VDatePicker
-          v-model="examples.datetime"
-          clearable
-          format="dd.MM.yyyy HH:mm:ss"
-          label="Дата та час"
-          placeholder="Виберіть дату та час"
-          type="datetime"
-          @change="handleChange"
-        />
+        <p class="demo-result">Selected: {{ monthRange ? `[${monthRange[0]}, ${monthRange[1]}]` : 'None' }}</p>
       </div>
 
-      <div class="example-row">
+      <!-- Year Range -->
+      <div class="demo-item">
+        <h3>Year Range</h3>
+        <p>Select year range</p>
         <VDatePicker
-          v-model="examples.withValidation"
-          label="З валідацією"
-          placeholder="Обов'язкове поле"
-          required
-          required-message="Дата обов'язкова для заповнення"
-          status="error"
-          type="date"
-          validate-on-blur
-          validate-on-input
-          @validation="handleValidation"
+          v-model="yearRange"
+          end-placeholder="End year"
+          start-placeholder="Start year"
+          type="yearrange"
+          @change="handleChange('Year Range', $event)"
         />
+        <p class="demo-result">Selected: {{ yearRange ? `[${yearRange[0]}, ${yearRange[1]}]` : 'None' }}</p>
       </div>
+    </section>
 
-      <div class="example-row">
+    <!-- Custom Formats -->
+    <section class="demo-section">
+      <h2>Custom Formats</h2>
+
+      <!-- Display Format -->
+      <div class="demo-item">
+        <h3>Custom Display Format</h3>
+        <p>Display format: dd/MM/yyyy</p>
         <VDatePicker
-          v-model="examples.customFormat"
-          clearable
+          v-model="customFormatDate"
           format="dd/MM/yyyy"
-          label="Користувацький формат"
-          placeholder="Виберіть дату"
-          type="date"
+          placeholder="Select date"
+          @change="handleChange('Custom Format', $event)"
+        />
+        <p class="demo-result">Selected: {{ customFormatDate || 'None' }}</p>
+      </div>
+
+      <!-- Value Format -->
+      <div class="demo-item">
+        <h3>Custom Value Format</h3>
+        <p>Value format: yyyy-MM-dd (ISO format)</p>
+        <VDatePicker
+          v-model="isoFormatDate"
+          format="dd/MM/yyyy"
+          placeholder="Select date"
           value-format="yyyy-MM-dd"
+          @change="handleChange('ISO Format', $event)"
         />
+        <p class="demo-result">Selected: {{ isoFormatDate || 'None' }}</p>
       </div>
 
-      <div class="example-row">
+      <!-- Timestamp Format -->
+      <div class="demo-item">
+        <h3>Timestamp Value</h3>
+        <p>Value format: timestamp</p>
         <VDatePicker
-          v-model="examples.minMaxDate"
-          :max-date="maxDate()"
-          :min-date="minDate"
-          clearable
-          label="З обмеженням дат"
-          placeholder="Тільки наступні 3 місяці"
-          type="date"
+          v-model="timestampDate"
+          placeholder="Select date"
+          value-format="timestamp"
+          @change="handleChange('Timestamp', $event)"
         />
+        <p class="demo-result">Selected: {{ timestampDate || 'None' }}</p>
       </div>
 
-      <div class="example-row">
+      <!-- Complex Format -->
+      <div class="demo-item">
+        <h3>Complex Format</h3>
+        <p>Format: dd MMMM yyyy [рік]</p>
         <VDatePicker
-          v-model="examples.disabledDates"
-          :disabled-date="disabledDate"
-          clearable
-          label="Заборонені дати"
-          placeholder="Без вихідних"
-          type="date"
+          v-model="complexFormatDate"
+          format="dd MMMM yyyy [рік]"
+          placeholder="Select date"
+          @change="handleChange('Complex Format', $event)"
         />
+        <p class="demo-result">Selected: {{ complexFormatDate || 'None' }}</p>
       </div>
-    </div>
+    </section>
 
-    <!-- Size and Status Examples -->
-    <div class="example-section">
-      <h3>Статуси</h3>
+    <!-- Sizes -->
+    <section class="demo-section">
+      <h2>Sizes</h2>
 
-      <div class="example-row">
-        <VDatePicker v-model="dataValue.value1" label="Успішний статус" placeholder="Успіх" status="success" />
-      </div>
-
-      <div class="example-row">
+      <div class="demo-item">
+        <h3>Small Size</h3>
         <VDatePicker
-          v-model="dataValue.value1"
-          label="Попереджувальний статус"
-          placeholder="Попередження"
-          status="warning"
+          v-model="smallSizeDate"
+          placeholder="Small picker"
+          size="small"
+          @change="handleChange('Small Size', $event)"
         />
       </div>
 
-      <div class="example-row">
-        <VDatePicker v-model="dataValue.value1" label="Помилковий статус" placeholder="Помилка" status="error" />
-      </div>
-    </div>
-
-    <!-- Special States -->
-    <div class="example-section">
-      <h3>Спеціальні стани</h3>
-
-      <div class="example-row">
-        <VDatePicker v-model="dataValue.value1" disabled label="Відключений" placeholder="Відключений датапікер" />
-      </div>
-
-      <div class="example-row">
-        <VDatePicker v-model="dataValue.value1" label="Тільки для читання" placeholder="Тільки читання" readonly />
-      </div>
-
-      <div class="example-row">
+      <div class="demo-item">
+        <h3>Default Size</h3>
         <VDatePicker
-          v-model="dataValue.value1"
-          editable
-          format="dd.MM.yyyy"
-          label="Редагований"
-          placeholder="Можна вводити текст"
+          v-model="defaultSizeDate"
+          placeholder="Default picker"
+          size="default"
+          @change="handleChange('Default Size', $event)"
         />
       </div>
-    </div>
 
-    <!-- Range Examples -->
-    <div class="example-section">
-      <h3>Діапазони</h3>
-
-      <div class="example-row">
+      <div class="demo-item">
+        <h3>Large Size</h3>
         <VDatePicker
-          v-model="dataValue.value5"
-          clearable
-          end-placeholder="Кінцевий тиждень"
-          label="Діапазон тижнів"
-          range
-          range-separator="до"
-          start-placeholder="Початковий тиждень"
-          type="week"
+          v-model="largeSizeDate"
+          placeholder="Large picker"
+          size="large"
+          @change="handleChange('Large Size', $event)"
         />
       </div>
+    </section>
 
-      <div class="example-row">
+    <!-- States -->
+    <section class="demo-section">
+      <h2>States</h2>
+
+      <div class="demo-item">
+        <h3>Disabled</h3>
+        <VDatePicker v-model="disabledDate" disabled placeholder="Disabled picker" />
+      </div>
+
+      <div class="demo-item">
+        <h3>Not Clearable</h3>
         <VDatePicker
-          v-model="dataValue.value5"
-          clearable
-          end-placeholder="Кінцевий місяць"
-          format="MMMM yyyy"
-          label="Діапазон місяців"
-          range
-          range-separator="до"
-          start-placeholder="Початковий місяць"
-          type="month"
+          v-model="notClearableDate"
+          :clearable="false"
+          placeholder="Not clearable"
+          @change="handleChange('Not Clearable', $event)"
         />
       </div>
+    </section>
 
-      <div class="example-row">
-        <VDatePicker
-          v-model="dataValue.value5"
-          clearable
-          end-placeholder="Кінцевий рік"
-          label="Діапазон років"
-          range
-          range-separator="до"
-          start-placeholder="Початковий рік"
-          type="year"
-        />
-      </div>
-    </div>
-
-    <!-- Values Display -->
-    <div class="example-section">
-      <h3>Поточні значення</h3>
-
-      <div class="values-display">
-        <div class="value-item"><strong>Дата:</strong> {{ dataValue.value1 || 'Не вибрано' }}</div>
-        <div class="value-item"><strong>Тиждень:</strong> {{ dataValue.value2 || 'Не вибрано' }}</div>
-        <div class="value-item"><strong>Місяць:</strong> {{ dataValue.value3 || 'Не вибрано' }}</div>
-        <div class="value-item"><strong>Рік:</strong> {{ dataValue.value4 || 'Не вибрано' }}</div>
-        <div class="value-item">
-          <strong>Діапазон:</strong>
-          {{ dataValue.value5 ? `${dataValue.value5[0]} - ${dataValue.value5[1]}` : 'Не вибрано' }}
+    <!-- Events Log -->
+    <section class="demo-section">
+      <h2>Events Log</h2>
+      <div class="events-log">
+        <h4>Recent Events:</h4>
+        <div v-if="events.length === 0" class="no-events">
+          No events yet. Interact with the pickers above to see events.
+        </div>
+        <div v-for="(event, index) in events" :key="index" class="event-item">
+          <span class="event-time">{{ event.time }}</span>
+          <span class="event-type">{{ event.type }}</span>
+          <span class="event-value">{{ event.value }}</span>
         </div>
       </div>
-    </div>
+      <button class="clear-events-btn" @click="clearEvents">Clear Events</button>
+    </section>
 
-    <!-- Format Examples -->
-    <div class="example-section">
-      <h3>Приклади форматів</h3>
+    <!-- Usage Examples -->
+    <section class="demo-section">
+      <h2>Usage Examples</h2>
 
-      <div class="format-examples">
-        <div class="format-row"><code>dd.MM.yyyy</code> → 25.12.2024</div>
-        <div class="format-row"><code>MM/dd/yyyy</code> → 12/25/2024</div>
-        <div class="format-row"><code>yyyy-MM-dd</code> → 2024-12-25</div>
-        <div class="format-row"><code>dd MMMM yyyy</code> → 25 Грудень 2024</div>
-        <div class="format-row"><code>MMM dd, yyyy</code> → Гру 25, 2024</div>
-        <div class="format-row"><code>yyyy-WW</code> → 2024-52 (тиждень)</div>
-        <div class="format-row"><code>MM.yyyy</code> → 12.2024 (місяць)</div>
-        <div class="format-row"><code>yyyy</code> → 2024 (рік)</div>
-        <div class="format-row"><code>dd.MM.yyyy HH:mm:ss</code> → 25.12.2024 14:30:45</div>
-        <div class="format-row"><code>timestamp</code> → 1703515845000</div>
+      <div class="code-examples">
+        <h3>Basic Usage</h3>
+        <pre><code>&lt;template&gt;
+  &lt;VDatePicker
+    v-model="selectedDate"
+    placeholder="Select date"
+    @change="handleDateChange"
+  /&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { ref } from 'vue'
+import VDatePicker from '@/components/VDatePicker.vue'
+
+const selectedDate = ref(null)
+
+const handleDateChange = (value) => {
+  console.log('Date changed:', value)
+}
+&lt;/script&gt;</code></pre>
+
+        <h3>Range Picker</h3>
+        <pre><code>&lt;VDatePicker
+  v-model="dateRange"
+  type="daterange"
+  start-placeholder="Start date"
+  end-placeholder="End date"
+  range-separator=" to "
+/&gt;</code></pre>
+
+        <h3>Custom Format</h3>
+        <pre><code>&lt;VDatePicker
+  v-model="customDate"
+  format="dd/MM/yyyy"
+  value-format="yyyy-MM-dd"
+/&gt;</code></pre>
+
+        <h3>Timestamp Value</h3>
+        <pre><code>&lt;VDatePicker
+  v-model="timestampValue"
+  value-format="timestamp"
+/&gt;</code></pre>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
+<script lang="ts" setup>
+  import { ref } from 'vue';
+  import VDatePicker from '@/components/datepicker/VDatePicker.vue';
+
+  // Basic examples
+  const basicDate = ref<Date | null>(null);
+  const monthDate = ref<Date | null>(null);
+  const yearDate = ref<Date | null>(null);
+
+  // Range examples
+  const dateRange = ref<Date[] | null>(null);
+  const monthRange = ref<Date[] | null>(null);
+  const yearRange = ref<Date[] | null>(null);
+
+  // Format examples
+  const customFormatDate = ref<Date | null>(null);
+  const isoFormatDate = ref<string | null>(null);
+  const timestampDate = ref<number | null>(null);
+  const complexFormatDate = ref<Date | null>(null);
+
+  // Size examples
+  const smallSizeDate = ref<Date | null>(null);
+  const defaultSizeDate = ref<Date | null>(null);
+  const largeSizeDate = ref<Date | null>(null);
+
+  // State examples
+  const disabledDate = ref<Date | null>(new Date());
+  const notClearableDate = ref<Date | null>(null);
+
+  // Events
+  interface Event {
+    time: string;
+    type: string;
+    value: string;
+  }
+
+  const events = ref<Event[]>([]);
+
+  const handleChange = (type: string, value: any) => {
+    const event: Event = {
+      time: new Date().toLocaleTimeString(),
+      type: `${type} Changed`,
+      value: Array.isArray(value) ? JSON.stringify(value) : String(value || 'null'),
+    };
+    events.value.unshift(event);
+
+    // Keep only last 10 events
+    if (events.value.length > 10) {
+      events.value = events.value.slice(0, 10);
+    }
+  };
+
+  const clearEvents = () => {
+    events.value = [];
+  };
+</script>
+
 <style scoped>
-  .date-picker-examples {
-    max-width: 800px;
+  .demo-datepicker {
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 24px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
-  .example-section {
-    margin-bottom: 32px;
-  }
-
-  .example-section h3 {
-    margin-bottom: 16px;
+  .demo-title {
+    font-size: 2.5rem;
     color: #2c3e50;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .demo-section {
+    margin-bottom: 3rem;
+    padding: 1.5rem;
+    border: 1px solid #e1e8ed;
+    border-radius: 8px;
+    background: #fafbfc;
+  }
+
+  .demo-section h2 {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
     border-bottom: 2px solid #3498db;
-    padding-bottom: 8px;
+    padding-bottom: 0.5rem;
   }
 
-  .example-row {
-    margin-bottom: 16px;
-    max-width: 400px;
-  }
-
-  .values-display {
-    background: #f8f9fa;
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-  }
-
-  .value-item {
-    margin-bottom: 8px;
-    padding: 4px 0;
-  }
-
-  .value-item strong {
-    color: #495057;
-    margin-right: 8px;
-  }
-
-  .format-examples {
-    background: #f8f9fa;
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid #e9ecef;
-    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  }
-
-  .format-row {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
-    padding: 4px 8px;
+  .demo-item {
+    margin-bottom: 2rem;
+    padding: 1rem;
     background: white;
-    border-radius: 4px;
-    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    border: 1px solid #e1e8ed;
   }
 
-  .format-row code {
-    color: #e83e8c;
+  .demo-item h3 {
+    font-size: 1.2rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+  }
+
+  .demo-item p {
+    color: #7f8c8d;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+
+  .demo-result {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.85rem;
+    color: #2c3e50;
+  }
+
+  /* API Documentation */
+  .api-docs h3 {
+    color: #2c3e50;
+    margin: 1.5rem 0 1rem 0;
+    font-size: 1.2rem;
+  }
+
+  .api-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+    background: white;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .api-table th {
+    background: #3498db;
+    color: white;
+    padding: 12px;
+    text-align: left;
     font-weight: 600;
   }
 
-  h2 {
-    text-align: center;
+  .api-table td {
+    padding: 12px;
+    border-bottom: 1px solid #e1e8ed;
+  }
+
+  .api-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .api-table code {
+    background: #f1f2f6;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.85rem;
+    color: #e74c3c;
+  }
+
+  /* Events Log */
+  .events-log {
+    background: white;
+    border-radius: 6px;
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #e1e8ed;
+  }
+
+  .events-log h4 {
+    margin-bottom: 1rem;
     color: #2c3e50;
-    margin-bottom: 32px;
+  }
+
+  .no-events {
+    color: #7f8c8d;
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .event-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #f1f2f6;
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.85rem;
+  }
+
+  .event-item:last-child {
+    border-bottom: none;
+  }
+
+  .event-time {
+    color: #7f8c8d;
+    min-width: 80px;
+  }
+
+  .event-type {
+    color: #3498db;
+    font-weight: 600;
+    min-width: 150px;
+  }
+
+  .event-value {
+    color: #2c3e50;
+    word-break: break-all;
+  }
+
+  .clear-events-btn {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+    background: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .clear-events-btn:hover {
+    background: #c0392b;
+  }
+
+  /* Code Examples */
+  .code-examples h3 {
+    color: #2c3e50;
+    margin: 1.5rem 0 1rem 0;
+  }
+
+  .code-examples pre {
+    background: #2d3748;
+    color: #e2e8f0;
+    padding: 1.5rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .code-examples code {
+    font-family: 'Monaco', 'Menlo', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .demo-datepicker {
+      padding: 10px;
+    }
+
+    .demo-title {
+      font-size: 2rem;
+    }
+
+    .api-table {
+      font-size: 0.85rem;
+    }
+
+    .api-table th,
+    .api-table td {
+      padding: 8px;
+    }
+
+    .event-item {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .event-time,
+    .event-type {
+      min-width: auto;
+    }
   }
 </style>

@@ -13,6 +13,7 @@
   import DemoSelect from './DemoSelect.vue';
   import DemoSelect2 from './DemoSelect2.vue';
   import DemoRadioBox from './DemoRadioBox.vue';
+  import DemoForms from './DemoForms.vue';
 
   const activeSlot = ref(null);
 
@@ -30,6 +31,7 @@
     { id: 10, name: 'Інпут', icon: '⬇️' },
     { id: 11, name: 'Селект', icon: '⬇️' },
     { id: 12, name: 'Селект2', icon: '⬇️' },
+    { id: 14, name: 'Форми', icon: '⬇️' },
   ];
 </script>
 
@@ -76,6 +78,7 @@
       <DemoSelect v-if="activeSlot === 11" />
       <DemoSelect2 v-if="activeSlot === 12" />
       <DemoRadioBox v-if="activeSlot === 13" />
+      <DemoForms v-if="activeSlot === 14" />
       <!-- і т.д. -->
     </div>
   </div>
