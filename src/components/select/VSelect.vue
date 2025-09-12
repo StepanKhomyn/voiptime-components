@@ -65,18 +65,25 @@
   };
 
   // ===== OPTIONS REGISTRY =====
-  const registeredOptions = ref<VtSelectOption[]>([]);
+  const allRegisteredOptions = ref<Map<string, VtSelectOption>>(new Map());
+  const activeOptionKeys = ref<Set<string>>(new Set());
   const optionSlots = ref<Map<any, any>>(new Map());
 
-  const registerOption = (option: VtSelectOption, slotContent?: any) => {
-    // Видаляємо існуючий варіант з тим же значенням
-    const existingIndex = registeredOptions.value.findIndex(o => compareValues(o.value, option.value, props.valueKey));
-    if (existingIndex > -1) {
-      registeredOptions.value.splice(existingIndex, 1);
+  const getOptionKey = (value: any): string => {
+    if (props.valueKey && typeof value === 'object' && value !== null) {
+      return String(value[props.valueKey]);
     }
+    return typeof value === 'object' ? JSON.stringify(value) : String(value);
+  };
 
-    // Додаємо новий варіант
-    registeredOptions.value.push(option);
+  const registerOption = (option: VtSelectOption, slotContent?: any) => {
+    const key = getOptionKey(option.value);
+
+    // Зберігаємо опцію в загальному реєстрі (зберігає порядок)
+    allRegisteredOptions.value.set(key, option);
+
+    // Позначаємо як активну
+    activeOptionKeys.value.add(key);
 
     if (slotContent) {
       optionSlots.value.set(option.value, slotContent);
@@ -84,10 +91,13 @@
   };
 
   const unregisterOption = (value: any) => {
-    const index = registeredOptions.value.findIndex(o => compareValues(o.value, value, props.valueKey));
-    if (index > -1) {
-      registeredOptions.value.splice(index, 1);
-    }
+    const key = getOptionKey(value);
+
+    // НЕ видаляємо з allRegisteredOptions, щоб зберегти порядок
+    // Просто видаляємо з активних
+    activeOptionKeys.value.delete(key);
+
+    // Slot можна видалити, він буде перереєстрований при потребі
     optionSlots.value.delete(value);
   };
 
@@ -99,6 +109,38 @@
       }
     }
     return undefined;
+  };
+
+  // Computed для отримання тільки активних опцій у правильному порядку
+  const registeredOptions = computed(() => {
+    const result: VtSelectOption[] = [];
+
+    for (const [key, option] of allRegisteredOptions.value.entries()) {
+      if (activeOptionKeys.value.has(key)) {
+        result.push(option);
+      }
+    }
+
+    return result;
+  });
+
+  // Опціонально: очищення неактивних опцій час від часу
+  const cleanupInactiveOptions = () => {
+    const keysToDelete: string[] = [];
+
+    for (const key of allRegisteredOptions.value.keys()) {
+      if (!activeOptionKeys.value.has(key)) {
+        keysToDelete.push(key);
+      }
+    }
+
+    // Видаляємо тільки після тривалої неактивності
+    if (keysToDelete.length > 50) {
+      // або інший поріг
+      keysToDelete.forEach(key => {
+        allRegisteredOptions.value.delete(key);
+      });
+    }
   };
 
   // ===== DROPDOWN INTEGRATION =====
