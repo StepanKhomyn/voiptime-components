@@ -1,3 +1,11 @@
+## [1.7.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.1...v1.7.2) (2025-09-12)
+
+
+### Bug Fixes
+
+* додано вільтр до селекту ([b6dd8db](https://github.com/StepanKhomyn/voiptime-components/commit/b6dd8db1d222faa89e4a1b9030ca4b6d3ab52796))
+* додано фільтр до селекту ([a34b1da](https://github.com/StepanKhomyn/voiptime-components/commit/a34b1daba2f14175e21d48db5b7623f5babf6520))
+
 ## [1.7.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.0...v1.7.1) (2025-09-12)
 
 
