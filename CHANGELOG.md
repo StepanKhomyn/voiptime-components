@@ -1,3 +1,10 @@
+## [1.7.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.9...v1.7.10) (2025-09-15)
+
+
+### Bug Fixes
+
+* стилі ([497ed6b](https://github.com/StepanKhomyn/voiptime-components/commit/497ed6b3e4b9213bded0f18198741af6a167ab12))
+
 ## [1.7.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.8...v1.7.9) (2025-09-15)
 
 
