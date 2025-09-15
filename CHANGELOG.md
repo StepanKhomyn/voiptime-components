@@ -1,3 +1,10 @@
+## [1.7.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.7...v1.7.8) (2025-09-15)
+
+
+### Bug Fixes
+
+* fixewd srcoll on select ([7855ccf](https://github.com/StepanKhomyn/voiptime-components/commit/7855ccff72667d3d4ab2eecf588a3fbb2b04d2f9))
+
 ## [1.7.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.6...v1.7.7) (2025-09-15)
 
 
