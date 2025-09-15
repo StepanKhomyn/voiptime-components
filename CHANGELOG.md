@@ -1,3 +1,10 @@
+## [1.7.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.2...v1.7.3) (2025-09-15)
+
+
+### Bug Fixes
+
+* змінено падінг селкту ([ae441c3](https://github.com/StepanKhomyn/voiptime-components/commit/ae441c3e564f018c39919331e21ed65c14532ed7))
+
 ## [1.7.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.1...v1.7.2) (2025-09-12)
 
 
