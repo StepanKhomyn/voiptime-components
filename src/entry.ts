@@ -14,6 +14,7 @@ import VDropdownItem from './components/dropdown/VDropdownItem.vue';
 import VInput from './components/input/VInput.vue';
 import VSelect from './components/select/VSelect.vue';
 import VOption from './components/select/VOption.vue';
+import VDatePicker from './components/datepicker/VDatePicker.vue'
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -35,6 +36,7 @@ export {
   VInput,
   VSelect,
   VOption,
+  VDatePicker
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -143,6 +145,7 @@ const VUIPlugin = {
     app.component(`${prefix}Input`, VInput);
     app.component(`${prefix}Select`, VSelect);
     app.component(`${prefix}Option`, VOption);
+    app.component(`${prefix}DatePicker`, VDatePicker);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
