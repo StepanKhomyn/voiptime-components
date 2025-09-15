@@ -1,3 +1,10 @@
+## [1.7.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.4...v1.7.5) (2025-09-15)
+
+
+### Bug Fixes
+
+* додав радіобокс в entry ([ca2b1d3](https://github.com/StepanKhomyn/voiptime-components/commit/ca2b1d341b1f65c2f756faa8a4bfebe8a32c28ae))
+
 ## [1.7.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.3...v1.7.4) (2025-09-15)
 
 
