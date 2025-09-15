@@ -183,6 +183,99 @@
     return registeredOptions.value.filter(option => filterOption(option, state.filterQuery.value));
   });
 
+  // ===== SCROLL HANDLER З SENTINEL =====
+  const scrollHandler = {
+    observer: null as IntersectionObserver | null,
+    sentinelElement: null as HTMLElement | null,
+    lastEmitTime: 0,
+    cooldown: 400,
+
+    init() {
+      this.cleanup();
+
+      if (scrollContainerRef.value) {
+        this.createSentinel();
+        this.initObserver();
+      }
+    },
+
+    createSentinel() {
+      if (!scrollContainerRef.value || this.sentinelElement) return;
+
+      // Створюємо sentinel елемент
+      this.sentinelElement = document.createElement('div');
+      this.sentinelElement.style.cssText = `
+        height: 20px;
+        width: 100%;
+        background: transparent;
+        pointer-events: none;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: #999;
+      `;
+      this.sentinelElement.setAttribute('data-load-more-trigger', 'true');
+      this.sentinelElement.textContent = ''; // Можна додати текст типу "Завантажити ще..."
+
+      // Додаємо в кінець контейнера
+      scrollContainerRef.value.appendChild(this.sentinelElement);
+    },
+
+    initObserver() {
+      if (!this.sentinelElement || !scrollContainerRef.value) return;
+
+      this.observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && this.canEmit()) {
+              this.emitScrolled();
+            }
+          });
+        },
+        {
+          root: scrollContainerRef.value,
+          rootMargin: '50px', // Тригерить за 50px до показу sentinel
+          threshold: 0,
+        }
+      );
+
+      this.observer.observe(this.sentinelElement);
+    },
+
+    canEmit(): boolean {
+      const now = Date.now();
+      return !props.loading && filteredOptions.value.length > 0 && now - this.lastEmitTime > this.cooldown;
+    },
+
+    emitScrolled() {
+      console.log('Sentinel triggered scroll - options count:', filteredOptions.value.length);
+      this.lastEmitTime = Date.now();
+      emit('scrolled');
+    },
+
+    // Переміщуємо sentinel після додавання нових опцій
+    updateSentinel() {
+      if (!this.sentinelElement || !scrollContainerRef.value) return;
+
+      // Переміщуємо в самий кінець
+      scrollContainerRef.value.appendChild(this.sentinelElement);
+    },
+
+    cleanup() {
+      if (this.observer) {
+        this.observer.disconnect();
+        this.observer = null;
+      }
+
+      if (this.sentinelElement) {
+        this.sentinelElement.remove();
+        this.sentinelElement = null;
+      }
+    },
+  };
+
   // ===== DROPDOWN INTEGRATION =====
   const {
     visible: isDropdownVisible,
@@ -203,22 +296,14 @@
       if (visible) {
         nextTick(async () => {
           await updatePosition();
-
-          // Ініціалізуємо scroll handler
           scrollHandler.init();
 
           // Фокус на input фільтра, якщо доступний
           if (props.filterable && filterInputRef.value) {
             filterInputRef.value.focus();
           }
-
-          // Додаткова затримка для перевірки потреби завантаження даних
-          setTimeout(() => {
-            scrollHandler.checkIfNeedMoreData();
-          }, 300);
         });
       } else {
-        // Очищаємо scroll handler при закритті
         scrollHandler.cleanup();
 
         // Очищаємо фільтр при закритті dropdown
@@ -255,149 +340,6 @@
       state.validationErrors.value = [];
       state.isValid.value = true;
       emit('validation', { isValid: true, errors: [] });
-    },
-  };
-
-  // ===== SCROLL HANDLER =====
-  const scrollHandler = {
-    observer: null as IntersectionObserver | null,
-    sentinelElement: null as HTMLElement | null,
-    scrollTimeoutId: null as number | null,
-    lastEmitTime: 0,
-    emitCooldown: 500, // мінімальний інтервал між емітами
-    isInitialized: false,
-
-    init() {
-      this.cleanup();
-      this.initIntersectionObserver();
-      this.initScrollFallback();
-      this.isInitialized = true;
-
-      // Початкова перевірка, чи потрібно завантажити дані одразу
-      nextTick(() => {
-        this.checkIfNeedMoreData();
-      });
-    },
-
-    initIntersectionObserver() {
-      if (!scrollContainerRef.value) return;
-
-      // Створюємо sentinel елемент
-      this.sentinelElement = document.createElement('div');
-      this.sentinelElement.style.cssText = `
-      height: 1px;
-      background: transparent;
-      pointer-events: none;
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-    `;
-      this.sentinelElement.setAttribute('data-scroll-sentinel', 'true');
-
-      // Додаємо sentinel в кінець контейнера
-      scrollContainerRef.value.appendChild(this.sentinelElement);
-
-      // Створюємо Intersection Observer
-      this.observer = new IntersectionObserver(
-        entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && this.canEmit()) {
-              this.emitScrolled('intersection-observer');
-            }
-          });
-        },
-        {
-          root: scrollContainerRef.value,
-          rootMargin: '100px', // Тригерить за 100px до кінця
-          threshold: 0,
-        }
-      );
-
-      this.observer.observe(this.sentinelElement);
-    },
-
-    initScrollFallback() {
-      if (!scrollContainerRef.value) return;
-
-      scrollContainerRef.value.addEventListener('scroll', this.handleScrollFallback, {
-        passive: true,
-      });
-    },
-
-    handleScrollFallback: (event: Event) => {
-      if (scrollHandler.scrollTimeoutId) {
-        clearTimeout(scrollHandler.scrollTimeoutId);
-      }
-
-      scrollHandler.scrollTimeoutId = setTimeout(() => {
-        const target = event.target as HTMLElement;
-        if (!target || !scrollHandler.canEmit()) return;
-
-        const { scrollTop, scrollHeight, clientHeight } = target;
-        const threshold = 80;
-
-        if (scrollHeight - scrollTop - clientHeight <= threshold && filteredOptions.value.length > 0) {
-          scrollHandler.emitScrolled('scroll-fallback');
-        }
-      }, 200);
-    },
-
-    canEmit(): boolean {
-      const now = Date.now();
-      return !props.loading && filteredOptions.value.length > 0 && now - this.lastEmitTime > this.emitCooldown;
-    },
-
-    emitScrolled(source: string) {
-      this.lastEmitTime = Date.now();
-      emit('scrolled');
-    },
-
-    updateSentinel() {
-      // Переміщуємо sentinel в кінець після додавання нових опцій
-      if (this.sentinelElement && scrollContainerRef.value) {
-        scrollContainerRef.value.appendChild(this.sentinelElement);
-      }
-    },
-
-    checkIfNeedMoreData() {
-      if (!scrollContainerRef.value || !this.canEmit()) return;
-
-      const { scrollHeight, clientHeight } = scrollContainerRef.value;
-
-      // Якщо контент менше за висоту контейнера, одразу завантажуємо більше
-      if (scrollHeight <= clientHeight && filteredOptions.value.length > 0) {
-        this.emitScrolled('initial-check');
-      }
-    },
-
-    // Метод для ручного тригеру (корисно для дебагу)
-    triggerManually() {
-      if (this.canEmit()) {
-        this.emitScrolled('manual-trigger');
-      }
-    },
-
-    cleanup() {
-      if (this.observer) {
-        this.observer.disconnect();
-        this.observer = null;
-      }
-
-      if (this.sentinelElement) {
-        this.sentinelElement.remove();
-        this.sentinelElement = null;
-      }
-
-      if (scrollContainerRef.value && this.isInitialized) {
-        scrollContainerRef.value.removeEventListener('scroll', this.handleScrollFallback);
-      }
-
-      if (this.scrollTimeoutId) {
-        clearTimeout(this.scrollTimeoutId);
-        this.scrollTimeoutId = null;
-      }
-
-      this.isInitialized = false;
     },
   };
 
@@ -701,13 +643,9 @@
       return state.filterQuery.value;
     },
 
-    // Нові методи для роботи зі скролом
-    checkScroll() {
-      scrollHandler.checkIfNeedMoreData();
-    },
-
-    triggerScroll() {
-      scrollHandler.triggerManually();
+    // Метод для оновлення sentinel після завантаження нових опцій
+    updateScrollSentinel() {
+      scrollHandler.updateSentinel();
     },
 
     getScrollInfo() {
@@ -718,10 +656,10 @@
         scrollTop,
         scrollHeight,
         clientHeight,
-        isNearBottom: scrollHeight - scrollTop - clientHeight <= 100,
-        canScroll: scrollHeight > clientHeight,
         optionsCount: filteredOptions.value.length,
         isLoading: props.loading,
+        hasSentinel: !!scrollHandler.sentinelElement,
+        hasObserver: !!scrollHandler.observer,
       };
     },
   };
@@ -732,7 +670,20 @@
     unregisterOption: unregisterOption,
   });
 
-  // ===== WATCHERS =====
+  // ===== WATCHER ДЛЯ ОНОВЛЕННЯ SENTINEL =====
+  watch(
+    () => filteredOptions.value.length,
+    (newLength, oldLength) => {
+      // Коли додаються нові опції - переміщуємо sentinel в кінець
+      if (isDropdownVisible.value && newLength > oldLength && scrollHandler.sentinelElement) {
+        nextTick(() => {
+          scrollHandler.updateSentinel();
+        });
+      }
+    }
+  );
+
+  // ===== ІНШІ WATCHERS =====
   watch(
     () => props.modelValue,
     () => {
@@ -766,41 +717,6 @@
     }
   });
 
-  watch(
-    filteredOptions,
-    (newOptions, oldOptions) => {
-      // Оновлюємо sentinel після зміни опцій
-      if (isDropdownVisible.value && scrollHandler.isInitialized) {
-        nextTick(() => {
-          scrollHandler.updateSentinel();
-
-          // Перевіряємо чи потрібно завантажити більше даних
-          if (newOptions.length > 0) {
-            setTimeout(() => {
-              scrollHandler.checkIfNeedMoreData();
-            }, 100);
-          }
-        });
-      }
-    },
-    { flush: 'post' }
-  );
-
-  watch(
-    () => props.loading,
-    (newLoading, oldLoading) => {
-      // Коли завантаження закінчується, перевіряємо чи потрібно більше даних
-      if (oldLoading && !newLoading && isDropdownVisible.value && scrollHandler.isInitialized) {
-        nextTick(() => {
-          scrollHandler.updateSentinel();
-          setTimeout(() => {
-            scrollHandler.checkIfNeedMoreData();
-          }, 200);
-        });
-      }
-    }
-  );
-
   // ===== LIFECYCLE HOOKS =====
   onMounted(() => {
     // Initial validation
@@ -821,10 +737,7 @@
   });
 
   onUnmounted(() => {
-    // Очищаємо scroll handler
     scrollHandler.cleanup();
-
-    // Інший cleanup
     document.removeEventListener('click', handleClickOutside);
     window.removeEventListener('resize', calcVisibleCount);
   });
