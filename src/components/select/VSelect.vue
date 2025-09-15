@@ -348,7 +348,6 @@
     },
 
     emitScrolled(source: string) {
-      console.log(`Scroll triggered by: ${source}, options count: ${filteredOptions.value.length}`);
       this.lastEmitTime = Date.now();
       emit('scrolled');
     },
@@ -367,7 +366,6 @@
 
       // Якщо контент менше за висоту контейнера, одразу завантажуємо більше
       if (scrollHeight <= clientHeight && filteredOptions.value.length > 0) {
-        console.log('Container height exceeds content, triggering initial load');
         this.emitScrolled('initial-check');
       }
     },

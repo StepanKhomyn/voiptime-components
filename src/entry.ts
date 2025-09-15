@@ -6,6 +6,7 @@ import VLoader from './components/loader/VLoader.vue';
 import VModal from './components/modal/VModal.vue';
 import VPagination from './components/pagination/VPagination.vue';
 import VCheckbox from './components/checkbox/VCheckbox.vue';
+import VRadiobox from './components/radiobox/VRadiobox.vue';
 import VTable from './components/table/VTable.vue';
 import VTableColumn from './components/table/VTableColumn.vue';
 import VDropdown from './components/dropdown/VDropdown.vue';
@@ -26,6 +27,7 @@ export {
   VModal,
   VPagination,
   VCheckbox,
+  VRadiobox,
   VTable,
   VTableColumn,
   VDropdown,
@@ -54,6 +56,7 @@ export type {
 } from './components/pagination/types';
 
 export type { VCheckboxProps, VCheckboxEmits, VCheckboxSlots } from './components/checkbox/types';
+export type { VRadioboxProps, VRadioboxEmits } from './components/radiobox/types';
 
 // Таблиця
 export type {
@@ -132,6 +135,7 @@ const VUIPlugin = {
     app.component(`${prefix}Modal`, VModal);
     app.component(`${prefix}Pagination`, VPagination);
     app.component(`${prefix}Checkbox`, VCheckbox);
+    app.component(`${prefix}Radiobox`, VRadiobox);
     app.component(`${prefix}Table`, VTable);
     app.component(`${prefix}TableColumn`, VTableColumn);
     app.component(`${prefix}Dropdown`, VDropdown);
