@@ -57,6 +57,7 @@ import EmailNewIcon from './mail/EmailNewIcon.vue';
 import EmailOutgoingIcon from './mail/EmailOutgoingIcon.vue';
 import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
+import DsrIcon from './others/DsrIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
@@ -143,6 +144,7 @@ export const icons = {
   emailSpam: EmailSpamIcon,
 
   // others icons
+  dsr: DsrIcon,
   ivr: IvrIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
