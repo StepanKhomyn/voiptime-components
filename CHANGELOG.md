@@ -1,3 +1,10 @@
+## [1.7.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.8...v1.7.9) (2025-09-15)
+
+
+### Bug Fixes
+
+* реєстрація datepicker ([e4d4d6d](https://github.com/StepanKhomyn/voiptime-components/commit/e4d4d6dbe546ae59b172472b290a1cb15f300a57))
+
 ## [1.7.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.7...v1.7.8) (2025-09-15)
 
 
