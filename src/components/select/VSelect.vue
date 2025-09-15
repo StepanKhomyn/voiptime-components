@@ -203,14 +203,24 @@
       if (visible) {
         nextTick(async () => {
           await updatePosition();
+
+          // Ініціалізуємо scroll handler
           scrollHandler.init();
 
           // Фокус на input фільтра, якщо доступний
           if (props.filterable && filterInputRef.value) {
             filterInputRef.value.focus();
           }
+
+          // Додаткова затримка для перевірки потреби завантаження даних
+          setTimeout(() => {
+            scrollHandler.checkIfNeedMoreData();
+          }, 300);
         });
       } else {
+        // Очищаємо scroll handler при закритті
+        scrollHandler.cleanup();
+
         // Очищаємо фільтр при закритті dropdown
         if (state.filterQuery.value) {
           handleFilterClear();
@@ -250,25 +260,146 @@
 
   // ===== SCROLL HANDLER =====
   const scrollHandler = {
+    observer: null as IntersectionObserver | null,
+    sentinelElement: null as HTMLElement | null,
+    scrollTimeoutId: null as number | null,
+    lastEmitTime: 0,
+    emitCooldown: 500, // мінімальний інтервал між емітами
+    isInitialized: false,
+
     init() {
-      if (scrollContainerRef.value) {
-        scrollContainerRef.value.addEventListener('scroll', this.handleOptionsScroll, { passive: true });
+      this.cleanup();
+      this.initIntersectionObserver();
+      this.initScrollFallback();
+      this.isInitialized = true;
+
+      // Початкова перевірка, чи потрібно завантажити дані одразу
+      nextTick(() => {
+        this.checkIfNeedMoreData();
+      });
+    },
+
+    initIntersectionObserver() {
+      if (!scrollContainerRef.value) return;
+
+      // Створюємо sentinel елемент
+      this.sentinelElement = document.createElement('div');
+      this.sentinelElement.style.cssText = `
+      height: 1px;
+      background: transparent;
+      pointer-events: none;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    `;
+      this.sentinelElement.setAttribute('data-scroll-sentinel', 'true');
+
+      // Додаємо sentinel в кінець контейнера
+      scrollContainerRef.value.appendChild(this.sentinelElement);
+
+      // Створюємо Intersection Observer
+      this.observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting && this.canEmit()) {
+              this.emitScrolled('intersection-observer');
+            }
+          });
+        },
+        {
+          root: scrollContainerRef.value,
+          rootMargin: '100px', // Тригерить за 100px до кінця
+          threshold: 0,
+        }
+      );
+
+      this.observer.observe(this.sentinelElement);
+    },
+
+    initScrollFallback() {
+      if (!scrollContainerRef.value) return;
+
+      scrollContainerRef.value.addEventListener('scroll', this.handleScrollFallback, {
+        passive: true,
+      });
+    },
+
+    handleScrollFallback: (event: Event) => {
+      if (scrollHandler.scrollTimeoutId) {
+        clearTimeout(scrollHandler.scrollTimeoutId);
+      }
+
+      scrollHandler.scrollTimeoutId = setTimeout(() => {
+        const target = event.target as HTMLElement;
+        if (!target || !scrollHandler.canEmit()) return;
+
+        const { scrollTop, scrollHeight, clientHeight } = target;
+        const threshold = 80;
+
+        if (scrollHeight - scrollTop - clientHeight <= threshold && filteredOptions.value.length > 0) {
+          scrollHandler.emitScrolled('scroll-fallback');
+        }
+      }, 200);
+    },
+
+    canEmit(): boolean {
+      const now = Date.now();
+      return !props.loading && filteredOptions.value.length > 0 && now - this.lastEmitTime > this.emitCooldown;
+    },
+
+    emitScrolled(source: string) {
+      console.log(`Scroll triggered by: ${source}, options count: ${filteredOptions.value.length}`);
+      this.lastEmitTime = Date.now();
+      emit('scrolled');
+    },
+
+    updateSentinel() {
+      // Переміщуємо sentinel в кінець після додавання нових опцій
+      if (this.sentinelElement && scrollContainerRef.value) {
+        scrollContainerRef.value.appendChild(this.sentinelElement);
       }
     },
 
-    handleOptionsScroll(event: Event) {
-      if (props.loading) return;
+    checkIfNeedMoreData() {
+      if (!scrollContainerRef.value || !this.canEmit()) return;
 
-      const target = event.target as HTMLElement;
-      if (!target) return;
+      const { scrollHeight, clientHeight } = scrollContainerRef.value;
 
-      const { scrollTop, scrollHeight, clientHeight } = target;
-      const scrollThreshold = 50;
-      const isNearBottom = scrollHeight - scrollTop - clientHeight <= scrollThreshold;
-
-      if (isNearBottom && filteredOptions.value.length > 0) {
-        emit('scrolled');
+      // Якщо контент менше за висоту контейнера, одразу завантажуємо більше
+      if (scrollHeight <= clientHeight && filteredOptions.value.length > 0) {
+        console.log('Container height exceeds content, triggering initial load');
+        this.emitScrolled('initial-check');
       }
+    },
+
+    // Метод для ручного тригеру (корисно для дебагу)
+    triggerManually() {
+      if (this.canEmit()) {
+        this.emitScrolled('manual-trigger');
+      }
+    },
+
+    cleanup() {
+      if (this.observer) {
+        this.observer.disconnect();
+        this.observer = null;
+      }
+
+      if (this.sentinelElement) {
+        this.sentinelElement.remove();
+        this.sentinelElement = null;
+      }
+
+      if (scrollContainerRef.value && this.isInitialized) {
+        scrollContainerRef.value.removeEventListener('scroll', this.handleScrollFallback);
+      }
+
+      if (this.scrollTimeoutId) {
+        clearTimeout(this.scrollTimeoutId);
+        this.scrollTimeoutId = null;
+      }
+
+      this.isInitialized = false;
     },
   };
 
@@ -404,6 +535,13 @@
     if (props.validateOnInput) {
       validation.validate();
     }
+  };
+
+  const handleCheckboxChange = (option: VtSelectOption, isChecked: boolean) => {
+    if (option.disabled) return;
+
+    // Обробляємо вибір опції
+    handleOptionClick(option);
   };
 
   const handleClear = () => {
@@ -552,7 +690,6 @@
       };
     },
 
-    // Нові методи для фільтрації
     setFilter(query: string) {
       state.filterQuery.value = query;
       emit('filter', query);
@@ -564,6 +701,30 @@
 
     getFilterQuery(): string {
       return state.filterQuery.value;
+    },
+
+    // Нові методи для роботи зі скролом
+    checkScroll() {
+      scrollHandler.checkIfNeedMoreData();
+    },
+
+    triggerScroll() {
+      scrollHandler.triggerManually();
+    },
+
+    getScrollInfo() {
+      if (!scrollContainerRef.value) return null;
+
+      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.value;
+      return {
+        scrollTop,
+        scrollHeight,
+        clientHeight,
+        isNearBottom: scrollHeight - scrollTop - clientHeight <= 100,
+        canScroll: scrollHeight > clientHeight,
+        optionsCount: filteredOptions.value.length,
+        isLoading: props.loading,
+      };
     },
   };
 
@@ -607,6 +768,41 @@
     }
   });
 
+  watch(
+    filteredOptions,
+    (newOptions, oldOptions) => {
+      // Оновлюємо sentinel після зміни опцій
+      if (isDropdownVisible.value && scrollHandler.isInitialized) {
+        nextTick(() => {
+          scrollHandler.updateSentinel();
+
+          // Перевіряємо чи потрібно завантажити більше даних
+          if (newOptions.length > 0) {
+            setTimeout(() => {
+              scrollHandler.checkIfNeedMoreData();
+            }, 100);
+          }
+        });
+      }
+    },
+    { flush: 'post' }
+  );
+
+  watch(
+    () => props.loading,
+    (newLoading, oldLoading) => {
+      // Коли завантаження закінчується, перевіряємо чи потрібно більше даних
+      if (oldLoading && !newLoading && isDropdownVisible.value && scrollHandler.isInitialized) {
+        nextTick(() => {
+          scrollHandler.updateSentinel();
+          setTimeout(() => {
+            scrollHandler.checkIfNeedMoreData();
+          }, 200);
+        });
+      }
+    }
+  );
+
   // ===== LIFECYCLE HOOKS =====
   onMounted(() => {
     // Initial validation
@@ -627,6 +823,10 @@
   });
 
   onUnmounted(() => {
+    // Очищаємо scroll handler
+    scrollHandler.cleanup();
+
+    // Інший cleanup
     document.removeEventListener('click', handleClickOutside);
     window.removeEventListener('resize', calcVisibleCount);
   });
@@ -792,6 +992,7 @@
                 :disabled="option.disabled || false"
                 class="vt-option__checkbox"
                 tabindex="-1"
+                @change="isChecked => handleCheckboxChange(option, isChecked)"
               />
 
               <!-- Option content -->
