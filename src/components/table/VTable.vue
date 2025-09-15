@@ -143,7 +143,7 @@
       return {
         ...baseStyle,
         top: '0px',
-        zIndex: 11,
+        zIndex: 12,
       };
     }
     return baseStyle;
@@ -155,7 +155,7 @@
       return {
         ...baseStyle,
         bottom: '0px',
-        zIndex: 11,
+        zIndex: 12,
       };
     }
     return baseStyle;

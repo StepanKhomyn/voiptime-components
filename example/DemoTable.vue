@@ -817,7 +817,7 @@
             @columns-change="handleColumnsChange"
           >
             <VTableColumn label="ID" prop="id" />
-            <VTableColumn label="Ім'я" pinned-left prop="name">
+            <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">
                 <div style="color: #0c5460; font-weight: 600">
                   {{ row.name }}

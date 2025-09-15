@@ -1,4 +1,4 @@
-// composables.ts - ВИПРАВЛЕНА ВЕРСІЯ
+// composables.ts
 import { computed, ref } from 'vue';
 import type { ResizeState, StickyPosition, VTableColumnProps, VTableProps, VTableStyleConfig } from '../types';
 
@@ -16,17 +16,18 @@ export function useTableColumns(columns: VTableColumnProps[]) {
     });
   });
 
-  // ВИПРАВЛЕНО: Більш консервативний підхід до обчислення ширини
   const getDefaultColumnWidth = (): number => {
     const totalColumns = sortedColumns.value.length;
     const columnsWithFixedWidth = sortedColumns.value.filter(col => col.width || col.minWidth);
+    const fixedWidth = columnsWithFixedWidth.reduce((sum, col) => sum + (col.width || col.minWidth || 0), 0);
     const flexibleColumns = totalColumns - columnsWithFixedWidth.length;
 
-    // Якщо всі колонки мають фіксовану ширину
     if (flexibleColumns === 0) return 150;
 
-    // Використовуємо мінімальну ширину для гнучких колонок
-    return 150; // Стандартна ширина для колонок без явно заданої ширини
+    const assumedTableWidth = 800;
+    const availableWidth = Math.max(assumedTableWidth - fixedWidth, flexibleColumns * 80);
+
+    return Math.max(Math.floor(availableWidth / flexibleColumns), 120);
   };
 
   const getStickyOffset = (side: StickyPosition, index: number, hasSelectable: boolean = false): number => {
@@ -34,8 +35,9 @@ export function useTableColumns(columns: VTableColumnProps[]) {
     let offset = 0;
 
     if (side === 'left') {
+      // Додаємо ширину колонки з чекбоксами для лівих pinned колонок
       if (hasSelectable) {
-        offset += 45;
+        offset += 50; // Ширина селекційної колонки
       }
 
       for (let i = 0; i < index; i++) {
@@ -63,7 +65,7 @@ export function useTableColumns(columns: VTableColumnProps[]) {
 }
 
 /**
- * Композабл для генерації стилів таблиці - ВИПРАВЛЕНО
+ * Композабл для генерації стилів таблиці
  */
 export function useTableStyles(props: VTableProps) {
   const getTableWrapperStyle = (): VTableStyleConfig => {
@@ -72,9 +74,6 @@ export function useTableStyles(props: VTableProps) {
     if (props.maxHeight) {
       style.maxHeight = `${props.maxHeight}px`;
     }
-
-    // ДОДАНО: Забезпечуємо горизонтальний скрол
-    style.overflowX = 'auto';
 
     return style;
   };
@@ -87,39 +86,20 @@ export function useTableStyles(props: VTableProps) {
   ): VTableStyleConfig => {
     const style: VTableStyleConfig = {};
 
-    // ВИПРАВЛЕНО: Точний контроль ширини колонок
+    // Ширина колонки
     if (col.width) {
-      // Фіксована ширина - точно як задано
       style.width = `${col.width}px`;
       style.minWidth = `${col.width}px`;
       style.maxWidth = `${col.width}px`;
-      style.flexShrink = '0'; // Запобігаємо стисканню
-    } else if (col.minWidth && col.maxWidth) {
-      // Задано і мін, і макс - використовуємо мінімум як базу
-      style.width = `${col.minWidth}px`;
-      style.minWidth = `${col.minWidth}px`;
-      style.maxWidth = `${col.maxWidth}px`;
-      style.flexGrow = '1'; // Дозволяємо розтягуватись
     } else if (col.minWidth) {
-      // Тільки мінімальна ширина
-      style.width = `${col.minWidth}px`;
       style.minWidth = `${col.minWidth}px`;
+      style.width = `${col.minWidth}px`;
       style.maxWidth = 'none';
-      style.flexGrow = '1';
-    } else if (col.maxWidth) {
-      // Тільки максимальна ширина
-      const defaultWidth = Math.min(getDefaultColumnWidth(), col.maxWidth);
-      style.width = `${defaultWidth}px`;
-      style.minWidth = '80px';
-      style.maxWidth = `${col.maxWidth}px`;
-      style.flexShrink = '1';
     } else {
-      // Без обмежень - використовуємо дефолт
       const defaultWidth = getDefaultColumnWidth();
       style.width = `${defaultWidth}px`;
-      style.minWidth = '120px';
+      style.minWidth = '80px';
       style.maxWidth = 'none';
-      style.flexGrow = '1';
     }
 
     // Sticky позиціонування
@@ -136,7 +116,6 @@ export function useTableStyles(props: VTableProps) {
     return style;
   };
 
-  // Решта функцій залишаються без змін...
   const getHeaderStyle = (
     col: VTableColumnProps,
     index: number,
@@ -145,10 +124,12 @@ export function useTableStyles(props: VTableProps) {
   ): VTableStyleConfig => {
     const style = getColumnStyle(col, index, getStickyOffsetFn, getDefaultColumnWidth);
 
+    // Sticky header при maxHeight
     if (props.maxHeight) {
       style.position = 'sticky';
       style.top = '0';
 
+      // Підвищуємо z-index для pinned колонок в header
       if (col.pinnedLeft || col.pinnedRight) {
         style.zIndex = '12';
       } else {
@@ -167,10 +148,12 @@ export function useTableStyles(props: VTableProps) {
   ): VTableStyleConfig => {
     const style = getColumnStyle(col, index, getStickyOffsetFn, getDefaultColumnWidth);
 
+    // Sticky footer при maxHeight
     if (props.maxHeight) {
       style.position = 'sticky';
       style.bottom = '0';
 
+      // Підвищуємо z-index для pinned колонок в footer
       if (col.pinnedLeft || col.pinnedRight) {
         style.zIndex = '12';
       } else {
@@ -189,7 +172,9 @@ export function useTableStyles(props: VTableProps) {
   };
 }
 
-// Композабл для ресайзу залишається без змін
+/**
+ * Композабл для ресайзу колонок
+ */
 export function useColumnResize() {
   const resizeState = ref<ResizeState>({
     resizingCol: null,
@@ -204,7 +189,7 @@ export function useColumnResize() {
     e: MouseEvent,
     col: VTableColumnProps,
     getDefaultColumnWidth: (prop: string) => number,
-    callback?: (newWidth: number) => void
+    callback?: (newWidth: number) => void // Додаємо callback параметр
   ) => {
     e.preventDefault();
     e.stopPropagation();
@@ -213,11 +198,13 @@ export function useColumnResize() {
     resizeState.value.startX = e.clientX;
     resizeState.value.startWidth = col.width || col.minWidth || getDefaultColumnWidth(col.prop);
 
+    // Створюємо локальні обробники, щоб захопити callback
     const onMouseMove = (e: MouseEvent) => {
       const { resizingCol, startX, startWidth } = resizeState.value;
 
       if (!resizingCol) return;
 
+      // Додаємо активний клас до всіх ресайзерів цієї колонки
       document.querySelectorAll(`[data-resizer="${resizingCol.prop}"]`).forEach(el => {
         el.classList.add('vt-table__resizer--active');
       });
@@ -227,6 +214,7 @@ export function useColumnResize() {
       const maxWidth = resizingCol.maxWidth || 1000;
       const newWidth = Math.max(Math.min(startWidth + delta, maxWidth), minWidth);
 
+      // Оновлюємо ширину в об'єкті колонки для візуального ефекту
       resizingCol.width = newWidth;
     };
 
@@ -244,6 +232,7 @@ export function useColumnResize() {
           el.classList.remove('vt-table__resizer--active');
         });
 
+        // ВАЖЛИВО: Викликаємо callback з новою шириною
         if (callback && resizingCol.width) {
           callback(resizingCol.width);
         }
@@ -252,6 +241,7 @@ export function useColumnResize() {
       resizeState.value.resizingCol = null;
     };
 
+    // Додаємо обробники
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
     document.body.style.cursor = RESIZE_CURSOR;
