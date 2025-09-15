@@ -1,3 +1,11 @@
+## [1.7.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.3...v1.7.4) (2025-09-15)
+
+
+### Bug Fixes
+
+* fixed select scroll ([2c26911](https://github.com/StepanKhomyn/voiptime-components/commit/2c26911061d16ada9f16b1f6d77476ff06573a16))
+* змінено скролінг селкту ([c124aa4](https://github.com/StepanKhomyn/voiptime-components/commit/c124aa4480d9aef65f789861a7ff2ad79fa1867d))
+
 ## [1.7.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.2...v1.7.3) (2025-09-15)
 
 
