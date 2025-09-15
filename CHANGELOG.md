@@ -1,3 +1,10 @@
+## [1.7.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.6...v1.7.7) (2025-09-15)
+
+
+### Bug Fixes
+
+* нові іконки dsr ([2d6bd70](https://github.com/StepanKhomyn/voiptime-components/commit/2d6bd70571915844e967664e2bd23f998bf83f67))
+
 ## [1.7.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.5...v1.7.6) (2025-09-15)
 
 
