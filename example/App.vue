@@ -14,6 +14,7 @@
   import DemoSelect2 from './DemoSelect2.vue';
   import DemoRadioBox from './DemoRadioBox.vue';
   import DemoForms from './DemoForms.vue';
+  import DemoTimePicker from './DemoTimePicker.vue';
 
   const activeSlot = ref(null);
 
@@ -28,6 +29,7 @@
     { id: 7, name: 'Тултіпи', icon: '💬' },
     { id: 8, name: 'Дропдавн', icon: '⬇️' },
     { id: 9, name: 'Дата пікер', icon: '⬇️' },
+    { id: 15, name: 'Тайм пікер', icon: '⬇️' },
     { id: 10, name: 'Інпут', icon: '⬇️' },
     { id: 11, name: 'Селект', icon: '⬇️' },
     { id: 12, name: 'Селект2', icon: '⬇️' },
@@ -74,6 +76,7 @@
       <DemoTooltip v-if="activeSlot === 7" />
       <DemoDropDown v-if="activeSlot === 8" />
       <DemoDatePicker v-if="activeSlot === 9" />
+      <DemoTimePicker v-if="activeSlot === 15" />
       <DemoInput v-if="activeSlot === 10" />
       <DemoSelect v-if="activeSlot === 11" />
       <DemoSelect2 v-if="activeSlot === 12" />

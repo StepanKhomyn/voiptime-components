@@ -741,15 +741,15 @@
         <h3>Дефолтна таблиця</h3>
         <div class="table-block">
           <VTable :data="currentPageData.slice(0, 5)">
-            <VTableColumn label="ID" prop="id" />
+            <VTableColumn label="ID" prop="id" width="150" />
             <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">
                 <VInput v-model="row.name" />
               </template>
             </VTableColumn>
-            <VTableColumn label="Статус" prop="status" />
-            <VTableColumn label="Дата" prop="date" />
-            <VTableColumn label="Рахунок" prop="score" />
+            <!--            <VTableColumn :min-width="120" label="Статус" prop="status" />-->
+            <!--            <VTableColumn :min-width="150" label="Дата" prop="date" />-->
+            <VTableColumn :width="60" label="Рахунок" prop="score" />
           </VTable>
         </div>
       </div>
@@ -817,7 +817,7 @@
             @columns-change="handleColumnsChange"
           >
             <VTableColumn label="ID" prop="id" />
-            <VTableColumn label="Ім'я" prop="name">
+            <VTableColumn label="Ім'я" pinned-left prop="name">
               <template #name="{ row }">
                 <div style="color: #0c5460; font-weight: 600">
                   {{ row.name }}
