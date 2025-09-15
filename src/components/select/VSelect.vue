@@ -183,97 +183,54 @@
     return registeredOptions.value.filter(option => filterOption(option, state.filterQuery.value));
   });
 
-  // ===== SCROLL HANDLER З SENTINEL =====
-  const scrollHandler = {
-    observer: null as IntersectionObserver | null,
-    sentinelElement: null as HTMLElement | null,
-    lastEmitTime: 0,
-    cooldown: 400,
+  // ===== ПРОСТИЙ SCROLL HANDLER =====
+  const lastEmitTime = ref(0);
+  const cooldown = 300; // мс
 
-    init() {
-      this.cleanup();
+  const handleScroll = (event: Event) => {
+    const container = event.target as HTMLElement;
+    if (!container) return;
 
-      if (scrollContainerRef.value) {
-        this.createSentinel();
-        this.initObserver();
-      }
-    },
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
 
-    createSentinel() {
-      if (!scrollContainerRef.value || this.sentinelElement) return;
+    // Якщо до кінця залишилось менше 50px - тригеримо подію
+    const scrollThreshold = 50;
+    const nearBottom = scrollTop + clientHeight >= scrollHeight - scrollThreshold;
 
-      // Створюємо sentinel елемент
-      this.sentinelElement = document.createElement('div');
-      this.sentinelElement.style.cssText = `
-        height: 20px;
-        width: 100%;
-        background: transparent;
-        pointer-events: none;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        color: #999;
-      `;
-      this.sentinelElement.setAttribute('data-load-more-trigger', 'true');
-      this.sentinelElement.textContent = ''; // Можна додати текст типу "Завантажити ще..."
+    // Перевіряємо cooldown та умови
+    const now = Date.now();
+    const canEmit = !props.loading && filteredOptions.value.length > 0 && now - lastEmitTime.value > cooldown;
 
-      // Додаємо в кінець контейнера
-      scrollContainerRef.value.appendChild(this.sentinelElement);
-    },
-
-    initObserver() {
-      if (!this.sentinelElement || !scrollContainerRef.value) return;
-
-      this.observer = new IntersectionObserver(
-        entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting && this.canEmit()) {
-              this.emitScrolled();
-            }
-          });
-        },
-        {
-          root: scrollContainerRef.value,
-          rootMargin: '50px', // Тригерить за 50px до показу sentinel
-          threshold: 0,
-        }
-      );
-
-      this.observer.observe(this.sentinelElement);
-    },
-
-    canEmit(): boolean {
-      const now = Date.now();
-      return !props.loading && filteredOptions.value.length > 0 && now - this.lastEmitTime > this.cooldown;
-    },
-
-    emitScrolled() {
-      console.log('Sentinel triggered scroll - options count:', filteredOptions.value.length);
-      this.lastEmitTime = Date.now();
+    if (nearBottom && canEmit) {
+      lastEmitTime.value = now;
       emit('scrolled');
-    },
+    }
+  };
 
-    // Переміщуємо sentinel після додавання нових опцій
-    updateSentinel() {
-      if (!this.sentinelElement || !scrollContainerRef.value) return;
+  // Функція для перевірки початкового завантаження (якщо контент не скролиться)
+  const checkInitialScroll = () => {
+    nextTick(() => {
+      if (!scrollContainerRef.value) return;
 
-      // Переміщуємо в самий кінець
-      scrollContainerRef.value.appendChild(this.sentinelElement);
-    },
+      const container = scrollContainerRef.value;
 
-    cleanup() {
-      if (this.observer) {
-        this.observer.disconnect();
-        this.observer = null;
+      const scrollHeight = container.scrollHeight;
+      const clientHeight = container.clientHeight;
+      const scrollTop = container.scrollTop;
+      // Якщо контент поміщається в контейнер АБО вже доскролили до кінця
+      const contentFits = scrollHeight <= clientHeight;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+      if ((contentFits || isAtBottom) && filteredOptions.value.length > 0 && !props.loading) {
+        const now = Date.now();
+        if (now - lastEmitTime.value > cooldown) {
+          lastEmitTime.value = now;
+          emit('scrolled');
+        }
       }
-
-      if (this.sentinelElement) {
-        this.sentinelElement.remove();
-        this.sentinelElement = null;
-      }
-    },
+    });
   };
 
   // ===== DROPDOWN INTEGRATION =====
@@ -296,16 +253,18 @@
       if (visible) {
         nextTick(async () => {
           await updatePosition();
-          scrollHandler.init();
 
           // Фокус на input фільтра, якщо доступний
           if (props.filterable && filterInputRef.value) {
             filterInputRef.value.focus();
           }
+
+          // Перевіряємо початковий скрол після невеликої затримки
+          setTimeout(() => {
+            checkInitialScroll();
+          }, 100);
         });
       } else {
-        scrollHandler.cleanup();
-
         // Очищаємо фільтр при закритті dropdown
         if (state.filterQuery.value) {
           handleFilterClear();
@@ -643,23 +602,26 @@
       return state.filterQuery.value;
     },
 
-    // Метод для оновлення sentinel після завантаження нових опцій
-    updateScrollSentinel() {
-      scrollHandler.updateSentinel();
+    // Методи для роботи зі скролом
+    checkInitialScroll() {
+      checkInitialScroll();
     },
 
     getScrollInfo() {
       if (!scrollContainerRef.value) return null;
 
       const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.value;
+      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+      const nearBottom = distanceFromBottom <= 50;
+
       return {
         scrollTop,
         scrollHeight,
         clientHeight,
+        distanceFromBottom,
+        nearBottom,
         optionsCount: filteredOptions.value.length,
         isLoading: props.loading,
-        hasSentinel: !!scrollHandler.sentinelElement,
-        hasObserver: !!scrollHandler.observer,
       };
     },
   };
@@ -670,20 +632,7 @@
     unregisterOption: unregisterOption,
   });
 
-  // ===== WATCHER ДЛЯ ОНОВЛЕННЯ SENTINEL =====
-  watch(
-    () => filteredOptions.value.length,
-    (newLength, oldLength) => {
-      // Коли додаються нові опції - переміщуємо sentinel в кінець
-      if (isDropdownVisible.value && newLength > oldLength && scrollHandler.sentinelElement) {
-        nextTick(() => {
-          scrollHandler.updateSentinel();
-        });
-      }
-    }
-  );
-
-  // ===== ІНШІ WATCHERS =====
+  // ===== WATCHERS =====
   watch(
     () => props.modelValue,
     () => {
@@ -717,6 +666,32 @@
     }
   });
 
+  // Watcher для реініціалізації скролу після зміни опцій
+  watch(
+    () => filteredOptions.value.length,
+    async (newLength, oldLength) => {
+      if (isDropdownVisible.value) {
+        // Якщо опції додалися і dropdown відкритий
+        if (newLength > oldLength) {
+          await nextTick();
+          // Перевіряємо чи потрібно відразу тригернути scroll для початкового завантаження
+          checkInitialScroll();
+        }
+      }
+    }
+  );
+
+  // Watcher для перевірки коли завантаження завершується
+  watch(
+    () => props.loading,
+    (newLoading, oldLoading) => {
+      if (oldLoading && !newLoading && isDropdownVisible.value) {
+        // Коли завантаження завершується, перевіряємо чи потрібно тригернути scroll
+        checkInitialScroll();
+      }
+    }
+  );
+
   // ===== LIFECYCLE HOOKS =====
   onMounted(() => {
     // Initial validation
@@ -737,7 +712,6 @@
   });
 
   onUnmounted(() => {
-    scrollHandler.cleanup();
     document.removeEventListener('click', handleClickOutside);
     window.removeEventListener('resize', calcVisibleCount);
   });
@@ -866,20 +840,14 @@
             />
           </div>
 
-          <!-- Loading state -->
-          <div v-if="loading" class="vt-select-dropdown__loading">
-            <VLoader class="vt-select-dropdown__loading-icon" />
-            {{ loadingText }}
-          </div>
-
           <!-- No Data -->
-          <div v-else-if="filteredOptions.length === 0" class="vt-select-dropdown__empty">
+          <div v-if="filteredOptions.length === 0" class="vt-select-dropdown__empty">
             <span v-if="state.filterQuery.value">Немає результатів для "{{ state.filterQuery.value }}"</span>
             <span v-else>{{ noDataText }}</span>
           </div>
 
-          <!-- Options -->
-          <div v-else ref="scrollContainerRef" class="vt-select-dropdown__options">
+          <!-- Options with scroll handler -->
+          <div v-else ref="scrollContainerRef" class="vt-select-dropdown__options" @scroll="handleScroll">
             <div
               v-for="option in filteredOptions"
               :key="`option-${typeof option.value === 'object' ? JSON.stringify(option.value) : option.value}`"
@@ -914,7 +882,7 @@
             </div>
 
             <!-- Loading more indicator -->
-            <div v-if="loading" class="vt-select-dropdown__loading-more">
+            <div v-if="loading" class="vt-select-dropdown__loading">
               <VLoader class="vt-select-dropdown__loading-icon" />
               {{ props.loadingText }}
             </div>
