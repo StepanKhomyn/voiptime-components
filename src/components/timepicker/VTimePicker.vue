@@ -272,17 +272,17 @@
     const rootMargin = `${-container.clientHeight / 2 + 16}px 0px ${-container.clientHeight / 2 + 16}px 0px`;
 
     const observer = new IntersectionObserver(
-      entries => {
-        let mostVisibleEntry = null;
+      (entries: IntersectionObserverEntry[]) => {
+        let mostVisibleEntry: IntersectionObserverEntry | null = null;
         let maxRatio = 0;
 
         // Знайти елемент з найбільшим відсотком перетину в центральній зоні
-        entries.forEach(entry => {
+        for (const entry of entries) {
           if (entry.intersectionRatio > maxRatio) {
             maxRatio = entry.intersectionRatio;
             mostVisibleEntry = entry;
           }
-        });
+        }
 
         if (mostVisibleEntry && mostVisibleEntry.isIntersecting) {
           const button = mostVisibleEntry.target as HTMLButtonElement;
@@ -413,7 +413,7 @@
       };
 
       if (isRange.value) {
-        const elementsArray = Array.from(allOptionsElements);
+        const elementsArray = Array.from(allOptionsElements) as HTMLElement[];
 
         // Start time panel
         if (elementsArray[0]) scrollToValue(elementsArray[0], currentHour.value, hourOptions.value);
@@ -431,7 +431,7 @@
           scrollToValue(elementsArray[endStartIndex + 2], endSecond.value, secondOptions.value);
         }
       } else {
-        const elementsArray = Array.from(allOptionsElements);
+        const elementsArray = Array.from(allOptionsElements) as HTMLElement[];
         if (elementsArray[0]) scrollToValue(elementsArray[0], currentHour.value, hourOptions.value);
         if (elementsArray[1]) scrollToValue(elementsArray[1], currentMinute.value, minuteOptions.value);
         if (props.showSeconds && elementsArray[2]) {

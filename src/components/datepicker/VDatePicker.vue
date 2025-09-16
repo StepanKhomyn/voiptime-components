@@ -3,7 +3,7 @@
   import VIcon from '@/components/icon/VIcon.vue';
   import { useDropdown } from '@/components/dropdown/useDropdown';
   import { useCalendar, useDatePicker } from '@/components/datepicker/helpers';
-  import { VDatePickerEmits, VDatePickerProps, WEEKDAY_NAMES_SHORT } from '@/components/datepicker/types';
+  import { type VDatePickerEmits, type VDatePickerProps, WEEKDAY_NAMES_SHORT } from '@/components/datepicker/types';
 
   // ===== PROPS & DEFAULTS =====
   const props = withDefaults(defineProps<VDatePickerProps>(), {
