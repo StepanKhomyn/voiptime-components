@@ -1,3 +1,10 @@
+## [1.7.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.10...v1.7.11) (2025-09-15)
+
+
+### Bug Fixes
+
+* fixed table selection header and footer style ([2d0a8f0](https://github.com/StepanKhomyn/voiptime-components/commit/2d0a8f0f417ead21710611657740e57d5f2eb9eb))
+
 ## [1.7.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.9...v1.7.10) (2025-09-15)
 
 
