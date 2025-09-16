@@ -26,7 +26,7 @@
     align-items: center;
     height: 36px;
     padding: 0 12px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid var(--color-gray-5);
     border-radius: 4px;
     background-color: #ffffff;
     font-size: 14px;
@@ -63,7 +63,7 @@
   &__placeholder {
     flex: 1;
     width: 100%;
-    color: #c0c4cc;
+    color: var(--color-gray-4);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -286,11 +286,11 @@
     }
 
     &--other-month {
-      color: #c0c4cc;
+      color: var(--color-gray-4);
 
       &.vt-datepicker__date--in-range {
         background-color: #f5f7fa;
-        color: #c0c4cc;
+        color: var(--color-gray-4);
       }
     }
 
@@ -305,13 +305,13 @@
     }
 
     &--disabled {
-      color: #c0c4cc !important;
+      color: var(--color-gray-4) !important;
       cursor: not-allowed !important;
       background-color: transparent !important;
 
       &:hover {
         background-color: transparent !important;
-        color: #c0c4cc !important;
+        color: var(--color-gray-4) !important;
       }
     }
   }

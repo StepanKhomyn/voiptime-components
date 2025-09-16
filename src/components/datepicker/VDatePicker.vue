@@ -3,7 +3,7 @@
   import VIcon from '@/components/icon/VIcon.vue';
   import { useDropdown } from '@/components/dropdown/useDropdown';
   import { useCalendar, useDatePicker } from '@/components/datepicker/helpers';
-  import type { VDatePickerEmits, VDatePickerProps } from '@/components/datepicker/types';
+  import { VDatePickerEmits, VDatePickerProps, WEEKDAY_NAMES_SHORT } from '@/components/datepicker/types';
 
   // ===== PROPS & DEFAULTS =====
   const props = withDefaults(defineProps<VDatePickerProps>(), {
@@ -124,10 +124,8 @@
     },
   });
 
-  const currentValue = computed(() => parsedValue.value);
-
   const showClearButton = computed(() => {
-    return props.clearable && !props.disabled && displayText.value;
+    return props.clearable && !props.disabled && hasDisplayValue.value;
   });
 
   const currentPlaceholder = computed(() => {
@@ -707,13 +705,12 @@
               <div class="vt-datepicker__content">
                 <div class="vt-datepicker__calendar">
                   <div class="vt-datepicker__weekdays">
-                    <span class="vt-datepicker__weekday">Sun</span>
-                    <span class="vt-datepicker__weekday">Mon</span>
-                    <span class="vt-datepicker__weekday">Tue</span>
-                    <span class="vt-datepicker__weekday">Wed</span>
-                    <span class="vt-datepicker__weekday">Thu</span>
-                    <span class="vt-datepicker__weekday">Fri</span>
-                    <span class="vt-datepicker__weekday">Sat</span>
+                    <span
+                      v-for="(day, index) in WEEKDAY_NAMES_SHORT"
+                      :key="`${index}_${day}`"
+                      class="vt-datepicker__weekday"
+                      >{{ day }}</span
+                    >
                   </div>
 
                   <div class="vt-datepicker__dates">
@@ -774,13 +771,12 @@
               <div class="vt-datepicker__content">
                 <div class="vt-datepicker__calendar">
                   <div class="vt-datepicker__weekdays">
-                    <span class="vt-datepicker__weekday">Sun</span>
-                    <span class="vt-datepicker__weekday">Mon</span>
-                    <span class="vt-datepicker__weekday">Tue</span>
-                    <span class="vt-datepicker__weekday">Wed</span>
-                    <span class="vt-datepicker__weekday">Thu</span>
-                    <span class="vt-datepicker__weekday">Fri</span>
-                    <span class="vt-datepicker__weekday">Sat</span>
+                    <span
+                      v-for="(day, index) in WEEKDAY_NAMES_SHORT"
+                      :key="`${index}_${day}`"
+                      class="vt-datepicker__weekday"
+                      >{{ day }}</span
+                    >
                   </div>
 
                   <div class="vt-datepicker__dates">
@@ -861,13 +857,12 @@
               <!-- Date View -->
               <div v-if="state.viewMode.value === 'date'" class="vt-datepicker__calendar">
                 <div class="vt-datepicker__weekdays">
-                  <span class="vt-datepicker__weekday">Sun</span>
-                  <span class="vt-datepicker__weekday">Mon</span>
-                  <span class="vt-datepicker__weekday">Tue</span>
-                  <span class="vt-datepicker__weekday">Wed</span>
-                  <span class="vt-datepicker__weekday">Thu</span>
-                  <span class="vt-datepicker__weekday">Fri</span>
-                  <span class="vt-datepicker__weekday">Sat</span>
+                  <span
+                    v-for="(day, index) in WEEKDAY_NAMES_SHORT"
+                    :key="`${index}_${day}`"
+                    class="vt-datepicker__weekday"
+                    >{{ day }}</span
+                  >
                 </div>
 
                 <div class="vt-datepicker__dates">

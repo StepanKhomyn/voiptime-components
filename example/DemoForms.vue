@@ -33,6 +33,9 @@
         <VDatePicker v-model="dateRange" type="daterange" />
       </div>
       <div class="demo-container-item-row-item">
+        <VTimePicker v-model="timeRange" type="timerange" />
+      </div>
+      <div class="demo-container-item-row-item">
         <VButton type="primary">Heello!</VButton>
       </div>
     </div>
@@ -45,10 +48,12 @@
   import VInput from '@/components/input/VInput.vue';
   import VButton from '@/components/button/VButton.vue';
   import VDatePicker from '@/components/datepicker/VDatePicker.vue';
+  import VTimePicker from '@/components/timepicker/VTimePicker.vue';
 
   const selectModel = ref('');
   const inputModel = ref('');
   const dateRange = ref<Date[] | null>(null);
+  const timeRange = ref('');
 </script>
 <style lang="scss" scoped>
   .block {
@@ -71,6 +76,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        flex-wrap: wrap;
         gap: 10px;
         width: 100%;
 

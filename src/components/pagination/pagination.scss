@@ -16,6 +16,10 @@
     gap: var(--vt-gap-base);
   }
 
+  &__label {
+    text-wrap: nowrap;
+  }
+
   &__rows-per-page {
     display: flex;
     align-items: center;
@@ -23,15 +27,6 @@
   }
 
   &__select {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    min-width: 4rem;
-
-    &:focus {
-      outline: none;
-      border-color: var(--vt-c-brand, #3b82f6);
-      box-shadow: 0 0 0 1px var(--vt-c-brand, #3b82f6);
-    }
   }
 
 

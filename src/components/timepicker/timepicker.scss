@@ -1,4 +1,4 @@
-// VTimePicker.scss
+// VTimePicker.scss - Enhanced styling like Element UI
 @use '../../assets/fonts' as *;
 @use '../../assets/scrollbar' as *;
 
@@ -9,32 +9,34 @@
 
   &--disabled {
     .vt-timepicker__trigger {
-      background-color: #f5f5f5;
+      border-color: var(--color-gray-5);
+      background-color: var(--color-gray-6);
+      color: var(--color-gray-4);
       cursor: not-allowed;
-      opacity: 0.6;
     }
   }
 
-  &--focused {
+  &--focused :not(.vt-timepicker--disabled) {
     .vt-timepicker__trigger {
-      border-color: var(--color-primary-main);
+      border-color: var(--color-primary-hover);
     }
   }
 
   &__trigger {
+    @include vt-typography('vt-input');
     display: flex;
     align-items: center;
     height: 36px;
     padding: 0 12px;
-    border: 1px solid #dcdfe6;
+    border: 1px solid var(--color-gray-5);
     border-radius: 4px;
     background-color: #ffffff;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.3s;
 
-    &:hover {
-      border-color: var(--color-primary-main);
+    &:hover:not(.vt-timepicker--disabled &) {
+      border-color: var(--color-primary-hover);
     }
   }
 
@@ -48,6 +50,18 @@
   &__icon {
     flex-shrink: 0;
     color: var(--color-gray-4);
+    font-size: 14px;
+  }
+
+
+  &__placeholder {
+    flex: 1;
+    width: 100%;
+    color: var(--color-gray-4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
   }
 
   &__text {
@@ -60,62 +74,31 @@
     justify-content: space-evenly;
   }
 
-  &__placeholder {
-    flex: 1;
-    width: 100%;
-    color: #c0c4cc;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-  }
-
   &__suffix {
     display: flex;
     align-items: center;
   }
 
-  &__clear {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border: none;
-    background: transparent;
-    border-radius: var(--radius-main);
-    color: var(--color-gray-4);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: var(--color-gray-7);
-    }
-
-    &:active {
-      background-color: #e5e7eb;
-    }
-  }
-
   &__dropdown {
     background: white;
     border: 1px solid var(--color-gray-5);
-    border-radius: var(--radius-main);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     overflow: hidden;
     z-index: 2000;
     animation: dropdown-fade-in 0.2s ease;
-    min-width: 280px;
+    min-width: 320px;
   }
 
   // Dual Panel Layout for Range
   &__dual-panel {
     display: flex;
-    border-bottom: 1px solid var(--color-gray-6);
+    border-bottom: 1px solid var(--color-gray-5);
   }
 
   &__panel {
     flex: 1;
-    border-right: 1px solid var(--color-gray-6);
+    border-right: 1px solid var(--color-gray-5);
 
     &:last-child {
       border-right: none;
@@ -125,16 +108,15 @@
   &__panel-header {
     padding: 12px 16px;
     background-color: var(--color-gray-7);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-gray-2);
+    font-weight: var(--font-size-sm);
+    color: var(--color-gray-3);
     text-align: center;
-    border-bottom: 1px solid var(--color-gray-6);
+    border-bottom: 1px solid var(--color-gray-5);
   }
 
   // Single Panel Layout
   &__single-panel {
-    border-bottom: 1px solid var(--color-gray-6);
+    border-bottom: 1px solid var(--color-gray-5);
   }
 
   &__time-columns {
@@ -146,78 +128,61 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid var(--color-gray-6);
+    border-right: 1px solid var(--color-gray-5);
     position: relative;
 
     &:last-child {
       border-right: none;
     }
 
-    // Selection indicator lines
+    // Selection indicator lines (Element UI style)
     &::before,
     &::after {
       content: '';
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 6px;
+      right: 6px;
       height: 1px;
-      background-color: var(--color-primary-main);
+      background-color: var(--color-gray-5);
       z-index: 10;
       pointer-events: none;
     }
 
     &::before {
-      top: calc(50% - 16px); // Top line of selection area
+      top: calc(50% - 17px);
     }
 
     &::after {
-      top: calc(50% + 16px); // Bottom line of selection area
+      top: calc(50% + 17px);
     }
-  }
-
-  &__column-header {
-    padding: 8px 12px;
-    background-color: var(--color-gray-7);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-medium);
-    color: var(--color-gray-3);
-    text-align: center;
-    border-bottom: 1px solid var(--color-gray-6);
   }
 
   &__options {
+    @include vt-scrollbar;
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     position: relative;
+    padding: 80px 0; // Padding to allow centering
+    scroll-behavior: smooth;
 
-    // Central selection zone background
     &::before {
       content: '';
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 50%;
       top: calc(50% - 16px);
       height: 32px;
-      background-color: rgba(var(--color-primary-rgb), 0.05);
+      width: calc(100% - 12px);
+      background-color: #f5f7fa;
+      border-radius: 3px;
       z-index: 1;
       pointer-events: none;
+      transform: translateX(-50%);
     }
 
+    // Custom scrollbar
     &::-webkit-scrollbar {
       width: 6px;
-    }
-
-    &::-webkit-scrollbar-track {
-      background: var(--color-gray-7);
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: var(--color-gray-5);
-      border-radius: 3px;
-
-      &:hover {
-        background: var(--color-gray-4);
-      }
     }
   }
 
@@ -228,115 +193,113 @@
     width: 100%;
     height: 32px;
     border: none;
-    background: transparent;
-    color: var(--color-gray-2);
-    font-size: var(--font-size-sm);
+    color: var(--color-gray-1);
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
     z-index: 2;
+    border-radius: 3px;
+    margin: 0 6px;
+    background-color: #FFFFFF;
 
-    &:hover:not(:disabled) {
-      background-color: var(--color-primary-bg);
-      color: var(--color-primary-main);
+    &:hover:not(:disabled):not(.vt-timepicker__option--selected) {
+      background-color: #f5f7fa;
+      transform: scale(1.02);
     }
 
     &--selected {
-      background-color: var(--color-primary-main);
-      color: #ffffff;
-      font-weight: var(--font-weight-medium);
-
-      &:hover {
-        background-color: var(--color-primary-main);
-        color: #ffffff;
-      }
+      color: var(--color-primary-main);
+      font-weight: var(--font-weight-semibold);
     }
 
     &--disabled {
-      color: var(--color-gray-5) !important;
-      cursor: not-allowed !important;
-      background-color: transparent !important;
+      opacity: 0.4;
+      background-color: transparent;
+      color: var(--color-gray-4);
+      cursor: not-allowed;
+      transform: none;
 
       &:hover {
-        background-color: transparent !important;
-        color: var(--color-gray-5) !important;
+        background-color: transparent;
+        color: var(--color-gray-4);
+        transform: none;
       }
     }
 
     &:disabled {
-      color: var(--color-gray-5);
+      opacity: 0.4;
+      color: var(--color-gray-4);
       cursor: not-allowed;
       background-color: transparent;
 
       &:hover {
         background-color: transparent;
-        color: var(--color-gray-5);
+        color: var(--color-gray-4);
+        transform: none;
       }
-    }
-
-    // Central selection area styling
-    &--in-selection-area {
-      font-weight: var(--font-weight-medium);
-      background-color: rgba(var(--color-primary-rgb), 0.1);
     }
   }
 
   &__actions {
     display: flex;
     justify-content: flex-end;
-    gap: 8px;
+    gap: 10px;
     padding: 12px 16px;
     background-color: var(--color-gray-7);
-    border-top: 1px solid var(--color-gray-6);
+    border-top: 1px solid var(--color-gray-5);
   }
 
   &__action {
-    padding: 6px 16px;
+    padding: 8px 20px;
     border: 1px solid var(--color-gray-5);
     border-radius: 4px;
     background: #ffffff;
-    color: var(--color-gray-2);
-    font-size: var(--font-size-sm);
+    color: #606266;
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
+    line-height: 1;
 
     &:hover {
-      border-color: var(--color-primary-main);
-      color: var(--color-primary-main);
+      color: #409eff;
+      border-color: #c6e2ff;
+      background-color: #ecf5ff;
     }
 
     &--confirm {
-      background-color: var(--color-primary-main);
-      border-color: var(--color-primary-main);
+      background-color: #409eff;
+      border-color: #409eff;
       color: #ffffff;
 
       &:hover {
-        background-color: var(--color-primary-focus);
-        border-color: var(--color-primary-focus);
+        background-color: #337ecc;
+        border-color: #337ecc;
         color: #ffffff;
       }
     }
 
     &--cancel {
       &:hover {
-        background-color: var(--color-gray-7);
+        color: #409eff;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
       }
     }
   }
 
-  // Size variants
+  // Size variants (Element UI sizes)
   &--small {
     .vt-timepicker__trigger {
-      height: 28px;
-      padding: 0 8px;
+      height: 32px;
+      padding: 0 12px;
       font-size: 12px;
     }
   }
 
   &--large {
     .vt-timepicker__trigger {
-      height: 44px;
-      padding: 0 16px;
+      height: 48px;
+      padding: 0 20px;
       font-size: 16px;
     }
   }
@@ -346,8 +309,8 @@
     &__dropdown {
       width: 100vw;
       max-width: 100vw;
-      left: 0 !important;
-      right: 0 !important;
+      left: 0;
+      right: 0;
     }
 
     &__dual-panel {
@@ -356,7 +319,7 @@
 
     &__panel {
       border-right: none;
-      border-bottom: 1px solid var(--color-gray-6);
+      border-bottom: 1px solid var(--color-gray-5);
 
       &:last-child {
         border-bottom: none;
@@ -366,16 +329,15 @@
     &__time-columns {
       height: 160px;
     }
-  }
-}
 
-@keyframes dropdown-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    &__actions {
+      gap: 8px;
+      padding: 10px 12px;
+    }
+
+    &__action {
+      padding: 6px 16px;
+      font-size: 11px;
+    }
   }
 }

@@ -14,7 +14,8 @@ import VDropdownItem from './components/dropdown/VDropdownItem.vue';
 import VInput from './components/input/VInput.vue';
 import VSelect from './components/select/VSelect.vue';
 import VOption from './components/select/VOption.vue';
-import VDatePicker from './components/datepicker/VDatePicker.vue'
+import VDatePicker from './components/datepicker/VDatePicker.vue';
+import VTimePicker from './components/timepicker/VTimePicker.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -36,7 +37,8 @@ export {
   VInput,
   VSelect,
   VOption,
-  VDatePicker
+  VDatePicker,
+  VTimePicker,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -113,10 +115,61 @@ export type {
   VtOptionEmits,
 } from './components/select/types';
 
+// VDatePicker
+export type {
+  DatePickerType,
+  DatePickerSize,
+  DateValue,
+  DateRangeValue,
+  DatePickerValue,
+  VDatePickerProps,
+  VDatePickerEmits,
+  VDatePickerMethods,
+  DatePickerShortcut,
+  FormatToken,
+  DateValidationResult,
+} from './components/datepicker/types';
+
+// VTimePicker
+export type {
+  TimePickerType,
+  TimePickerSize,
+  TimeValue,
+  TimeRangeValue,
+  TimePickerValue,
+  VTimePickerProps,
+  VTimePickerEmits,
+  VTimePickerMethods,
+  TimeObject,
+  TimeValidationResult,
+} from './components/timepicker/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
 export { VtSelectContextKey } from './components/select/types';
+
+// VDatePicker константи
+export {
+  FORMAT_TOKENS,
+  MONTH_NAMES,
+  MONTH_NAMES_SHORT,
+  WEEKDAY_NAMES,
+  WEEKDAY_NAMES_SHORT,
+  DEFAULT_FORMATS,
+  isValidDate,
+  validateDateValue,
+} from './components/datepicker/types';
+
+// VTimePicker константи
+export {
+  DEFAULT_TIME_FORMATS,
+  isValidTimeString,
+  validateTimeValue,
+  formatTime,
+  parseTimeString,
+  generateTimeOptions,
+} from './components/timepicker/types';
 
 // ----------------- Плагін -----------------
 export { VModalPlugin, modalManager } from './components/modal/plugin';
@@ -146,6 +199,7 @@ const VUIPlugin = {
     app.component(`${prefix}Select`, VSelect);
     app.component(`${prefix}Option`, VOption);
     app.component(`${prefix}DatePicker`, VDatePicker);
+    app.component(`${prefix}TimePicker`, VTimePicker);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

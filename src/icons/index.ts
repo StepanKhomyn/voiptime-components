@@ -45,6 +45,7 @@ import AlertCircleIcon from './input/AlertCircleIcon.vue';
 import AlertTriangleIcon from './input/AlertTriangleIcon.vue';
 import CalendarIcon from './input/CalendarIcon.vue';
 import CheckCircleIcon from './input/CheckCircleIcon.vue';
+import ClockIcon from './input/ClockIcon.vue';
 import EyeClosedIcon from './input/EyeClosedIcon.vue';
 import EyeOpenedIcon from './input/EyeOpenedIcon.vue';
 import SearchIcon from './input/SearchIcon.vue';
@@ -128,6 +129,7 @@ export const icons = {
   alertTriangle: AlertTriangleIcon,
   calendar: CalendarIcon,
   checkCircle: CheckCircleIcon,
+  clock: ClockIcon,
   eyeClosed: EyeClosedIcon,
   eyeOpened: EyeOpenedIcon,
   search: SearchIcon,

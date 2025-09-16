@@ -1,8 +1,10 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, watch } from 'vue';
   import type { PaginationEmits, PaginationProps } from './types';
   import VButton from '@/components/button/VButton.vue';
   import VIcon from '@/components/icon/VIcon.vue';
+  import VSelect from '@/components/select/VSelect.vue';
+  import VOption from '@/components/select/VOption.vue';
   // Props
   const props = withDefaults(defineProps<PaginationProps>(), {
     pageSize: 10,
@@ -118,12 +120,12 @@
     <div class="vt-pagination__info">
       <!-- Селект для кількості рядків на сторінку -->
       <div class="vt-pagination__rows-per-page">
-        <label for="rowsSelect" class="vt-pagination__label">Рядків на сторінку:</label>
-        <select id="rowsSelect" v-model="currentPageSize" @change="handlePageSizeChange" class="vt-pagination__select">
-          <option v-for="option in pageSizeOptions" :key="option" :value="option">
+        <label class="vt-pagination__label" for="rowsSelect">Рядків на сторінку:</label>
+        <VSelect id="rowsSelect" v-model="currentPageSize" class="vt-pagination__select" @change="handlePageSizeChange">
+          <VOption v-for="option in pageSizeOptions" :key="option" :label="option" :value="option">
             {{ option }}
-          </option>
-        </select>
+          </VOption>
+        </VSelect>
       </div>
 
       <!-- Інформація про відображення -->
@@ -134,9 +136,9 @@
     <div class="vt-pagination__navigation">
       <!-- Кнопка "Попередня" -->
       <button
-        @click="goToPrevious"
-        :disabled="isPreviousDisabled"
         :class="{ 'vt-pagination__nav-button': true, 'has-items': !isPreviousDisabled }"
+        :disabled="isPreviousDisabled"
+        @click="goToPrevious"
       >
         <VIcon name="arrowLeft" />
       </button>
@@ -145,20 +147,20 @@
       <button
         v-for="page in visiblePages"
         :key="page"
-        @click="goToPage(page)"
-        class="vt-pagination__nav-button"
         :class="{
           'vt-pagination__nav-button--active': page === currentPage,
         }"
+        class="vt-pagination__nav-button"
+        @click="goToPage(page)"
       >
         {{ page }}
       </button>
 
       <!-- Кнопка "Наступна" -->
       <button
-        @click="goToNext"
-        :disabled="isNextDisabled"
         :class="{ 'vt-pagination__nav-button': true, 'has-items': !isNextDisabled }"
+        :disabled="isNextDisabled"
+        @click="goToNext"
       >
         <VIcon name="arrowRight" />
       </button>

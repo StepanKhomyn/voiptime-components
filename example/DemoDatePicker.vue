@@ -450,23 +450,6 @@
       </div>
     </section>
 
-    <!-- Events Log -->
-    <section class="demo-section">
-      <h2>Events Log</h2>
-      <div class="events-log">
-        <h4>Recent Events:</h4>
-        <div v-if="events.length === 0" class="no-events">
-          No events yet. Interact with the pickers above to see events.
-        </div>
-        <div v-for="(event, index) in events" :key="index" class="event-item">
-          <span class="event-time">{{ event.time }}</span>
-          <span class="event-type">{{ event.type }}</span>
-          <span class="event-value">{{ event.value }}</span>
-        </div>
-      </div>
-      <button class="clear-events-btn" @click="clearEvents">Clear Events</button>
-    </section>
-
     <!-- Usage Examples -->
     <section class="demo-section">
       <h2>Usage Examples</h2>
