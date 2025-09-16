@@ -1,3 +1,15 @@
+# [1.8.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.11...v1.8.0) (2025-09-16)
+
+
+### Bug Fixes
+
+* fixed build ([dfff01d](https://github.com/StepanKhomyn/voiptime-components/commit/dfff01d9182c5d4813de27b4a893ffcff1544db3))
+
+
+### Features
+
+* Додано таймпікер ([cf0aced](https://github.com/StepanKhomyn/voiptime-components/commit/cf0aced7ad9ce80d97ce23ca7c64492480cfbbb1))
+
 ## [1.7.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.10...v1.7.11) (2025-09-15)
 
 
