@@ -1,0 +1,77 @@
+@use '../../assets/fonts' as *;
+
+.v-collapse {
+  overflow: hidden;
+
+  &-item {
+    border-bottom: 1px solid var(--color-gray-5);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &.is-disabled {
+      .v-collapse-item__header {
+        cursor: not-allowed;
+        color: var(--color-gray-4);
+        background-color: var(--color-gray-6);
+      }
+    }
+
+    &__header {
+      @include vt-typography('vt-collapse');
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--vt-padding-base) var(--vt-padding-lg);
+      background-color: var(--color-gray-7);
+      color: var(--color-gray-1);
+      cursor: pointer;
+      transition: border-bottom-color 0.3s;
+      outline: none;
+
+      &:hover {
+        background-color: #f5f7fa;
+      }
+
+      &.is-active {
+        border-bottom-color: transparent;
+      }
+    }
+
+    &__title {
+      flex: 1;
+    }
+
+    &__arrow {
+      transition: transform 0.3s;
+
+      &.is-active {
+        transform: rotate(90deg);
+      }
+
+    }
+
+    &__wrap {
+      will-change: height;
+      background-color: #fff;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    &__content {
+      padding: var(--vt-padding-lg);
+    }
+  }
+}
+
+// Анімація для collapse
+.collapse-enter-active,
+.collapse-leave-active {
+  transition: height 0.3s ease;
+}
+
+.collapse-enter-from,
+.collapse-leave-to {
+  height: 0;
+}

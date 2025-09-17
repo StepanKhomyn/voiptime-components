@@ -71,6 +71,13 @@
   --vt-input-font-size: var(--font-size-sm);
   --vt-input-line-height: 100%;
   --vt-input-letter-spacing: 0%;
+
+  // Collapse
+  --vt-collapse-font-family: var(--font-secondary);
+  --vt-collapse-font-weight: var(--font-weight-medium);
+  --vt-collapse-font-size: var(--font-size-base);
+  --vt-collapse-line-height: 100%;
+  --vt-collapse-letter-spacing: 0%;
 }
 
 @font-face {

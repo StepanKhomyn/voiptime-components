@@ -11,10 +11,10 @@
   import DemoDatePicker from './DemoDatePicker.vue';
   import DemoInput from './DemoInput.vue';
   import DemoSelect from './DemoSelect.vue';
-  import DemoSelect2 from './DemoSelect2.vue';
   import DemoRadioBox from './DemoRadioBox.vue';
   import DemoForms from './DemoForms.vue';
   import DemoTimePicker from './DemoTimePicker.vue';
+  import DemoCollapse from './DemoCollapse.vue';
 
   const activeSlot = ref(null);
 
@@ -32,8 +32,8 @@
     { id: 15, name: 'Тайм пікер', icon: '🕐' },
     { id: 10, name: 'Інпут', icon: '📝' },
     { id: 11, name: 'Селект', icon: '⬇️' },
-    { id: 12, name: 'Селект2', icon: '🔽' },
     { id: 14, name: 'Форми', icon: '📋' },
+    { id: 16, name: 'Коллапс', icon: '⬇️' },
   ];
 </script>
 
@@ -79,9 +79,9 @@
       <DemoTimePicker v-if="activeSlot === 15" />
       <DemoInput v-if="activeSlot === 10" />
       <DemoSelect v-if="activeSlot === 11" />
-      <DemoSelect2 v-if="activeSlot === 12" />
       <DemoRadioBox v-if="activeSlot === 13" />
       <DemoForms v-if="activeSlot === 14" />
+      <DemoCollapse v-if="activeSlot === 16" />
       <!-- і т.д. -->
     </div>
   </div>

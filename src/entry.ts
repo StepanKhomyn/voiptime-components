@@ -16,6 +16,8 @@ import VSelect from './components/select/VSelect.vue';
 import VOption from './components/select/VOption.vue';
 import VDatePicker from './components/datepicker/VDatePicker.vue';
 import VTimePicker from './components/timepicker/VTimePicker.vue';
+import VCollapse from './components/collapse/VCollapse.vue';
+import VCollapseItem from './components/collapse/VCollapseItem.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -39,6 +41,8 @@ export {
   VOption,
   VDatePicker,
   VTimePicker,
+  VCollapse,
+  VCollapseItem,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -144,6 +148,15 @@ export type {
   TimeValidationResult,
 } from './components/timepicker/types';
 
+// VCollapse
+export type {
+  CollapseItemProps,
+  CollapseProps,
+  CollapseEmits,
+  CollapseItemEmits,
+  CollapseContext,
+} from './components/collapse/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -200,6 +213,8 @@ const VUIPlugin = {
     app.component(`${prefix}Option`, VOption);
     app.component(`${prefix}DatePicker`, VDatePicker);
     app.component(`${prefix}TimePicker`, VTimePicker);
+    app.component(`${prefix}Collapse`, VCollapse);
+    app.component(`${prefix}CollapseItem`, VCollapseItem);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
