@@ -1,3 +1,10 @@
+## [1.8.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.3...v1.8.4) (2025-09-17)
+
+
+### Bug Fixes
+
+* додано компоненту коллапсу ([69027b2](https://github.com/StepanKhomyn/voiptime-components/commit/69027b26bb5f47f552e90b1d2546328718a675bc))
+
 ## [1.8.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.2...v1.8.3) (2025-09-17)
 
 
