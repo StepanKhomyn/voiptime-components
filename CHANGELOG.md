@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.0...v1.8.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* іконки дзвінка ([c194223](https://github.com/StepanKhomyn/voiptime-components/commit/c19422377f9a6544f9a21219372bdbc8097dca83))
+
 # [1.8.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.11...v1.8.0) (2025-09-16)
 
 
