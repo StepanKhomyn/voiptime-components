@@ -1,3 +1,29 @@
+## [1.8.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.1...v1.8.2) (2025-09-17)
+
+
+### Bug Fixes
+
+* іконки дзвінка ([b702ee0](https://github.com/StepanKhomyn/voiptime-components/commit/b702ee0335add738b6ad303d2de2ae8d8cb843db))
+
+## [1.8.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.0...v1.8.1) (2025-09-17)
+
+
+### Bug Fixes
+
+* іконки дзвінка ([c194223](https://github.com/StepanKhomyn/voiptime-components/commit/c19422377f9a6544f9a21219372bdbc8097dca83))
+
+# [1.8.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.11...v1.8.0) (2025-09-16)
+
+
+### Bug Fixes
+
+* fixed build ([dfff01d](https://github.com/StepanKhomyn/voiptime-components/commit/dfff01d9182c5d4813de27b4a893ffcff1544db3))
+
+
+### Features
+
+* Додано таймпікер ([cf0aced](https://github.com/StepanKhomyn/voiptime-components/commit/cf0aced7ad9ce80d97ce23ca7c64492480cfbbb1))
+
 ## [1.7.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.7.10...v1.7.11) (2025-09-15)
 
 

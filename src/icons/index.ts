@@ -29,6 +29,14 @@ import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
 import ArrowReloadIcon from './arrow/ArrowReloadIcon.vue';
 import ArrowRightIcon from './arrow/ArrowRightIcon.vue';
 import ArrowTopIcon from './arrow/ArrowTopIcon.vue';
+import AnswerCallIcon from './call/AnswerCallIcon.vue';
+import ClientCallIcon from './call/ClientCallIcon.vue';
+import HangupCallIcon from './call/HangupCallIcon.vue';
+import KeyboardCallIcon from './call/KeyboardCallIcon.vue';
+import MicrophoneCallIcon from './call/MicrophoneCallIcon.vue';
+import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
+import TransferCallIcon from './call/TransferCallIcon.vue';
+import VolumeCallIcon from './call/VolumeCallIcon.vue';
 import EmptyImgIcon from './files/EmptyImgIcon.vue';
 import FileDocIcon from './files/FileDocIcon.vue';
 import FileSignIcon from './files/FileSignIcon.vue';
@@ -58,8 +66,12 @@ import EmailNewIcon from './mail/EmailNewIcon.vue';
 import EmailOutgoingIcon from './mail/EmailOutgoingIcon.vue';
 import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
+import AddIcon from './others/AddIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
+import HoldIcon from './others/HoldIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
+import MinusIcon from './others/MinusIcon.vue';
+import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
 import ProgressiveIcon from './others/ProgressiveIcon.vue';
@@ -108,6 +120,16 @@ export const icons = {
   arrowRight: ArrowRightIcon,
   arrowTop: ArrowTopIcon,
 
+  // call icons
+  answerCall: AnswerCallIcon,
+  clientCall: ClientCallIcon,
+  hangupCall: HangupCallIcon,
+  keyboardCall: KeyboardCallIcon,
+  microphoneCall: MicrophoneCallIcon,
+  scenarioCall: ScenarioCallIcon,
+  transferCall: TransferCallIcon,
+  volumeCall: VolumeCallIcon,
+
   // files icons
   emptyImg: EmptyImgIcon,
   fileDoc: FileDocIcon,
@@ -146,8 +168,12 @@ export const icons = {
   emailSpam: EmailSpamIcon,
 
   // others icons
+  add: AddIcon,
   dsr: DsrIcon,
+  hold: HoldIcon,
   ivr: IvrIcon,
+  minus: MinusIcon,
+  plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
   progressive: ProgressiveIcon,
