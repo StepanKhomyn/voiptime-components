@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.2...v1.8.3) (2025-09-17)
+
+
+### Bug Fixes
+
+* додав дататайм пікер до датапікеру ([fb8fe26](https://github.com/StepanKhomyn/voiptime-components/commit/fb8fe2693173e744f19b385a28a11bb285132df3))
+
 ## [1.8.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.1...v1.8.2) (2025-09-17)
 
 
