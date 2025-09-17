@@ -267,6 +267,19 @@
         <p class="demo-result">Selected: {{ basicDate || 'None' }}</p>
       </div>
 
+      <!-- Date Picker -->
+      <div class="demo-item">
+        <h3>DateTime Picker</h3>
+        <p>Basic datetime selection</p>
+        <VDatePicker
+          v-model="basicDateTime"
+          placeholder="Select dateTime"
+          type="datetime"
+          @change="handleChange('Basic DateTime', $event)"
+        />
+        <p class="demo-result">Selected: {{ basicDateTime || 'None' }}</p>
+      </div>
+
       <!-- Month Picker -->
       <div class="demo-item">
         <h3>Month Picker</h3>
@@ -306,6 +319,21 @@
           @change="handleChange('Date Range', $event)"
         />
         <p class="demo-result">Selected: {{ dateRange ? `[${dateRange[0]}, ${dateRange[1]}]` : 'None' }}</p>
+      </div>
+
+      <!-- Date Range -->
+      <div class="demo-item">
+        <h3>DateTime Range</h3>
+        <p>Select datetime range</p>
+        <VDatePicker
+          v-model="dateTimeRange"
+          end-placeholder="End date"
+          range-separator=" to "
+          start-placeholder="Start date"
+          type="datetimerange"
+          @change="handleChange('DateTime Range', $event)"
+        />
+        <p class="demo-result">Selected: {{ dateTimeRange ? `[${dateTimeRange[0]}, ${dateTimeRange[1]}]` : 'None' }}</p>
       </div>
 
       <!-- Month Range -->
@@ -507,11 +535,13 @@ const handleDateChange = (value) => {
 
   // Basic examples
   const basicDate = ref<Date | null>(null);
+  const basicDateTime = ref<Date | null>(null);
   const monthDate = ref<Date | null>(null);
   const yearDate = ref<Date | null>(null);
 
   // Range examples
   const dateRange = ref<Date[] | null>(null);
+  const dateTimeRange = ref<Date[] | null>(null);
   const monthRange = ref<Date[] | null>(null);
   const yearRange = ref<Date[] | null>(null);
 
@@ -540,6 +570,7 @@ const handleDateChange = (value) => {
   const events = ref<Event[]>([]);
 
   const handleChange = (type: string, value: any) => {
+    console.log(type, value);
     const event: Event = {
       time: new Date().toLocaleTimeString(),
       type: `${type} Changed`,

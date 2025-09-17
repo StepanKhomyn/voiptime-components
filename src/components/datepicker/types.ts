@@ -33,6 +33,17 @@ export interface VDatePickerProps {
   unlinkPanels?: boolean; // For range pickers
   defaultValue?: DatePickerValue;
   defaultTime?: string | string[];
+
+  // Time picker props (для datetime типів)
+  hourStep?: number;
+  minuteStep?: number;
+  secondStep?: number;
+  showSeconds?: boolean;
+  use12Hours?: boolean;
+  disabledHours?: () => number[];
+  disabledMinutes?: (selectedHour: number) => number[];
+  disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
+  hideDisabledOptions?: boolean;
 }
 
 export interface VDatePickerEmits {
@@ -47,6 +58,8 @@ export interface VDatePickerEmits {
   (e: 'calendar-change', value: [Date, Date | null]): void;
 
   (e: 'panel-change', value: Date, mode: string, view: string): void;
+
+  (e: 'open-change', open: boolean): void;
 }
 
 export interface DatePickerShortcut {

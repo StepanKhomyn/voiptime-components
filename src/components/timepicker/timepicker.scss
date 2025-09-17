@@ -243,10 +243,9 @@
   &__actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    padding: 12px 16px;
+    gap: var(--vt-gap-base);
+    padding: var(--vt-padding-base);
     background-color: var(--color-gray-7);
-    border-top: 1px solid var(--color-gray-5);
   }
 
   &__action {

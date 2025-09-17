@@ -424,6 +424,20 @@
     }
   }
 
+  &__time {
+    display: flex;
+    padding: 0 10px 10px 10px;
+    border-bottom: 1px solid var(--color-gray-5);
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--vt-gap-base);
+    padding: var(--vt-padding-base);
+    //background-color: var(--color-gray-7);
+  }
+
   // Responsive adjustments for dual calendar
   @media (max-width: 768px) {
     &__dual-calendar {

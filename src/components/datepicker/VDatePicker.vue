@@ -1,9 +1,12 @@
 <script lang="ts" setup>
   import { computed, nextTick, onMounted, onUnmounted, ref, toRef, watch } from 'vue';
   import VIcon from '@/components/icon/VIcon.vue';
+  import VButton from '@/components/button/VButton.vue';
   import { useDropdown } from '@/components/dropdown/useDropdown';
   import { useCalendar, useDatePicker } from '@/components/datepicker/helpers';
   import { type VDatePickerEmits, type VDatePickerProps, WEEKDAY_NAMES_SHORT } from '@/components/datepicker/types';
+  import VTimePicker from '@/components/timepicker/VTimePicker.vue';
+  import type { TimePickerValue } from '@/components/timepicker/types';
 
   // ===== PROPS & DEFAULTS =====
   const props = withDefaults(defineProps<VDatePickerProps>(), {
@@ -17,6 +20,13 @@
     disabled: false,
     clearable: true,
     size: 'default',
+    // Time props
+    hourStep: 1,
+    minuteStep: 1,
+    secondStep: 1,
+    showSeconds: true,
+    use12Hours: false,
+    hideDisabledOptions: false,
   });
 
   // ===== EMITS =====
@@ -26,17 +36,31 @@
   const datePickerRef = ref<HTMLElement>();
   const triggerRef = ref<HTMLElement>();
   const dropdownRef = ref<HTMLElement>();
+  const startTimePickerRef = ref<InstanceType<typeof VTimePicker>>();
+  const endTimePickerRef = ref<InstanceType<typeof VTimePicker>>();
+
+  // ===== INITIAL TIME VALUES =====
+  const getInitialStartTime = () => {
+    return props.type === 'datetime' || props.type === 'datetimerange' ? '00:00:00' : '00:00:00';
+  };
+
+  const getInitialEndTime = () => {
+    return '23:59:59';
+  };
 
   // ===== STATE =====
   const state = {
     isFocused: ref(false),
     currentDate: ref(new Date()),
-    rightCurrentDate: ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)), // Наступний місяць для правої частини
+    rightCurrentDate: ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)),
     viewMode: ref<'date' | 'month' | 'year'>('date'),
     startDate: ref<Date | null>(null),
     endDate: ref<Date | null>(null),
     isSelectingEnd: ref(false),
     hoverDate: ref<Date | null>(null),
+    // Time state for datetime types
+    startTime: ref<TimePickerValue>(getInitialStartTime()),
+    endTime: ref<TimePickerValue>(getInitialEndTime()),
   };
 
   // ===== COMPOSABLES =====
@@ -101,6 +125,14 @@
     }
   };
 
+  const isDateTimeType = computed(() => {
+    return props.type === 'datetime' || props.type === 'datetimerange';
+  });
+
+  const showTimePicker = computed(() => {
+    return isDateTimeType.value;
+  });
+
   // ===== DROPDOWN INTEGRATION =====
   const {
     visible: isDropdownVisible,
@@ -147,6 +179,7 @@
       'vt-datepicker--focused': state.isFocused.value,
       'vt-datepicker--range': isRange.value,
       'vt-datepicker--open': isDropdownVisible.value,
+      'vt-datepicker--with-time': showTimePicker.value,
     },
   ]);
 
@@ -157,13 +190,12 @@
   }));
 
   const showDualCalendar = computed(() => {
-    return props.type === 'daterange' && state.viewMode.value === 'date';
+    return (props.type === 'daterange' || props.type === 'datetimerange') && state.viewMode.value === 'date';
   });
 
   // ===== SELECTION LOGIC =====
   const isDateClickable = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
-    // Для daterange режиму обмежуємо клік по датам з інших місяців
-    if (props.type === 'daterange') {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
       if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
         return false;
       }
@@ -175,8 +207,7 @@
   };
 
   const isDateSelected = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
-    // Для daterange режиму не підсвічуємо вибрані дати з інших місяців
-    if (props.type === 'daterange') {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
       if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
         return false;
       }
@@ -207,7 +238,7 @@
       }
       return false;
     } else {
-      const selected = parsedValue.value as Date | null;
+      const selected = state.startDate.value || (parsedValue.value as Date | null);
       if (!selected) return false;
 
       const selectedDate = new Date(selected);
@@ -223,8 +254,7 @@
   const isDateInRange = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
     if (!isRange.value) return false;
 
-    // Для daterange режиму не підсвічуємо дати з інших місяців
-    if (props.type === 'daterange') {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
       if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
         return false;
       }
@@ -352,6 +382,51 @@
     return false;
   };
 
+  // ===== TIME HELPERS =====
+  const combineDateTime = (date: Date, time: TimePickerValue): Date => {
+    const result = new Date(date);
+
+    if (time && typeof time === 'string') {
+      // Parse time string like "14:30:00" or "2:30:00 PM"
+      const timeMatch = time.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s?(AM|PM)?/i);
+      if (timeMatch) {
+        let hours = parseInt(timeMatch[1]);
+        const minutes = parseInt(timeMatch[2]);
+        const seconds = timeMatch[3] ? parseInt(timeMatch[3]) : 0;
+        const period = timeMatch[4]?.toUpperCase();
+
+        if (period) {
+          if (period === 'PM' && hours !== 12) hours += 12;
+          if (period === 'AM' && hours === 12) hours = 0;
+        }
+
+        result.setHours(hours, minutes, seconds, 0);
+      }
+    }
+
+    return result;
+  };
+
+  const extractTime = (date: Date): string => {
+    if (!date) return '';
+
+    if (props.use12Hours) {
+      return date.toLocaleTimeString('en-US', {
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        ...(props.showSeconds && { second: '2-digit' }),
+      });
+    } else {
+      return date.toLocaleTimeString('en-GB', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        ...(props.showSeconds && { second: '2-digit' }),
+      });
+    }
+  };
+
   // ===== EVENT HANDLERS =====
   const handleClickOutside = (event: MouseEvent) => {
     if (!isDropdownVisible.value) return;
@@ -380,22 +455,24 @@
   };
 
   const handleClear = () => {
-    const newValue = isRange.value ? null : null;
+    const newValue = null;
     emit('update:modelValue', newValue);
     emit('change', newValue);
 
-    if (isRange.value) {
-      state.startDate.value = null;
-      state.endDate.value = null;
-      state.isSelectingEnd.value = false;
-      state.hoverDate.value = null;
-    }
+    // Reset state
+    state.startDate.value = null;
+    state.endDate.value = null;
+    state.isSelectingEnd.value = false;
+    state.hoverDate.value = null;
+
+    // Reset time values to defaults
+    state.startTime.value = getInitialStartTime();
+    state.endTime.value = getInitialEndTime();
   };
 
   const handleDateClick = (date: Date, isLeftCalendar = false, isRightCalendar = false) => {
     if (props.disabled || !date) return;
 
-    // Перевіряємо чи можна клікнути по цій даті
     if (!isDateClickable(date, isLeftCalendar, isRightCalendar)) return;
 
     if (isRange.value) {
@@ -404,6 +481,12 @@
         state.endDate.value = null;
         state.isSelectingEnd.value = true;
         state.hoverDate.value = null;
+
+        // For datetime types, reset to default times
+        if (isDateTimeType.value) {
+          state.startTime.value = '00:00:00';
+          state.endTime.value = null;
+        }
       } else if (state.startDate.value && !state.endDate.value) {
         const startDate = new Date(state.startDate.value);
         const endDate = new Date(date);
@@ -415,35 +498,48 @@
           state.startDate.value = endDate;
         }
 
-        const rangeValue = [state.startDate.value, state.endDate.value];
-
-        try {
-          const outputValue = formatOutput(rangeValue);
-          emit('update:modelValue', outputValue);
-          emit('change', outputValue);
-        } catch (error) {
-          console.warn('Error formatting output:', error);
+        // For datetime types, set end time to 23:59:59
+        if (isDateTimeType.value) {
+          state.endTime.value = '23:59:59';
         }
 
         state.isSelectingEnd.value = false;
         state.hoverDate.value = null;
-        hideDropdown();
+
+        // For pure date range, emit immediately
+        if (!isDateTimeType.value) {
+          const rangeValue = [state.startDate.value, state.endDate.value];
+          try {
+            const outputValue = formatOutput(rangeValue);
+            emit('update:modelValue', outputValue);
+            emit('change', outputValue);
+          } catch (error) {
+            console.warn('Error formatting output:', error);
+          }
+          hideDropdown();
+        }
       }
     } else {
-      try {
-        const outputValue = formatOutput(new Date(date));
-        emit('update:modelValue', outputValue);
-        emit('change', outputValue);
-        hideDropdown();
-      } catch (error) {
-        console.warn('Error formatting single date output:', error);
+      if (isDateTimeType.value) {
+        // For datetime, set the date and default time
+        state.startDate.value = new Date(date);
+        state.startTime.value = '00:00:00';
+      } else {
+        // For pure date, emit immediately
+        try {
+          const outputValue = formatOutput(new Date(date));
+          emit('update:modelValue', outputValue);
+          emit('change', outputValue);
+          hideDropdown();
+        } catch (error) {
+          console.warn('Error formatting single date output:', error);
+        }
       }
     }
   };
 
   const handleDateHover = (date: Date, isLeftCalendar = false, isRightCalendar = false) => {
-    // Для daterange режиму не дозволяємо hover на датах з інших місяців
-    if (props.type === 'daterange') {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
       if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
         return;
       }
@@ -461,6 +557,59 @@
     if (isRange.value && state.isSelectingEnd.value) {
       state.hoverDate.value = null;
     }
+  };
+
+  const handleTimeChange = (timeValue: TimePickerValue, isEndTime = false) => {
+    if (isEndTime) {
+      state.endTime.value = timeValue;
+    } else {
+      state.startTime.value = timeValue;
+    }
+
+    // Auto-emit for single datetime when both date and time are set
+    if (!isRange.value && state.startDate.value && state.startTime.value) {
+      const dateTime = combineDateTime(state.startDate.value, state.startTime.value);
+      try {
+        const outputValue = formatOutput(dateTime);
+        emit('update:modelValue', outputValue);
+        emit('change', outputValue);
+      } catch (error) {
+        console.warn('Error formatting datetime output:', error);
+      }
+    }
+  };
+
+  const handleConfirm = () => {
+    if (isDateTimeType.value) {
+      if (isRange.value && state.startDate.value && state.endDate.value) {
+        const startDateTime = combineDateTime(state.startDate.value, state.startTime.value || '00:00:00');
+        const endDateTime = combineDateTime(state.endDate.value, state.endTime.value || '23:59:59');
+
+        const rangeValue = [startDateTime, endDateTime];
+        try {
+          const outputValue = formatOutput(rangeValue);
+          emit('update:modelValue', outputValue);
+          emit('change', outputValue);
+        } catch (error) {
+          console.warn('Error formatting datetime range output:', error);
+        }
+      } else if (!isRange.value && state.startDate.value) {
+        const dateTime = combineDateTime(state.startDate.value, state.startTime.value || '00:00:00');
+        try {
+          const outputValue = formatOutput(dateTime);
+          emit('update:modelValue', outputValue);
+          emit('change', outputValue);
+        } catch (error) {
+          console.warn('Error formatting datetime output:', error);
+        }
+      }
+    }
+
+    hideDropdown();
+  };
+
+  const handleCancel = () => {
+    hideDropdown();
   };
 
   const handleMonthClick = (monthIndex: number, isRight = false) => {
@@ -527,7 +676,6 @@
       rightNavigateYear('prev');
     } else {
       leftNavigateMonth('prev');
-      // Синхронізуємо правий календар
       state.rightCurrentDate.value = new Date(
         state.currentDate.value.getFullYear(),
         state.currentDate.value.getMonth() + 1,
@@ -545,7 +693,6 @@
       rightNavigateYear('next');
     } else {
       leftNavigateMonth('next');
-      // Синхронізуємо правий календар
       state.rightCurrentDate.value = new Date(
         state.currentDate.value.getFullYear(),
         state.currentDate.value.getMonth() + 1,
@@ -558,20 +705,54 @@
   watch(
     () => props.modelValue,
     newValue => {
-      if (isRange.value && Array.isArray(newValue) && newValue.length === 2) {
-        try {
-          state.startDate.value = newValue[0] instanceof Date ? new Date(newValue[0]) : new Date(newValue[0]);
-          state.endDate.value = newValue[1] instanceof Date ? new Date(newValue[1]) : new Date(newValue[1]);
-        } catch (error) {
-          console.warn('Invalid date format in modelValue:', newValue);
-          state.startDate.value = null;
-          state.endDate.value = null;
+      if (newValue) {
+        if (isRange.value && Array.isArray(newValue) && newValue.length === 2) {
+          try {
+            state.startDate.value = newValue[0] instanceof Date ? new Date(newValue[0]) : new Date(newValue[0]);
+            state.endDate.value = newValue[1] instanceof Date ? new Date(newValue[1]) : new Date(newValue[1]);
+
+            // Extract time for datetime types
+            if (isDateTimeType.value) {
+              state.startTime.value = extractTime(state.startDate.value);
+              state.endTime.value = extractTime(state.endDate.value);
+            }
+          } catch (error) {
+            console.warn('Invalid date format in modelValue:', newValue);
+            state.startDate.value = null;
+            state.endDate.value = null;
+          }
+        } else if (!isRange.value && newValue !== null) {
+          try {
+            let date: Date | null = null;
+
+            if (newValue instanceof Date) {
+              date = newValue;
+            } else if (typeof newValue === 'string' || typeof newValue === 'number') {
+              date = new Date(newValue);
+            }
+
+            if (date && !isNaN(date.getTime())) {
+              state.startDate.value = date;
+
+              // Extract time for datetime types
+              if (isDateTimeType.value) {
+                state.startTime.value = extractTime(date);
+              }
+            } else {
+              state.startDate.value = null;
+            }
+          } catch (error) {
+            console.warn('Invalid date format in modelValue:', newValue);
+            state.startDate.value = null;
+          }
         }
-      } else if (!isRange.value && newValue === null) {
+      } else {
         state.startDate.value = null;
         state.endDate.value = null;
         state.isSelectingEnd.value = false;
         state.hoverDate.value = null;
+        state.startTime.value = getInitialStartTime();
+        state.endTime.value = getInitialEndTime();
       }
     },
     { immediate: true }
@@ -581,6 +762,9 @@
     () => props.type,
     newType => {
       state.viewMode.value = getInitialViewMode(newType);
+      // Reset time values when type changes
+      state.startTime.value = getInitialStartTime();
+      state.endTime.value = getInitialEndTime();
     },
     { immediate: true }
   );
@@ -601,7 +785,7 @@
     state.viewMode.value = getInitialViewMode(props.type);
 
     // Ініціалізація правого календаря
-    if (props.type === 'daterange') {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
       state.rightCurrentDate.value = new Date(
         state.currentDate.value.getFullYear(),
         state.currentDate.value.getMonth() + 1,
@@ -612,6 +796,33 @@
 
   onUnmounted(() => {
     document.removeEventListener('click', handleClickOutside);
+  });
+
+  // ===== COMPONENT METHODS =====
+  const focus = () => {
+    triggerRef.value?.focus();
+  };
+
+  const blur = () => {
+    triggerRef.value?.blur();
+  };
+
+  const open = () => {
+    if (!props.disabled) {
+      showDropdown();
+    }
+  };
+
+  const close = () => {
+    hideDropdown();
+  };
+
+  defineExpose({
+    focus,
+    blur,
+    open,
+    close,
+    validate,
   });
 </script>
 
@@ -628,20 +839,14 @@
     >
       <div class="vt-datepicker__input">
         <div class="vt-datepicker__icon">
-          <VIcon name="calendar" />
+          <VIcon :name="isDateTimeType ? 'clock' : 'calendar'" />
         </div>
 
         <div v-if="hasDisplayValue" class="vt-datepicker__text">
           <template v-if="isRange">
-            <span>
-              {{ displayText[0] }}
-            </span>
-            <span>
-              {{ props.rangeSeparator }}
-            </span>
-            <span>
-              {{ displayText[1] }}
-            </span>
+            <span>{{ displayText[0] }}</span>
+            <span>{{ props.rangeSeparator }}</span>
+            <span>{{ displayText[1] }}</span>
           </template>
           <template v-else>
             {{ displayText }}
@@ -649,15 +854,9 @@
         </div>
         <div v-else class="vt-datepicker__placeholder">
           <template v-if="isRange">
-            <span>
-              {{ props.startPlaceholder }}
-            </span>
-            <span>
-              {{ props.rangeSeparator }}
-            </span>
-            <span>
-              {{ props.endPlaceholder }}
-            </span>
+            <span>{{ props.startPlaceholder }}</span>
+            <span>{{ props.rangeSeparator }}</span>
+            <span>{{ props.endPlaceholder }}</span>
           </template>
           <template v-else>
             {{ currentPlaceholder }}
@@ -682,28 +881,240 @@
     <Teleport v-if="isDropdownVisible && parentVisible" to="body">
       <transition name="dropdown">
         <div ref="dropdownRef" :style="dropdownStyle" class="vt-datepicker__dropdown" @click.stop @mousedown.prevent>
-          <!-- Dual Calendar for daterange -->
-          <div v-if="showDualCalendar" class="vt-datepicker__dual-calendar">
-            <!-- Left Calendar -->
-            <div class="vt-datepicker__calendar-panel">
-              <!-- Left Header -->
+          <!-- Date Section -->
+          <div
+            :class="{ 'vt-datepicker__date-section--with-time': showTimePicker }"
+            class="vt-datepicker__date-section"
+          >
+            <!-- Dual Calendar for daterange/datetimerange -->
+            <div v-if="showDualCalendar" class="vt-datepicker__dual-calendar">
+              <!-- Left Calendar -->
+              <div class="vt-datepicker__calendar-panel">
+                <div v-if="showTimePicker" class="vt-datepicker__time">
+                  <VTimePicker
+                    ref="startTimePickerRef"
+                    v-model="state.startTime.value"
+                    :clearable="false"
+                    :disabled-hours="props.disabledHours"
+                    :disabled-minutes="props.disabledMinutes"
+                    :disabled-seconds="props.disabledSeconds"
+                    :hide-disabled-options="props.hideDisabledOptions"
+                    :hour-step="props.hourStep"
+                    :minute-step="props.minuteStep"
+                    :second-step="props.secondStep"
+                    :show-seconds="props.showSeconds"
+                    :use12-hours="props.use12Hours"
+                    placeholder="Початковий час"
+                    type="time"
+                    @change="value => handleTimeChange(value, false)"
+                  />
+                </div>
+                <div class="vt-datepicker__header">
+                  <button class="vt-datepicker__nav-btn" @click="navigatePrev">
+                    <VIcon name="arrowLeft" />
+                  </button>
+
+                  <div class="vt-datepicker__header-content">
+                    <button class="vt-datepicker__header-btn" @click="state.viewMode.value = 'month'">
+                      {{ state.currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
+                    </button>
+                  </div>
+
+                  <div class="vt-datepicker__nav-spacer"></div>
+                </div>
+
+                <div class="vt-datepicker__content">
+                  <div class="vt-datepicker__calendar">
+                    <div class="vt-datepicker__weekdays">
+                      <span
+                        v-for="(day, index) in WEEKDAY_NAMES_SHORT"
+                        :key="`${index}_${day}`"
+                        class="vt-datepicker__weekday"
+                        >{{ day }}</span
+                      >
+                    </div>
+
+                    <div class="vt-datepicker__dates">
+                      <button
+                        v-for="date in leftCalendarDates"
+                        :key="date.getTime()"
+                        :class="[
+                          'vt-datepicker__date',
+                          {
+                            'vt-datepicker__date--selected': isDateSelected(date, true, false),
+                            'vt-datepicker__date--other-month': !leftIsDateInCurrentMonth(date),
+                            'vt-datepicker__date--today': isToday(date),
+                            'vt-datepicker__date--in-range':
+                              isDateInRange(date, true, false) && !isDateSelected(date, true, false),
+                            'vt-datepicker__date--range-start':
+                              isRange &&
+                              state.startDate.value &&
+                              isSameDate(date, state.startDate.value) &&
+                              leftIsDateInCurrentMonth(date),
+                            'vt-datepicker__date--range-end':
+                              isRange &&
+                              state.endDate.value &&
+                              isSameDate(date, state.endDate.value) &&
+                              leftIsDateInCurrentMonth(date),
+                            'vt-datepicker__date--disabled': !isDateClickable(date, true, false),
+                          },
+                        ]"
+                        :disabled="!isDateClickable(date, true, false)"
+                        @click="handleDateClick(date, true, false)"
+                        @mouseenter="handleDateHover(date, true, false)"
+                        @mouseleave="handleDateLeave"
+                      >
+                        {{ date.getDate() }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Calendar -->
+              <div class="vt-datepicker__calendar-panel">
+                <div v-if="showTimePicker" class="vt-datepicker__time">
+                  <VTimePicker
+                    ref="endTimePickerRef"
+                    v-model="state.endTime.value"
+                    :clearable="false"
+                    :disabled-hours="props.disabledHours"
+                    :disabled-minutes="props.disabledMinutes"
+                    :disabled-seconds="props.disabledSeconds"
+                    :hide-disabled-options="props.hideDisabledOptions"
+                    :hour-step="props.hourStep"
+                    :minute-step="props.minuteStep"
+                    :second-step="props.secondStep"
+                    :show-seconds="props.showSeconds"
+                    :use12-hours="props.use12Hours"
+                    placeholder="Кінцевий час"
+                    type="time"
+                    @change="value => handleTimeChange(value, true)"
+                  />
+                </div>
+                <div class="vt-datepicker__header">
+                  <div class="vt-datepicker__nav-spacer"></div>
+
+                  <div class="vt-datepicker__header-content">
+                    <button class="vt-datepicker__header-btn" @click="state.viewMode.value = 'month'">
+                      {{ state.rightCurrentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
+                    </button>
+                  </div>
+
+                  <button class="vt-datepicker__nav-btn" @click="navigateNext">
+                    <VIcon name="arrowRight" />
+                  </button>
+                </div>
+
+                <div class="vt-datepicker__content">
+                  <div class="vt-datepicker__calendar">
+                    <div class="vt-datepicker__weekdays">
+                      <span
+                        v-for="(day, index) in WEEKDAY_NAMES_SHORT"
+                        :key="`${index}_${day}`"
+                        class="vt-datepicker__weekday"
+                        >{{ day }}</span
+                      >
+                    </div>
+
+                    <div class="vt-datepicker__dates">
+                      <button
+                        v-for="date in rightCalendarDates"
+                        :key="date.getTime()"
+                        :class="[
+                          'vt-datepicker__date',
+                          {
+                            'vt-datepicker__date--selected': isDateSelected(date, false, true),
+                            'vt-datepicker__date--other-month': !rightIsDateInCurrentMonth(date),
+                            'vt-datepicker__date--today': isToday(date),
+                            'vt-datepicker__date--in-range':
+                              isDateInRange(date, false, true) && !isDateSelected(date, false, true),
+                            'vt-datepicker__date--range-start':
+                              isRange &&
+                              state.startDate.value &&
+                              isSameDate(date, state.startDate.value) &&
+                              rightIsDateInCurrentMonth(date),
+                            'vt-datepicker__date--range-end':
+                              isRange &&
+                              state.endDate.value &&
+                              isSameDate(date, state.endDate.value) &&
+                              rightIsDateInCurrentMonth(date),
+                            'vt-datepicker__date--disabled': !isDateClickable(date, false, true),
+                          },
+                        ]"
+                        :disabled="!isDateClickable(date, false, true)"
+                        @click="handleDateClick(date, false, true)"
+                        @mouseenter="handleDateHover(date, false, true)"
+                        @mouseleave="handleDateLeave"
+                      >
+                        {{ date.getDate() }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Single Calendar for other types -->
+            <div v-else>
+              <!-- TimePicker for single datetime -->
+              <div v-if="showTimePicker" class="vt-datepicker__time">
+                <VTimePicker
+                  ref="startTimePickerRef"
+                  v-model="state.startTime.value"
+                  :clearable="false"
+                  :disabled-hours="props.disabledHours"
+                  :disabled-minutes="props.disabledMinutes"
+                  :disabled-seconds="props.disabledSeconds"
+                  :hide-disabled-options="props.hideDisabledOptions"
+                  :hour-step="props.hourStep"
+                  :minute-step="props.minuteStep"
+                  :second-step="props.secondStep"
+                  :show-seconds="props.showSeconds"
+                  :use12-hours="props.use12Hours"
+                  placeholder="Час"
+                  type="time"
+                  @change="value => handleTimeChange(value, false)"
+                />
+              </div>
+
+              <!-- Calendar Header -->
               <div class="vt-datepicker__header">
                 <button class="vt-datepicker__nav-btn" @click="navigatePrev">
                   <VIcon name="arrowLeft" />
                 </button>
 
                 <div class="vt-datepicker__header-content">
-                  <button class="vt-datepicker__header-btn" @click="state.viewMode.value = 'month'">
+                  <button
+                    v-if="state.viewMode.value === 'date'"
+                    class="vt-datepicker__header-btn"
+                    @click="state.viewMode.value = 'month'"
+                  >
                     {{ state.currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
                   </button>
+
+                  <button
+                    v-else-if="state.viewMode.value === 'month'"
+                    class="vt-datepicker__header-btn"
+                    @click="state.viewMode.value = 'year'"
+                  >
+                    {{ state.currentDate.value.getFullYear() }}
+                  </button>
+
+                  <span v-else class="vt-datepicker__header-text">
+                    {{ leftDecadeRange }}
+                  </span>
                 </div>
 
-                <div class="vt-datepicker__nav-spacer"></div>
+                <button class="vt-datepicker__nav-btn" @click="navigateNext">
+                  <VIcon name="arrowRight" />
+                </button>
               </div>
 
-              <!-- Left Calendar Content -->
+              <!-- Calendar Content -->
               <div class="vt-datepicker__content">
-                <div class="vt-datepicker__calendar">
+                <!-- Date View -->
+                <div v-if="state.viewMode.value === 'date'" class="vt-datepicker__calendar">
                   <div class="vt-datepicker__weekdays">
                     <span
                       v-for="(day, index) in WEEKDAY_NAMES_SHORT"
@@ -720,219 +1131,80 @@
                       :class="[
                         'vt-datepicker__date',
                         {
-                          'vt-datepicker__date--selected': isDateSelected(date, true, false),
+                          'vt-datepicker__date--selected': isDateSelected(date),
                           'vt-datepicker__date--other-month': !leftIsDateInCurrentMonth(date),
                           'vt-datepicker__date--today': isToday(date),
-                          'vt-datepicker__date--in-range':
-                            isDateInRange(date, true, false) && !isDateSelected(date, true, false),
+                          'vt-datepicker__date--in-range': isDateInRange(date) && !isDateSelected(date),
                           'vt-datepicker__date--range-start':
-                            isRange &&
-                            state.startDate.value &&
-                            isSameDate(date, state.startDate.value) &&
-                            leftIsDateInCurrentMonth(date),
+                            isRange && state.startDate.value && isSameDate(date, state.startDate.value),
                           'vt-datepicker__date--range-end':
-                            isRange &&
-                            state.endDate.value &&
-                            isSameDate(date, state.endDate.value) &&
-                            leftIsDateInCurrentMonth(date),
-                          'vt-datepicker__date--disabled': !isDateClickable(date, true, false),
+                            isRange && state.endDate.value && isSameDate(date, state.endDate.value),
                         },
                       ]"
-                      :disabled="!isDateClickable(date, true, false)"
-                      @click="handleDateClick(date, true, false)"
-                      @mouseenter="handleDateHover(date, true, false)"
+                      @click="handleDateClick(date)"
+                      @mouseenter="handleDateHover(date)"
                       @mouseleave="handleDateLeave"
                     >
                       {{ date.getDate() }}
                     </button>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <!-- Right Calendar -->
-            <div class="vt-datepicker__calendar-panel">
-              <!-- Right Header -->
-              <div class="vt-datepicker__header">
-                <div class="vt-datepicker__nav-spacer"></div>
-
-                <div class="vt-datepicker__header-content">
-                  <button class="vt-datepicker__header-btn" @click="state.viewMode.value = 'month'">
-                    {{ state.rightCurrentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
+                <!-- Month View -->
+                <div v-else-if="state.viewMode.value === 'month'" class="vt-datepicker__months">
+                  <button
+                    v-for="(monthData, index) in leftMonthsInYear"
+                    :key="monthData.name"
+                    :class="[
+                      'vt-datepicker__month',
+                      {
+                        'vt-datepicker__month--selected': isMonthSelected(index, state.currentDate.value),
+                        'vt-datepicker__month--current': index === state.currentDate.value.getMonth(),
+                        'vt-datepicker__month--in-range': isMonthInRange(index, state.currentDate.value),
+                      },
+                    ]"
+                    @click="handleMonthClick(index, false)"
+                    @mouseenter="handleMonthHover(index, state.currentDate.value)"
+                    @mouseleave="handleMonthLeave"
+                  >
+                    {{ monthData.name }}
                   </button>
                 </div>
 
-                <button class="vt-datepicker__nav-btn" @click="navigateNext">
-                  <VIcon name="arrowRight" />
-                </button>
-              </div>
-
-              <!-- Right Calendar Content -->
-              <div class="vt-datepicker__content">
-                <div class="vt-datepicker__calendar">
-                  <div class="vt-datepicker__weekdays">
-                    <span
-                      v-for="(day, index) in WEEKDAY_NAMES_SHORT"
-                      :key="`${index}_${day}`"
-                      class="vt-datepicker__weekday"
-                      >{{ day }}</span
-                    >
-                  </div>
-
-                  <div class="vt-datepicker__dates">
-                    <button
-                      v-for="date in rightCalendarDates"
-                      :key="date.getTime()"
-                      :class="[
-                        'vt-datepicker__date',
-                        {
-                          'vt-datepicker__date--selected': isDateSelected(date, false, true),
-                          'vt-datepicker__date--other-month': !rightIsDateInCurrentMonth(date),
-                          'vt-datepicker__date--today': isToday(date),
-                          'vt-datepicker__date--in-range':
-                            isDateInRange(date, false, true) && !isDateSelected(date, false, true),
-                          'vt-datepicker__date--range-start':
-                            isRange &&
-                            state.startDate.value &&
-                            isSameDate(date, state.startDate.value) &&
-                            rightIsDateInCurrentMonth(date),
-                          'vt-datepicker__date--range-end':
-                            isRange &&
-                            state.endDate.value &&
-                            isSameDate(date, state.endDate.value) &&
-                            rightIsDateInCurrentMonth(date),
-                          'vt-datepicker__date--disabled': !isDateClickable(date, false, true),
-                        },
-                      ]"
-                      :disabled="!isDateClickable(date, false, true)"
-                      @click="handleDateClick(date, false, true)"
-                      @mouseenter="handleDateHover(date, false, true)"
-                      @mouseleave="handleDateLeave"
-                    >
-                      {{ date.getDate() }}
-                    </button>
-                  </div>
+                <!-- Year View -->
+                <div v-else class="vt-datepicker__years">
+                  <button
+                    v-for="yearData in leftYearsInDecade"
+                    :key="yearData.year"
+                    :class="[
+                      'vt-datepicker__year',
+                      {
+                        'vt-datepicker__year--selected': isYearSelected(yearData.year),
+                        'vt-datepicker__year--current': yearData.year === state.currentDate.value.getFullYear(),
+                        'vt-datepicker__year--in-range': isYearInRange(yearData.year),
+                      },
+                    ]"
+                    @click="handleYearClick(yearData.year)"
+                    @mouseenter="handleYearHover(yearData.year)"
+                    @mouseleave="handleYearLeave"
+                  >
+                    {{ yearData.year }}
+                  </button>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Single Calendar for other types -->
-          <div v-else>
-            <!-- Header -->
-            <div class="vt-datepicker__header">
-              <button class="vt-datepicker__nav-btn" @click="navigatePrev">
-                <VIcon name="arrowLeft" />
-              </button>
-
-              <div class="vt-datepicker__header-content">
-                <button
-                  v-if="state.viewMode.value === 'date'"
-                  class="vt-datepicker__header-btn"
-                  @click="state.viewMode.value = 'month'"
-                >
-                  {{ state.currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
-                </button>
-
-                <button
-                  v-else-if="state.viewMode.value === 'month'"
-                  class="vt-datepicker__header-btn"
-                  @click="state.viewMode.value = 'year'"
-                >
-                  {{ state.currentDate.value.getFullYear() }}
-                </button>
-
-                <span v-else class="vt-datepicker__header-text">
-                  {{ leftDecadeRange }}
-                </span>
-              </div>
-
-              <button class="vt-datepicker__nav-btn" @click="navigateNext">
-                <VIcon name="arrowRight" />
-              </button>
-            </div>
-
-            <!-- Calendar Content -->
-            <div class="vt-datepicker__content">
-              <!-- Date View -->
-              <div v-if="state.viewMode.value === 'date'" class="vt-datepicker__calendar">
-                <div class="vt-datepicker__weekdays">
-                  <span
-                    v-for="(day, index) in WEEKDAY_NAMES_SHORT"
-                    :key="`${index}_${day}`"
-                    class="vt-datepicker__weekday"
-                    >{{ day }}</span
-                  >
-                </div>
-
-                <div class="vt-datepicker__dates">
-                  <button
-                    v-for="date in leftCalendarDates"
-                    :key="date.getTime()"
-                    :class="[
-                      'vt-datepicker__date',
-                      {
-                        'vt-datepicker__date--selected': isDateSelected(date),
-                        'vt-datepicker__date--other-month': !leftIsDateInCurrentMonth(date),
-                        'vt-datepicker__date--today': isToday(date),
-                        'vt-datepicker__date--in-range': isDateInRange(date) && !isDateSelected(date),
-                        'vt-datepicker__date--range-start':
-                          isRange && state.startDate.value && isSameDate(date, state.startDate.value),
-                        'vt-datepicker__date--range-end':
-                          isRange && state.endDate.value && isSameDate(date, state.endDate.value),
-                      },
-                    ]"
-                    @click="handleDateClick(date)"
-                    @mouseenter="handleDateHover(date)"
-                    @mouseleave="handleDateLeave"
-                  >
-                    {{ date.getDate() }}
-                  </button>
-                </div>
-              </div>
-
-              <!-- Month View -->
-              <div v-else-if="state.viewMode.value === 'month'" class="vt-datepicker__months">
-                <button
-                  v-for="(monthData, index) in leftMonthsInYear"
-                  :key="monthData.name"
-                  :class="[
-                    'vt-datepicker__month',
-                    {
-                      'vt-datepicker__month--selected': isMonthSelected(index, state.currentDate.value),
-                      'vt-datepicker__month--current': index === state.currentDate.value.getMonth(),
-                      'vt-datepicker__month--in-range': isMonthInRange(index, state.currentDate.value),
-                    },
-                  ]"
-                  @click="handleMonthClick(index, false)"
-                  @mouseenter="handleMonthHover(index, state.currentDate.value)"
-                  @mouseleave="handleMonthLeave"
-                >
-                  {{ monthData.name }}
-                </button>
-              </div>
-
-              <!-- Year View -->
-              <div v-else class="vt-datepicker__years">
-                <button
-                  v-for="yearData in leftYearsInDecade"
-                  :key="yearData.year"
-                  :class="[
-                    'vt-datepicker__year',
-                    {
-                      'vt-datepicker__year--selected': isYearSelected(yearData.year),
-                      'vt-datepicker__year--current': yearData.year === state.currentDate.value.getFullYear(),
-                      'vt-datepicker__year--in-range': isYearInRange(yearData.year),
-                    },
-                  ]"
-                  @click="handleYearClick(yearData.year)"
-                  @mouseenter="handleYearHover(yearData.year)"
-                  @mouseleave="handleYearLeave"
-                >
-                  {{ yearData.year }}
-                </button>
-              </div>
-            </div>
+          <!-- Actions (only for DateTime types) -->
+          <div v-if="showTimePicker" class="vt-datepicker__actions">
+            <VButton @click="handleCancel">Скасувати</VButton>
+            <VButton
+              :disabled="!state.startDate.value || (isRange && !state.endDate.value)"
+              type="primary"
+              @click="handleConfirm"
+            >
+              OK
+            </VButton>
           </div>
         </div>
       </transition>
