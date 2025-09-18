@@ -89,6 +89,7 @@ import TwoRowsIcon from './table/TwoRowsIcon.vue';
 import UnfreezeIcon from './table/UnfreezeIcon.vue';
 import FileChooseIcon from '@/icons/files/FileChooseIcon.vue';
 import TranscriptionIcon from '@/icons/others/TranscriptionIcon.vue';
+import TranscriptionStartIcon from '@/icons/others/TranscriptionStartIcon.vue';
 
 export const icons = {
   // actions icons
@@ -184,6 +185,7 @@ export const icons = {
   progressive: ProgressiveIcon,
   sms: SmsIcon,
   transcription: TranscriptionIcon,
+  transcriptionStart: TranscriptionStartIcon,
 
   // table icons
   columnInsert: ColumnInsertIcon,
