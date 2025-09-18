@@ -845,7 +845,7 @@
         <div v-if="hasDisplayValue" class="vt-datepicker__text">
           <template v-if="isRange">
             <span>{{ displayText[0] }}</span>
-            <span>{{ props.rangeSeparator }}</span>
+            <span class="vt-datepicker__separator">{{ props.rangeSeparator }}</span>
             <span>{{ displayText[1] }}</span>
           </template>
           <template v-else>
@@ -855,7 +855,7 @@
         <div v-else class="vt-datepicker__placeholder">
           <template v-if="isRange">
             <span>{{ props.startPlaceholder }}</span>
-            <span>{{ props.rangeSeparator }}</span>
+            <span class="vt-datepicker__separator">{{ props.rangeSeparator }}</span>
             <span>{{ props.endPlaceholder }}</span>
           </template>
           <template v-else>
