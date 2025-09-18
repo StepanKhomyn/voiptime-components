@@ -1,3 +1,10 @@
+## [1.8.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.4...v1.8.5) (2025-09-18)
+
+
+### Bug Fixes
+
+* додано меседж та та таби ([cfd061e](https://github.com/StepanKhomyn/voiptime-components/commit/cfd061e486ce73fa5911bb2e2c4e6ef3f78fc0fc))
+
 ## [1.8.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.3...v1.8.4) (2025-09-17)
 
 
