@@ -1,3 +1,10 @@
+## [1.8.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.6...v1.8.7) (2025-09-18)
+
+
+### Bug Fixes
+
+* додано таби до entry файлу ([29c619b](https://github.com/StepanKhomyn/voiptime-components/commit/29c619bcf0b2d1966697e0631aef10117cd66e3f))
+
 ## [1.8.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.5...v1.8.6) (2025-09-18)
 
 
