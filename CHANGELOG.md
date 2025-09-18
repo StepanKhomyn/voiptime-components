@@ -1,3 +1,10 @@
+## [1.8.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.7...v1.8.8) (2025-09-18)
+
+
+### Bug Fixes
+
+* fixed empty table styles ([c38b128](https://github.com/StepanKhomyn/voiptime-components/commit/c38b128e3dac64b525063bb87a0ab47d9a1e48bf))
+
 ## [1.8.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.6...v1.8.7) (2025-09-18)
 
 
