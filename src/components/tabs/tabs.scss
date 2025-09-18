@@ -1,0 +1,50 @@
+@use '../../assets/fonts' as *;
+
+.vt-tabs {
+  display: flex;
+  flex-direction: column;
+
+  &__nav {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-gray-5);
+    background-color: #FFFFFF;
+    gap: var(--vt-gap-lg);
+    height: 46px;
+  }
+
+  &__nav-item {
+    @include vt-typography('vt-tabs');
+    padding: 10px 20px;
+    cursor: pointer;
+    position: relative;
+    color: var(--color-gray-4);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &.is-active {
+      color: var(--color-primary-main);
+      border-bottom: 5px solid var(--color-primary-main);
+    }
+
+    &.is-disabled {
+      color: var(--color-gray-5);
+      cursor: not-allowed;
+    }
+  }
+
+  &__close {
+    cursor: pointer;
+
+    &:hover {
+      color: #f56c6c;
+    }
+  }
+
+
+  &__pane {
+    display: block;
+  }
+}

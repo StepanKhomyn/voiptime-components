@@ -56,6 +56,7 @@ import CheckCircleIcon from './input/CheckCircleIcon.vue';
 import ClockIcon from './input/ClockIcon.vue';
 import EyeClosedIcon from './input/EyeClosedIcon.vue';
 import EyeOpenedIcon from './input/EyeOpenedIcon.vue';
+import InfoCircleIcon from './input/InfoCircleIcon.vue';
 import SearchIcon from './input/SearchIcon.vue';
 import UrlIcon from './input/UrlIcon.vue';
 import EmailDeletedIcon from './mail/EmailDeletedIcon.vue';
@@ -154,6 +155,7 @@ export const icons = {
   clock: ClockIcon,
   eyeClosed: EyeClosedIcon,
   eyeOpened: EyeOpenedIcon,
+  infoCircle: InfoCircleIcon,
   search: SearchIcon,
   url: UrlIcon,
 

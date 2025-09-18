@@ -15,6 +15,8 @@
   import DemoForms from './DemoForms.vue';
   import DemoTimePicker from './DemoTimePicker.vue';
   import DemoCollapse from './DemoCollapse.vue';
+  import DemoMessage from './DemoMessage.vue';
+  import DemoTabs from './DemoTabs.vue';
 
   const activeSlot = ref(null);
 
@@ -34,6 +36,8 @@
     { id: 11, name: 'Селект', icon: '⬇️' },
     { id: 14, name: 'Форми', icon: '📋' },
     { id: 16, name: 'Коллапс', icon: '⬇️' },
+    { id: 17, name: 'Message', icon: '⬇📋' },
+    { id: 18, name: 'Tabs', icon: '⬇📋2' },
   ];
 </script>
 
@@ -82,6 +86,8 @@
       <DemoRadioBox v-if="activeSlot === 13" />
       <DemoForms v-if="activeSlot === 14" />
       <DemoCollapse v-if="activeSlot === 16" />
+      <DemoMessage v-if="activeSlot === 17" />
+      <DemoTabs v-if="activeSlot === 18" />
       <!-- і т.д. -->
     </div>
   </div>
