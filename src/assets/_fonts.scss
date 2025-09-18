@@ -7,6 +7,7 @@
   --font-size-base: 16px;
   --font-size-lg: 20px;
   --font-size-sm: 14px;
+  --font-size-medium: 18px;
 
   // Font weights
   --font-weight-regular: 400;
@@ -78,6 +79,13 @@
   --vt-collapse-font-size: var(--font-size-base);
   --vt-collapse-line-height: 100%;
   --vt-collapse-letter-spacing: 0%;
+
+  // Tabs
+  --vt-tabs-font-family: var(--font-secondary);
+  --vt-tabs-font-weight: var(--font-weight-regular);
+  --vt-tabs-font-size: var(--font-size-medium);
+  --vt-tabs-line-height: 100%;
+  --vt-tabs-letter-spacing: 0%;
 }
 
 @font-face {

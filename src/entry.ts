@@ -1,4 +1,4 @@
-// index.ts - оновлений головний файл бібліотеки з повними експортами
+// index.ts - оновлений головний файл бібліотеки з VMessage
 import type { App } from 'vue';
 import VButton from './components/button/VButton.vue';
 import VIcon from './components/icon/VIcon.vue';
@@ -22,6 +22,7 @@ import VCollapseItem from './components/collapse/VCollapseItem.vue';
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
 import { VModalPlugin } from './components/modal/plugin';
+import { VMessagePlugin } from './components/message/message-plugin';
 
 // ----------------- Експортуємо компоненти -----------------
 export {
@@ -54,6 +55,9 @@ export type { IconName } from './icons/index';
 export type { TooltipPlacement } from './directives/tooltip/types';
 
 export type { VModalProps, VModalEmits, VModalSize, VModalConfig, VModalInstance } from './components/modal/types';
+
+// VMessage типи
+export type { VMessageType, VMessageOptions, VMessageInstance, VMessageMethods } from './components/message/types';
 
 export type {
   PaginationProps,
@@ -184,17 +188,19 @@ export {
   generateTimeOptions,
 } from './components/timepicker/types';
 
-// ----------------- Плагін -----------------
+// ----------------- Плагіни -----------------
 export { VModalPlugin, modalManager } from './components/modal/plugin';
+export { VMessagePlugin, VMessage, messageManager } from './components/message/message-plugin';
 
 export interface VUIPluginOptions {
   prefix?: string;
   modal?: boolean;
+  message?: boolean;
 }
 
 const VUIPlugin = {
   install(app: App, options: VUIPluginOptions = {}) {
-    const { prefix = 'V', modal = true } = options;
+    const { prefix = 'V', modal = true, message = true } = options;
 
     // Реєстрація компонентів
     app.component(`${prefix}Button`, VButton);
@@ -219,8 +225,13 @@ const VUIPlugin = {
     // Директиви
     app.directive('tooltip', tooltipDirective);
 
+    // Плагіни
     if (modal) {
       app.use(VModalPlugin);
+    }
+
+    if (message) {
+      app.use(VMessagePlugin);
     }
   },
 };
@@ -232,5 +243,11 @@ export const install = VUIPlugin.install;
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $modal: import('./components/modal/types').VModalInstance;
+    $message: import('./components/message/types').VMessageMethods;
+    $messageStack: {
+      closeAll: () => void;
+      getCount: () => number;
+      closeById: (id: number) => void;
+    };
   }
 }

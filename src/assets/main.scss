@@ -32,6 +32,8 @@
 @use '../components/input/input';
 @use '../components/select/select';
 @use '../components/collapse/collapse';
+@use '../components/message/message';
+@use '../components/tabs/tabs';
 @use '../directives/tooltip/tooltip';
 
 body {
