@@ -1,4 +1,4 @@
-// index.ts - оновлений головний файл бібліотеки з VMessage
+// index.ts - оновлений головний файл бібліотеки з VMessage та VTabs
 import type { App } from 'vue';
 import VButton from './components/button/VButton.vue';
 import VIcon from './components/icon/VIcon.vue';
@@ -18,6 +18,8 @@ import VDatePicker from './components/datepicker/VDatePicker.vue';
 import VTimePicker from './components/timepicker/VTimePicker.vue';
 import VCollapse from './components/collapse/VCollapse.vue';
 import VCollapseItem from './components/collapse/VCollapseItem.vue';
+import VTabs from './components/tabs/VTabs.vue';
+import VTabItem from './components/tabs/VTabItem.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -44,6 +46,8 @@ export {
   VTimePicker,
   VCollapse,
   VCollapseItem,
+  VTabs,
+  VTabItem,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -161,6 +165,9 @@ export type {
   CollapseContext,
 } from './components/collapse/types';
 
+// VTabs
+export type { VTabsProps, VTabItemProps, VTabsEmits } from './components/tabs/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -221,6 +228,8 @@ const VUIPlugin = {
     app.component(`${prefix}TimePicker`, VTimePicker);
     app.component(`${prefix}Collapse`, VCollapse);
     app.component(`${prefix}CollapseItem`, VCollapseItem);
+    app.component(`${prefix}Tabs`, VTabs);
+    app.component(`${prefix}TabItem`, VTabItem);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
