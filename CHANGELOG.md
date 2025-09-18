@@ -1,3 +1,10 @@
+## [1.8.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.5...v1.8.6) (2025-09-18)
+
+
+### Bug Fixes
+
+* icons ([dcb72dd](https://github.com/StepanKhomyn/voiptime-components/commit/dcb72dd4cec8d78a78a3f9fd1ee40b0c101494cd))
+
 ## [1.8.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.4...v1.8.5) (2025-09-18)
 
 
