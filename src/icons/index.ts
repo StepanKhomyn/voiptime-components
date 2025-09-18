@@ -86,6 +86,8 @@ import TableSettingsIcon from './table/TableSettingsIcon.vue';
 import TwoColumnsIcon from './table/TwoColumnsIcon.vue';
 import TwoRowsIcon from './table/TwoRowsIcon.vue';
 import UnfreezeIcon from './table/UnfreezeIcon.vue';
+import FileChooseIcon from '@/icons/files/FileChooseIcon.vue';
+import TranscriptionIcon from '@/icons/others/TranscriptionIcon.vue';
 
 export const icons = {
   // actions icons
@@ -134,6 +136,7 @@ export const icons = {
   emptyImg: EmptyImgIcon,
   fileDoc: FileDocIcon,
   fileSign: FileSignIcon,
+  fileChoose: FileChooseIcon,
 
   // filter icons
   filterAdd: FilterAddIcon,
@@ -178,6 +181,7 @@ export const icons = {
   preview: PreviewIcon,
   progressive: ProgressiveIcon,
   sms: SmsIcon,
+  transcription: TranscriptionIcon,
 
   // table icons
   columnInsert: ColumnInsertIcon,
