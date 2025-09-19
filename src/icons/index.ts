@@ -12,17 +12,14 @@ import GoToIcon from './actions/GoToIcon.vue';
 import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
 import ListBulletIcon from './actions/ListBulletIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
-import PauseIcon from './player/PauseIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
 import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
-import StartIcon from './player/StartIcon.vue';
 import StatusChange2Icon from './actions/StatusChange2Icon.vue';
 import StatusChangeIcon from './actions/StatusChangeIcon.vue';
-import StopIcon from './player/StopIcon.vue';
 import UsersGroupIcon from './actions/UsersGroupIcon.vue';
 import ArrowDownIcon from './arrow/ArrowDownIcon.vue';
 import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
@@ -38,6 +35,7 @@ import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
 import TransferCallIcon from './call/TransferCallIcon.vue';
 import VolumeCallIcon from './call/VolumeCallIcon.vue';
 import EmptyImgIcon from './files/EmptyImgIcon.vue';
+import FileChooseIcon from './files/FileChooseIcon.vue';
 import FileDocIcon from './files/FileDocIcon.vue';
 import FileSignIcon from './files/FileSignIcon.vue';
 import FilterAddIcon from './filter/FilterAddIcon.vue';
@@ -77,6 +75,15 @@ import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
 import ProgressiveIcon from './others/ProgressiveIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
+import TranscriptionIcon from './others/TranscriptionIcon.vue';
+import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
+import PauseIcon from './player/PauseIcon.vue';
+import StartIcon from './player/StartIcon.vue';
+import StopIcon from './player/StopIcon.vue';
+import AnketBlockIcon from './scenario/AnketBlockIcon.vue';
+import IframBlockIcon from './scenario/IframBlockIcon.vue';
+import InfoBlockIcon from './scenario/InfoBlockIcon.vue';
+import ProposalBlockIcon from './scenario/ProposalBlockIcon.vue';
 import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
 import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
 import EmptyIcon from './table/EmptyIcon.vue';
@@ -87,9 +94,6 @@ import TableSettingsIcon from './table/TableSettingsIcon.vue';
 import TwoColumnsIcon from './table/TwoColumnsIcon.vue';
 import TwoRowsIcon from './table/TwoRowsIcon.vue';
 import UnfreezeIcon from './table/UnfreezeIcon.vue';
-import FileChooseIcon from '@/icons/files/FileChooseIcon.vue';
-import TranscriptionIcon from '@/icons/others/TranscriptionIcon.vue';
-import TranscriptionStartIcon from '@/icons/others/TranscriptionStartIcon.vue';
 
 export const icons = {
   // actions icons
@@ -104,17 +108,14 @@ export const icons = {
   listBulletHorizontal: ListBulletHorizontalIcon,
   listBullet: ListBulletIcon,
   paperClip: PaperClipIcon,
-  pause: PauseIcon,
   plusRound: PlusRoundIcon,
   prompt: PromptIcon,
   prompter: PrompterIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   star: StarIcon,
-  start: StartIcon,
   statusChange2: StatusChange2Icon,
   statusChange: StatusChangeIcon,
-  stop: StopIcon,
   usersGroup: UsersGroupIcon,
 
   // arrow icons
@@ -136,9 +137,9 @@ export const icons = {
 
   // files icons
   emptyImg: EmptyImgIcon,
+  fileChoose: FileChooseIcon,
   fileDoc: FileDocIcon,
   fileSign: FileSignIcon,
-  fileChoose: FileChooseIcon,
 
   // filter icons
   filterAdd: FilterAddIcon,
@@ -186,6 +187,17 @@ export const icons = {
   sms: SmsIcon,
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
+
+  // player icons
+  pause: PauseIcon,
+  start: StartIcon,
+  stop: StopIcon,
+
+  // scenario icons
+  anketBlock: AnketBlockIcon,
+  iframBlock: IframBlockIcon,
+  infoBlock: InfoBlockIcon,
+  proposalBlock: ProposalBlockIcon,
 
   // table icons
   columnInsert: ColumnInsertIcon,
