@@ -70,11 +70,15 @@ import DsrIcon from './others/DsrIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
+import OperatorIcon from './others/OperatorIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
+import PrioritySelectIcon from './others/PrioritySelectIcon.vue';
 import ProgressiveIcon from './others/ProgressiveIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
+import StatusSelectIcon from './others/StatusSelectIcon.vue';
+import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
@@ -180,11 +184,15 @@ export const icons = {
   hold: HoldIcon,
   ivr: IvrIcon,
   minus: MinusIcon,
+  operator: OperatorIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
+  prioritySelect: PrioritySelectIcon,
   progressive: ProgressiveIcon,
   sms: SmsIcon,
+  statusSelect: StatusSelectIcon,
+  taskSelect: TaskSelectIcon,
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
 
