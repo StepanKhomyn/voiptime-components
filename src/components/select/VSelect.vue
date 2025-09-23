@@ -837,6 +837,7 @@
               clearable
               suffix-icon="search"
               type="text"
+              @input="handleFilterInput"
             />
           </div>
 
