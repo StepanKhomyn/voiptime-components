@@ -3,7 +3,6 @@
   import type { SortDirection, SortState, VTableColumnProps, VTableEmits, VTableProps } from './types';
   import { useColumnResize, useTableColumns, useTableStyles } from './functions/composables';
   import { useTableSelection } from './functions/useTableSelection';
-  import { renderTableSlot } from './functions/useTableSlots';
   import { getSortIconClasses, handleSortDirect, sortTableData } from './functions/sorting';
   import ColumnActions from '@/components/table/ColumnActions.vue';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -557,8 +556,12 @@
               class="vt-table__cell-content vt-table__cell-content--ellipsis"
             >
               <component
-                :is="() => renderTableSlot(col.renderSlot, { row, column: col, value: row[col.prop], index: rowIndex })"
+                :is="col.renderSlot"
                 v-if="col.renderSlot"
+                :column="col"
+                :index="rowIndex"
+                :row="row"
+                :value="row[col.prop]"
               />
               <span v-else>{{ row[col.prop] }}</span>
             </div>

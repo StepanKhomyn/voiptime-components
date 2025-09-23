@@ -4,6 +4,7 @@
   import VTableColumn from '@/components/table/VTableColumn.vue';
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
+  import VInput from '@/components/input/VInput.vue';
 
   interface RowData {
     id: string;
@@ -121,10 +122,12 @@
 
     <button @click="addRow">Додати рядок</button>
   </div>
-
+  {{ rows }}
   <VTable :data="rows" row-key="id">
     <VTableColumn v-for="column in heading" :key="column.key" :label="column.i18n" :prop="column.key" :width="200">
-      <template #default="{ row }"> {{ row[column.key] }}</template>
+      <template #default="{ row }">
+        <VInput v-model="row[column.key]" />
+      </template>
     </VTableColumn>
   </VTable>
 </template>
