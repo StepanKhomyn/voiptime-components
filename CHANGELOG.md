@@ -1,3 +1,10 @@
+## [1.8.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.21...v1.8.22) (2025-09-23)
+
+
+### Bug Fixes
+
+* tables column ([3c4fd34](https://github.com/StepanKhomyn/voiptime-components/commit/3c4fd34ec6dbee483dd74e39aadacc0e94bef851))
+
 ## [1.8.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.20...v1.8.21) (2025-09-23)
 
 
