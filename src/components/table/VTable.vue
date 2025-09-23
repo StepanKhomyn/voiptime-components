@@ -438,8 +438,6 @@
 </script>
 
 <template>
-  {{ internalColumns.length }}
-  {{ internalColumns }}
   <div ref="tableWrapperRef" :style="getTableWrapperStyle()" class="vt-table-wrapper" @scroll="handleScroll">
     <slot />
     <table class="vt-table">
