@@ -44,6 +44,8 @@
 
   // Додаємо колонку до масиву при монтуванні
   onMounted(() => {
+    console.log('ADD', props.prop);
+    console.log('ADD', columns);
     nextTick(() => {
       if (!columns) return;
       const newColumn = createColumn();
@@ -94,6 +96,8 @@
 
   // Видаляємо колонку з масиву при демонтуванні
   onUnmounted(() => {
+    console.log('DELETE', props.prop);
+    console.log('DELETE', columns);
     if (columns) {
       const index = columns.findIndex(col => col.prop === props.prop);
       if (index > -1) {

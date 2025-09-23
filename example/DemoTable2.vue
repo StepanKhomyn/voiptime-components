@@ -6,70 +6,102 @@
   import VOption from '@/components/select/VOption.vue';
 
   interface RowData {
-    id?: string;
+    id: string;
+    reportPeriod?: string;
+    totalCalls?: number;
+    answeredCalls?: number;
+    abandonedCalls?: number;
+    answeredInterval?: Record<string, number>;
+    abandonedInterval?: Record<string, number>;
 
     [key: string]: any;
   }
 
-  // reactive для step та iteration
+  // Reactive step та iteration
   const filter = reactive({
     step: 5,
     iteration: 0,
   });
 
-  // Генерація унікального id
-  const generateId = () => `row_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  // Генерація інтервалів
+  const intervals = computed(() => {
+    const options = [];
+    if (!filter.step || !filter.iteration) return options;
 
-  // Дані для таблиці
-  const rows = reactive<RowData[]>([{ id: generateId() }]);
+    for (let i = 0; i < Number(filter.step) * Number(filter.iteration); i += Number(filter.step)) {
+      options.push({ id: i, name: `${i}` });
+    }
+    return options;
+  });
 
-  // Динамічні колонки на основі step * iteration
+  // Heading колонок
   const heading = computed(() => {
     const columns = [];
+
+    // Статичні
     columns.push(
-      {
-        key: `id`,
-        i18n: `Колонка id`,
-      },
-      {
-        key: `colInform`,
-        i18n: `Колонка colInform`,
-      },
-      {
-        key: `colInformText`,
-        i18n: `Колонка colInformT`,
-      }
+      { key: 'reportPeriod', i18n: 'Період звіту' },
+      { key: 'totalCalls', i18n: 'Всього дзвінків' },
+      { key: 'answeredCalls', i18n: 'Всього дзвінків із відповіддю' }
     );
-    const totalCols = filter.step * filter.iteration;
-    for (let i = 0; i < totalCols; i++) {
-      columns.push({
-        key: `col_${i}`,
-        i18n: `Колонка ${i + 1}`,
-      });
-    }
+
+    // Динамічні answered
+    intervals.value.forEach((interval, idx) => {
+      columns.push({ key: `answered_${interval.id}`, i18n: `Відповідь на ${interval.name}s` });
+      if (idx === intervals.value.length - 1) {
+        columns.push({ key: `answered_more_${interval.id}`, i18n: `Відповідь на > ${interval.name}s` });
+      }
+    });
+
+    // Статична abandoned
+    columns.push({ key: 'abandonedCalls', i18n: 'Всього втрачених дзвінків' });
+
+    // Динамічні abandoned
+    intervals.value.forEach((interval, idx) => {
+      columns.push({ key: `abandoned_${interval.id}`, i18n: `Втрачені на ${interval.name}s` });
+      if (idx === intervals.value.length - 1) {
+        columns.push({ key: `abandoned_more_${interval.id}`, i18n: `Втрачені на > ${interval.name}s` });
+      }
+    });
+
     return columns;
   });
 
-  // Функція для додавання рядка
+  // Дані таблиці
+  const rows = reactive<RowData[]>([
+    {
+      id: `row_${Date.now()}`,
+      reportPeriod: null,
+      totalCalls: 0,
+      answeredCalls: 0,
+      abandonedCalls: 0,
+      answeredInterval: {},
+      abandonedInterval: {},
+    },
+  ]);
+
+  // Функція додавання рядка
   const addRow = () => {
-    const newRow: RowData = { id: generateId() };
-    heading.value.forEach(col => (newRow[col.key] = null));
-    rows.push(newRow);
+    rows.push({
+      id: `row_${Date.now()}_${Math.random()}`,
+      reportPeriod: null,
+      totalCalls: 0,
+      answeredCalls: 0,
+      abandonedCalls: 0,
+      answeredInterval: {},
+      abandonedInterval: {},
+    });
   };
 
-  // Слідкуємо за зміною heading і додаємо/змінюємо значення для всіх рядків
-  watch(heading, newCols => {
+  // Watch, щоб додавати нові інтервальні ключі
+  watch(intervals, newIntervals => {
     rows.forEach(row => {
-      newCols.forEach(col => {
-        if (!(col.key in row)) {
-          row[col.key] = null;
-        }
-      });
-      // видаляємо старі ключі, яких вже немає
-      Object.keys(row).forEach(k => {
-        if (k !== 'id' && !newCols.find(c => c.key === k)) {
-          delete row[k];
-        }
+      row.answeredInterval ||= {};
+      row.abandonedInterval ||= {};
+
+      newIntervals.forEach(interval => {
+        if (!(interval.id in row.answeredInterval)) row.answeredInterval[interval.id] = 0;
+        if (!(interval.id in row.abandonedInterval)) row.abandonedInterval[interval.id] = 0;
       });
     });
   });
@@ -90,8 +122,8 @@
     <button @click="addRow">Додати рядок</button>
   </div>
 
-  <VTable :data="rows" max-height="400px" row-key="id">
-    <VTableColumn v-for="column in heading" :key="column.key" :label="column.i18n" :prop="column.key" :width="150">
+  <VTable :data="rows" row-key="id">
+    <VTableColumn v-for="column in heading" :key="column.key" :label="column.i18n" :prop="column.key" :width="200">
       <template #default="{ row }"> {{ row[column.key] }}</template>
     </VTableColumn>
   </VTable>
