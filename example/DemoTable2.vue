@@ -1,68 +1,81 @@
 <script lang="ts" setup>
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive, watch } from 'vue';
   import VTable from '@/components/table/VTable.vue';
+  import VTableColumn from '@/components/table/VTableColumn.vue';
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
-  import VTableColumn from '@/components/table/VTableColumn.vue';
-  import VInput from '@/components/input/VInput.vue';
 
   interface RowData {
-    reportPeriod: string | null;
-    totalCalls: number;
-    answeredCalls: number;
-    abandonedCalls: number;
+    id?: string;
 
     [key: string]: any;
   }
 
-  // зробимо reactive, щоб зміни в об’єкті спрацьовували
+  // reactive для step та iteration
   const filter = reactive({
     step: 5,
     iteration: 0,
   });
 
-  // Дані для таблиці
-  const rows = reactive<RowData[]>([
-    {
-      reportPeriod: null,
-      totalCalls: 0,
-      answeredCalls: 0,
-      abandonedCalls: 0,
-    },
-  ]);
+  // Генерація унікального id
+  const generateId = () => `row_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-  // Генерація інтервалів
-  const intervals = computed(() => {
-    const options = [];
-    if (!filter.step || !filter.iteration) return options;
-    for (let i = 0; i < filter.step * filter.iteration; i += filter.step) {
-      options.push({ id: i, name: `${i}` });
+  // Дані для таблиці
+  const rows = reactive<RowData[]>([{ id: generateId() }]);
+
+  // Динамічні колонки на основі step * iteration
+  const heading = computed(() => {
+    const columns = [];
+    columns.push(
+      {
+        key: `id`,
+        i18n: `Колонка id`,
+      },
+      {
+        key: `colInform`,
+        i18n: `Колонка colInform`,
+      },
+      {
+        key: `colInformText`,
+        i18n: `Колонка colInformT`,
+      }
+    );
+    const totalCols = filter.step * filter.iteration;
+    for (let i = 0; i < totalCols; i++) {
+      columns.push({
+        key: `col_${i}`,
+        i18n: `Колонка ${i + 1}`,
+      });
     }
-    return options;
+    return columns;
   });
 
-  // Колонки з реактивними ключами
-  const heading = ref([
-    { key: 'reportPeriod', i18n: 'Період звіту' },
-    { key: 'totalCalls', i18n: 'Всього дзвінків' },
-    { key: 'answeredCalls', i18n: 'Всього дзвінків із відповіддю' },
-  ]);
+  // Функція для додавання рядка
+  const addRow = () => {
+    const newRow: RowData = { id: generateId() };
+    heading.value.forEach(col => (newRow[col.key] = null));
+    rows.push(newRow);
+  };
 
-  // Опції для селектів ітерацій
-  const iterationOptions = computed(() => {
-    const options = [];
-    if (!filter.step) return options;
-    const maxIterations = 60 / Number(filter.step);
-    for (let i = 1; i <= maxIterations; i++) {
-      options.push({ id: i, name: `${i}` });
-    }
-    return options;
+  // Слідкуємо за зміною heading і додаємо/змінюємо значення для всіх рядків
+  watch(heading, newCols => {
+    rows.forEach(row => {
+      newCols.forEach(col => {
+        if (!(col.key in row)) {
+          row[col.key] = null;
+        }
+      });
+      // видаляємо старі ключі, яких вже немає
+      Object.keys(row).forEach(k => {
+        if (k !== 'id' && !newCols.find(c => c.key === k)) {
+          delete row[k];
+        }
+      });
+    });
   });
 </script>
 
 <template>
-  {{ heading.length }}
-  {{ heading }}
   <div style="margin-bottom: 16px">
     <VSelect v-model="filter.step" placeholder="Крок (с.)">
       <VOption label="5" value="5" />
@@ -71,21 +84,15 @@
     </VSelect>
 
     <VSelect v-model="filter.iteration" placeholder="Ітерації">
-      <VOption v-for="option in iterationOptions" :key="option.id" :label="option.name" :value="option.id" />
+      <VOption v-for="i in 12" :key="i" :label="i" :value="i" />
     </VSelect>
+
+    <button @click="addRow">Додати рядок</button>
   </div>
 
-  <VTable :data="rows" max-height="400px">
-    <VTableColumn
-      v-for="(column, colIndex) in heading"
-      :key="column.key"
-      :label="column.i18n"
-      :prop="column.key"
-      :width="250"
-    >
-      <template #default="{ row, $index }">
-        <VInput :key="column.key + '-' + $index" v-model="row[column.key]" />
-      </template>
+  <VTable :data="rows" max-height="400px" row-key="id">
+    <VTableColumn v-for="column in heading" :key="column.key" :label="column.i18n" :prop="column.key" :width="150">
+      <template #default="{ row }"> {{ row[column.key] }}</template>
     </VTableColumn>
   </VTable>
 </template>

@@ -79,10 +79,8 @@
     () => modelColumns.value,
     newColumns => {
       if (newColumns && hasColumnsModel.value) {
-        console.log('internalColumns1', internalColumns);
         internalColumns.length = 0;
         internalColumns.push(...newColumns);
-        console.log('internalColumns1', internalColumns);
       }
     },
     { deep: true }
@@ -92,19 +90,13 @@
   watch(
     () => props.columns,
     newColumns => {
-      console.log('Props columns changed:', newColumns);
       if (newColumns && !hasColumnsModel.value) {
         internalColumns.length = 0;
         internalColumns.push(...newColumns);
-        console.log('internalColumns2', internalColumns);
       }
     },
     { deep: true }
   );
-
-  watch(internalColumns, newcol => {
-    console.log(newcol);
-  });
 
   // Provide columns для child компонентів
   provide('vt-table-columns', internalColumns);
@@ -242,14 +234,11 @@
   };
 
   const handleColumnsUpdate = (updatedColumns: VTableColumnProps[]) => {
-    console.log('internalColumns3', internalColumns);
     internalColumns.splice(0, internalColumns.length, ...updatedColumns);
 
     if (hasColumnsModel.value) {
       modelColumns.value = [...updatedColumns];
     }
-    console.log('internalColumns3', internalColumns);
-
     emit('columns-change', [...updatedColumns]);
   };
 
@@ -478,7 +467,7 @@
             :style="getHeaderStyleWithContext(col, index)"
           >
             <div class="vt-th__content">
-              <div class="vt-th__label">
+              <div v-tooltip="col.label" class="vt-th__label">
                 {{ col.label }}
               </div>
 
@@ -519,7 +508,6 @@
           </td>
         </tr>
 
-        <!-- МАКСИМАЛЬНА ОПТИМІЗАЦІЯ: Рядки з точною мемоізацією -->
         <tr
           v-for="(row, rowIndex) in sortedData"
           v-else
