@@ -1,3 +1,21 @@
+## [1.8.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.13...v1.8.14) (2025-09-23)
+
+
+### Bug Fixes
+
+* search select ([025722b](https://github.com/StepanKhomyn/voiptime-components/commit/025722bf866e3694b7d15be5a3ffb48d55f593b0))
+* search select ([304849d](https://github.com/StepanKhomyn/voiptime-components/commit/304849d81592c57b16a251fd637b7b926bd97f5b))
+* search select ([0c7906e](https://github.com/StepanKhomyn/voiptime-components/commit/0c7906e65fd14e9db1af4af23397d5e9f2a52a8a))
+* search select ([8766261](https://github.com/StepanKhomyn/voiptime-components/commit/8766261226679dbe3790b50e1eb2055cdc34544b))
+* search select ([6311b44](https://github.com/StepanKhomyn/voiptime-components/commit/6311b4426b8018e3a194f2fbde648a3950a835e6))
+
+## [1.8.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.12...v1.8.13) (2025-09-23)
+
+
+### Bug Fixes
+
+* додав відображення колонок на таблиці ([3c22fbd](https://github.com/StepanKhomyn/voiptime-components/commit/3c22fbdae7b94fdb99e2787c186cca6617b5f2ef))
+
 ## [1.8.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.11...v1.8.12) (2025-09-22)
 
 

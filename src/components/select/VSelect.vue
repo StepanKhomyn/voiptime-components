@@ -493,14 +493,14 @@
     }, 100);
   };
 
-  const handleFilterInput = (value: string) => {
-    state.filterQuery.value = value;
-    emit('filter', value);
+  const handleFilterInput = (event: Event) => {
+    const inputValue = (event.target as HTMLInputElement).value;
 
-    // Для remote фільтрації можна додати debounce
+    state.filterQuery.value = inputValue;
+    emit('filter', inputValue);
+
     if (props.allowRemoteFilter) {
-      // Тут можна додати debounce логіку
-      console.log('Remote filter query:', value);
+      console.log('Remote filter query:', inputValue);
     }
   };
 
@@ -837,6 +837,7 @@
               clearable
               suffix-icon="search"
               type="text"
+              @input="handleFilterInput"
             />
           </div>
 
