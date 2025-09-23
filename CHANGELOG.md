@@ -1,3 +1,10 @@
+## [1.8.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.12...v1.8.13) (2025-09-23)
+
+
+### Bug Fixes
+
+* додав відображення колонок на таблиці ([3c22fbd](https://github.com/StepanKhomyn/voiptime-components/commit/3c22fbdae7b94fdb99e2787c186cca6617b5f2ef))
+
 ## [1.8.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.11...v1.8.12) (2025-09-22)
 
 
