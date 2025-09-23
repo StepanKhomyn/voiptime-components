@@ -42,11 +42,6 @@
   const internalColumns = reactive<VTableColumnProps[]>([]);
   const sortState = ref<SortState | null>(props.defaultSort || null);
 
-  // Map для відстеження порядку колонок
-  const columnInstances = new Map<string, { column: VTableColumnProps; instance: any; order: number }>();
-  let columnOrderCounter = 0;
-
-  // ПРОСТІШЕ РІШЕННЯ: Використовуємо звичайний computed, але з правильною оптимізацією v-memo
   const sortedData = computed(() => {
     return sortTableData(props.data || [], sortState.value, internalColumns);
   });
@@ -79,45 +74,15 @@
     return `row_${index}`;
   };
 
-  // Функція для реєстрації колонки з порядком
-  const registerColumn = (column: VTableColumnProps, instance: any) => {
-    const existing = columnInstances.get(column.prop);
-    const order = existing ? existing.order : columnOrderCounter++;
-
-    columnInstances.set(column.prop, { column, instance, order });
-
-    // Переупорядковуємо колонки згідно з order
-    const sortedColumns = Array.from(columnInstances.values())
-      .sort((a, b) => a.order - b.order)
-      .map(item => item.column);
-
-    internalColumns.splice(0, internalColumns.length, ...sortedColumns);
-  };
-
-  // Функція для видалення колонки
-  const unregisterColumn = (prop: string) => {
-    columnInstances.delete(prop);
-    const index = internalColumns.findIndex(col => col.prop === prop);
-    if (index > -1) {
-      internalColumns.splice(index, 1);
-    }
-  };
-
-  // Ініціалізація internal колонок з пропсів
-  const initializeInternalColumns = () => {
-    if (hasColumnsModel.value && modelColumns.value) {
-      internalColumns.splice(0, internalColumns.length, ...modelColumns.value);
-    } else if (props.columns && props.columns.length > 0) {
-      internalColumns.splice(0, internalColumns.length, ...props.columns);
-    }
-  };
-
   // Слідкуємо за змінами в modelColumns
   watch(
     () => modelColumns.value,
     newColumns => {
       if (newColumns && hasColumnsModel.value) {
-        internalColumns.splice(0, internalColumns.length, ...newColumns);
+        console.log('internalColumns1', internalColumns);
+        internalColumns.length = 0;
+        internalColumns.push(...newColumns);
+        console.log('internalColumns1', internalColumns);
       }
     },
     { deep: true }
@@ -127,17 +92,22 @@
   watch(
     () => props.columns,
     newColumns => {
+      console.log('Props columns changed:', newColumns);
       if (newColumns && !hasColumnsModel.value) {
-        internalColumns.splice(0, internalColumns.length, ...newColumns);
+        internalColumns.length = 0;
+        internalColumns.push(...newColumns);
+        console.log('internalColumns2', internalColumns);
       }
     },
     { deep: true }
   );
 
+  watch(internalColumns, newcol => {
+    console.log(newcol);
+  });
+
   // Provide columns для child компонентів
   provide('vt-table-columns', internalColumns);
-  provide('vt-register-column', registerColumn);
-  provide('vt-unregister-column', unregisterColumn);
 
   // Композабли
   const { sortedColumns, getDefaultColumnWidth, getStickyOffset } = useTableColumns(internalColumns);
@@ -272,11 +242,13 @@
   };
 
   const handleColumnsUpdate = (updatedColumns: VTableColumnProps[]) => {
+    console.log('internalColumns3', internalColumns);
     internalColumns.splice(0, internalColumns.length, ...updatedColumns);
 
     if (hasColumnsModel.value) {
       modelColumns.value = [...updatedColumns];
     }
+    console.log('internalColumns3', internalColumns);
 
     emit('columns-change', [...updatedColumns]);
   };
@@ -454,11 +426,6 @@
       return [];
     }
   };
-
-  onMounted(() => {
-    initializeInternalColumns();
-  });
-
   defineExpose({
     toggleRowSelection,
     toggleAllSelection,
@@ -471,6 +438,8 @@
 </script>
 
 <template>
+  {{ internalColumns.length }}
+  {{ internalColumns }}
   <div ref="tableWrapperRef" :style="getTableWrapperStyle()" class="vt-table-wrapper" @scroll="handleScroll">
     <slot />
     <table class="vt-table">

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { getCurrentInstance, inject, onBeforeMount, onUnmounted, type Slots, useSlots, watch } from 'vue';
+  import { inject, nextTick, onMounted, onUnmounted, Slots, useSlots, watch } from 'vue';
   import type { VTableColumnProps } from './types';
 
   const props = withDefaults(defineProps<VTableColumnProps>(), {
@@ -16,17 +16,12 @@
 
   // Отримуємо масив колонок від батьківської таблиці
   const columns = inject<VTableColumnProps[]>('vt-table-columns');
-  // Отримуємо функцію регістрації колонки з порядком
-  const registerColumn = inject<(column: VTableColumnProps, instance: any) => void>('vt-register-column');
-  const unregisterColumn = inject<(prop: string) => void>('vt-unregister-column');
 
-  if (!columns || !registerColumn || !unregisterColumn) {
+  if (!columns) {
     console.error(
       'VTableColumn: не знайдено контекст таблиці. Переконайтеся, що компонент використовується всередині VTable.'
     );
   }
-
-  const instance = getCurrentInstance();
 
   // Створюємо об'єкт колонки
   const createColumn = (): VTableColumnProps => ({
@@ -45,12 +40,22 @@
     renderSlot: slots[props.prop] ?? slots.default ?? slots.slot,
   });
 
-  // Реєструємо колонку при монтуванні
-  onBeforeMount(() => {
-    if (registerColumn && instance) {
-      const column = createColumn();
-      registerColumn(column, instance);
-    }
+  let columnIndex = -1;
+
+  // Додаємо колонку до масиву при монтуванні
+  onMounted(() => {
+    nextTick(() => {
+      if (!columns) return;
+      const newColumn = createColumn();
+      const existingIndex = columns.findIndex(c => c.prop === props.prop && c.label === props.label);
+      if (existingIndex !== -1) {
+        // Оновлюємо існуючу
+        columns[existingIndex] = { ...columns[existingIndex], ...newColumn };
+      } else {
+        columns.push(newColumn);
+        columnIndex = columns.length - 1;
+      }
+    });
   });
 
   // Спостерігаємо за змінами пропсів і оновлюємо колонку
@@ -68,18 +73,32 @@
       props.label,
     ],
     () => {
-      if (registerColumn && instance) {
-        const updatedColumn = createColumn();
-        registerColumn(updatedColumn, instance);
+      if (columns && columnIndex !== -1) {
+        // Знаходимо колонку за prop (більш надійно ніж за індексом)
+        const existingColumnIndex = columns.findIndex(col => col.prop === props.prop);
+        if (existingColumnIndex !== -1) {
+          // Оновлюємо існуючу колонку зі збереженням renderSlot
+          const existingColumn = columns[existingColumnIndex];
+          const updatedColumn = {
+            ...createColumn(),
+            renderSlot: existingColumn.renderSlot, // Зберігаємо існуючий renderSlot
+          };
+
+          // Замінюємо колонку
+          columns[existingColumnIndex] = updatedColumn;
+        }
       }
     },
     { deep: true }
   );
 
-  // Видаляємо колонку при демонтуванні
+  // Видаляємо колонку з масиву при демонтуванні
   onUnmounted(() => {
-    if (unregisterColumn) {
-      unregisterColumn(props.prop);
+    if (columns) {
+      const index = columns.findIndex(col => col.prop === props.prop);
+      if (index > -1) {
+        columns.splice(index, 1);
+      }
     }
   });
 </script>
