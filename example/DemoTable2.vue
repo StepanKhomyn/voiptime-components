@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, reactive } from 'vue';
+  import { computed, reactive, ref } from 'vue';
   import VTable from '@/components/table/VTable.vue';
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
@@ -42,35 +42,11 @@
   });
 
   // Колонки з реактивними ключами
-  const heading = computed(() => {
-    const columns = [];
-
-    // Static columns - first group
-    columns.push(
-      { key: 'reportPeriod', i18n: 'Період звіту' },
-      { key: 'totalCalls', i18n: 'Всього дзвінків' },
-      { key: 'answeredCalls', i18n: 'Всього дзвінків із відповіддю' }
-    );
-
-    intervals.value.forEach((interval, index) => {
-      columns.push({ key: `answered_${interval.id}`, i18n: `Відповідь на ${interval.name}s` });
-      if (index === intervals.value.length - 1)
-        columns.push({ key: `answered_more_${interval.id}`, i18n: `Відповідь на > ${interval.name}s` });
-    });
-
-    columns.push({ key: 'abandonedCalls', i18n: 'Всього втрачених дзвінків' });
-
-    intervals.value.forEach((interval, index) => {
-      columns.push({ key: `abandoned_${interval.id}`, i18n: `Втрачені на ${interval.name}s` });
-      if (index === intervals.value.length - 1)
-        columns.push({ key: `abandoned_more_${interval.id}`, i18n: `Втрачені на > ${interval.name}s` });
-    });
-
-    columns.push({ key: 'serviceLevel', i18n: 'Service level' });
-    columns.push({ key: 'efficiency', i18n: 'Efficiency' });
-
-    return columns;
-  });
+  const heading = ref([
+    { key: 'reportPeriod', i18n: 'Період звіту' },
+    { key: 'totalCalls', i18n: 'Всього дзвінків' },
+    { key: 'answeredCalls', i18n: 'Всього дзвінків із відповіддю' },
+  ]);
 
   // Опції для селектів ітерацій
   const iterationOptions = computed(() => {
@@ -100,9 +76,15 @@
   </div>
 
   <VTable :data="rows" max-height="400px">
-    <VTableColumn v-for="column in heading" :key="column.key" :label="column.i18n" :prop="column.key" :width="250">
-      <template #default="{ row }">
-        <VInput v-model="row[column.key]" />
+    <VTableColumn
+      v-for="(column, colIndex) in heading"
+      :key="column.key"
+      :label="column.i18n"
+      :prop="column.key"
+      :width="250"
+    >
+      <template #default="{ row, $index }">
+        <VInput :key="column.key + '-' + $index" v-model="row[column.key]" />
       </template>
     </VTableColumn>
   </VTable>

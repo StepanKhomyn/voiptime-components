@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { inject, nextTick, onMounted, onUnmounted, Slots, useSlots, watch } from 'vue';
+  import { inject, nextTick, onMounted, onUnmounted, type Slots, useSlots, watch } from 'vue';
   import type { VTableColumnProps } from './types';
 
   const props = withDefaults(defineProps<VTableColumnProps>(), {
