@@ -16,8 +16,8 @@
 
   // зробимо reactive, щоб зміни в об’єкті спрацьовували
   const filter = reactive({
-    step: 10,
-    iteration: 3,
+    step: 5,
+    iteration: 0,
   });
 
   // Дані для таблиці
@@ -42,11 +42,14 @@
 
   // Колонки з реактивними ключами
   const heading = computed(() => {
-    const columns: { key: string; i18n: string }[] = [
+    const columns = [];
+
+    // Static columns - first group
+    columns.push(
       { key: 'reportPeriod', i18n: 'Період звіту' },
       { key: 'totalCalls', i18n: 'Всього дзвінків' },
-      { key: 'answeredCalls', i18n: 'Всього дзвінків із відповіддю' },
-    ];
+      { key: 'answeredCalls', i18n: 'Всього дзвінків із відповіддю' }
+    );
 
     intervals.value.forEach((interval, index) => {
       columns.push({ key: `answered_${interval.id}`, i18n: `Відповідь на ${interval.name}s` });

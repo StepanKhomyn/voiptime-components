@@ -42,6 +42,10 @@
   const internalColumns = reactive<VTableColumnProps[]>([]);
   const sortState = ref<SortState | null>(props.defaultSort || null);
 
+  // Map для відстеження порядку колонок
+  const columnInstances = new Map<string, { column: VTableColumnProps; instance: any; order: number }>();
+  let columnOrderCounter = 0;
+
   // ПРОСТІШЕ РІШЕННЯ: Використовуємо звичайний computed, але з правильною оптимізацією v-memo
   const sortedData = computed(() => {
     return sortTableData(props.data || [], sortState.value, internalColumns);
@@ -73,6 +77,30 @@
       return `row_${row[props.rowKey]}`;
     }
     return `row_${index}`;
+  };
+
+  // Функція для реєстрації колонки з порядком
+  const registerColumn = (column: VTableColumnProps, instance: any) => {
+    const existing = columnInstances.get(column.prop);
+    const order = existing ? existing.order : columnOrderCounter++;
+
+    columnInstances.set(column.prop, { column, instance, order });
+
+    // Переупорядковуємо колонки згідно з order
+    const sortedColumns = Array.from(columnInstances.values())
+      .sort((a, b) => a.order - b.order)
+      .map(item => item.column);
+
+    internalColumns.splice(0, internalColumns.length, ...sortedColumns);
+  };
+
+  // Функція для видалення колонки
+  const unregisterColumn = (prop: string) => {
+    columnInstances.delete(prop);
+    const index = internalColumns.findIndex(col => col.prop === prop);
+    if (index > -1) {
+      internalColumns.splice(index, 1);
+    }
   };
 
   // Ініціалізація internal колонок з пропсів
@@ -108,6 +136,8 @@
 
   // Provide columns для child компонентів
   provide('vt-table-columns', internalColumns);
+  provide('vt-register-column', registerColumn);
+  provide('vt-unregister-column', unregisterColumn);
 
   // Композабли
   const { sortedColumns, getDefaultColumnWidth, getStickyOffset } = useTableColumns(internalColumns);
