@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { getCurrentInstance, inject, onBeforeMount, onUnmounted, Slots, useSlots, watch } from 'vue';
+  import { getCurrentInstance, inject, onBeforeMount, onUnmounted, type Slots, useSlots, watch } from 'vue';
   import type { VTableColumnProps } from './types';
 
   const props = withDefaults(defineProps<VTableColumnProps>(), {
@@ -82,7 +82,6 @@
       unregisterColumn(props.prop);
     }
   });
-
 </script>
 
 <template>

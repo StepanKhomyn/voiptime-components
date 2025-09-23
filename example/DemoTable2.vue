@@ -4,6 +4,7 @@
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
   import VTableColumn from '@/components/table/VTableColumn.vue';
+  import VInput from '@/components/input/VInput.vue';
 
   interface RowData {
     reportPeriod: string | null;
@@ -100,7 +101,9 @@
 
   <VTable :data="rows" max-height="400px">
     <VTableColumn v-for="column in heading" :key="column.key" :label="column.i18n" :prop="column.key" :width="250">
-      <template #default="{ row }"> {{ row[column.key] }}</template>
+      <template #default="{ row }">
+        <VInput v-model="row[column.key]" />
+      </template>
     </VTableColumn>
   </VTable>
 </template>
