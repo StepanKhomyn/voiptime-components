@@ -7,13 +7,11 @@ import type { ResizeState, StickyPosition, VTableColumnProps, VTableProps, VTabl
  */
 export function useTableColumns(columns: VTableColumnProps[]) {
   const sortedColumns = computed(() => {
-    return [...columns].sort((a, b) => {
-      if (a.pinnedLeft && !b.pinnedLeft) return -1;
-      if (!a.pinnedLeft && b.pinnedLeft) return 1;
-      if (a.pinnedRight && !b.pinnedRight) return 1;
-      if (!a.pinnedRight && b.pinnedRight) return -1;
-      return 0;
-    });
+    const left = columns.filter(c => c.pinnedLeft);
+    const right = columns.filter(c => c.pinnedRight);
+    const center = columns.filter(c => !c.pinnedLeft && !c.pinnedRight);
+
+    return [...left, ...center, ...right];
   });
 
   const getDefaultColumnWidth = (): number => {

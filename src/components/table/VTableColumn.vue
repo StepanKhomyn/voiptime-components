@@ -1,6 +1,6 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import type { Slots } from 'vue';
-  import { inject, onMounted, onUnmounted, useSlots, watch } from 'vue';
+  import { inject, nextTick, onMounted, onUnmounted, useSlots, watch } from 'vue';
   import type { VTableColumnProps } from './types';
 
   const props = withDefaults(defineProps<VTableColumnProps>(), {
@@ -45,11 +45,18 @@
 
   // Додаємо колонку до масиву при монтуванні
   onMounted(() => {
-    if (columns) {
+    nextTick(() => {
+      if (!columns) return;
       const newColumn = createColumn();
-      columns.push(newColumn);
-      columnIndex = columns.length - 1;
-    }
+      const existingIndex = columns.findIndex(c => c.prop === props.prop && c.label === props.label);
+      if (existingIndex !== -1) {
+        // Оновлюємо існуючу
+        columns[existingIndex] = { ...columns[existingIndex], ...newColumn };
+      } else {
+        columns.push(newColumn);
+        columnIndex = columns.length - 1;
+      }
+    });
   });
 
   // Спостерігаємо за змінами пропсів і оновлюємо колонку

@@ -441,9 +441,6 @@
 </script>
 
 <template>
-  {{ internalColumns }}
-  <br />
-  {{ sortedColumns }}
   <div ref="tableWrapperRef" :style="getTableWrapperStyle()" class="vt-table-wrapper" @scroll="handleScroll">
     <slot />
     <table class="vt-table">

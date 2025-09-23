@@ -17,6 +17,7 @@
   import DemoCollapse from './DemoCollapse.vue';
   import DemoMessage from './DemoMessage.vue';
   import DemoTabs from './DemoTabs.vue';
+  import DemoTable2 from './DemoTable2.vue';
 
   const activeSlot = ref(null);
 
@@ -38,6 +39,7 @@
     { id: 16, name: 'Коллапс', icon: '⬇️' },
     { id: 17, name: 'Message', icon: '⬇📋' },
     { id: 18, name: 'Tabs', icon: '⬇📋2' },
+    { id: 19, name: 'Tab3s', icon: '⬇📋2' },
   ];
 </script>
 
@@ -88,6 +90,7 @@
       <DemoCollapse v-if="activeSlot === 16" />
       <DemoMessage v-if="activeSlot === 17" />
       <DemoTabs v-if="activeSlot === 18" />
+      <DemoTable2 v-if="activeSlot === 19" />
       <!-- і т.д. -->
     </div>
   </div>
