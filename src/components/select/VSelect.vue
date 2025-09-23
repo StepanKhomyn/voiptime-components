@@ -493,7 +493,7 @@
     }, 100);
   };
 
-  const handleFilterInput = (value: Event) => {
+  const handleFilterInput = (value) => {
     state.filterQuery.value = value;
     emit('filter', value);
 
