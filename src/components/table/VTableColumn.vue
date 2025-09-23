@@ -44,7 +44,6 @@
 
   // Додаємо колонку до масиву при монтуванні
   onMounted(() => {
-    console.log('ADD', props.prop);
     nextTick(() => {
       if (!columns) return;
       const newColumn = createColumn();
@@ -53,9 +52,7 @@
         // Оновлюємо існуючу
         columns[existingIndex] = { ...columns[existingIndex], ...newColumn };
       } else {
-        console.log('ADD1', columns);
         columns.push(newColumn);
-        console.log('ADD2', columns);
         columnIndex = columns.length - 1;
       }
     });
@@ -97,8 +94,6 @@
 
   // Видаляємо колонку з масиву при демонтуванні
   onUnmounted(() => {
-    console.log('DELETE', props.prop);
-    console.log('DELETE', columns);
     if (columns) {
       const index = columns.findIndex(col => col.prop === props.prop);
       if (index > -1) {
