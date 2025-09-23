@@ -45,7 +45,6 @@
   // Додаємо колонку до масиву при монтуванні
   onMounted(() => {
     console.log('ADD', props.prop);
-    console.log('ADD', columns);
     nextTick(() => {
       if (!columns) return;
       const newColumn = createColumn();
@@ -54,7 +53,9 @@
         // Оновлюємо існуючу
         columns[existingIndex] = { ...columns[existingIndex], ...newColumn };
       } else {
+        console.log('ADD1', columns);
         columns.push(newColumn);
+        console.log('ADD2', columns);
         columnIndex = columns.length - 1;
       }
     });
