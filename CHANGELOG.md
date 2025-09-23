@@ -1,3 +1,10 @@
+## [1.8.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.18...v1.8.19) (2025-09-23)
+
+
+### Bug Fixes
+
+* tavle fu* ([ae0d0c9](https://github.com/StepanKhomyn/voiptime-components/commit/ae0d0c943400c1b6cf424d9e0fa2398f70f76c0f))
+
 ## [1.8.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.17...v1.8.18) (2025-09-23)
 
 
