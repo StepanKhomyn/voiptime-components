@@ -1,3 +1,10 @@
+## [1.8.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.23...v1.8.24) (2025-09-24)
+
+
+### Bug Fixes
+
+* додано параметр isAllSelect на таблицю для виділення апсолютно всіх даних ([0f892a5](https://github.com/StepanKhomyn/voiptime-components/commit/0f892a540f2a7a532413f62f8e18ce9a7ac126b2))
+
 ## [1.8.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.22...v1.8.23) (2025-09-23)
 
 
