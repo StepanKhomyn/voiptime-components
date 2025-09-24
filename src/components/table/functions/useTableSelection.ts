@@ -53,8 +53,9 @@ export function useTableSelection(
     return isAllVisibleSelected.value && !isIndeterminate.value;
   });
 
+  // Показувати подвійний чекбокс тільки якщо включено isAllSelect і є повне виділення
   const isDoubleCheck = computed(() => {
-    return isFullSelection.value;
+    return props.isAllSelect && isFullSelection.value;
   });
 
   // Методи
@@ -107,8 +108,12 @@ export function useTableSelection(
         selectAllVisible();
         break;
       case 'allVisible':
-        // Виділити абсолютно всі
-        selectAbsolutelyAll();
+        // Якщо isAllSelect увімкнено - виділити абсолютно всі, інакше скинути
+        if (props.isAllSelect) {
+          selectAbsolutelyAll();
+        } else {
+          clearSelection();
+        }
         break;
       case 'absoluteAll':
         // Скинути виділення
@@ -146,18 +151,23 @@ export function useTableSelection(
   };
 
   const selectAbsolutelyAll = () => {
-    // Встановлюємо флаг повного виділення без завантаження всіх даних
-    isFullSelection.value = true;
+    // Встановлюємо флаг повного виділення тільки якщо isAllSelect увімкнено
+    if (props.isAllSelect) {
+      isFullSelection.value = true;
 
-    // Якщо є allData, зберігаємо їх у selectedRows для сумісності
-    if (allData?.value) {
-      selectedRows.value = [...allData.value];
+      // Якщо є allData, зберігаємо їх у selectedRows для сумісності
+      if (allData?.value) {
+        selectedRows.value = [...allData.value];
+      } else {
+        // Якщо немає allData, зберігаємо тільки поточні відомі дані
+        selectedRows.value = [...sortedData.value];
+      }
+
+      emitSelectionChange(undefined, undefined, true);
     } else {
-      // Якщо немає allData, зберігаємо тільки поточні відомі дані
-      selectedRows.value = [...sortedData.value];
+      // Якщо isAllSelect вимкнено, просто виділяємо всі видимі
+      selectAllVisible();
     }
-
-    emitSelectionChange(undefined, undefined, true);
   };
 
   const clearSelection = () => {

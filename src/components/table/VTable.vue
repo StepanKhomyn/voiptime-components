@@ -11,6 +11,7 @@
   // Явно типізуємо props з withDefaults
   const props = withDefaults(defineProps<VTableProps>(), {
     selectable: false,
+    isAllSelect: false,
     selectOnClickRow: false,
     highlightCurrentRow: false,
     showSummary: false,
@@ -444,7 +445,7 @@
               <VCheckbox
                 :checked="selectionComposable?.isAllSelected.value"
                 :indeterminate="selectionComposable?.isIndeterminate.value"
-                :is-double="selectionComposable?.isDoubleCheck?.value"
+                :is-double="props.isAllSelect && selectionComposable?.isDoubleCheck?.value"
                 @change="handleSelectAllChange"
               />
             </div>
