@@ -25,7 +25,7 @@ function addLoader(el: HTMLElement) {
 
   const overlay = document.createElement('div');
   overlay.className = 'vt-loader-base__overlay';
-  overlay.innerHTML = `<span class="vt-base-loader"></span>`;
+  overlay.innerHTML = `<span class="vt-loader-base"></span>`;
 
   const currentPos = getComputedStyle(el).position;
   if (currentPos === 'static' || !currentPos) {
