@@ -1,3 +1,10 @@
+## [1.9.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.11...v1.9.12) (2025-09-25)
+
+
+### Bug Fixes
+
+* додано оверфолов на модалку ([6327484](https://github.com/StepanKhomyn/voiptime-components/commit/6327484d7075e9c5612791fe9fd7d19ae8401097))
+
 ## [1.9.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.10...v1.9.11) (2025-09-25)
 
 
