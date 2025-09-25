@@ -1,27 +1,17 @@
-import type { DirectiveBinding, ObjectDirective } from 'vue';
-
-const loaderTemplate = `
-  <div class="vt-loader-base__overlay">
-    <span class="vt-loader-base"></span>
-  </div>
-`;
+import type { ObjectDirective, DirectiveBinding } from 'vue';
 
 export const loaderDirective: ObjectDirective = {
-  mounted(el: HTMLElement, binding: DirectiveBinding<boolean>) {
-    if (binding.value) {
-      addLoader(el);
-    }
+  mounted(el: HTMLElement, binding: DirectiveBinding<any>) {
+    const value = unwrap(binding.value);
+    if (value) addLoader(el);
   },
-  updated(el: HTMLElement, binding: DirectiveBinding<boolean>) {
+  updated(el: HTMLElement, binding: DirectiveBinding<any>) {
     const value = unwrap(binding.value);
     const oldValue = unwrap(binding.oldValue);
 
     if (value !== oldValue) {
-      if (value) {
-        addLoader(el);
-      } else {
-        removeLoader(el);
-      }
+      if (value) addLoader(el);
+      else removeLoader(el);
     }
   },
   unmounted(el: HTMLElement) {
@@ -36,17 +26,25 @@ function unwrap(val: any): boolean {
 }
 
 function addLoader(el: HTMLElement) {
-  if (el.querySelector('.vt-loader__overlay')) return;
+  if ((el as any)._loaderEl) return; // вже доданий
+
+  const overlay = document.createElement('div');
+  overlay.className = 'v-loader__overlay';
+  overlay.innerHTML = `<span class="v-loader"></span>`;
 
   const currentPos = getComputedStyle(el).position;
   if (currentPos === 'static' || !currentPos) {
     el.style.position = 'relative';
   }
 
-  el.insertAdjacentHTML('beforeend', loaderTemplate);
+  el.appendChild(overlay);
+  (el as any)._loaderEl = overlay;
 }
 
 function removeLoader(el: HTMLElement) {
-  const loader = el.querySelector('.vt-loader__overlay');
-  if (loader) loader.remove();
+  const overlay = (el as any)._loaderEl as HTMLElement | undefined;
+  if (overlay) {
+    overlay.remove();
+    delete (el as any)._loaderEl;
+  }
 }
