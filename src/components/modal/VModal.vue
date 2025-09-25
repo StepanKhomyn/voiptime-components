@@ -48,12 +48,9 @@
         </div>
 
         <!-- Scrollable content -->
-        <div class="vt-modal__content">
+        <div class="vt-modal__body">
           <slot />
         </div>
-
-        <!-- Fixed footer (buttons) -->
-        <div id="late-div" class="vt-modal__footer"> </div>
       </div>
     </div>
   </Teleport>

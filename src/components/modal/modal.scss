@@ -71,9 +71,14 @@
     }
   }
 
+  &__body {
+    display: flex;
+    flex-direction: column;
+    padding: var(--vt-padding-base);
+  }
+
   &__content {
     @include vt-scrollbar;
-    padding: var(--vt-padding-base);
     flex: 1;
     overflow-y: auto;
 
