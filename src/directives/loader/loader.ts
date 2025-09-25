@@ -13,8 +13,11 @@ export const loaderDirective: ObjectDirective = {
     }
   },
   updated(el: HTMLElement, binding: DirectiveBinding<boolean>) {
-    if (binding.value !== binding.oldValue) {
-      if (binding.value) {
+    const value = unwrap(binding.value);
+    const oldValue = unwrap(binding.oldValue);
+
+    if (value !== oldValue) {
+      if (value) {
         addLoader(el);
       } else {
         removeLoader(el);
@@ -25,6 +28,12 @@ export const loaderDirective: ObjectDirective = {
     removeLoader(el);
   },
 };
+
+function unwrap(val: any): boolean {
+  return typeof val === 'object' && val !== null && 'value' in val
+    ? val.value
+    : val;
+}
 
 function addLoader(el: HTMLElement) {
   if (el.querySelector('.vt-loader__overlay')) return;
