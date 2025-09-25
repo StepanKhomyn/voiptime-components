@@ -22,7 +22,7 @@
     zIndex: props.zIndex,
   }));
 
-  const footerEl = ref<HTMLElement | null>(null);
+  const footerHtml = ref<string>('');
 
   // Methods
   const closeModal = () => {
@@ -38,13 +38,11 @@
 
   onMounted(() => {
     nextTick(() => {
-      // шукаємо блок футера всередині default слота
       const content = document.querySelector('.vt-modal__content');
-      const footerBlock = content?.querySelector('.modal-footer');
+      const footerBlock = content?.querySelector('[ref="modalFooter"]');
       if (footerBlock) {
-        footerEl.value = footerBlock as HTMLElement;
-        // переміщаємо футер поза контент
-        content?.appendChild(footerEl.value);
+        footerHtml.value = footerBlock.outerHTML;
+        footerBlock.remove();
       }
     });
   });
@@ -68,10 +66,7 @@
         </div>
 
         <!-- Fixed footer (buttons) -->
-        <div v-if="footerEl" class="vt-modal__footer">
-          <!-- вставляємо знайдений блок -->
-          <component :is="footerEl" />
-        </div>
+        <div v-if="footerHtml" class="vt-modal__footer" v-html="footerHtml"></div>
       </div>
     </div>
   </Teleport>
