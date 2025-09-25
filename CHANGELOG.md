@@ -1,3 +1,10 @@
+## [1.9.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.13...v1.9.14) (2025-09-25)
+
+
+### Bug Fixes
+
+* try globl comp3 ([1095650](https://github.com/StepanKhomyn/voiptime-components/commit/10956501c0f0415f5961079ce1e128c3217cb997))
+
 ## [1.9.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.12...v1.9.13) (2025-09-25)
 
 
