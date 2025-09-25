@@ -23,6 +23,9 @@
       "require": "./dist/index.cjs",
       "default": "./dist/index.umd.js"
     },
+    "./global": {
+      "types": "./dist/global.d.ts"
+    },
     "./index.css": "./dist/index.css",
     "./scss/mixins": "./src/assets/_mixins.scss"
   },
