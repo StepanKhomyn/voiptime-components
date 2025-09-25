@@ -1,3 +1,10 @@
+## [1.9.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.4...v1.9.5) (2025-09-25)
+
+
+### Bug Fixes
+
+* fix loader куа гтцкфз ([e67826c](https://github.com/StepanKhomyn/voiptime-components/commit/e67826cc122a41146852cd24c57b1c0d88487028))
+
 ## [1.9.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.3...v1.9.4) (2025-09-25)
 
 
