@@ -18,11 +18,7 @@ export default defineConfig({
     dts({
       entryRoot: 'src',
       outDir: 'dist',
-      include: [
-        'src/**/*.ts',
-        'src/**/*.vue',
-        'src/global.d.ts', // Включаємо файл глобальних типів
-      ],
+      include: ['src/**/*.ts', 'src/**/*.vue'],
       exclude: ['**/*.test.*', '**/tests/**'],
       insertTypesEntry: true,
       rollupTypes: true,
@@ -31,13 +27,6 @@ export default defineConfig({
       copyDtsFiles: false,
       staticImport: true,
       beforeWriteFile: (filePath, content) => {
-        // Переміщуємо global.d.ts в корінь dist для кращої доступності
-        if (filePath.includes('global.d.ts')) {
-          return {
-            filePath: path.join(path.dirname(filePath).replace('/src', ''), 'global.d.ts'),
-            content,
-          };
-        }
         return { filePath, content };
       },
     }),

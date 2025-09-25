@@ -1,4 +1,4 @@
-// entry.ts - оновлений головний файл бібліотеки з VMessage та VTabs
+// index.ts - оновлений головний файл бібліотеки з VMessage та VTabs
 import type { App } from 'vue';
 import VButton from './components/button/VButton.vue';
 import VIcon from './components/icon/VIcon.vue';
@@ -210,8 +210,7 @@ export interface VUIPluginOptions {
 const VUIPlugin = {
   install(app: App, options: VUIPluginOptions = {}) {
     const { prefix = 'V', modal = true, message = true } = options;
-    console.log('VUIPlugin installing with options:', options);
-    console.log('Using prefix:', prefix);
+
     // Реєстрація компонентів
     app.component(`${prefix}Button`, VButton);
     app.component(`${prefix}Icon`, VIcon);
@@ -234,22 +233,18 @@ const VUIPlugin = {
     app.component(`${prefix}Tabs`, VTabs);
     app.component(`${prefix}TabItem`, VTabItem);
 
-    console.log('Registering directive: tooltip');
+    // Директиви
     app.directive('tooltip', tooltipDirective);
-    console.log('Registering directive: loader');
     app.directive('loader', loaderDirective);
 
     // Плагіни
     if (modal) {
-      console.log('Installing VModalPlugin');
       app.use(VModalPlugin);
     }
+
     if (message) {
-      console.log('Installing VMessagePlugin');
       app.use(VMessagePlugin);
     }
-
-    console.log('VUIPlugin installation complete');
   },
 };
 
