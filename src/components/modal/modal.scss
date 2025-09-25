@@ -73,7 +73,7 @@
 
   &__content {
     @include vt-scrollbar;
-    padding: var(--vt-padding-lg);
+    padding: var(--vt-padding-base);
     flex: 1;
     overflow-y: auto;
 
@@ -84,6 +84,15 @@
       justify-content: center;
       gap: var(--vt-gap-base);
     }
+  }
+
+  &__footer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--vt-gap-base);
+    padding: var(--vt-padding-base);
   }
 }
 

@@ -62,6 +62,29 @@
       </div>
     </section>
 
+    <!-- Слот footer -->
+    <section class="section">
+      <h2>Слот <code>footer</code></h2>
+      <p>
+        Для додавання кнопок або іншого контенту, який має бути зафіксованим знизу модального вікна (і не скролитися
+        разом із контентом), використовуйте слот <code>footer</code>.
+      </p>
+
+      <div class="card">
+        <h3>Приклад</h3>
+        <pre class="code">
+&lt;VModal v-model="modals.form" title="Приклад з footer"&gt;
+  &lt;p&gt;Основний скролюваний контент...&lt;/p&gt;
+
+  &lt;template #footer&gt;
+    &lt;VButton type="secondary" @click="modals.form = false"&gt;Скасувати&lt;/VButton&gt;
+    &lt;VButton type="success"&gt;Зберегти&lt;/VButton&gt;
+  &lt;/template&gt;
+&lt;/VModal&gt;
+        </pre>
+      </div>
+    </section>
+
     <!-- Props -->
     <section class="section">
       <h2>Властивості</h2>
@@ -257,7 +280,10 @@
 
     <VModal v-model="modals.noBackdrop" :closeOnBackdropClick="false" title="Без backdrop">
       <p>Це вікно не закривається при кліку поза ним.</p>
-      <VButton type="danger" @click="modals.noBackdrop = false">Закрити</VButton>
+
+      <template #footer>
+        <VButton type="danger" @click="modals.noBackdrop = false">Закрити</VButton>
+      </template>
     </VModal>
   </div>
 </template>

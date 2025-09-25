@@ -1,5 +1,5 @@
 <!-- components/modal/VModal.vue -->
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed } from 'vue';
   import type { VModalEmits, VModalProps } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -37,19 +37,24 @@
 
 <template>
   <Teleport to="body">
-    <div v-if="modelValue" class="vt-modal__backdrop" :style="backdropStyles" @click="handleBackdropClick">
+    <div v-if="modelValue" :style="backdropStyles" class="vt-modal__backdrop" @click="handleBackdropClick">
       <div :class="containerClasses" @click.stop>
         <!-- Header -->
-        <div class="vt-modal__header" v-if="title || showCloseButton">
+        <div v-if="title || showCloseButton" class="vt-modal__header">
           <h2 v-if="title" class="vt-modal__title">
             {{ title }}
           </h2>
-          <VIcon name="close" v-if="showCloseButton" class="vt-modal__close" @click="closeModal" />
+          <VIcon v-if="showCloseButton" class="vt-modal__close" name="close" @click="closeModal" />
         </div>
 
-        <!-- Content -->
+        <!-- Scrollable content -->
         <div class="vt-modal__content">
           <slot />
+        </div>
+
+        <!-- Fixed footer (buttons) -->
+        <div v-if="$slots.footer" class="vt-modal__footer">
+          <slot name="footer" />
         </div>
       </div>
     </div>
