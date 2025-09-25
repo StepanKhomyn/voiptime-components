@@ -1,6 +1,6 @@
 <!-- components/modal/VModal.vue -->
 <script lang="ts" setup>
-  import { computed, nextTick, onMounted, ref } from 'vue';
+  import { computed } from 'vue';
   import type { VModalEmits, VModalProps } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
 
@@ -22,8 +22,6 @@
     zIndex: props.zIndex,
   }));
 
-  const footerHtml = ref<string>('');
-
   // Methods
   const closeModal = () => {
     emit('update:modelValue', false);
@@ -35,17 +33,6 @@
       closeModal();
     }
   };
-
-  onMounted(() => {
-    nextTick(() => {
-      const content = document.querySelector('.vt-modal__content');
-      const footerBlock = content?.querySelector('[ref="modalFooter"]');
-      if (footerBlock) {
-        footerHtml.value = footerBlock.outerHTML;
-        footerBlock.remove();
-      }
-    });
-  });
 </script>
 
 <template>
@@ -66,7 +53,7 @@
         </div>
 
         <!-- Fixed footer (buttons) -->
-        <div v-if="footerHtml" class="vt-modal__footer" v-html="footerHtml"></div>
+        <div id="late-div" class="vt-modal__footer"> </div>
       </div>
     </div>
   </Teleport>
