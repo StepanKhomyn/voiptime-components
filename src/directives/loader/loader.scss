@@ -1,4 +1,4 @@
-.vt-loader__overlay {
+.vt-loader-base__overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -14,30 +14,30 @@
   pointer-events: all;
 }
 
-.vt-loader {
+.vt-loader-base {
   border-radius: 50%;
   position: relative;
-  animation: v-rotate 1s linear infinite;
+  animation: vt-rotate 1s linear infinite;
   width: 48px;
   height: 48px;
 }
 
-.vt-loader::before,
-.vt-loader::after {
+.vt-loader-base::before,
+.vt-loader-base::after {
   content: '';
   box-sizing: border-box;
   position: absolute;
   inset: 0px;
   border-radius: 50%;
-  border: 5px solid #ccc;
-  animation: v-prixClipFix 2s linear infinite;
+  border: 5px solid #e0e0e0;
+  animation: vt-prixClipFix 2s linear infinite;
 }
 
-.vt-loader::after {
-  border-color: #f9c623;
+.vt-loader-base::after {
+  border-color: #ffbd3e;
   animation:
-          v-prixClipFix 2s linear infinite,
-          v-rotate 0.5s linear infinite reverse;
+          vt-prixClipFix 2s linear infinite,
+          vt-rotate 0.5s linear infinite reverse;
   inset: 6px;
 }
 
@@ -47,7 +47,7 @@
   }
 }
 
-@keyframes v-prixClipFix {
+@keyframes vt-prixClipFix {
   0% {
     clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
   }

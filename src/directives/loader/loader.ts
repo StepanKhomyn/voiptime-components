@@ -1,8 +1,8 @@
 import type { DirectiveBinding, ObjectDirective } from 'vue';
 
 const loaderTemplate = `
-  <div class="vt-loader__overlay">
-    <span class="vt-loader"></span>
+  <div class="vt-loader-base__overlay">
+    <span class="vt-loader-base"></span>
   </div>
 `;
 
