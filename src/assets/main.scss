@@ -35,6 +35,7 @@
 @use '../components/message/message';
 @use '../components/tabs/tabs';
 @use '../directives/tooltip/tooltip';
+@use '../directives/loader/loader';
 
 body {
   @include vt-scrollbar;

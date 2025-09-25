@@ -23,6 +23,7 @@ import VTabItem from './components/tabs/VTabItem.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
+import { loaderDirective } from './directives/loader/loader';
 import { VModalPlugin } from './components/modal/plugin';
 import { VMessagePlugin } from './components/message/message-plugin';
 
@@ -52,6 +53,7 @@ export {
 
 // ----------------- Експортуємо директиви -----------------
 export { tooltipDirective };
+export { loaderDirective };
 
 // ----------------- Експортуємо типи -----------------
 export type { VButtonProps, VButtonEmits, VButtonType } from './components/button/types';
@@ -233,6 +235,7 @@ const VUIPlugin = {
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
+    app.directive('loader', loaderDirective);
 
     // Плагіни
     if (modal) {
