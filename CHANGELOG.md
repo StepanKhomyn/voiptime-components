@@ -1,3 +1,12 @@
+# [1.9.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.24...v1.9.0) (2025-09-25)
+
+
+### Features
+
+* add loader directive ([e365ff4](https://github.com/StepanKhomyn/voiptime-components/commit/e365ff414cdc385a184a581dfaa834452c8623b9))
+* add loader directive ([c6ac509](https://github.com/StepanKhomyn/voiptime-components/commit/c6ac509f290d93b7086c75a3cdc793e295e07a9f))
+* add loader directive ([06578c9](https://github.com/StepanKhomyn/voiptime-components/commit/06578c9cdc59ed0e0025ad9ad23a9b5e2874190c))
+
 ## [1.8.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.23...v1.8.24) (2025-09-24)
 
 
