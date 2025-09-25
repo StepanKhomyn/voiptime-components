@@ -1,5 +1,4 @@
 import type { DirectiveBinding, ObjectDirective } from 'vue';
-import '@/styles/loader.scss';
 
 const loaderTemplate = `
   <div class="vt-loader__overlay">
