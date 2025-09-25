@@ -210,7 +210,8 @@ export interface VUIPluginOptions {
 const VUIPlugin = {
   install(app: App, options: VUIPluginOptions = {}) {
     const { prefix = 'V', modal = true, message = true } = options;
-
+    console.log('VUIPlugin installing with options:', options);
+    console.log('Using prefix:', prefix);
     // Реєстрація компонентів
     app.component(`${prefix}Button`, VButton);
     app.component(`${prefix}Icon`, VIcon);
@@ -233,18 +234,22 @@ const VUIPlugin = {
     app.component(`${prefix}Tabs`, VTabs);
     app.component(`${prefix}TabItem`, VTabItem);
 
-    // Директиви
+    console.log('Registering directive: tooltip');
     app.directive('tooltip', tooltipDirective);
+    console.log('Registering directive: loader');
     app.directive('loader', loaderDirective);
 
     // Плагіни
     if (modal) {
+      console.log('Installing VModalPlugin');
       app.use(VModalPlugin);
     }
-
     if (message) {
+      console.log('Installing VMessagePlugin');
       app.use(VMessagePlugin);
     }
+
+    console.log('VUIPlugin installation complete');
   },
 };
 
