@@ -1,6 +1,6 @@
 <!-- components/modal/VModal.vue -->
 <script lang="ts" setup>
-  import { computed } from 'vue';
+  import { computed, nextTick, onMounted, ref } from 'vue';
   import type { VModalEmits, VModalProps } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
 
@@ -22,6 +22,8 @@
     zIndex: props.zIndex,
   }));
 
+  const footerEl = ref<HTMLElement | null>(null);
+
   // Methods
   const closeModal = () => {
     emit('update:modelValue', false);
@@ -33,6 +35,19 @@
       closeModal();
     }
   };
+
+  onMounted(() => {
+    nextTick(() => {
+      // шукаємо блок футера всередині default слота
+      const content = document.querySelector('.vt-modal__content');
+      const footerBlock = content?.querySelector('.modal-footer');
+      if (footerBlock) {
+        footerEl.value = footerBlock as HTMLElement;
+        // переміщаємо футер поза контент
+        content?.appendChild(footerEl.value);
+      }
+    });
+  });
 </script>
 
 <template>
@@ -53,8 +68,9 @@
         </div>
 
         <!-- Fixed footer (buttons) -->
-        <div v-if="$slots.footer" class="vt-modal__footer">
-          <slot name="footer" />
+        <div v-if="footerEl" class="vt-modal__footer">
+          <!-- вставляємо знайдений блок -->
+          <component :is="footerEl" />
         </div>
       </div>
     </div>
