@@ -1,4 +1,4 @@
-// index.ts - оновлений головний файл бібліотеки з VMessage та VTabs
+// entry.ts - оновлений головний файл бібліотеки з VMessage та VTabs
 import type { App } from 'vue';
 import VButton from './components/button/VButton.vue';
 import VIcon from './components/icon/VIcon.vue';
