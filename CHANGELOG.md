@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.0...v1.9.1) (2025-09-25)
+
+
+### Bug Fixes
+
+* додано footer до модального вікна ([219322f](https://github.com/StepanKhomyn/voiptime-components/commit/219322f9fe0c351804522b16ff10c029befaec67))
+
 # [1.9.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.8.24...v1.9.0) (2025-09-25)
 
 
