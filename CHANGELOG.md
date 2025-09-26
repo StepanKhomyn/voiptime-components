@@ -1,3 +1,10 @@
+## [1.9.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.16...v1.9.17) (2025-09-26)
+
+
+### Bug Fixes
+
+* new icons for statisitc ([571d4ec](https://github.com/StepanKhomyn/voiptime-components/commit/571d4eca6b17e422e70a065da25c48c0d2495cd3))
+
 ## [1.9.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.15...v1.9.16) (2025-09-26)
 
 
