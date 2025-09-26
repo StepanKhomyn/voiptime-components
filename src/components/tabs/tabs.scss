@@ -3,6 +3,7 @@
 .vt-tabs {
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   &__nav {
     display: flex;
@@ -11,6 +12,10 @@
     background-color: #FFFFFF;
     gap: var(--vt-gap-lg);
     height: 46px;
+  }
+
+  &__content {
+    height: 100%;
   }
 
   &__nav-item {
@@ -46,5 +51,6 @@
 
   &__pane {
     display: block;
+    height: 100%;
   }
 }
