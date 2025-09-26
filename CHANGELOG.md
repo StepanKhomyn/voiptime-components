@@ -1,3 +1,10 @@
+## [1.9.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.15...v1.9.16) (2025-09-26)
+
+
+### Bug Fixes
+
+* виправлено доступ до компонентів в модальному вікні ([75f56e4](https://github.com/StepanKhomyn/voiptime-components/commit/75f56e49ccb0d5940ceeb65629b78ae38e5beec3))
+
 ## [1.9.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.14...v1.9.15) (2025-09-25)
 
 
