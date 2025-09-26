@@ -1,3 +1,10 @@
+## [1.9.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.17...v1.9.18) (2025-09-26)
+
+
+### Bug Fixes
+
+* tabs 100% ([94080c2](https://github.com/StepanKhomyn/voiptime-components/commit/94080c2e281281f25363bf3228e26b6d594f612e))
+
 ## [1.9.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.16...v1.9.17) (2025-09-26)
 
 
