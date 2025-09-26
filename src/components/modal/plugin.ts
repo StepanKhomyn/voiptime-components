@@ -13,8 +13,19 @@ interface ModalEntry {
 class VModalManager implements VModalInstance {
   private modalStack: ModalEntry[] = [];
   private baseZIndex = 1000;
+  private parentApp: App | null = null; // Зберігаємо посилання на основний додаток
+
+  // Метод для збереження посилання на основний додаток
+  setParentApp(app: App): void {
+    this.parentApp = app;
+  }
 
   open(config: VModalConfig = {}): string {
+    if (!this.parentApp) {
+      console.warn('Parent app not set. Please call setParentApp() first.');
+      return '';
+    }
+
     // Генеруємо унікальний ID для модального вікна
     const modalId = `modal-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -29,7 +40,7 @@ class VModalManager implements VModalInstance {
     // Розраховуємо z-index для нового модального вікна
     const currentZIndex = this.baseZIndex + this.modalStack.length * 10;
 
-    // Створюємо Vue додаток
+    // Створюємо Vue додаток з наслідуванням конфігурації від батьківського
     const app = createApp({
       setup() {
         const handleClose = () => {
@@ -69,6 +80,9 @@ class VModalManager implements VModalInstance {
           );
       },
     });
+
+    // КЛЮЧОВИЙ МОМЕНТ: Копіюємо всі глобальні властивості та компоненти з батьківського додатку
+    this.inheritFromParentApp(app, this.parentApp);
 
     // Монтуємо
     app.mount(container);
@@ -125,6 +139,41 @@ class VModalManager implements VModalInstance {
     return this.modalStack.length;
   }
 
+  // Метод для наслідування конфігурації від батьківського додатку
+  private inheritFromParentApp(childApp: App, parentApp: App): void {
+    // Копіюємо глобальні властивості
+    Object.keys(parentApp.config.globalProperties).forEach(key => {
+      childApp.config.globalProperties[key] = parentApp.config.globalProperties[key];
+    });
+
+    // Копіюємо зареєстровані компоненти
+    // @ts-ignore - доступ до внутрішніх властивостей Vue
+    const parentComponents = parentApp._context.components;
+    if (parentComponents) {
+      Object.keys(parentComponents).forEach(name => {
+        childApp.component(name, parentComponents[name]);
+      });
+    }
+
+    // Копіюємо директиви
+    // @ts-ignore - доступ до внутрішніх властивостей Vue
+    const parentDirectives = parentApp._context.directives;
+    if (parentDirectives) {
+      Object.keys(parentDirectives).forEach(name => {
+        childApp.directive(name, parentDirectives[name]);
+      });
+    }
+
+    // Копіюємо provides
+    // @ts-ignore
+    const parentProvides = parentApp._context.provides;
+    if (parentProvides) {
+      Object.keys(parentProvides).forEach(key => {
+        childApp.provide(key, parentProvides[key]);
+      });
+    }
+  }
+
   private cleanupModal(modal: ModalEntry): void {
     if (modal.app) {
       modal.app.unmount();
@@ -148,6 +197,9 @@ const modalManager = new VModalManager();
 // Плагін для додавання $modal до Vue
 export const VModalPlugin = {
   install(app: App) {
+    // Зберігаємо посилання на основний додаток
+    modalManager.setParentApp(app);
+
     app.config.globalProperties.$modal = modalManager;
 
     // Додаємо глобальні методи для управління стеком модальних вікон
