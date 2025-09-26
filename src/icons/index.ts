@@ -77,6 +77,8 @@ import PreviewIcon from './others/PreviewIcon.vue';
 import PrioritySelectIcon from './others/PrioritySelectIcon.vue';
 import ProgressiveIcon from './others/ProgressiveIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
+import StatisticDetailIcon from './others/StatisticDetailIcon.vue';
+import StatisticSummaryIcon from './others/StatisticSummaryIcon.vue';
 import StatusSelectIcon from './others/StatusSelectIcon.vue';
 import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
@@ -191,6 +193,8 @@ export const icons = {
   prioritySelect: PrioritySelectIcon,
   progressive: ProgressiveIcon,
   sms: SmsIcon,
+  statisticDetail: StatisticDetailIcon,
+  statisticSummary: StatisticSummaryIcon,
   statusSelect: StatusSelectIcon,
   taskSelect: TaskSelectIcon,
   transcription: TranscriptionIcon,
