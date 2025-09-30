@@ -1,3 +1,39 @@
+## [1.9.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.19...v1.9.20) (2025-09-30)
+
+
+### Bug Fixes
+
+* implemented recall new icons ([1fd8d75](https://github.com/StepanKhomyn/voiptime-components/commit/1fd8d75e7c69c28568cc8deeae389a301b45fe32))
+* implemented recall new icons ([7def65b](https://github.com/StepanKhomyn/voiptime-components/commit/7def65be516c95ea9220424f44c6b12eee95cd07))
+
+## [1.9.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.18...v1.9.19) (2025-09-26)
+
+
+### Bug Fixes
+
+* tabs 100% ([7422882](https://github.com/StepanKhomyn/voiptime-components/commit/7422882b2a0e66759a7d5e9e2bc381bd1051070b))
+
+## [1.9.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.17...v1.9.18) (2025-09-26)
+
+
+### Bug Fixes
+
+* tabs 100% ([94080c2](https://github.com/StepanKhomyn/voiptime-components/commit/94080c2e281281f25363bf3228e26b6d594f612e))
+
+## [1.9.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.16...v1.9.17) (2025-09-26)
+
+
+### Bug Fixes
+
+* new icons for statisitc ([571d4ec](https://github.com/StepanKhomyn/voiptime-components/commit/571d4eca6b17e422e70a065da25c48c0d2495cd3))
+
+## [1.9.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.15...v1.9.16) (2025-09-26)
+
+
+### Bug Fixes
+
+* виправлено доступ до компонентів в модальному вікні ([75f56e4](https://github.com/StepanKhomyn/voiptime-components/commit/75f56e49ccb0d5940ceeb65629b78ae38e5beec3))
+
 ## [1.9.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.14...v1.9.15) (2025-09-25)
 
 
