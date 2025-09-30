@@ -1,3 +1,11 @@
+## [1.9.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.19...v1.9.20) (2025-09-30)
+
+
+### Bug Fixes
+
+* implemented recall new icons ([1fd8d75](https://github.com/StepanKhomyn/voiptime-components/commit/1fd8d75e7c69c28568cc8deeae389a301b45fe32))
+* implemented recall new icons ([7def65b](https://github.com/StepanKhomyn/voiptime-components/commit/7def65be516c95ea9220424f44c6b12eee95cd07))
+
 ## [1.9.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.18...v1.9.19) (2025-09-26)
 
 
