@@ -207,6 +207,12 @@
   }
 }
 
+.vt-input input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+  -webkit-text-fill-color: #000;
+  caret-color: #000;
+}
+
 input[type="search"]::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
