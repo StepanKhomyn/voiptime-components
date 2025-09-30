@@ -31,6 +31,10 @@ import ClientCallIcon from './call/ClientCallIcon.vue';
 import HangupCallIcon from './call/HangupCallIcon.vue';
 import KeyboardCallIcon from './call/KeyboardCallIcon.vue';
 import MicrophoneCallIcon from './call/MicrophoneCallIcon.vue';
+import PhoneCancelRecallIcon from './call/PhoneCancelRecallIcon.vue';
+import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
+import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
+import PhoneRecallIcon from './call/PhoneRecallIcon.vue';
 import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
 import TransferCallIcon from './call/TransferCallIcon.vue';
 import VolumeCallIcon from './call/VolumeCallIcon.vue';
@@ -83,6 +87,7 @@ import StatusSelectIcon from './others/StatusSelectIcon.vue';
 import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -137,6 +142,10 @@ export const icons = {
   hangupCall: HangupCallIcon,
   keyboardCall: KeyboardCallIcon,
   microphoneCall: MicrophoneCallIcon,
+  phoneCancelRecall: PhoneCancelRecallIcon,
+  phoneExecuteRecall: PhoneExecuteRecallIcon,
+  phoneHangup: PhoneHangupIcon,
+  phoneRecall: PhoneRecallIcon,
   scenarioCall: ScenarioCallIcon,
   transferCall: TransferCallIcon,
   volumeCall: VolumeCallIcon,
@@ -199,6 +208,7 @@ export const icons = {
   taskSelect: TaskSelectIcon,
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
+  operator: operatorIcon,
 
   // player icons
   pause: PauseIcon,
