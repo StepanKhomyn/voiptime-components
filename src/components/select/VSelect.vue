@@ -767,7 +767,8 @@
 
         <!-- Single select display -->
         <span v-else-if="!multiple && displayText" class="vt-select__display-text">
-          {{ displayText }}
+          <slot v-if="$slots.selected && selectedOptions[0]" :option="selectedOptions[0]" name="selected" />
+          <span v-else>{{ displayText }}</span>
         </span>
 
         <!-- Placeholder -->
