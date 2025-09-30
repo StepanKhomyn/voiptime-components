@@ -1,3 +1,10 @@
+## [1.9.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.20...v1.9.21) (2025-09-30)
+
+
+### Bug Fixes
+
+* vertical align in table ([313f6c7](https://github.com/StepanKhomyn/voiptime-components/commit/313f6c7fa0d4274d0cc4ba2eb4d652eeb6cdaaa8))
+
 ## [1.9.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.19...v1.9.20) (2025-09-30)
 
 
