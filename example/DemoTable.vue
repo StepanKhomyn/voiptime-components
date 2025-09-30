@@ -737,24 +737,8 @@ const highlightFunction = (row, index) => {
   <div class="container">
     <!-- Дефолтна таблиця-->
     <div class="container-item">
-      <div class="container-item-table">
-        <h3>Дефолтна таблиця</h3>
-        <div class="table-block">
-          <VTable :data="currentPageData.slice(0, 5)">
-            <VTableColumn label="ID" prop="id" width="150" />
-            <VTableColumn label="Ім'я" prop="name">
-              <template #name="{ row }">
-                <VInput v-model="row.name" />
-              </template>
-            </VTableColumn>
-            <!--            <VTableColumn :min-width="120" label="Статус" prop="status" />-->
-            <!--            <VTableColumn :min-width="150" label="Дата" prop="date" />-->
-            <VTableColumn :width="60" label="Рахунок" prop="score" />
-          </VTable>
-        </div>
-      </div>
       <div class="container-item-example">
-        <h3 :class="{ collapsed: codeCollapsed.defaultTable }" @click="toggleCode('defaultTable')"> Код </h3>
+        <h3 :class="{ collapsed: codeCollapsed.defaultTable }" @click="toggleCode('defaultTable')"> Дефолтна таблиця </h3>
         <div :class="{ collapsed: codeCollapsed.defaultTable }" class="container-item-code">
           <pre class="code"><code>&lt;VTable :data="dataTable"&gt;
   &lt;VTableColumn prop="id" label="ID" /&gt;
@@ -771,13 +755,105 @@ const highlightFunction = (row, index) => {
 &lt;/VTable&gt;</code></pre>
         </div>
       </div>
+      <div class="container-item-table">
+        <div class="table-block">
+          <VTable :data="currentPageData.slice(0, 5)">
+            <VTableColumn label="ID" prop="id" width="150" />
+            <VTableColumn label="Ім'я" prop="name">
+              <template #name="{ row }">
+                <VInput v-model="row.name" />
+              </template>
+            </VTableColumn>
+            <!--            <VTableColumn :min-width="120" label="Статус" prop="status" />-->
+            <!--            <VTableColumn :min-width="150" label="Дата" prop="date" />-->
+            <VTableColumn :width="60" label="Рахунок" prop="score" />
+          </VTable>
+        </div>
+      </div>
     </div>
 
     <!-- Таблиця з пагінацією та розширеним виділенням -->
     <div class="container-item">
-      <div class="container-item-table">
-        <h3>Таблиця з пагінацією та розширеним виділенням + summary-row</h3>
+      <div class="container-item-example">
+        <h3 :class="{ collapsed: codeCollapsed.paginatedTable }" @click="toggleCode('paginatedTable')"> Таблиця з пагінацією та розширеним виділенням + summary-row </h3>
+        <div :class="{ collapsed: codeCollapsed.paginatedTable }" class="container-item-code">
+          <pre class="code"><code>&lt;!-- Кнопки управління --&gt;
+&lt;div class="table-controls"&gt;
+  &lt;button @click="selectAll"&gt;Виділити всі на сторінці&lt;/button&gt;
+  &lt;button @click="selectAbsolutelyAll" :disabled="!canSelectAll"&gt;
+    Виділити абсолютно всі ({{ totalItems }})
+  &lt;/button&gt;
+  &lt;button @click="clearAll"&gt;Зняти виділення&lt;/button&gt;
+&lt;/div&gt;
 
+&lt;!-- Таблиця --&gt;
+&lt;VTable
+  ref="tableRef"
+  :data="currentPageData"
+  selectable
+  select-on-click-row
+  highlight-current-row
+  show-summary
+  :summary-method="getSummaries"
+  @selection-change="handleSelectionChange"
+  @row-click="handleRowClick"
+&gt;
+  &lt;VTableColumn prop="id" label="ID" /&gt;
+  &lt;VTableColumn prop="name" label="Ім'я" /&gt;
+  &lt;VTableColumn prop="status" label="Статус" /&gt;
+  &lt;VTableColumn prop="date" label="Дата" /&gt;
+  &lt;VTableColumn prop="score" label="Рахунок" /&gt;
+&lt;/VTable&gt;
+
+&lt;!-- Пагінація --&gt;
+&lt;VPagination
+  :total-items="totalItems"
+  :page-size="pageSize"
+  :current-page="currentPage"
+  @update:current-page="handlePageChange"
+  @update:page-size="handlePageSizeChange"
+/&gt;
+
+// JavaScript логіка
+const loadPageData = async (page: number) =&gt; {
+  loading.value = true;
+  try {
+    const data = await fetchPageData(page, pageSize.value);
+    pageCache.value[page] = data;
+    currentPageData.value = data;
+  } finally {
+    loading.value = false;
+  }
+};
+
+const handleSelectionChange = (data: SelectionChangeEventData) => {
+    console.log('📋 Зміна виділення:', data);
+    selectedRows.value = data.selection;
+    isFullSelection.value = data.isAllSelected || false;
+
+    if (data.row) {
+      console.log(`Рядок ${data.row.name} ${data.selected ? 'виділено' : 'знято виділення'}`);
+    }
+
+    if (data.isAllSelected) {
+      console.log('🎯 Виділені абсолютно всі записи!');
+    }
+  };
+
+  const getSummaries = ({ columns, data }: { columns: any[]; data: any[] }) => {
+    return columns.map(col => {
+      if (!col.prop) return 'Σ';
+      const values = data.map(row => row[col.prop]);
+      if (values.every(val => typeof val === 'number')) {
+        return values.reduce((sum, val) => sum + val, 0);
+      }
+      return 'N/A';
+    });
+  };
+</code></pre>
+        </div>
+      </div>
+      <div class="container-item-table">
         <!-- Інформація про стан виділення -->
         <div class="selection-status">
           <div><strong>Стан виділення:</strong> {{ selectionStatus }}</div>
@@ -859,114 +935,12 @@ const highlightFunction = (row, index) => {
         </div>
       </div>
 
-      <div class="container-item-example">
-        <h3 :class="{ collapsed: codeCollapsed.paginatedTable }" @click="toggleCode('paginatedTable')"> Код </h3>
-        <div :class="{ collapsed: codeCollapsed.paginatedTable }" class="container-item-code">
-          <pre class="code"><code>&lt;!-- Кнопки управління --&gt;
-&lt;div class="table-controls"&gt;
-  &lt;button @click="selectAll"&gt;Виділити всі на сторінці&lt;/button&gt;
-  &lt;button @click="selectAbsolutelyAll" :disabled="!canSelectAll"&gt;
-    Виділити абсолютно всі ({{ totalItems }})
-  &lt;/button&gt;
-  &lt;button @click="clearAll"&gt;Зняти виділення&lt;/button&gt;
-&lt;/div&gt;
-
-&lt;!-- Таблиця --&gt;
-&lt;VTable
-  ref="tableRef"
-  :data="currentPageData"
-  selectable
-  select-on-click-row
-  highlight-current-row
-  show-summary
-  :summary-method="getSummaries"
-  @selection-change="handleSelectionChange"
-  @row-click="handleRowClick"
-&gt;
-  &lt;VTableColumn prop="id" label="ID" /&gt;
-  &lt;VTableColumn prop="name" label="Ім'я" /&gt;
-  &lt;VTableColumn prop="status" label="Статус" /&gt;
-  &lt;VTableColumn prop="date" label="Дата" /&gt;
-  &lt;VTableColumn prop="score" label="Рахунок" /&gt;
-&lt;/VTable&gt;
-
-&lt;!-- Пагінація --&gt;
-&lt;VPagination
-  :total-items="totalItems"
-  :page-size="pageSize"
-  :current-page="currentPage"
-  @update:current-page="handlePageChange"
-  @update:page-size="handlePageSizeChange"
-/&gt;
-
-// JavaScript логіка
-const loadPageData = async (page: number) =&gt; {
-  loading.value = true;
-  try {
-    const data = await fetchPageData(page, pageSize.value);
-    pageCache.value[page] = data;
-    currentPageData.value = data;
-  } finally {
-    loading.value = false;
-  }
-};
-
-const handleSelectionChange = (data: SelectionChangeEventData) => {
-    console.log('📋 Зміна виділення:', data);
-    selectedRows.value = data.selection;
-    isFullSelection.value = data.isAllSelected || false;
-
-    if (data.row) {
-      console.log(`Рядок ${data.row.name} ${data.selected ? 'виділено' : 'знято виділення'}`);
-    }
-
-    if (data.isAllSelected) {
-      console.log('🎯 Виділені абсолютно всі записи!');
-    }
-  };
-
-  const getSummaries = ({ columns, data }: { columns: any[]; data: any[] }) => {
-    return columns.map(col => {
-      if (!col.prop) return 'Σ';
-      const values = data.map(row => row[col.prop]);
-      if (values.every(val => typeof val === 'number')) {
-        return values.reduce((sum, val) => sum + val, 0);
-      }
-      return 'N/A';
-    });
-  };
-</code></pre>
-        </div>
-      </div>
     </div>
 
     <!-- Управління колонками таблиці -->
     <div class="container-item">
-      <div class="container-item-table">
-        <h3>Управління колонками таблиці</h3>
-        <div class="table-block">
-          <VTable
-            :columns-selector="columnGroups"
-            :data="sampleColumnData"
-            @column-pin="columnPinMethod"
-            @column-resize="columnResizeMethod"
-            @column-visibility="columnVisibilityMethod"
-            @columns-change="columnChangeMethod"
-          >
-            <VTableColumn label="ID" prop="id" />
-            <VTableColumn label="Ім'я" prop="name">
-              <template #name="{ row }">
-                <div style="color: #0c5460">
-                  {{ row.name }}
-                </div>
-              </template>
-            </VTableColumn>
-            <VTableColumn label="Email" prop="email" />
-          </VTable>
-        </div>
-      </div>
       <div class="container-item-example">
-        <h3 :class="{ collapsed: codeCollapsed.columnActionTable }" @click="toggleCode('columnActionTable')"> Код </h3>
+        <h3 :class="{ collapsed: codeCollapsed.columnActionTable }" @click="toggleCode('columnActionTable')"> Управління колонками таблиці </h3>
         <div :class="{ collapsed: codeCollapsed.columnActionTable }" class="container-item-code">
           <pre class="code">
 &lt;template&gt;
@@ -1173,51 +1147,33 @@ const columnChangeMethod = (columns) => {
   >
         </div>
       </div>
-    </div>
-
-    <div class="container-item">
       <div class="container-item-table">
-        <h3>Підсвічування рядків таблиці</h3>
         <div class="table-block">
-          <VTable :data="highlightTableData" :max-height="400" :row-highlight="highlightFunction">
+          <VTable
+            :columns-selector="columnGroups"
+            :data="sampleColumnData"
+            @column-pin="columnPinMethod"
+            @column-resize="columnResizeMethod"
+            @column-visibility="columnVisibilityMethod"
+            @columns-change="columnChangeMethod"
+          >
             <VTableColumn label="ID" prop="id" />
             <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">
-                <div style="font-weight: 600">
+                <div style="color: #0c5460">
                   {{ row.name }}
                 </div>
               </template>
             </VTableColumn>
-            <VTableColumn label="Статус" prop="status">
-              <template #status="{ row }">
-                <span :class="`status-${row.status}`" class="status-badge">
-                  {{ getStatusLabel(row.status) }}
-                </span>
-              </template>
-            </VTableColumn>
-            <VTableColumn label="Пріоритет" prop="priority">
-              <template #priority="{ row }">
-                <span :class="`priority-${row.priority}`" class="priority-badge">
-                  {{ row.priority }}
-                </span>
-              </template>
-            </VTableColumn>
-            <VTableColumn label="Зарплата" prop="salary">
-              <template #salary="{ row }">
-                <div class="salary-cell"> ${{ row.salary.toLocaleString() }}</div>
-              </template>
-            </VTableColumn>
-            <VTableColumn label="Відділ" prop="department" />
+            <VTableColumn label="Email" prop="email" />
           </VTable>
         </div>
-
-        <div>
-          export type VTableRowHighlightType = 'default' | 'success' | 'warning' | 'danger' | 'custom'; export interface
-          VTableRowHighlight { type: VTableRowHighlightType; className?: string; // для кастомних стилів }
-        </div>
       </div>
+    </div>
+
+    <div class="container-item">
       <div class="container-item-example">
-        <h3 :class="{ collapsed: codeCollapsed.highlightTable }" @click="toggleCode('highlightTable')"> Код </h3>
+        <h3 :class="{ collapsed: codeCollapsed.highlightTable }" @click="toggleCode('highlightTable')"> Підсвічування рядків таблиці </h3>
         <div :class="{ collapsed: codeCollapsed.highlightTable }" class="container-item-code">
           <pre class="code"><code>&lt;template&gt;
   &lt;VTable
@@ -1348,6 +1304,45 @@ const highlightFunction = (row, index) => {
     font-weight: 600;
   }
 &lt;/style&gt;</code></pre>
+        </div>
+      </div>
+      <div class="container-item-table">
+        <div class="table-block">
+          <VTable :data="highlightTableData" :max-height="400" :row-highlight="highlightFunction">
+            <VTableColumn label="ID" prop="id" />
+            <VTableColumn label="Ім'я" prop="name">
+              <template #name="{ row }">
+                <div style="font-weight: 600">
+                  {{ row.name }}
+                </div>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Статус" prop="status">
+              <template #status="{ row }">
+                <span :class="`status-${row.status}`" class="status-badge">
+                  {{ getStatusLabel(row.status) }}
+                </span>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Пріоритет" prop="priority">
+              <template #priority="{ row }">
+                <span :class="`priority-${row.priority}`" class="priority-badge">
+                  {{ row.priority }}
+                </span>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Зарплата" prop="salary">
+              <template #salary="{ row }">
+                <div class="salary-cell"> ${{ row.salary.toLocaleString() }}</div>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Відділ" prop="department" />
+          </VTable>
+        </div>
+
+        <div>
+          export type VTableRowHighlightType = 'default' | 'success' | 'warning' | 'danger' | 'custom'; export interface
+          VTableRowHighlight { type: VTableRowHighlightType; className?: string; // для кастомних стилів }
         </div>
       </div>
     </div>
@@ -1827,7 +1822,6 @@ const highlightFunction = (row, index) => {
   &-item {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
     align-items: flex-start;
 
     @media (max-width: 1024px) {
@@ -1836,13 +1830,25 @@ const highlightFunction = (row, index) => {
 
     &-table {
       flex: 1;
+      box-sizing: border-box;
       background: white;
-      border-radius: 16px;
+      border-radius: 0 0 16px 16px;
       padding: 2rem;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
       0 2px 4px -1px rgba(0, 0, 0, 0.06);
       border: 1px solid rgba(226, 232, 240, 0.8);
       transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    &-example {
+      flex: 1;
+      box-sizing: border-box;
+      background: #fafafa;
+      border-radius: 16px 16px 0 0;
+      padding: 1rem 2rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+      0 2px 4px -1px rgba(0, 0, 0, 0.06);
       width: 100%;
 
       h3 {
@@ -1850,27 +1856,6 @@ const highlightFunction = (row, index) => {
         font-size: 1.5rem;
         font-weight: 600;
         color: #1e293b;
-        border-bottom: 3px solid #3b82f6;
-        padding-bottom: 0.5rem;
-        display: inline-block;
-      }
-    }
-
-    &-example {
-      flex: 1;
-      background: #1e293b;
-      border-radius: 16px;
-      padding: 2rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-      0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      border: 1px solid #334155;
-      width: 100%;
-
-      h3 {
-        margin: 0 0 1.5rem 0;
-        font-size: 1.5rem;
-        font-weight: 600;
-        color: #f1f5f9;
         border-bottom: 3px solid #10b981;
         padding-bottom: 0.5rem;
         display: flex;

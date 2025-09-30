@@ -76,6 +76,10 @@ export type {
 export type { VCheckboxProps, VCheckboxEmits, VCheckboxSlots } from './components/checkbox/types';
 export type { VRadioboxProps, VRadioboxEmits } from './components/radiobox/types';
 
+// ----------------- Експортуємо валідацію -----------------
+
+export * from './validation';
+
 // Таблиця
 export type {
   VTableProps,

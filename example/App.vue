@@ -19,6 +19,7 @@
   import DemoTabs from './DemoTabs.vue';
   import DemoTable2 from './DemoTable2.vue';
   import DemoLoader from './DemoLoader.vue';
+  import DemoValidationForm from './DemoValidationForm.vue';
 
   const activeSlot = ref(null);
 
@@ -42,6 +43,7 @@
     { id: 18, name: 'Tabs', icon: '⬇📋2' },
     { id: 19, name: 'Tab3s', icon: '⬇📋2' },
     { id: 20, name: 'Лоадер', icon: '🔘' },
+    { id: 21, name: 'Валідація', icon: '✅' },
   ];
 </script>
 
@@ -94,6 +96,7 @@
       <DemoTabs v-if="activeSlot === 18" />
       <DemoTable2 v-if="activeSlot === 19" />
       <DemoLoader v-if="activeSlot === 20" />
+      <DemoValidationForm v-if="activeSlot === 21" />
       <!-- і т.д. -->
     </div>
   </div>

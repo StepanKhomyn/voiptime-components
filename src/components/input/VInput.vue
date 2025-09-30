@@ -184,6 +184,9 @@
     // Показуємо дефолтні іконки тільки якщо немає автоматичних іконок типу
     if (getAutomaticPrefixIcon.value) return null;
 
+    // У випадку якщо є errorMessage відображаємо іконку типу error
+    if (props.errorMessage) return 'alertCircle';
+
     // Показуємо іконки для всіх станів, включаючи явно встановлені
     switch (props.status) {
       case 'error':
@@ -264,6 +267,7 @@
 
   const currentStatus = computed(() => {
     if (props.status !== 'default') return props.status;
+    if (props.errorMessage) return 'error';
     if (!isValid.value) return 'error';
     return 'default';
   });
@@ -278,7 +282,7 @@
       'vt-input--textarea': isTextarea.value,
       'vt-input--has-prefix': hasPrefix.value,
       'vt-input--has-suffix': hasSuffix.value,
-      'vt-input--invalid': !isValid.value,
+      'vt-input--invalid': !!props.errorMessage || !isValid.value,
     },
   ]);
 
