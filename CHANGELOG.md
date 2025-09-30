@@ -1,3 +1,10 @@
+## [1.9.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.22...v1.9.23) (2025-09-30)
+
+
+### Bug Fixes
+
+* fixed input autofill color ([a77be23](https://github.com/StepanKhomyn/voiptime-components/commit/a77be230f197f09e7eba9ea3202d0dd457491e50))
+
 ## [1.9.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.21...v1.9.22) (2025-09-30)
 
 
