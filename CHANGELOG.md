@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.23...v1.10.0) (2025-09-30)
+
+
+### Features
+
+* додано валідацію ([4971477](https://github.com/StepanKhomyn/voiptime-components/commit/4971477de70bd7a07b9a52f50bccc5967acaa23c))
+
 ## [1.9.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.22...v1.9.23) (2025-09-30)
 
 
