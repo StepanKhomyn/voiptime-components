@@ -1,3 +1,10 @@
+## [1.9.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.21...v1.9.22) (2025-09-30)
+
+
+### Bug Fixes
+
+* додано можливість відображення іконки як вибраного значення в селекті ([dc950da](https://github.com/StepanKhomyn/voiptime-components/commit/dc950daf71cac87f81b16c95c25b35358b6b2958))
+
 ## [1.9.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.9.20...v1.9.21) (2025-09-30)
 
 
