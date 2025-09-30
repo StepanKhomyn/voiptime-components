@@ -74,7 +74,6 @@ import DsrIcon from './others/DsrIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
-import OperatorIcon from './others/OperatorIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
@@ -195,7 +194,6 @@ export const icons = {
   hold: HoldIcon,
   ivr: IvrIcon,
   minus: MinusIcon,
-  operator: OperatorIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
