@@ -29,8 +29,11 @@ import ArrowTopIcon from './arrow/ArrowTopIcon.vue';
 import AnswerCallIcon from './call/AnswerCallIcon.vue';
 import ClientCallIcon from './call/ClientCallIcon.vue';
 import HangupCallIcon from './call/HangupCallIcon.vue';
+import InboundCallIcon from './call/InboundCallIcon.vue';
 import KeyboardCallIcon from './call/KeyboardCallIcon.vue';
 import MicrophoneCallIcon from './call/MicrophoneCallIcon.vue';
+import OutboundCallIcon from './call/OutboundCallIcon.vue';
+import OwnCallIcon from './call/OwnCallIcon.vue';
 import PhoneCancelRecallIcon from './call/PhoneCancelRecallIcon.vue';
 import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
 import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
@@ -139,8 +142,11 @@ export const icons = {
   answerCall: AnswerCallIcon,
   clientCall: ClientCallIcon,
   hangupCall: HangupCallIcon,
+  inboundCall: InboundCallIcon,
   keyboardCall: KeyboardCallIcon,
   microphoneCall: MicrophoneCallIcon,
+  outboundCall: OutboundCallIcon,
+  ownCall: OwnCallIcon,
   phoneCancelRecall: PhoneCancelRecallIcon,
   phoneExecuteRecall: PhoneExecuteRecallIcon,
   phoneHangup: PhoneHangupIcon,
