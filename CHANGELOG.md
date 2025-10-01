@@ -1,3 +1,11 @@
+## [1.10.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.10.1...v1.10.2) (2025-10-01)
+
+
+### Bug Fixes
+
+* виправив використання валідації у v-model ([e48dc35](https://github.com/StepanKhomyn/voiptime-components/commit/e48dc35e736669f9cd515391dd90d52770e5b754))
+* виправив проблему з $model ([461082f](https://github.com/StepanKhomyn/voiptime-components/commit/461082fdc6fb3ed164d46fcbcf5c5a7a1f101e48))
+
 ## [1.10.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.10.0...v1.10.1) (2025-10-01)
 
 
