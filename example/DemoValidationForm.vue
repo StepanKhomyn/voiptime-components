@@ -154,39 +154,39 @@ const rules = {
         <h3>Базові типи полів</h3>
         <div>
           <h4>{{ 'required' }}</h4>
-          <VInput v-model="v$.nameRequired.$model" placeholder="Обов'язкове поле"
+          <VInput v-model="form.nameRequired" placeholder="Обов'язкове поле"
                   :error-message="v$.nameRequired.$errors[0]?.$message" />
         </div>
         <div>
           <h4>{{ 'minLength' }}</h4>
-          <VInput v-model="v$.passwordMin.$model" type="password" placeholder="Пароль (>=6)"
+          <VInput v-model="form.passwordMin" type="password" placeholder="Пароль (>=6)"
                   :error-message="v$.passwordMin.$errors[0]?.$message" />
         </div>
         <div>
           <h4>{{ 'maxLength' }}</h4>
-          <VInput v-model="v$.passwordMax.$model" type="text" placeholder="Не більше 10 символів"
+          <VInput v-model="form.passwordMax" type="text" placeholder="Не більше 10 символів"
                   :error-message="v$.passwordMax.$errors[0]?.$message" />
         </div>
         <div>
           <h4>{{ 'email' }}</h4>
-          <VInput v-model="v$.email.$model" type="email" placeholder="Email"
+          <VInput v-model="form.email" type="email" placeholder="Email"
                   :error-message="v$.email.$errors[0]?.$message" />
         </div>
         <div>
           <h4>{{ 'sameAs' }}</h4>
-          <VInput v-model="v$.password.$model" :show-password="true" style="margin-bottom: 10px" type="password" placeholder="Пароль"
+          <VInput v-model="form.password" :show-password="true" style="margin-bottom: 10px" type="password" placeholder="Пароль"
                   :error-message="v$.password.$errors[0]?.$message" />
-          <VInput v-model="v$.confirm.$model" :show-password="true" type="password" placeholder="Підтвердження паролю"
+          <VInput v-model="form.confirm" :show-password="true" type="password" placeholder="Підтвердження паролю"
                   :error-message="v$.confirm.$errors[0]?.$message" />
         </div>
         <div>
           <h4>{{ 'numeric' }}</h4>
-          <VInput v-model="v$.age.$model" type="text" placeholder="Вік"
+          <VInput v-model="form.age" type="text" placeholder="Вік"
                   :error-message="v$.age.$errors[0]?.$message" />
         </div>
         <div>
           <h4>{{ 'custom' }}</h4>
-          <VInput v-model="v$.nameCustom.$model" type="text" placeholder="Починається з ABC"
+          <VInput v-model="form.nameCustom" type="text" placeholder="Починається з ABC"
                   :error-message="v$.nameCustom.$errors[0]?.$message" />
         </div>
         <div>

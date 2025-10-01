@@ -62,9 +62,7 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
   const $pending = ref(false);
   const lastValidateToken = { t: 0 };
 
-  // External results container for this field (messages array)
   let externalResults: Array<{ $message: string; $validator?: string }> = [];
-
   const _errors = ref<Array<{ $message: string; $validator: string; $params?: any; $pending?: boolean }>>([]);
 
   async function runValidators(value: any) {
@@ -91,31 +89,27 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
       }
     }
 
-    // apply external results (if any)
     if (externalResults.length) {
       for (const er of externalResults) {
         errs.push({ $message: er.$message, $validator: er.$validator || 'external' });
       }
     }
 
-    // Only apply if token is latest
     if (token === lastValidateToken.t) {
       _errors.value = errs;
       $pending.value = false;
     }
   }
 
-  const node: FieldValidation = reactive({
-    get $model() {
-      return modelRef.value;
-    },
-    set $model(val: any) {
-      modelRef.value = val;
+  watch(
+    () => modelRef.value,
+    () => {
       $dirty.value = true;
-      // Run validation but don't block setter
-      void node.$validate();
-    },
+      void runValidators(modelRef.value);
+    }
+  );
 
+  const node: FieldValidation = reactive({
     get $dirty() {
       return $dirty.value;
     },
@@ -132,10 +126,9 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
       return node.$dirty && node.$invalid;
     },
     get $errors() {
-      // return shallow copy to avoid mutation
       return opts.silentErrors ? [] : _errors.value.map(e => ({ ...e }));
     },
-    $params: validators.length ? ( (validators[0] as WrappedValidator).$params || {} ) : undefined,
+    $params: validators.length ? ((validators[0] as WrappedValidator).$params || {}) : undefined,
 
     $touch() {
       $dirty.value = true;
@@ -150,17 +143,14 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
     },
 
     async $validate() {
-      // mark dirty when validating (like vuelidate)
       $dirty.value = true;
       await runValidators(modelRef.value);
       return !_errors.value.length;
     }
   });
 
-  // add helper to set external results for this field
   (node as any).$setExternalResults = (arr: Array<{ $message: string; $validator?: string }>) => {
     externalResults = arr || [];
-    // merge into errors on next tick
     void node.$validate();
   };
 
