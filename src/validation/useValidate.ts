@@ -110,6 +110,15 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
   );
 
   const node: FieldValidation = reactive({
+    get $model() {
+      return modelRef.value;
+    },
+    set $model(val: any) {
+      modelRef.value = val;
+      $dirty.value = true;
+      void node.$validate();
+    },
+
     get $dirty() {
       return $dirty.value;
     },
