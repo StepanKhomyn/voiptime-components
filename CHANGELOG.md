@@ -1,3 +1,13 @@
+# [1.11.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.10.2...v1.11.0) (2025-10-02)
+
+
+### Features
+
+* Додано нові опцій у календар ([f1b3657](https://github.com/StepanKhomyn/voiptime-components/commit/f1b3657ef5cce9346a4482c4850a3a3b2c7fe4a8))
+* Додано нові опцій у календар ([0a381bd](https://github.com/StepanKhomyn/voiptime-components/commit/0a381bde880745b22035895825959e677b9c7bdb))
+* Додано нові опцій у календар ([6e5b563](https://github.com/StepanKhomyn/voiptime-components/commit/6e5b56374baa0fa3a32962c870f56ed0f425bbad))
+* Додано нові опцій у календар 2 ([fa2fc20](https://github.com/StepanKhomyn/voiptime-components/commit/fa2fc2090bc77f19adb598230a01390d5f7a962a))
+
 ## [1.10.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.10.1...v1.10.2) (2025-10-01)
 
 
