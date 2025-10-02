@@ -201,46 +201,41 @@
     return isDateTimeType.value;
   });
 
-  const disabledHoursValue = computed((): number[] => {
-    const now = new Date();
-    let hours: number[] = [];
+  const disabledHoursValue = computed<() => number[]>(() => {
+    // Return a function, not call it
+    return () => {
+      const now = new Date();
+      let hours: number[] = [];
 
-    // якщо є свої disabledHours з props
-    if (props.disabledHours) {
-      hours = [...props.disabledHours];
-    }
+      if (props.disabledHours) {
+        hours = [...props.disabledHours()]; // Call the function from props
+      }
 
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours();
-      // блокуємо всі години до поточної
-      for (let h = 0; h < currentHour; h++) {
-        if (!hours.includes(h)) {
-          hours.push(h);
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        for (let h = 0; h < currentHour; h++) {
+          if (!hours.includes(h)) {
+            hours.push(h);
+          }
         }
       }
-    }
 
-    return hours;
+      return hours;
+    };
   });
 
-  const disabledMinutesValue = computed((): number[] => {
-    const now = new Date();
-    let minutes: number[] = [];
+  const disabledMinutesValue = computed<(selectedHour: number) => number[]>(() => {
+    return (selectedHour: number) => {
+      const now = new Date();
+      let minutes: number[] = [];
 
-    if (props.disabledMinutes) {
-      minutes = [...props.disabledMinutes];
-    }
+      if (props.disabledMinutes) {
+        minutes = [...props.disabledMinutes(selectedHour)]; // Call with selectedHour
+      }
 
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-
-      // Якщо користувач вибрав поточну годину, блокуємо хвилини які вже минули
-      // Note: Without knowing which hour is selected, we block current minutes
-      // You may need to track selected hour in state for more precise control
-      if (state.startTime.value) {
-        const timeMatch = state.startTime.value.toString().match(/(\d{1,2}):/);
-        const selectedHour = timeMatch ? parseInt(timeMatch[1]) : null;
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
 
         if (selectedHour === currentHour) {
           for (let m = 0; m < currentMinute; m++) {
@@ -250,42 +245,36 @@
           }
         }
       }
-    }
 
-    return minutes;
+      return minutes;
+    };
   });
 
-  const disabledSecondsValue = computed((): number[] => {
-    const now = new Date();
-    let seconds: number[] = [];
+  const disabledSecondsValue = computed<(selectedHour: number, selectedMinute: number) => number[]>(() => {
+    return (selectedHour: number, selectedMinute: number) => {
+      const now = new Date();
+      let seconds: number[] = [];
 
-    if (props.disabledSeconds) {
-      seconds = [...props.disabledSeconds];
-    }
+      if (props.disabledSeconds) {
+        seconds = [...props.disabledSeconds(selectedHour, selectedMinute)]; // Call with both params
+      }
 
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const currentSecond = now.getSeconds();
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        const currentSecond = now.getSeconds();
 
-      if (state.startTime.value) {
-        const timeMatch = state.startTime.value.toString().match(/(\d{1,2}):(\d{2})/);
-        if (timeMatch) {
-          const selectedHour = parseInt(timeMatch[1]);
-          const selectedMinute = parseInt(timeMatch[2]);
-
-          if (selectedHour === currentHour && selectedMinute === currentMinute) {
-            for (let s = 0; s < currentSecond; s++) {
-              if (!seconds.includes(s)) {
-                seconds.push(s);
-              }
+        if (selectedHour === currentHour && selectedMinute === currentMinute) {
+          for (let s = 0; s < currentSecond; s++) {
+            if (!seconds.includes(s)) {
+              seconds.push(s);
             }
           }
         }
       }
-    }
 
-    return seconds;
+      return seconds;
+    };
   });
 
   // ===== DROPDOWN INTEGRATION =====
