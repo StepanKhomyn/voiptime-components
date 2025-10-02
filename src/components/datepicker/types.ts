@@ -44,6 +44,9 @@ export interface VDatePickerProps {
   disabledMinutes?: (selectedHour: number) => number[];
   disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
   hideDisabledOptions?: boolean;
+
+  maxDateRange?: number;
+  previousDateDisabled?: boolean;
 }
 
 export interface VDatePickerEmits {

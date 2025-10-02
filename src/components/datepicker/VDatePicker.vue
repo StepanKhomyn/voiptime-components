@@ -27,6 +27,8 @@
     showSeconds: true,
     use12Hours: false,
     hideDisabledOptions: false,
+    maxDateRange: null,
+    previousDateDisabled: false
   });
 
   // ===== EMITS =====
@@ -40,12 +42,78 @@
   const endTimePickerRef = ref<InstanceType<typeof VTimePicker>>();
 
   // ===== INITIAL TIME VALUES =====
+  const formatDefaultTime = (hours: number, minutes: number, seconds: number): string => {
+    if (props.use12Hours) {
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const adjustedHours = hours % 12 || 12;
+      return props.showSeconds
+        ? `${String(adjustedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${period}`
+        : `${String(adjustedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${period}`;
+    } else {
+      return props.showSeconds
+        ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        : `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+  };
+
+  const resolveDate = (val: unknown): Date | null => {
+    if (val instanceof Date) return val;
+    if (typeof val === 'number') return new Date(val);
+    return null;
+  };
+
   const getInitialStartTime = () => {
-    return props.type === 'datetime' || props.type === 'datetimerange' ? '00:00:00' : '00:00:00';
+    if (props.modelValue) {
+      if (props.type === 'datetimerange' && Array.isArray(props.modelValue)) {
+        const start = resolveDate(props.modelValue[0]);
+        if (start) {
+          return formatDefaultTime(start.getHours(), start.getMinutes(), start.getSeconds());
+        }
+      }
+      if (props.type === 'datetime') {
+        const date = resolveDate(props.modelValue);
+        if (date) {
+          return formatDefaultTime(date.getHours(), date.getMinutes(), date.getSeconds());
+        }
+      }
+    }
+
+    // дефолти
+    if (props.type === 'datetimerange') {
+      return formatDefaultTime(0, 0, 0);
+    }
+    if (props.type === 'datetime') {
+      const now = new Date();
+      return formatDefaultTime(now.getHours(), now.getMinutes(), now.getSeconds());
+    }
+    return formatDefaultTime(0, 0, 0);
   };
 
   const getInitialEndTime = () => {
-    return '23:59:59';
+    if (props.modelValue) {
+      if (props.type === 'datetimerange' && Array.isArray(props.modelValue)) {
+        const end = resolveDate(props.modelValue[1]);
+        if (end) {
+          return formatDefaultTime(end.getHours(), end.getMinutes(), end.getSeconds());
+        }
+      }
+      if (props.type === 'datetime') {
+        const date = resolveDate(props.modelValue);
+        if (date) {
+          return formatDefaultTime(date.getHours(), date.getMinutes(), date.getSeconds());
+        }
+      }
+    }
+
+    // дефолти
+    if (props.type === 'datetimerange') {
+      return formatDefaultTime(23, 59, 59);
+    }
+    if (props.type === 'datetime') {
+      const now = new Date();
+      return formatDefaultTime(now.getHours(), now.getMinutes(), now.getSeconds());
+    }
+    return formatDefaultTime(23, 59, 59);
   };
 
   // ===== STATE =====
@@ -133,6 +201,87 @@
     return isDateTimeType.value;
   });
 
+  const disabledHoursValue = computed(() => {
+    const now = new Date()
+
+    let hours: number[] = []
+
+    // якщо є свої disabledHours з props
+    if (props.disabledHours) {
+      hours = [...props.disabledHours]
+    }
+
+    if (props.previousDateDisabled) {
+      const currentHour = now.getHours()
+      // блокуємо всі години до поточної
+      for (let h = 0; h < currentHour; h++) {
+        if (!hours.includes(h)) {
+          hours.push(h)
+        }
+      }
+    }
+
+    return hours
+  })
+
+  const disabledMinutesValue = computed(() => {
+    const now = new Date()
+
+    let minutes: number[] = []
+
+    if (props.disabledMinutes) {
+      minutes = [...props.disabledMinutes]
+    }
+
+    if (props.previousDateDisabled) {
+      const currentHour = now.getHours()
+      const currentMinute = now.getMinutes()
+
+      // Якщо користувач вибрав поточну годину, блокуємо хвилини які вже минули
+      if (state.startTime.value && new Date(state.startTime.value).getHours() === currentHour) {
+        for (let m = 0; m < currentMinute; m++) {
+          if (!minutes.includes(m)) {
+            minutes.push(m)
+          }
+        }
+      }
+    }
+
+    return minutes
+  })
+
+  const disabledSecondsValue = computed(() => {
+    const now = new Date()
+
+    let seconds: number[] = []
+
+    if (props.disabledSeconds) {
+      seconds = [...props.disabledSeconds]
+    }
+
+    if (props.previousDateDisabled) {
+      const currentHour = now.getHours()
+      const currentMinute = now.getMinutes()
+      const currentSecond = now.getSeconds()
+
+      if (state.startTime.value) {
+        const selectedDate = new Date(state.startTime.value)
+        if (
+          selectedDate.getHours() === currentHour &&
+          selectedDate.getMinutes() === currentMinute
+        ) {
+          for (let s = 0; s < currentSecond; s++) {
+            if (!seconds.includes(s)) {
+              seconds.push(s)
+            }
+          }
+        }
+      }
+    }
+
+    return seconds
+  })
+
   // ===== DROPDOWN INTEGRATION =====
   const {
     visible: isDropdownVisible,
@@ -203,6 +352,35 @@
         return false;
       }
     }
+
+    // previousDate: забороняє вибір дат у минулому
+    if (props.previousDateDisabled) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      if (checkDate < today) {
+        return false;
+      }
+    }
+
+    // maxDateRange: перевірка максимального діапазону
+    if (props.maxDateRange && (props.type === 'daterange' || props.type === 'datetimerange')) {
+      if (state.startDate.value && state.isSelectingEnd.value) {
+        const start = new Date(state.startDate.value);
+        start.setHours(0, 0, 0, 0);
+        const checkDate = new Date(date);
+        checkDate.setHours(0, 0, 0, 0);
+
+        const diffTime = Math.abs(checkDate.getTime() - start.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays > props.maxDateRange) {
+          return false;
+        }
+      }
+    }
+
     return true;
   };
 
@@ -895,9 +1073,9 @@
                     ref="startTimePickerRef"
                     v-model="state.startTime.value"
                     :clearable="false"
-                    :disabled-hours="props.disabledHours"
-                    :disabled-minutes="props.disabledMinutes"
-                    :disabled-seconds="props.disabledSeconds"
+                    :disabled-hours="() => disabledHoursValue"
+                    :disabled-minutes="() => disabledMinutesValue"
+                    :disabled-seconds="() => disabledSecondsValue"
                     :hide-disabled-options="props.hideDisabledOptions"
                     :hour-step="props.hourStep"
                     :minute-step="props.minuteStep"
@@ -1063,9 +1241,9 @@
                   ref="startTimePickerRef"
                   v-model="state.startTime.value"
                   :clearable="false"
-                  :disabled-hours="props.disabledHours"
-                  :disabled-minutes="props.disabledMinutes"
-                  :disabled-seconds="props.disabledSeconds"
+                  :disabled-hours="() => disabledHoursValue"
+                  :disabled-minutes="() => disabledMinutesValue"
+                  :disabled-seconds="() => disabledSecondsValue"
                   :hide-disabled-options="props.hideDisabledOptions"
                   :hour-step="props.hourStep"
                   :minute-step="props.minuteStep"
@@ -1139,6 +1317,7 @@
                             isRange && state.startDate.value && isSameDate(date, state.startDate.value),
                           'vt-datepicker__date--range-end':
                             isRange && state.endDate.value && isSameDate(date, state.endDate.value),
+                            'vt-datepicker__date--disabled': !isDateClickable(date, false, true)
                         },
                       ]"
                       @click="handleDateClick(date)"

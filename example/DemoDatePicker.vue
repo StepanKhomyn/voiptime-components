@@ -84,6 +84,18 @@
               <td>Whether to show clear button</td>
             </tr>
             <tr>
+              <td><code>previous-date-disabled</code></td>
+              <td><code>boolean</code></td>
+              <td><code>false</code></td>
+              <td>Previous date disabled</td>
+            </tr>
+            <tr>
+              <td><code>max-date-range</code></td>
+              <td><code>number</code></td>
+              <td><code>null</code></td>
+              <td>Max date range</td>
+            </tr>
+            <tr>
               <td><code>size</code></td>
               <td><code>'small' | 'default' | 'large'</code></td>
               <td><code>'default'</code></td>
@@ -262,6 +274,7 @@
           v-model="basicDate"
           placeholder="Select date"
           type="date"
+          previous-date-disabled
           @change="handleChange('Basic Date', $event)"
         />
         <p class="demo-result">Selected: {{ basicDate || 'None' }}</p>
@@ -275,6 +288,7 @@
           v-model="basicDateTime"
           placeholder="Select dateTime"
           type="datetime"
+          previous-date-disabled
           @change="handleChange('Basic DateTime', $event)"
         />
         <p class="demo-result">Selected: {{ basicDateTime || 'None' }}</p>
@@ -331,6 +345,7 @@
           range-separator=" to "
           start-placeholder="Start date"
           type="datetimerange"
+          :max-date-range="31"
           @change="handleChange('DateTime Range', $event)"
         />
         <p class="demo-result">Selected: {{ dateTimeRange ? `[${dateTimeRange[0]}, ${dateTimeRange[1]}]` : 'None' }}</p>
