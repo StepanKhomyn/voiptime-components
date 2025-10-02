@@ -1,14 +1,5 @@
-import {
-  reactive,
-  ref,
-  computed,
-  isRef,
-  unref,
-  watch,
-  toRef,
-  nextTick,
-} from 'vue';
-import type { RulesObject, ValidatorFn, WrappedValidator, FieldValidation, ValidationGroup } from './types';
+import { computed, isRef, reactive, ref, watch } from 'vue';
+import type { FieldValidation, RulesObject, ValidationGroup, ValidatorFn, WrappedValidator } from './types';
 
 type AnyObject = Record<string, any>;
 
@@ -22,6 +13,7 @@ function getPath(obj: AnyObject, path: string) {
   }
   return cur;
 }
+
 function setPath(obj: AnyObject, path: string, value: any) {
   const parts = path.split('.');
   let cur: any = obj;
@@ -35,27 +27,40 @@ function setPath(obj: AnyObject, path: string, value: any) {
 
 /**
  * Build a "ref-like" object for path inside state (get/set)
+ * Now supports both regular objects and refs
  */
-function refFor(state: AnyObject, path: string) {
+function refFor(state: AnyObject | any, path: string) {
   return {
     get value() {
-      return getPath(state, path);
+      // Якщо state - це ref, спочатку розгортаємо його
+      const actualState = isRef(state) ? state.value : state;
+      return getPath(actualState, path);
     },
     set value(v: any) {
-      setPath(state, path, v);
+      // Якщо state - це ref, спочатку розгортаємо його
+      const actualState = isRef(state) ? state.value : state;
+      setPath(actualState, v);
     },
   };
 }
 
 let uidCounter = 1;
+
 function uid() {
-  return `v_${Date.now()}_${(uidCounter++)}`;
+  return `v_${Date.now()}_${uidCounter++}`;
 }
 
 /**
  * Create field validation node
  */
-function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn[], opts: { silentErrors?: boolean }) {
+function createFieldNode(
+  state: AnyObject | any,
+  path: string,
+  validators: ValidatorFn[],
+  opts: {
+    silentErrors?: boolean;
+  }
+) {
   const modelRef = refFor(state, path);
   const $dirty = ref(false);
   const $touched = ref(false);
@@ -78,14 +83,28 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
         if (out === true) {
           // ok
         } else if (typeof out === 'string') {
-          errs.push({ $message: out, $validator: wrapped.$validatorName || wrapped.name || 'validator', $params: wrapped.$params });
+          errs.push({
+            $message: out,
+            $validator: wrapped.$validatorName || wrapped.name || 'validator',
+            $params: wrapped.$params,
+          });
         } else if (out === false) {
-          const message = typeof wrapped.$message === 'function' ? wrapped.$message(wrapped.$params) : (wrapped.$message || 'Невалідне поле');
-          errs.push({ $message: message as string, $validator: wrapped.$validatorName || wrapped.name || 'validator', $params: wrapped.$params });
+          const message =
+            typeof wrapped.$message === 'function'
+              ? wrapped.$message(wrapped.$params)
+              : wrapped.$message || 'Невалідне поле';
+          errs.push({
+            $message: message as string,
+            $validator: wrapped.$validatorName || wrapped.name || 'validator',
+            $params: wrapped.$params,
+          });
         }
       } catch (e: any) {
         const wrapped = v as WrappedValidator;
-        errs.push({ $message: e?.message || 'Validator error', $validator: wrapped.$validatorName || wrapped.name || 'validator' });
+        errs.push({
+          $message: e?.message || 'Validator error',
+          $validator: wrapped.$validatorName || wrapped.name || 'validator',
+        });
       }
     }
 
@@ -101,8 +120,12 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
     }
   }
 
+  // Спостерігаємо за змінами з підтримкою ref
   watch(
-    () => modelRef.value,
+    () => {
+      const actualState = isRef(state) ? state.value : state;
+      return getPath(actualState, path);
+    },
     () => {
       $dirty.value = true;
       void runValidators(modelRef.value);
@@ -129,7 +152,7 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
       return $pending.value;
     },
     get $invalid() {
-      return (_errors.value && _errors.value.length > 0);
+      return _errors.value && _errors.value.length > 0;
     },
     get $error() {
       return node.$dirty && node.$invalid;
@@ -137,7 +160,7 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
     get $errors() {
       return opts.silentErrors ? [] : _errors.value.map(e => ({ ...e }));
     },
-    $params: validators.length ? ((validators[0] as WrappedValidator).$params || {}) : undefined,
+    $params: validators.length ? (validators[0] as WrappedValidator).$params || {} : undefined,
 
     $touch() {
       $dirty.value = true;
@@ -155,7 +178,7 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
       $dirty.value = true;
       await runValidators(modelRef.value);
       return !_errors.value.length;
-    }
+    },
   });
 
   (node as any).$setExternalResults = (arr: Array<{ $message: string; $validator?: string }>) => {
@@ -174,10 +197,19 @@ function createFieldNode(state: AnyObject, path: string, validators: ValidatorFn
 /**
  * Build validation tree recursively
  */
-export function useValidate(rulesOrFactory: RulesObject | (() => RulesObject), state: AnyObject, globalOpts?: { silentErrors?: boolean }) {
+export function useValidate(
+  rulesOrFactory: RulesObject | (() => RulesObject),
+  state: AnyObject | any,
+  globalOpts?: {
+    silentErrors?: boolean;
+  }
+) {
   const opts = { silentErrors: !!globalOpts?.silentErrors };
 
   const rules = typeof rulesOrFactory === 'function' ? rulesOrFactory() : rulesOrFactory;
+
+  // Розгортаємо ref якщо потрібно
+  const actualState = isRef(state) ? state : state;
 
   function build(nodeRules: any, basePath = ''): any {
     const group: AnyObject = {};
@@ -187,13 +219,13 @@ export function useValidate(rulesOrFactory: RulesObject | (() => RulesObject), s
       const rule = nodeRules[key];
       const path = basePath ? `${basePath}.${key}` : key;
 
-      if (typeof rule === 'function' || Array.isArray(rule) && (rule.length > 0 && typeof rule[0] === 'function')) {
+      if (typeof rule === 'function' || (Array.isArray(rule) && rule.length > 0 && typeof rule[0] === 'function')) {
         // Field validators - accept either single function or array of functions
-        const validators: ValidatorFn[] = Array.isArray(rule) ? rule as ValidatorFn[] : [rule as ValidatorFn];
-        group[key] = createFieldNode(state, path, validators, opts);
+        const validators: ValidatorFn[] = Array.isArray(rule) ? (rule as ValidatorFn[]) : [rule as ValidatorFn];
+        group[key] = createFieldNode(actualState, path, validators, opts);
       } else if (typeof rule === 'object' && rule !== null) {
         // nested group or lazy factory
-        if (typeof rule === 'object' && (Array.isArray(rule) === false)) {
+        if (typeof rule === 'object' && Array.isArray(rule) === false) {
           group[key] = build(rule as any, path);
         }
       } else {
@@ -236,28 +268,28 @@ export function useValidate(rulesOrFactory: RulesObject | (() => RulesObject), s
     };
 
     const $anyDirty = computed(() => {
-      return Object.keys(group).some((k) => {
+      return Object.keys(group).some(k => {
         const child = group[k];
         return child && child.$dirty;
       });
     });
 
     const $anyInvalid = computed(() => {
-      return Object.keys(group).some((k) => {
+      return Object.keys(group).some(k => {
         const child = group[k];
         return child && child.$invalid;
       });
     });
 
     const $anyError = computed(() => {
-      return Object.keys(group).some((k) => {
+      return Object.keys(group).some(k => {
         const child = group[k];
         return child && child.$error;
       });
     });
 
     const $pending = computed(() => {
-      return Object.keys(group).some((k) => {
+      return Object.keys(group).some(k => {
         const child = group[k];
         return child && child.$pending;
       });
@@ -300,7 +332,9 @@ export function useValidate(rulesOrFactory: RulesObject | (() => RulesObject), s
           for (const k of Object.keys(external)) {
             const node = getNodeByPath(resRoot, k);
             if (node && (node as any).$setExternalResults) {
-              const arr = Array.isArray(external[k]) ? external[k].map((m: string) => ({ $message: m })) : [{ $message: external[k] }];
+              const arr = Array.isArray(external[k])
+                ? external[k].map((m: string) => ({ $message: m }))
+                : [{ $message: external[k] }];
               (node as any).$setExternalResults(arr);
             }
           }
@@ -309,7 +343,7 @@ export function useValidate(rulesOrFactory: RulesObject | (() => RulesObject), s
       $clearExternalResults() {
         // TODO: clear all
         traverseAndApply(resRoot, (n: any) => n.$clearExternalResults?.());
-      }
+      },
     };
 
     Object.assign(group, meta);
