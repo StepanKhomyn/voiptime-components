@@ -27,7 +27,7 @@
     showSeconds: true,
     use12Hours: false,
     hideDisabledOptions: false,
-    maxDateRange: null,
+    maxDateRange: Infinity,
     previousDateDisabled: false
   });
 
@@ -202,85 +202,82 @@
   });
 
   const disabledHoursValue = computed(() => {
-    const now = new Date()
+    return (selectedHour?: number): number[] => {
+      const now = new Date();
+      let hours: number[] = [];
 
-    let hours: number[] = []
-
-    // якщо є свої disabledHours з props
-    if (props.disabledHours) {
-      hours = [...props.disabledHours]
-    }
-
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours()
-      // блокуємо всі години до поточної
-      for (let h = 0; h < currentHour; h++) {
-        if (!hours.includes(h)) {
-          hours.push(h)
-        }
+      // якщо є свої disabledHours з props
+      if (props.disabledHours) {
+        hours = [...props.disabledHours];
       }
-    }
 
-    return hours
-  })
-
-  const disabledMinutesValue = computed(() => {
-    const now = new Date()
-
-    let minutes: number[] = []
-
-    if (props.disabledMinutes) {
-      minutes = [...props.disabledMinutes]
-    }
-
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours()
-      const currentMinute = now.getMinutes()
-
-      // Якщо користувач вибрав поточну годину, блокуємо хвилини які вже минули
-      if (state.startTime.value && new Date(state.startTime.value).getHours() === currentHour) {
-        for (let m = 0; m < currentMinute; m++) {
-          if (!minutes.includes(m)) {
-            minutes.push(m)
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        // блокуємо всі години до поточної
+        for (let h = 0; h < currentHour; h++) {
+          if (!hours.includes(h)) {
+            hours.push(h);
           }
         }
       }
-    }
 
-    return minutes
-  })
+      return hours;
+    };
+  });
 
-  const disabledSecondsValue = computed(() => {
-    const now = new Date()
+  const disabledMinutesValue = computed(() => {
+    return (selectedHour: number): number[] => {
+      const now = new Date();
+      let minutes: number[] = [];
 
-    let seconds: number[] = []
+      if (props.disabledMinutes) {
+        minutes = [...props.disabledMinutes];
+      }
 
-    if (props.disabledSeconds) {
-      seconds = [...props.disabledSeconds]
-    }
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
 
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours()
-      const currentMinute = now.getMinutes()
-      const currentSecond = now.getSeconds()
-
-      if (state.startTime.value) {
-        const selectedDate = new Date(state.startTime.value)
-        if (
-          selectedDate.getHours() === currentHour &&
-          selectedDate.getMinutes() === currentMinute
-        ) {
-          for (let s = 0; s < currentSecond; s++) {
-            if (!seconds.includes(s)) {
-              seconds.push(s)
+        // Якщо користувач вибрав поточну годину, блокуємо хвилини які вже минули
+        if (selectedHour === currentHour) {
+          for (let m = 0; m < currentMinute; m++) {
+            if (!minutes.includes(m)) {
+              minutes.push(m);
             }
           }
         }
       }
-    }
 
-    return seconds
-  })
+      return minutes;
+    };
+  });
+
+  const disabledSecondsValue = computed(() => {
+    return (selectedHour: number, selectedMinute: number): number[] => {
+      const now = new Date();
+      let seconds: number[] = [];
+
+      if (props.disabledSeconds) {
+        seconds = [...props.disabledSeconds];
+      }
+
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        const currentSecond = now.getSeconds();
+
+        if (selectedHour === currentHour && selectedMinute === currentMinute) {
+          for (let s = 0; s < currentSecond; s++) {
+            if (!seconds.includes(s)) {
+              seconds.push(s);
+            }
+          }
+        }
+      }
+
+      return seconds;
+    };
+  });
 
   // ===== DROPDOWN INTEGRATION =====
   const {
@@ -1073,9 +1070,9 @@
                     ref="startTimePickerRef"
                     v-model="state.startTime.value"
                     :clearable="false"
-                    :disabled-hours="() => disabledHoursValue"
-                    :disabled-minutes="() => disabledMinutesValue"
-                    :disabled-seconds="() => disabledSecondsValue"
+                    :disabled-hours="disabledHoursValue"
+                    :disabled-minutes="disabledMinutesValue"
+                    :disabled-seconds="disabledSecondsValue"
                     :hide-disabled-options="props.hideDisabledOptions"
                     :hour-step="props.hourStep"
                     :minute-step="props.minuteStep"
@@ -1241,9 +1238,9 @@
                   ref="startTimePickerRef"
                   v-model="state.startTime.value"
                   :clearable="false"
-                  :disabled-hours="() => disabledHoursValue"
-                  :disabled-minutes="() => disabledMinutesValue"
-                  :disabled-seconds="() => disabledSecondsValue"
+                  :disabled-hours="disabledHoursValue"
+                  :disabled-minutes="disabledMinutesValue"
+                  :disabled-seconds="disabledSecondsValue"
                   :hide-disabled-options="props.hideDisabledOptions"
                   :hour-step="props.hourStep"
                   :minute-step="props.minuteStep"
