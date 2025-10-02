@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.0...v1.11.1) (2025-10-02)
+
+
+### Bug Fixes
+
+* validation with ref2 ([c8c33ed](https://github.com/StepanKhomyn/voiptime-components/commit/c8c33edbc85b85e0cbf7abba2125a58d731f183e))
+
 # [1.11.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.10.2...v1.11.0) (2025-10-02)
 
 
