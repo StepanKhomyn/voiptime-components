@@ -39,7 +39,7 @@ function refFor(state: AnyObject | any, path: string) {
     set value(v: any) {
       // Якщо state - це ref, спочатку розгортаємо його
       const actualState = isRef(state) ? state.value : state;
-      setPath(actualState, v);
+      setPath(actualState, path, v);
     },
   };
 }
