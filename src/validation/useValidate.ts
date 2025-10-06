@@ -66,6 +66,7 @@ function createFieldNode(
   const $touched = ref(false);
   const $pending = ref(false);
   const lastValidateToken = { t: 0 };
+  let isResetting = false;
 
   let externalResults: Array<{ $message: string; $validator?: string }> = [];
   const _errors = ref<Array<{ $message: string; $validator: string; $params?: any; $pending?: boolean }>>([]);
@@ -127,6 +128,7 @@ function createFieldNode(
       return getPath(actualState, path);
     },
     () => {
+      if (isResetting) return;
       $dirty.value = true;
       void runValidators(modelRef.value);
     }
@@ -168,10 +170,15 @@ function createFieldNode(
     },
 
     $reset() {
+      isResetting = true;
       $dirty.value = false;
       $touched.value = false;
       _errors.value = [];
       $pending.value = false;
+
+      queueMicrotask(() => {
+        isResetting = false;
+      });
     },
 
     async $validate() {
