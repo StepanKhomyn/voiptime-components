@@ -43,6 +43,12 @@ export const containUpperCaseLetter: ValidatorFn = (v: any) =>
 
 withName('containUpperCaseLetter', containUpperCaseLetter);
 
+export const noSpaces: ValidatorFn = (v: any) =>
+  v == null || v === ''
+    ? true
+    : !/\s/.test(v) || 'Не повинно містити пробілів';
+
+withName('noSpaces', noSpaces);
 
 // Example async validator factory
 export const uniqueAsync = (checkFn: (val: any) => Promise<boolean>, message = 'Значення вже зайнято'): ValidatorFn => {
