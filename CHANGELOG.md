@@ -1,3 +1,10 @@
+## [1.11.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.5...v1.11.6) (2025-10-06)
+
+
+### Bug Fixes
+
+* problem with $reset ([97149d2](https://github.com/StepanKhomyn/voiptime-components/commit/97149d23be472ee0b3ae9ed342ff03caa42eaa5e))
+
 ## [1.11.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.4...v1.11.5) (2025-10-06)
 
 
