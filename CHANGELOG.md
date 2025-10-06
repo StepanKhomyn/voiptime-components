@@ -1,3 +1,10 @@
+## [1.11.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.3...v1.11.4) (2025-10-06)
+
+
+### Bug Fixes
+
+* add noSpaces to validation ([e0af1f6](https://github.com/StepanKhomyn/voiptime-components/commit/e0af1f6effc17d9649536a30bc2423b2c9c6e8db))
+
 ## [1.11.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.2...v1.11.3) (2025-10-06)
 
 
