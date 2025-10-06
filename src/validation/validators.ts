@@ -3,8 +3,11 @@ import { withName } from './helpers';
 
 // Тут додаємо стандартні валідатори по типу required, minLength
 
-export const required: ValidatorFn = (v) =>
-  (v !== null && v !== undefined && v !== '') || 'Поле є обовʼязковим';
+export const required: ValidatorFn = (v) => {
+  if (v === null || v === undefined) return 'Поле є обовʼязковим';
+  if (Array.isArray(v)) return v.length > 0 || 'Поле є обовʼязковим';
+  return v.toString().trim() !== '' || 'Поле є обовʼязковим';
+};
 withName('required', required);
 
 export const minLength = (min: number): ValidatorFn =>
