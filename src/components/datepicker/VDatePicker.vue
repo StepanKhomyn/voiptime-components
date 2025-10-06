@@ -324,8 +324,15 @@
       'vt-datepicker--range': isRange.value,
       'vt-datepicker--open': isDropdownVisible.value,
       'vt-datepicker--with-time': showTimePicker.value,
+      'vt-datepicker--error': !!props.errorMessage,
     },
   ]);
+
+  // Повернення помилки
+  const displayErrorMessage = computed(() => {
+    if (props.errorMessage) return props.errorMessage;
+    return '';
+  });
 
   const dropdownStyle = computed(() => ({
     ...dropdownPosition.value,
@@ -1383,5 +1390,11 @@
         </div>
       </transition>
     </Teleport>
+    <!-- Helper Text / Error Message -->
+    <div v-if="displayErrorMessage" class="vt-datepicker__help">
+      <span v-if="displayErrorMessage" class="vt-datepicker__error">
+        {{ displayErrorMessage }}
+      </span>
+    </div>
   </div>
 </template>

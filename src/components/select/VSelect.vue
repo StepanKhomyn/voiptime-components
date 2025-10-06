@@ -365,6 +365,7 @@
 
   const currentStatus = computed(() => {
     if (props.status !== 'default') return props.status;
+    if (props.errorMessage) return 'error';
     if (!state.isValid.value) return 'error';
     return 'default';
   });
@@ -379,6 +380,12 @@
       'vt-select--open': isDropdownVisible.value,
     },
   ]);
+
+  // Повернення помилки
+  const displayErrorMessage = computed(() => {
+    if (props.errorMessage) return props.errorMessage;
+    return '';
+  });
 
   const dropdownStyle = computed(() => ({
     ...dropdownPosition.value,
@@ -892,5 +899,12 @@
         </div>
       </transition>
     </Teleport>
+
+    <!-- Helper Text / Error Message -->
+    <div v-if="displayErrorMessage" class="vt-select__help">
+      <span v-if="displayErrorMessage" class="vt-select__error">
+        {{ displayErrorMessage }}
+      </span>
+    </div>
   </div>
 </template>

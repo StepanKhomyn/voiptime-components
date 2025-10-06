@@ -282,7 +282,7 @@
       'vt-input--textarea': isTextarea.value,
       'vt-input--has-prefix': hasPrefix.value,
       'vt-input--has-suffix': hasSuffix.value,
-      'vt-input--invalid': !!props.errorMessage || !isValid.value,
+      'vt-input--invalid': !isValid.value,
     },
   ]);
 

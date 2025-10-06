@@ -38,6 +38,15 @@
     }
   }
 
+  &--error {
+    .vt-datepicker__trigger {
+      border-color: var(--color-danger-main);    }
+
+    &.vt-datepicker--focused .vt-datepicker__trigger {
+      border-color: var(--color-danger-main);
+    }
+  }
+
   &__input {
     display: flex;
     align-items: center;
@@ -441,6 +450,16 @@
     gap: var(--vt-gap-base);
     padding: var(--vt-padding-base);
     //background-color: var(--color-gray-7);
+  }
+
+  &__help {
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  &__error {
+    color: var(--color-danger-main);
   }
 
   // Responsive adjustments for dual calendar

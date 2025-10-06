@@ -38,6 +38,9 @@ export interface VtSelectProps {
   // Опція для порівняння об'єктів
   valueKey?: string; // Ключ для порівняння об'єктів (наприклад, 'id')
 
+  // Тексти
+  errorMessage?: string;
+
   // Нові пропи для фільтрації
   filterPlaceholder?: string; // Плейсхолдер для поля фільтрації
   allowRemoteFilter?: boolean; // Чи дозволяти віддалену фільтрацію (не фільтрувати локально)

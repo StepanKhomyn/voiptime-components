@@ -160,8 +160,15 @@
       'vt-timepicker--focused': state.isFocused.value,
       'vt-timepicker--range': isRange.value,
       'vt-timepicker--open': isDropdownVisible.value,
+      'vt-timepicker--error': !!props.errorMessage,
     },
   ]);
+
+  // Повернення помилки
+  const displayErrorMessage = computed(() => {
+    if (props.errorMessage) return props.errorMessage;
+    return '';
+  });
 
   // ===== CURRENT TIME STATE =====
   const currentHour = ref(0);
@@ -1071,5 +1078,11 @@
         </div>
       </transition>
     </Teleport>
+    <!-- Helper Text / Error Message -->
+    <div v-if="displayErrorMessage" class="vt-timepicker__help">
+      <span v-if="displayErrorMessage" class="vt-timepicker__error">
+        {{ displayErrorMessage }}
+      </span>
+    </div>
   </div>
 </template>

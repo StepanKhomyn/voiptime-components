@@ -34,6 +34,9 @@ export interface VDatePickerProps {
   defaultValue?: DatePickerValue;
   defaultTime?: string | string[];
 
+  // Тексти
+  errorMessage?: string;
+
   // Time picker props (для datetime типів)
   hourStep?: number;
   minuteStep?: number;

@@ -26,6 +26,8 @@ export interface VTimePickerProps {
   disabledMinutes?: (selectedHour: number) => number[];
   disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
   hideDisabledOptions?: boolean;
+  // Тексти
+  errorMessage?: string;
 }
 
 export interface VTimePickerEmits {

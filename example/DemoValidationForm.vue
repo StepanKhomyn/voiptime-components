@@ -12,6 +12,10 @@
     withName,
   } from '../src/validation';
   import VInput from '@/components/input/VInput.vue';
+  import VSelect from '../src/components/select/VSelect.vue';
+  import VOption from '../src/components/select/VOption.vue';
+  import VDatePicker from '../src/components/datepicker/VDatePicker.vue';
+  import VTimePicker from '../src/components/timepicker/VTimePicker.vue';
 
   // кастомні валідатори
   const startsWithABC = withMessage(
@@ -30,6 +34,9 @@
     age: '',
     nameCustom: '',
     nameAsync: '',
+    selectRequired: '',
+    basicDate: Date,
+    selectedTime: '14:30:00'
   });
 
   // rules
@@ -42,21 +49,13 @@
     confirm: [minLength(6), sameAs(() => form.password, 'Паролі не співпадають')],
     age: [numeric],
     nameCustom: [startsWithABC],
+    selectRequired: [required],
+    basicDate: [required],
+    selectedTime: [required],
   };
 
   // validation tree
   const v$ = useValidate(rules, form);
-
-  // submit
-  const submit = async () => {
-    const ok = await v$.$validate();
-    if (!ok) {
-      alert('Помилки у формі');
-      v$.$touch();
-      return;
-    }
-    alert('OK — дані валідні');
-  };
 
   // toggle code
   const codeCollapsed = ref({
@@ -73,6 +72,16 @@
   const toggleCode = (key: string) => {
     codeCollapsed.value[key] = !codeCollapsed.value[key];
   };
+
+  const technologies = [
+    { label: 'Vue.js', value: 'vue' },
+    { label: 'React', value: 'react' },
+    { label: 'Angular', value: 'angular' },
+    { label: 'Svelte', value: 'svelte' },
+    { label: 'Svelte3', value: 'svelte23' },
+    { label: 'Svelte33', value: 'svelte233' },
+    { label: 'Svelte3вці3', value: 'svelte2313' },
+  ];
 
   // приклади коду для кожної секції
   const examplesValidators = {
@@ -130,6 +139,27 @@ const uniqueName = withMessage(
 const rules = {
   nameAsync: [uniqueName]
 };`,
+    select: `
+          <VSelect
+            v-model="form.selectRequired"
+            collapsed-tags
+            multiple
+            placeholder="Оберіть технології..."
+            :error-message="v$.selectRequired.$errors[0]?.$message"
+          >
+            <VOption v-for="item in technologies" :key="item.value" :label="item.label" :value="item.value" />
+          </VSelect>`,
+
+    datePicker: `
+          <VDatePicker
+            v-model="form.basicDate"
+            placeholder="Select date"
+            type="date"
+            previous-date-disabled
+            :error-message="v$.basicDate.$errors[0]?.$message"
+          />`,
+    timePicker:
+      `<VTimePicker v-model="form.selectedTime" :error-message="v$.selectedTime.$errors[0]?.$message" placeholder="Оберіть час" />`,
   };
 </script>
 
@@ -148,6 +178,9 @@ const rules = {
           <pre class="code"><h4>{{ 'numeric' }}</h4><code>{{ examplesValidators.numeric }}</code></pre>
           <pre class="code"><h4>{{ 'custom' }}</h4><code>{{ examplesValidators.custom }}</code></pre>
           <pre class="code"><h4>{{ 'async' }}</h4><code>{{ examplesValidators.async }}</code></pre>
+          <pre class="code"><h4>{{ 'required select' }}</h4><code>{{ examplesValidators.select }}</code></pre>
+          <pre class="code"><h4>{{ 'required datePicker' }}</h4><code>{{ examplesValidators.datePicker }}</code></pre>
+          <pre class="code"><h4>{{ 'required timePicker' }}</h4><code>{{ examplesValidators.timePicker }}</code></pre>
         </div>
       </div>
       <div class="container-item-table">
@@ -192,6 +225,32 @@ const rules = {
         <div>
           <h4>{{ 'async' }}</h4>
           <VInput :disabled="true" type="text" placeholder="Унікальне ім'я" />
+        </div>
+        <div>
+          <h4>{{ 'Select' }}</h4>
+          <VSelect
+            v-model="form.selectRequired"
+            collapsed-tags
+            multiple
+            placeholder="Оберіть технології..."
+            :error-message="v$.selectRequired.$errors[0]?.$message"
+          >
+            <VOption v-for="item in technologies" :key="item.value" :label="item.label" :value="item.value" />
+          </VSelect>
+        </div>
+        <div>
+          <h4>{{ 'DatePicker' }}</h4>
+          <VDatePicker
+            v-model="form.basicDate"
+            placeholder="Select date"
+            type="date"
+            previous-date-disabled
+            :error-message="v$.basicDate.$errors[0]?.$message"
+          />
+        </div>
+        <div>
+          <h4>{{ 'TimePicker' }}</h4>
+          <VTimePicker v-model="form.selectedTime" :error-message="v$.selectedTime.$errors[0]?.$message" placeholder="Оберіть час" />
         </div>
       </div>
     </div>
