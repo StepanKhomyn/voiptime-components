@@ -74,6 +74,7 @@ import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
 import AddIcon from './others/AddIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
+import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
@@ -197,6 +198,7 @@ export const icons = {
   // others icons
   add: AddIcon,
   dsr: DsrIcon,
+  emptyRound: EmptyRoundIcon,
   hold: HoldIcon,
   ivr: IvrIcon,
   minus: MinusIcon,
