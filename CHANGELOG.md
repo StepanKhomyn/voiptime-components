@@ -1,3 +1,10 @@
+## [1.11.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.6...v1.11.7) (2025-10-06)
+
+
+### Bug Fixes
+
+* add error message to select, date picker, time picker ([f061e1a](https://github.com/StepanKhomyn/voiptime-components/commit/f061e1a784983ca4f091921ec155158e0731a7ee))
+
 ## [1.11.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.5...v1.11.6) (2025-10-06)
 
 
