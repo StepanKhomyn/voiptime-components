@@ -1,3 +1,10 @@
+## [1.11.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.4...v1.11.5) (2025-10-06)
+
+
+### Bug Fixes
+
+* add empty round icon ([e8079d0](https://github.com/StepanKhomyn/voiptime-components/commit/e8079d094018da6e1db6a0479dcc881d00ea873d))
+
 ## [1.11.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.3...v1.11.4) (2025-10-06)
 
 
