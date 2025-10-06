@@ -36,6 +36,14 @@ export const numeric: ValidatorFn = (v: any) =>
   (v == null || v === '' ? true : !isNaN(Number(v))) || 'Повинно бути числом';
 withName('numeric', numeric);
 
+export const containUpperCaseLetter: ValidatorFn = (v: any) =>
+  v == null || v === ''
+    ? true
+    : /[A-Z]/.test(v) || 'Має містити хоча б одну велику літеру';
+
+withName('containUpperCaseLetter', containUpperCaseLetter);
+
+
 // Example async validator factory
 export const uniqueAsync = (checkFn: (val: any) => Promise<boolean>, message = 'Значення вже зайнято'): ValidatorFn => {
   const fn: ValidatorFn = async (v) => {
