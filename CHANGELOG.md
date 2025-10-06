@@ -1,3 +1,10 @@
+## [1.11.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.1...v1.11.2) (2025-10-06)
+
+
+### Bug Fixes
+
+* виправив проблему з trim в required ([1e4a09c](https://github.com/StepanKhomyn/voiptime-components/commit/1e4a09cb9e006323472e95ad0a4a98f0c80a6f18))
+
 ## [1.11.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.0...v1.11.1) (2025-10-02)
 
 
