@@ -1,3 +1,10 @@
+## [1.11.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.2...v1.11.3) (2025-10-06)
+
+
+### Bug Fixes
+
+* add possibility to check if letter contains one upper case letter ([53aafbf](https://github.com/StepanKhomyn/voiptime-components/commit/53aafbf8b13f12f92006f4b9c735f3d93d52be4c))
+
 ## [1.11.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.1...v1.11.2) (2025-10-06)
 
 
