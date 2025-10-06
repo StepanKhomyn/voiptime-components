@@ -3,8 +3,11 @@ import { withName } from './helpers';
 
 // Тут додаємо стандартні валідатори по типу required, minLength
 
-export const required: ValidatorFn = (v) =>
-  (v !== null && v !== undefined && v !== '') || 'Поле є обовʼязковим';
+export const required: ValidatorFn = (v) => {
+  if (v === null || v === undefined) return 'Поле є обовʼязковим';
+  if (Array.isArray(v)) return v.length > 0 || 'Поле є обовʼязковим';
+  return v.toString().trim() !== '' || 'Поле є обовʼязковим';
+};
 withName('required', required);
 
 export const minLength = (min: number): ValidatorFn =>
@@ -32,6 +35,20 @@ export const sameAs = (compare: () => any, msg?: string): ValidatorFn =>
 export const numeric: ValidatorFn = (v: any) =>
   (v == null || v === '' ? true : !isNaN(Number(v))) || 'Повинно бути числом';
 withName('numeric', numeric);
+
+export const containUpperCaseLetter: ValidatorFn = (v: any) =>
+  v == null || v === ''
+    ? true
+    : /[A-Z]/.test(v) || 'Має містити хоча б одну велику літеру';
+
+withName('containUpperCaseLetter', containUpperCaseLetter);
+
+export const noSpaces: ValidatorFn = (v: any) =>
+  v == null || v === ''
+    ? true
+    : !/\s/.test(v) || 'Не повинно містити пробілів';
+
+withName('noSpaces', noSpaces);
 
 // Example async validator factory
 export const uniqueAsync = (checkFn: (val: any) => Promise<boolean>, message = 'Значення вже зайнято'): ValidatorFn => {

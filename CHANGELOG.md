@@ -1,3 +1,31 @@
+## [1.11.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.3...v1.11.4) (2025-10-06)
+
+
+### Bug Fixes
+
+* add noSpaces to validation ([e0af1f6](https://github.com/StepanKhomyn/voiptime-components/commit/e0af1f6effc17d9649536a30bc2423b2c9c6e8db))
+
+## [1.11.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.2...v1.11.3) (2025-10-06)
+
+
+### Bug Fixes
+
+* add possibility to check if letter contains one upper case letter ([53aafbf](https://github.com/StepanKhomyn/voiptime-components/commit/53aafbf8b13f12f92006f4b9c735f3d93d52be4c))
+
+## [1.11.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.1...v1.11.2) (2025-10-06)
+
+
+### Bug Fixes
+
+* виправив проблему з trim в required ([1e4a09c](https://github.com/StepanKhomyn/voiptime-components/commit/1e4a09cb9e006323472e95ad0a4a98f0c80a6f18))
+
+## [1.11.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.0...v1.11.1) (2025-10-02)
+
+
+### Bug Fixes
+
+* validation with ref2 ([c8c33ed](https://github.com/StepanKhomyn/voiptime-components/commit/c8c33edbc85b85e0cbf7abba2125a58d731f183e))
+
 # [1.11.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.10.2...v1.11.0) (2025-10-02)
 
 
