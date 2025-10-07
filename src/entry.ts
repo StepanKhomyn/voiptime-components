@@ -20,6 +20,7 @@ import VCollapse from './components/collapse/VCollapse.vue';
 import VCollapseItem from './components/collapse/VCollapseItem.vue';
 import VTabs from './components/tabs/VTabs.vue';
 import VTabItem from './components/tabs/VTabItem.vue';
+import VUpload from './components/upload/VUpload.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -49,6 +50,7 @@ export {
   VCollapseItem,
   VTabs,
   VTabItem,
+  VUpload,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -174,6 +176,8 @@ export type {
 // VTabs
 export type { VTabsProps, VTabItemProps, VTabsEmits } from './components/tabs/types';
 
+export type { UploadFile, VUploadProps, VUploadEmits, UploadError } from './components/upload/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -236,6 +240,7 @@ const VUIPlugin = {
     app.component(`${prefix}CollapseItem`, VCollapseItem);
     app.component(`${prefix}Tabs`, VTabs);
     app.component(`${prefix}TabItem`, VTabItem);
+    app.component(`${prefix}Upload`, VUpload);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

@@ -20,6 +20,7 @@ import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
 import StatusChange2Icon from './actions/StatusChange2Icon.vue';
 import StatusChangeIcon from './actions/StatusChangeIcon.vue';
+import UploadCloudIcon from './actions/UploadCloudIcon.vue';
 import UsersGroupIcon from './actions/UsersGroupIcon.vue';
 import ArrowDownIcon from './arrow/ArrowDownIcon.vue';
 import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
@@ -130,6 +131,7 @@ export const icons = {
   star: StarIcon,
   statusChange2: StatusChange2Icon,
   statusChange: StatusChangeIcon,
+  uploadCloud: UploadCloudIcon,
   usersGroup: UsersGroupIcon,
 
   // arrow icons

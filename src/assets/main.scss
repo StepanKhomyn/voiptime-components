@@ -19,7 +19,9 @@
 @use './mixins' as *;
 
 @use '../components/button/button';
-@use '../components/loader/loader' as loader-component;;
+@use '../components/loader/loader' as loader-component;
+
+;
 @use '../components/pagination/pagination';
 @use '../components/table/table';
 @use '../components/table/column-selector';
@@ -34,6 +36,7 @@
 @use '../components/collapse/collapse';
 @use '../components/message/message';
 @use '../components/tabs/tabs';
+@use '../components/upload/upload';
 @use '../directives/tooltip/tooltip';
 @use '../directives/loader/loader' as loader-directive;
 
