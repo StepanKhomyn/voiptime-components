@@ -84,6 +84,7 @@ import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
 import PrioritySelectIcon from './others/PrioritySelectIcon.vue';
 import ProgressiveIcon from './others/ProgressiveIcon.vue';
+import ScheduleIcon from './others/ScheduleIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
 import StatisticDetailIcon from './others/StatisticDetailIcon.vue';
 import StatisticSummaryIcon from './others/StatisticSummaryIcon.vue';
@@ -91,6 +92,7 @@ import StatusSelectIcon from './others/StatusSelectIcon.vue';
 import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
+import WindowStartIcon from './others/WindowStartIcon.vue';
 import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
@@ -209,6 +211,7 @@ export const icons = {
   preview: PreviewIcon,
   prioritySelect: PrioritySelectIcon,
   progressive: ProgressiveIcon,
+  schedule: ScheduleIcon,
   sms: SmsIcon,
   statisticDetail: StatisticDetailIcon,
   statisticSummary: StatisticSummaryIcon,
@@ -216,6 +219,7 @@ export const icons = {
   taskSelect: TaskSelectIcon,
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
+  windowStart: WindowStartIcon,
   operator: operatorIcon,
 
   // player icons
