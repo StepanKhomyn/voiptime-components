@@ -1,3 +1,10 @@
+## [1.12.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.0...v1.12.1) (2025-10-07)
+
+
+### Bug Fixes
+
+* add FileValidator to entry ([ac9e3ed](https://github.com/StepanKhomyn/voiptime-components/commit/ac9e3edc7c467b43918b677bc327c56cc6983402))
+
 # [1.12.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.9...v1.12.0) (2025-10-07)
 
 
