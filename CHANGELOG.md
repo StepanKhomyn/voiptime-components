@@ -1,3 +1,10 @@
+## [1.11.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.7...v1.11.8) (2025-10-07)
+
+
+### Bug Fixes
+
+* actualState ref problem ([3e1317d](https://github.com/StepanKhomyn/voiptime-components/commit/3e1317d81480360c1a177b4a4fb3b69af0745e84))
+
 ## [1.11.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.6...v1.11.7) (2025-10-06)
 
 
