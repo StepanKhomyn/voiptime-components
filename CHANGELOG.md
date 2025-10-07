@@ -1,3 +1,10 @@
+## [1.12.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.1...v1.12.2) (2025-10-07)
+
+
+### Bug Fixes
+
+* new icons for tm tabs ([107c7c8](https://github.com/StepanKhomyn/voiptime-components/commit/107c7c8ab825343f8300a6b4f210eedc39b5453b))
+
 ## [1.12.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.0...v1.12.1) (2025-10-07)
 
 
