@@ -216,7 +216,7 @@ export function useValidate(
   const rules = typeof rulesOrFactory === 'function' ? rulesOrFactory() : rulesOrFactory;
 
   // Розгортаємо ref якщо потрібно
-  const actualState = isRef(state) ? state : state;
+  const actualState = isRef(state) ? state.value : state;
 
   function build(nodeRules: any, basePath = ''): any {
     const group: AnyObject = {};
