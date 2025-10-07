@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.9...v1.12.0) (2025-10-07)
+
+
+### Features
+
+* Add VUpload component ([5279aad](https://github.com/StepanKhomyn/voiptime-components/commit/5279aadc36a52d40ced8d7099abbfcbcf55060da))
+
 ## [1.11.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.11.8...v1.11.9) (2025-10-07)
 
 
