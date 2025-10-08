@@ -102,6 +102,11 @@
   }
 }
 
+.vt-modal__row {
+  padding: var(--vt-padding-base);
+  line-height: 1.5;
+}
+
 // Анімації для плавного відкриття/закриття
 .vt-modal__backdrop {
   animation: modal-fade-in 0.2s ease-out;
@@ -109,12 +114,6 @@
 
 .vt-modal__container {
   animation: modal-slide-in 0.2s ease-out;
-}
-
-.vt-modal__row {
-  padding: var(--vt-padding-base);
-  line-height: 1.5;
-  color: var(--color-gray-7);
 }
 
 @keyframes modal-fade-in {
