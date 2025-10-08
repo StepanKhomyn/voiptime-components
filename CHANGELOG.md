@@ -1,3 +1,10 @@
+## [1.12.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.7...v1.12.8) (2025-10-08)
+
+
+### Bug Fixes
+
+* change icon color ([490e38c](https://github.com/StepanKhomyn/voiptime-components/commit/490e38c9b85bd36b6f0bcae11c9763d90f506629))
+
 ## [1.12.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.6...v1.12.7) (2025-10-08)
 
 
