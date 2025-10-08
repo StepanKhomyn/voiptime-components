@@ -1,3 +1,10 @@
+## [1.12.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.5...v1.12.6) (2025-10-08)
+
+
+### Bug Fixes
+
+* remove color from modal row ([b903e9e](https://github.com/StepanKhomyn/voiptime-components/commit/b903e9e637629d9ed25ca4f39c84e19671ec1525))
+
 ## [1.12.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.4...v1.12.5) (2025-10-08)
 
 
