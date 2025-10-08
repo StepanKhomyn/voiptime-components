@@ -1,3 +1,11 @@
+## [1.12.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.2...v1.12.3) (2025-10-08)
+
+
+### Bug Fixes
+
+* add star icon ([7509890](https://github.com/StepanKhomyn/voiptime-components/commit/750989008ed517c099e8914dbbdb2a98405c076a))
+* fixed star icon ([3ae150d](https://github.com/StepanKhomyn/voiptime-components/commit/3ae150d148f4814954e3162091c9d1d93c2bd0cf))
+
 ## [1.12.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.1...v1.12.2) (2025-10-07)
 
 
