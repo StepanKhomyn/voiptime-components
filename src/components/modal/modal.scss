@@ -92,6 +92,12 @@
     }
   }
 
+  &__row {
+    padding: var(--vt-padding-base);
+    line-height: 1.5;
+    color: var(--color-gray-7);
+  }
+
   &__footer {
     display: flex;
     flex-direction: row;
