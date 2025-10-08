@@ -11,6 +11,7 @@
     loading: false,
     tooltip: false,
     tooltipPlacement: 'top',
+    color: ''
   });
 
   const emit = defineEmits<VButtonEmits>();
@@ -34,6 +35,15 @@
     },
   ]);
 
+  const buttonStyle = computed(() => {
+    if (!props.color) return {};
+    return {
+      color: props.color,
+      '--vt-button-icon-color': props.color,
+    };
+  });
+
+
   // Динамічні аргументи для директиви
   const tooltipDirectiveValue = computed(() => (isIconOnly.value && props.tooltip ? slotText.value : null));
 
@@ -47,6 +57,7 @@
 <template>
   <button
     :class="classes"
+    :style="buttonStyle"
     :disabled="props.disabled || props.loading"
     :type="props.htmlType"
     v-tooltip="tooltipDirectiveValue"
@@ -54,9 +65,14 @@
     @click="handleClick"
   >
     <VLoader v-if="props.loading" class="vt-button__icon" />
-    <VIcon v-else-if="props.icon" :name="props.icon" class="vt-button__icon" />
+    <VIcon
+      v-else-if="props.icon"
+      :name="props.icon"
+      class="vt-button__icon"
+      :style="{ color: 'var(--vt-button-icon-color)' }"
+    />
     <span v-if="!isIconOnly" class="vt-button__content">
-      <slot />
-    </span>
+    <slot />
+  </span>
   </button>
 </template>

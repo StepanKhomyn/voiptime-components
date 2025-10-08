@@ -38,6 +38,7 @@
   // Вкладені стилі після оголошень
   &__icon {
     margin-right: 8px;
+    color: var(--vt-button-icon-color, currentColor);
   }
 
   &__content {

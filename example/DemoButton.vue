@@ -267,6 +267,12 @@
               <td>'button'</td>
               <td>HTML тип кнопки</td>
             </tr>
+            <tr>
+              <td><code>color</code></td>
+              <td><code>String</code></td>
+              <td>#FFFFFF</td>
+              <td>Зміна кольору вмісту кнопки</td>
+            </tr>
           </tbody>
         </table>
       </div>

@@ -17,4 +17,5 @@ export interface VButtonProps {
   tooltip?: boolean;
   tooltipPlacement?: TooltipPlacement;
   htmlType?: 'button' | 'submit' | 'reset';
+  color?: string;
 }
