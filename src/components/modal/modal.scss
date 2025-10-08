@@ -92,12 +92,6 @@
     }
   }
 
-  &__row {
-    padding: var(--vt-padding-base);
-    line-height: 1.5;
-    color: var(--color-gray-7);
-  }
-
   &__footer {
     display: flex;
     flex-direction: row;
@@ -115,6 +109,12 @@
 
 .vt-modal__container {
   animation: modal-slide-in 0.2s ease-out;
+}
+
+.vt-modal__row {
+  padding: var(--vt-padding-base);
+  line-height: 1.5;
+  color: var(--color-gray-7);
 }
 
 @keyframes modal-fade-in {
