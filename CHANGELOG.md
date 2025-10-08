@@ -1,3 +1,10 @@
+## [1.12.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.3...v1.12.4) (2025-10-08)
+
+
+### Bug Fixes
+
+* add modal row ([dd662c8](https://github.com/StepanKhomyn/voiptime-components/commit/dd662c8bde20cbd4a0bd7812a2e1234e33d9237c))
+
 ## [1.12.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.2...v1.12.3) (2025-10-08)
 
 
