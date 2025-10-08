@@ -114,10 +114,12 @@ import TwoRowsIcon from './table/TwoRowsIcon.vue';
 import UnfreezeIcon from './table/UnfreezeIcon.vue';
 import AddLineIcon from '@/icons/actions/AddLineIcon.vue';
 import NumberListIcon from '@/icons/table/NumberListIcon.vue';
+import ChannelsChangeIcon from '@/icons/actions/ChannelsChangeIcon.vue';
 
 export const icons = {
   // actions icons
   addLine: AddLineIcon,
+  channelsChange: ChannelsChangeIcon,
   circleChecked: CircleCheckedIcon,
   circleClose: CircleCloseIcon,
   close: CloseIcon,
