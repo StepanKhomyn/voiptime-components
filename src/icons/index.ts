@@ -113,6 +113,7 @@ import TwoColumnsIcon from './table/TwoColumnsIcon.vue';
 import TwoRowsIcon from './table/TwoRowsIcon.vue';
 import UnfreezeIcon from './table/UnfreezeIcon.vue';
 import AddLineIcon from '@/icons/actions/AddLineIcon.vue';
+import NumberListIcon from '@/icons/table/NumberListIcon.vue';
 
 export const icons = {
   // actions icons
@@ -244,6 +245,7 @@ export const icons = {
   excel: ExcelIcon,
   freeze: FreezeIcon,
   listAdd: ListAddIcon,
+  numberList: NumberListIcon,
   tableSettings: TableSettingsIcon,
   twoColumns: TwoColumnsIcon,
   twoRows: TwoRowsIcon,
