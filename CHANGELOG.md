@@ -1,3 +1,10 @@
+## [1.12.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.9...v1.12.10) (2025-10-08)
+
+
+### Bug Fixes
+
+* add possibility to change color in button ([f5f0ada](https://github.com/StepanKhomyn/voiptime-components/commit/f5f0ada19cecde4c4d6b07af98c646a062162408))
+
 ## [1.12.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.8...v1.12.9) (2025-10-08)
 
 
