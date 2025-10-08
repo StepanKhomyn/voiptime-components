@@ -87,7 +87,6 @@ import ProgressiveIcon from './others/ProgressiveIcon.vue';
 import ScheduleIcon from './others/ScheduleIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
 import StarFilledIcon from './others/StarFilledIcon.vue';
-import StarIcon from './others/StarIcon.vue';
 import StatisticDetailIcon from './others/StatisticDetailIcon.vue';
 import StatisticSummaryIcon from './others/StatisticSummaryIcon.vue';
 import StatusSelectIcon from './others/StatusSelectIcon.vue';
@@ -216,7 +215,6 @@ export const icons = {
   schedule: ScheduleIcon,
   sms: SmsIcon,
   starFilled: StarFilledIcon,
-  star: StarIcon,
   statisticDetail: StatisticDetailIcon,
   statisticSummary: StatisticSummaryIcon,
   statusSelect: StatusSelectIcon,
