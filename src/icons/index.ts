@@ -112,9 +112,11 @@ import TableSettingsIcon from './table/TableSettingsIcon.vue';
 import TwoColumnsIcon from './table/TwoColumnsIcon.vue';
 import TwoRowsIcon from './table/TwoRowsIcon.vue';
 import UnfreezeIcon from './table/UnfreezeIcon.vue';
+import AddLineIcon from '@/icons/actions/AddLineIcon.vue';
 
 export const icons = {
   // actions icons
+  addLine: AddLineIcon,
   circleChecked: CircleCheckedIcon,
   circleClose: CircleCloseIcon,
   close: CloseIcon,
