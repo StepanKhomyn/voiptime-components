@@ -1,6 +1,8 @@
 // Цей файл згенеровано автоматично. Не редагуйте вручну!
 // Для оновлення запустіть: node scripts/generate-icons.js
 
+import AddLineIcon from './actions/AddLineIcon.vue';
+import ChannelsChangeIcon from './actions/ChannelsChangeIcon.vue';
 import CircleCheckedIcon from './actions/CircleCheckedIcon.vue';
 import CircleCloseIcon from './actions/CircleCloseIcon.vue';
 import CloseIcon from './actions/CloseIcon.vue';
@@ -13,8 +15,8 @@ import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
 import ListBulletIcon from './actions/ListBulletIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
+import PromptIcon from './actions/PromptIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
@@ -27,6 +29,7 @@ import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
 import ArrowReloadIcon from './arrow/ArrowReloadIcon.vue';
 import ArrowRightIcon from './arrow/ArrowRightIcon.vue';
 import ArrowTopIcon from './arrow/ArrowTopIcon.vue';
+import AddNumberIcon from './call/AddNumberIcon.vue';
 import AnswerCallIcon from './call/AnswerCallIcon.vue';
 import ClientCallIcon from './call/ClientCallIcon.vue';
 import HangupCallIcon from './call/HangupCallIcon.vue';
@@ -79,6 +82,7 @@ import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
@@ -94,7 +98,6 @@ import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -108,13 +111,11 @@ import EmptyIcon from './table/EmptyIcon.vue';
 import ExcelIcon from './table/ExcelIcon.vue';
 import FreezeIcon from './table/FreezeIcon.vue';
 import ListAddIcon from './table/ListAddIcon.vue';
+import NumberListIcon from './table/NumberListIcon.vue';
 import TableSettingsIcon from './table/TableSettingsIcon.vue';
 import TwoColumnsIcon from './table/TwoColumnsIcon.vue';
 import TwoRowsIcon from './table/TwoRowsIcon.vue';
 import UnfreezeIcon from './table/UnfreezeIcon.vue';
-import AddLineIcon from '@/icons/actions/AddLineIcon.vue';
-import NumberListIcon from '@/icons/table/NumberListIcon.vue';
-import ChannelsChangeIcon from '@/icons/actions/ChannelsChangeIcon.vue';
 
 export const icons = {
   // actions icons
@@ -132,8 +133,8 @@ export const icons = {
   listBullet: ListBulletIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompt: PromptIcon,
   prompter: PrompterIcon,
+  prompt: PromptIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   star: StarIcon,
@@ -150,6 +151,7 @@ export const icons = {
   arrowTop: ArrowTopIcon,
 
   // call icons
+  addNumber: AddNumberIcon,
   answerCall: AnswerCallIcon,
   clientCall: ClientCallIcon,
   hangupCall: HangupCallIcon,
@@ -212,6 +214,7 @@ export const icons = {
   hold: HoldIcon,
   ivr: IvrIcon,
   minus: MinusIcon,
+  operator: operatorIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
@@ -227,7 +230,6 @@ export const icons = {
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
   windowStart: WindowStartIcon,
-  operator: operatorIcon,
 
   // player icons
   pause: PauseIcon,
