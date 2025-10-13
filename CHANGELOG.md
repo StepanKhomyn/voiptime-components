@@ -1,3 +1,10 @@
+## [1.12.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.13...v1.12.14) (2025-10-13)
+
+
+### Bug Fixes
+
+* виправлено стилі для драг анд дропу в таблиці ([671cad7](https://github.com/StepanKhomyn/voiptime-components/commit/671cad76801c8185da0a603a33a739943cedef0b))
+
 ## [1.12.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.12...v1.12.13) (2025-10-13)
 
 
