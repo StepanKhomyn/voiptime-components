@@ -1,3 +1,11 @@
+## [1.12.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.12...v1.12.13) (2025-10-13)
+
+
+### Bug Fixes
+
+* create drag and drop on table ([880918c](https://github.com/StepanKhomyn/voiptime-components/commit/880918cddf89b6abfb0a91bf860241a51628e0d5))
+* reovate token ([3c2229b](https://github.com/StepanKhomyn/voiptime-components/commit/3c2229b20971d4a90a33d340f8fb5f49d21fc5e2))
+
 ## [1.12.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.11...v1.12.12) (2025-10-09)
 
 
