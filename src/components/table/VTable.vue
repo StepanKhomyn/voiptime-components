@@ -542,89 +542,97 @@
             </div>
           </td>
         </tr>
-
-        <tr
-          v-for="(row, rowIndex) in sortedData"
-          v-else
-          :key="createRowKey(row, rowIndex)"
-          :class="[
-            'vt-table__row',
-            {
-              'vt-table__row--selected': selectionComposable?.isRowSelected(row),
-              'vt-table__row--current': selectionComposable?.currentRow.value === row,
-              'vt-table__row--clickable': props.selectOnClickRow || props.highlightCurrentRow,
-              'vt-table__row--draggable': props.rowDraggable,
-            },
-            ...getRowHighlightClasses(row, rowIndex),
-          ]"
-          :draggable="props.rowDraggable"
-          @click="handleRowClick(row, sortedColumns[0], $event)"
-          @dragend="dragComposable ? dragComposable.handleDragEnd($event) : null"
-          @dragenter="dragComposable ? dragComposable.handleDragEnter($event, rowIndex) : null"
-          @dragleave="dragComposable ? dragComposable.handleDragLeave($event) : null"
-          @dragover="dragComposable ? dragComposable.handleDragOver($event, rowIndex) : null"
-          @dragstart="dragComposable ? dragComposable.handleDragStart($event, row, rowIndex) : null"
-          @drop="dragComposable ? dragComposable.handleDrop($event, rowIndex) : null"
-        >
-          <td
-            v-if="props.selectable"
+        <template v-for="(row, rowIndex) in sortedData" v-else :key="createRowKey(row, rowIndex)">
+          <tr
             :class="{
-              'vt-table__td--pinned-left': true,
+              'vt-table__row--insert-before': dragComposable?.shouldShowInsertLine(rowIndex, 'before'),
             }"
-            :style="getSelectionColumnStyle()"
-            class="vt-table__td vt-table__td--selection"
-          >
-            <div class="vt-table__cell-content">
-              <VCheckbox
-                :checked="selectionComposable?.isRowSelected(row)"
-                @change="(isChecked, event) => handleCheckboxChange(isChecked, row, event)"
-              />
-            </div>
-          </td>
-
-          <td
-            v-if="props.rowDraggable && props.showDragHandle"
-            :class="{
-              'vt-table__td--pinned-left': true,
-            }"
-            :style="getDragHandleColumnStyle()"
-            class="vt-table__td vt-table__td--drag-handle"
-          >
-            <div class="vt-table__cell-content vt-table__drag-handle">
-              <VIcon name="columnsMove" />
-            </div>
-          </td>
-
-          <td
-            v-for="(col, colIndex) in sortedColumns"
-            :key="`${createRowKey(row, rowIndex)}-${col.prop}`"
-            :ref="el => setColumnRef(el as HTMLElement, col.prop)"
+          ></tr>
+          <tr
             :class="[
-              'vt-table__td',
+              'vt-table__row',
               {
-                'vt-table__td--pinned-left': col.pinnedLeft,
-                'vt-table__td--pinned-right': col.pinnedRight,
+                'vt-table__row--selected': selectionComposable?.isRowSelected(row),
+                'vt-table__row--current': selectionComposable?.currentRow.value === row,
+                'vt-table__row--clickable': props.selectOnClickRow || props.highlightCurrentRow,
+                'vt-table__row--draggable': props.rowDraggable,
               },
+              ...getRowHighlightClasses(row, rowIndex),
             ]"
-            :style="getColumnStyleWithContext(col, colIndex)"
+            :draggable="props.rowDraggable"
+            @click="handleRowClick(row, sortedColumns[0], $event)"
+            @dragend="dragComposable ? dragComposable.handleDragEnd($event) : null"
+            @dragenter="dragComposable ? dragComposable.handleDragEnter($event, rowIndex) : null"
+            @dragleave="dragComposable ? dragComposable.handleDragLeave($event) : null"
+            @dragover="dragComposable ? dragComposable.handleDragOver($event, rowIndex) : null"
+            @dragstart="dragComposable ? dragComposable.handleDragStart($event, row, rowIndex) : null"
+            @drop="dragComposable ? dragComposable.handleDrop($event, rowIndex) : null"
           >
-            <div
-              v-tooltip="col.showOverflowTooltip ? getTooltipText(row, col) : null"
-              class="vt-table__cell-content vt-table__cell-content--ellipsis"
+            <td
+              v-if="props.selectable"
+              :class="{
+                'vt-table__td--pinned-left': true,
+              }"
+              :style="getSelectionColumnStyle()"
+              class="vt-table__td vt-table__td--selection"
             >
-              <component
-                :is="col.renderSlot"
-                v-if="col.renderSlot"
-                :column="col"
-                :index="rowIndex"
-                :row="row"
-                :value="row[col.prop]"
-              />
-              <span v-else>{{ row[col.prop] }}</span>
-            </div>
-            <div :data-resizer="col.prop" class="vt-table__resizer" @mousedown="e => handleMouseDown(e, col)" />
-          </td>
-        </tr>
+              <div class="vt-table__cell-content">
+                <VCheckbox
+                  :checked="selectionComposable?.isRowSelected(row)"
+                  @change="(isChecked, event) => handleCheckboxChange(isChecked, row, event)"
+                />
+              </div>
+            </td>
+
+            <td
+              v-if="props.rowDraggable && props.showDragHandle"
+              :class="{
+                'vt-table__td--pinned-left': true,
+              }"
+              :style="getDragHandleColumnStyle()"
+              class="vt-table__td vt-table__td--drag-handle"
+            >
+              <div class="vt-table__cell-content vt-table__drag-handle">
+                <VIcon name="columnsMove" />
+              </div>
+            </td>
+
+            <td
+              v-for="(col, colIndex) in sortedColumns"
+              :key="`${createRowKey(row, rowIndex)}-${col.prop}`"
+              :ref="el => setColumnRef(el as HTMLElement, col.prop)"
+              :class="[
+                'vt-table__td',
+                {
+                  'vt-table__td--pinned-left': col.pinnedLeft,
+                  'vt-table__td--pinned-right': col.pinnedRight,
+                },
+              ]"
+              :style="getColumnStyleWithContext(col, colIndex)"
+            >
+              <div
+                v-tooltip="col.showOverflowTooltip ? getTooltipText(row, col) : null"
+                class="vt-table__cell-content vt-table__cell-content--ellipsis"
+              >
+                <component
+                  :is="col.renderSlot"
+                  v-if="col.renderSlot"
+                  :column="col"
+                  :index="rowIndex"
+                  :row="row"
+                  :value="row[col.prop]"
+                />
+                <span v-else>{{ row[col.prop] }}</span>
+              </div>
+              <div :data-resizer="col.prop" class="vt-table__resizer" @mousedown="e => handleMouseDown(e, col)" />
+            </td>
+          </tr>
+          <tr
+            :class="{
+              'vt-table__row--insert-after': dragComposable?.shouldShowInsertLine(rowIndex, 'after'),
+            }"
+          ></tr>
+        </template>
       </tbody>
 
       <tfoot v-if="shouldShowSummary" class="vt-table__summary">

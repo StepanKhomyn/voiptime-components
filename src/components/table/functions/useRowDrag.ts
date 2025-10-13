@@ -26,6 +26,9 @@ export function useRowDrag(getData: () => Record<string, any>[], emit: (...args:
     dragState.value.draggedRow = row;
     dragState.value.isDragging = true;
 
+    // Додаємо клас до body
+    document.body.classList.add('vt-table-dragging');
+
     event.dataTransfer.effectAllowed = 'move';
     event.dataTransfer.setData('text/plain', String(index));
 
@@ -34,26 +37,48 @@ export function useRowDrag(getData: () => Record<string, any>[], emit: (...args:
     const rowElement = target.closest('tr');
 
     if (rowElement) {
+      const table = rowElement.closest('table');
+
       dragImage = rowElement.cloneNode(true) as HTMLElement;
       dragImage.style.position = 'absolute';
       dragImage.style.top = '-9999px';
+      dragImage.style.left = '-9999px';
       dragImage.style.opacity = '0.8';
       dragImage.style.width = rowElement.offsetWidth + 'px';
       dragImage.style.backgroundColor = 'white';
       dragImage.style.border = '1px solid var(--color-primary-main)';
-      document.body.appendChild(dragImage);
+      dragImage.style.pointerEvents = 'none';
+      dragImage.style.zIndex = '9999';
 
-      event.dataTransfer.setDragImage(dragImage, 0, 0);
+      // Зберігаємо структуру таблиці для правильного відображення
+      if (table) {
+        const tableClone = document.createElement('table');
+        tableClone.style.borderCollapse = 'separate';
+        tableClone.style.borderSpacing = '0';
+        tableClone.appendChild(dragImage);
+        document.body.appendChild(tableClone);
 
-      setTimeout(() => {
-        dragImage?.parentNode?.removeChild(dragImage);
-        dragImage = null;
-      }, 0);
+        event.dataTransfer.setDragImage(tableClone, event.offsetX, event.offsetY);
+
+        // Видаляємо після завершення drag start
+        requestAnimationFrame(() => {
+          tableClone.remove();
+        });
+      } else {
+        document.body.appendChild(dragImage);
+        event.dataTransfer.setDragImage(dragImage, event.offsetX, event.offsetY);
+
+        requestAnimationFrame(() => {
+          dragImage?.remove();
+          dragImage = null;
+        });
+      }
     }
 
-    requestAnimationFrame(() => {
+    // Додаємо клас dragging до рядка
+    setTimeout(() => {
       target.closest('tr')?.classList.add('vt-table__row--dragging');
-    });
+    }, 0);
   };
 
   const handleDragOver = (event: DragEvent, index: number) => {
