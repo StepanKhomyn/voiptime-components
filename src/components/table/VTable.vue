@@ -3,12 +3,12 @@
   import type { SortDirection, SortState, VTableColumnProps, VTableEmits, VTableProps } from './types';
   import { useColumnResize, useTableColumns, useTableStyles } from './functions/composables';
   import { useTableSelection } from './functions/useTableSelection';
+  import { useRowDrag } from './functions/useRowDrag';
   import { getSortIconClasses, handleSortDirect, sortTableData } from './functions/sorting';
   import ColumnActions from '@/components/table/ColumnActions.vue';
   import VIcon from '@/components/icon/VIcon.vue';
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
 
-  // Явно типізуємо props з withDefaults
   const props = withDefaults(defineProps<VTableProps>(), {
     selectable: false,
     isAllSelect: false,
@@ -23,12 +23,12 @@
     allData: undefined,
     columnsSelector: () => [],
     columns: () => [],
+    rowDraggable: false,
+    showDragHandle: true,
   });
 
-  // Явно типізуємо emits
   const emit = defineEmits<VTableEmits>();
 
-  // defineModel для колонок (опціонально) - з явною типізацією
   const modelColumns = defineModel<VTableColumnProps[] | undefined>('columns', {
     required: false,
     default: undefined,
@@ -46,20 +46,15 @@
     return sortTableData(props.data || [], sortState.value, internalColumns);
   });
 
-  // Computed для перевірки наявності defineModel
   const hasColumnsModel = computed(() => modelColumns.value !== undefined);
-
-  // Computed для перевірки чи є дані
   const hasData = computed(() => {
     return props.data && props.data.length > 0;
   });
 
-  // Для затримки при інфініті scroll
   const infinityScrollTriggered = ref(false);
   const lastScrollTop = ref(0);
   let scrollTimeout: ReturnType<typeof setTimeout>;
 
-  // ОПТИМІЗАЦІЯ: Створюємо стабільні ключі для рядків
   const createRowKey = (row: any, index: number): string => {
     if (props.rowKey && row[props.rowKey] != null) {
       return String(row[props.rowKey]);
@@ -74,7 +69,6 @@
     return `row_${index}`;
   };
 
-  // Слідкуємо за змінами в modelColumns
   watch(
     () => modelColumns.value,
     newColumns => {
@@ -86,7 +80,6 @@
     { deep: true }
   );
 
-  // Слідкуємо за змінами в props.columns
   watch(
     () => props.columns,
     newColumns => {
@@ -98,26 +91,23 @@
     { deep: true }
   );
 
-  // Provide columns для child компонентів
   provide('vt-table-columns', internalColumns);
 
-  // Композабли
   const { sortedColumns, getDefaultColumnWidth, getStickyOffset } = useTableColumns(internalColumns);
   const { getTableWrapperStyle, getColumnStyle, getHeaderStyle, getFooterStyle } = useTableStyles(props);
   const { onMouseDown } = useColumnResize();
 
-  // Computed - всі дані для повного виділення
   const allDataComputed = computed(() => {
     return props.allData || props.data;
   });
 
-  // Композабл для виділення (тільки якщо selectable=true)
   const selectionComposable = props.selectable ? useTableSelection(props, sortedData, emit, allDataComputed) : null;
 
-  // Константа для ширини колонки з чекбоксами
+  // Ініціалізуємо drag & drop composable
+  const dragComposable = props.rowDraggable ? useRowDrag(() => sortedData.value, emit) : null;
   const SELECTION_COLUMN_WIDTH = 50;
+  const DRAG_HANDLE_WIDTH = 40;
 
-  // Стилі для колонки з чекбоксами
   const getSelectionColumnStyle = () => {
     return {
       width: `${SELECTION_COLUMN_WIDTH}px`,
@@ -129,8 +119,32 @@
     };
   };
 
+  const getDragHandleColumnStyle = () => {
+    const leftOffset = props.selectable ? SELECTION_COLUMN_WIDTH : 0;
+    return {
+      width: `${DRAG_HANDLE_WIDTH}px`,
+      minWidth: `${DRAG_HANDLE_WIDTH}px`,
+      maxWidth: `${DRAG_HANDLE_WIDTH}px`,
+      left: `${leftOffset}px`,
+      position: 'sticky' as const,
+      zIndex: 10,
+    };
+  };
+
   const getSelectionColumnHeaderStyle = () => {
     const baseStyle = getSelectionColumnStyle();
+    if (props.maxHeight) {
+      return {
+        ...baseStyle,
+        top: '0px',
+        zIndex: 12,
+      };
+    }
+    return baseStyle;
+  };
+
+  const getDragHandleHeaderStyle = () => {
+    const baseStyle = getDragHandleColumnStyle();
     if (props.maxHeight) {
       return {
         ...baseStyle,
@@ -153,7 +167,18 @@
     return baseStyle;
   };
 
-  // Infinity Scroll логіка
+  const getDragHandleFooterStyle = () => {
+    const baseStyle = getDragHandleColumnStyle();
+    if (props.maxHeight) {
+      return {
+        ...baseStyle,
+        bottom: '0px',
+        zIndex: 12,
+      };
+    }
+    return baseStyle;
+  };
+
   const handleScroll = () => {
     if (!tableWrapperRef.value || infinityScrollTriggered.value) return;
 
@@ -205,7 +230,6 @@
     }
   });
 
-  // Обробник сортування
   const handleSort = (column: VTableColumnProps, direction: SortDirection): void => {
     handleSortDirect(column, direction, newSortState => {
       if (sortState.value?.prop === column.prop && sortState.value.direction === direction) {
@@ -261,7 +285,6 @@
     }
   };
 
-  // Обробники кліків
   const handleRowClick = (row: Record<string, any>, column: VTableColumnProps, event: Event): void => {
     emit('row-click', { row, column, event });
 
@@ -284,7 +307,6 @@
     }
   };
 
-  // Інші методи
   const setColumnRef = (el: HTMLElement | null, prop: string): void => {
     if (el) {
       columnRefs.value[prop] = el;
@@ -323,7 +345,6 @@
     return value == null ? '' : String(value);
   };
 
-  //метод для сумарного рядку
   const summaryData = computed<Record<string, any>>(() => {
     if (!props.showSummary || !hasData.value) return {};
 
@@ -354,7 +375,6 @@
     return props.showSummary && hasData.value;
   });
 
-  // Публічні методи для зовнішнього використання
   const toggleRowSelection = (row: Record<string, any>, selected?: boolean) => {
     if (selectionComposable) {
       selectionComposable.toggleRowSelection(row, selected);
@@ -389,7 +409,6 @@
     }
   };
 
-  // Функція для отримання класів підсвічування рядка
   const getRowHighlightClasses = (row: any, rowIndex: number): string[] => {
     if (!props.rowHighlight) return [];
 
@@ -399,12 +418,10 @@
 
       const classes: string[] = [];
 
-      // Додаємо клас за типом (тільки якщо не custom або немає className)
       if (highlightResult.type !== 'custom' || !highlightResult.className) {
         classes.push(`vt-table__row--highlight-${highlightResult.type}`);
       }
 
-      // Додаємо кастомний клас
       if (highlightResult.className) {
         classes.push(highlightResult.className);
       }
@@ -415,6 +432,7 @@
       return [];
     }
   };
+
   defineExpose({
     toggleRowSelection,
     toggleAllSelection,
@@ -449,6 +467,18 @@
                 @change="handleSelectAllChange"
               />
             </div>
+          </th>
+
+          <th
+            v-if="props.rowDraggable && props.showDragHandle"
+            :class="{
+              'vt-table__th--sticky': props.maxHeight,
+              'vt-table__th--pinned-left': true,
+            }"
+            :style="getDragHandleHeaderStyle()"
+            class="vt-table__th vt-table__th--drag-handle"
+          >
+            <div class="vt-th__content"></div>
           </th>
 
           <th
@@ -500,7 +530,12 @@
       </thead>
       <tbody>
         <tr v-if="!hasData" class="vt-table__empty-row">
-          <td :colspan="sortedColumns.length + (props.selectable ? 1 : 0)" class="vt-table__empty-cell">
+          <td
+            :colspan="
+              sortedColumns.length + (props.selectable ? 1 : 0) + (props.rowDraggable && props.showDragHandle ? 1 : 0)
+            "
+            class="vt-table__empty-cell"
+          >
             <div class="vt-table__empty-content">
               <VIcon class="vt-table__empty-icon" name="empty" />
               <span class="vt-table__empty-text">Немає даних!</span>
@@ -518,10 +553,18 @@
               'vt-table__row--selected': selectionComposable?.isRowSelected(row),
               'vt-table__row--current': selectionComposable?.currentRow.value === row,
               'vt-table__row--clickable': props.selectOnClickRow || props.highlightCurrentRow,
+              'vt-table__row--draggable': props.rowDraggable,
             },
             ...getRowHighlightClasses(row, rowIndex),
           ]"
+          :draggable="props.rowDraggable"
           @click="handleRowClick(row, sortedColumns[0], $event)"
+          @dragend="dragComposable ? dragComposable.handleDragEnd($event) : null"
+          @dragenter="dragComposable ? dragComposable.handleDragEnter($event, rowIndex) : null"
+          @dragleave="dragComposable ? dragComposable.handleDragLeave($event) : null"
+          @dragover="dragComposable ? dragComposable.handleDragOver($event, rowIndex) : null"
+          @dragstart="dragComposable ? dragComposable.handleDragStart($event, row, rowIndex) : null"
+          @drop="dragComposable ? dragComposable.handleDrop($event, rowIndex) : null"
         >
           <td
             v-if="props.selectable"
@@ -536,6 +579,19 @@
                 :checked="selectionComposable?.isRowSelected(row)"
                 @change="(isChecked, event) => handleCheckboxChange(isChecked, row, event)"
               />
+            </div>
+          </td>
+
+          <td
+            v-if="props.rowDraggable && props.showDragHandle"
+            :class="{
+              'vt-table__td--pinned-left': true,
+            }"
+            :style="getDragHandleColumnStyle()"
+            class="vt-table__td vt-table__td--drag-handle"
+          >
+            <div class="vt-table__cell-content vt-table__drag-handle">
+              <VIcon name="columnsMove" />
             </div>
           </td>
 
@@ -579,6 +635,17 @@
               'vt-table__td--pinned-left': true,
             }"
             :style="getSelectionColumnFooterStyle()"
+            class="vt-table__td"
+          >
+            <div class="vt-table__cell-content vt-table__cell-content--summary"></div>
+          </td>
+
+          <td
+            v-if="props.rowDraggable && props.showDragHandle"
+            :class="{
+              'vt-table__td--pinned-left': true,
+            }"
+            :style="getDragHandleFooterStyle()"
             class="vt-table__td"
           >
             <div class="vt-table__cell-content vt-table__cell-content--summary"></div>

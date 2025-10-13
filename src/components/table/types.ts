@@ -35,6 +35,14 @@ export interface SelectionChangeEventData {
   isAllSelected?: boolean;
 }
 
+// Дані події зміни порядку рядків
+export interface RowReorderEventData {
+  oldIndex: number;
+  newIndex: number;
+  row: Record<string, any>;
+  newData: Record<string, any>[];
+}
+
 export interface VTableColumnGroup {
   name: string;
   label: string;
@@ -63,7 +71,6 @@ export interface VTableColumnProps {
   actionColumn?: boolean;
   showOverflowTooltip?: boolean;
   selectable?: boolean;
-  // Додаємо підтримку слотів
   renderSlot?: VTableRenderSlot;
   sortMethod?: Function;
 }
@@ -72,57 +79,37 @@ export type VTableRowHighlightType = 'default' | 'success' | 'warning' | 'danger
 
 export interface VTableRowHighlight {
   type: VTableRowHighlightType;
-  className?: string; // для кастомних стилів
+  className?: string;
 }
 
 export type VTableRowHighlightFunction = (row: any, index: number) => VTableRowHighlight | null;
 
-// Явно типізуємо props interface
 export interface VTableProps {
-  /** Масив даних для відображення в таблиці */
   data: Record<string, any>[];
-  /** Максимальна висота таблиці (для sticky header) */
   maxHeight?: number;
-  /** Максимальна висота таблиці (для sticky header) */
   rowKey?: string;
-  /** Початкове сортування */
   defaultSort?: SortState;
-  /** Показувати підсумковий рядок */
   showSummary?: boolean;
-  /** Метод для обчислення підсумкових значень */
   summaryMethod?: (params: { columns: VTableColumnProps[]; data: Record<string, any>[] }) => any[];
-  /** Групи колонок для селектора */
   columnsSelector?: VTableColumnGroup[];
-
-  // Пропси для виділення
-  /** Чи включити функціонал виділення рядків */
   selectable?: boolean;
-  /** Чи виділяти всі чи тільки на поточній сторінці */
   isAllSelect?: boolean;
-  /** Ключ для ідентифікації рядків (за замовчуванням 'id') */
   selectionKey?: string;
-  /** Рядки виділені за замовчуванням */
   defaultSelection?: any[];
-  /** Виділяти рядок при кліку на нього */
   selectOnClickRow?: boolean;
-  /** Підсвічувати поточний рядок */
   highlightCurrentRow?: boolean;
-
-  // Додаткові пропси для повного вибору
-  /** Всі дані для повного виділення (якщо відрізняються від data) */
   allData?: Record<string, any>[];
-
-  // Опціональний v-model для колонок
-  /** Конфігурація колонок */
   columns?: VTableColumnProps[];
-
   hideHeader?: boolean;
-
-  // Функція для підсвічування рядків
   rowHighlight?: VTableRowHighlightFunction;
+
+  // Нові пропси для drag & drop
+  /** Дозволити перетягування рядків */
+  rowDraggable?: boolean;
+  /** Показувати handle для перетягування */
+  showDragHandle?: boolean;
 }
 
-// Явно типізуємо emits interface
 export interface VTableEmits {
   'sort-change': [payload: SortChangeEventData];
   'selection-change': [payload: SelectionChangeEventData];
@@ -140,6 +127,8 @@ export interface VTableEmits {
   'column-sort': [payload: { column: VTableColumnProps; direction: 'asc' | 'desc' | null }];
   'columns-change': [columns: VTableColumnProps[]];
   'infinity-scroll': [];
+  'row-reorder': [payload: RowReorderEventData];
+  'update:data': [data: Record<string, any>[]];
 }
 
 export const DEFAULT_COLUMN_CONFIG = {

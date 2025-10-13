@@ -1,4 +1,3 @@
-// VTable.scss
 @use '../../assets/scrollbar' as *;
 @use '../../assets/fonts' as *;
 
@@ -69,10 +68,9 @@
     }
   }
 
-  // Базові стилі для комірок
   &__cell-base {
     position: relative;
-    padding: 0; // Видаляємо padding, він буде в контенті
+    padding: 0;
     white-space: nowrap;
     overflow: hidden;
     background-color: #ffffff;
@@ -85,24 +83,20 @@
     }
   }
 
-  // Стилі для заголовків
   &__th {
     @extend .vt-table__cell-base;
     @include vt-typography('vt-table-th');
-
     color: var(--color-gray-1);
     border-top: 1px solid var(--color-gray-5);
     border-bottom: 1px solid var(--color-gray-4);
     background-color: #ffffff;
 
-    // Sticky заголовок
     &--sticky {
       position: sticky;
       top: 0;
       z-index: 15;
     }
 
-    // Pinned колонки в заголовку
     &--pinned-left {
       background-color: var(--color-gray-7);
       z-index: 20;
@@ -122,36 +116,27 @@
     }
   }
 
-  // Стилі для комірок даних
   &__td {
     @extend .vt-table__cell-base;
     @include vt-typography('vt-table-td');
-
     color: var(--color-gray-2);
 
-    // Pinned колонки в тілі
-    &--pinned-left {
-      background-color: var(--color-gray-7);
-      position: sticky;
-      z-index: 10;
-
-      &::after {
-        @include pinned-border-right;
-      }
-    }
-
+    &--pinned-left,
     &--pinned-right {
       background-color: var(--color-gray-7);
       position: sticky;
       z-index: 10;
+    }
 
-      &::before {
-        @include pinned-border-left;
-      }
+    &--pinned-left::after {
+      @include pinned-border-right;
+    }
+
+    &--pinned-right::before {
+      @include pinned-border-left;
     }
   }
 
-  // Стилі для контенту комірок - ТУТ ДОДАНО НОВІ СТИЛІ
   &__cell-content {
     display: block;
     width: 100%;
@@ -161,7 +146,6 @@
     white-space: nowrap;
     box-sizing: border-box;
 
-    // Форсуємо ellipsis для довгого тексту
     &--ellipsis {
       overflow: hidden !important;
       text-overflow: ellipsis !important;
@@ -173,13 +157,9 @@
     }
   }
 
-  // Стилі для рядків
   &__row {
     &:hover {
-      .vt-table__td {
-        background-color: var(--color-primary-light);
-      }
-
+      .vt-table__td,
       .vt-table__td--pinned-left,
       .vt-table__td--pinned-right {
         background-color: var(--color-primary-light);
@@ -188,10 +168,7 @@
 
     &--highlight {
       &-default {
-        .vt-table__td {
-          background-color: var(--color-primary-light);
-        }
-
+        .vt-table__td,
         .vt-table__td--pinned-left,
         .vt-table__td--pinned-right {
           background-color: var(--color-primary-light);
@@ -199,10 +176,7 @@
       }
 
       &-success {
-        .vt-table__td {
-          background-color: var(--color-success-focus);
-        }
-
+        .vt-table__td,
         .vt-table__td--pinned-left,
         .vt-table__td--pinned-right {
           background-color: var(--color-success-focus);
@@ -210,10 +184,7 @@
       }
 
       &-warning {
-        .vt-table__td {
-          background-color: var(--color-warning-focus);
-        }
-
+        .vt-table__td,
         .vt-table__td--pinned-left,
         .vt-table__td--pinned-right {
           background-color: var(--color-warning-focus);
@@ -221,10 +192,7 @@
       }
 
       &-danger {
-        .vt-table__td {
-          background-color: var(--color-danger-focus);
-        }
-
+        .vt-table__td,
         .vt-table__td--pinned-left,
         .vt-table__td--pinned-right {
           background-color: var(--color-danger-focus);
@@ -233,7 +201,6 @@
     }
   }
 
-  // Ресайзер колонок
   &__resizer {
     position: absolute;
     top: 0;
@@ -251,7 +218,6 @@
       background-color: var(--color-primary-main);
     }
 
-    // Кастомний курсор для ресайзера
     &:hover {
       cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'><path d='M5 13L2 10L5 7' stroke='%23828282' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M15 7L18 10L15 13' stroke='%23828282' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/><path d='M10 3L10 17' stroke='%23828282' stroke-width='3' stroke-linecap='round'/></svg>") 10 10, col-resize;
     }
@@ -284,9 +250,130 @@
       color: var(--color-primary-main);
     }
   }
+
+  /* Drag & Drop */
+  &__th--drag-handle,
+  &__td--drag-handle {
+    text-align: center;
+    cursor: grab;
+    user-select: none;
+    padding: 8px 12px;
+
+    .vt-table__drag-handle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s ease;
+      height: 100%;
+    }
+
+    &:hover .vt-table__drag-handle {
+      color: var(--color-primary-main);
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &__row--draggable {
+    position: relative;
+    transition: none;
+
+    &:hover {
+      background-color: var(--color-primary-hover);
+    }
+
+    * {
+      user-select: none;
+    }
+  }
+
+  &__row--dragging {
+    opacity: 0.4 !important;
+    background-color: var(--color-primary-light) !important;
+    pointer-events: none;
+
+    * {
+      cursor: grabbing !important;
+      pointer-events: none !important;
+    }
+
+    td {
+      border-color: transparent !important;
+    }
+
+    .vt-table__td--pinned-left,
+    .vt-table__td--pinned-right {
+      background-color: transparent !important;
+    }
+
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  &__insert-line {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    pointer-events: none !important;
+    z-index: 100 !important;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--color-primary-main);
+      box-shadow: 0 0 4px rgba(59, 130, 246, 0.5);
+      animation: insertLineAppear 0.15s ease-out;
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      background-color: var(--color-primary-main);
+      border-radius: 50%;
+      transform: translateY(-2px);
+      box-shadow: 0 0 4px rgba(59, 130, 246, 0.5);
+      animation: insertLineAppear 0.15s ease-out;
+    }
+
+    &--before {
+      top: -1px !important;
+
+      &::before {
+        top: -1px;
+      }
+
+      &::after {
+        top: -1px;
+      }
+    }
+
+    &--after {
+      bottom: -1px !important;
+
+      &::before {
+        bottom: -1px;
+      }
+
+      &::after {
+        bottom: -1px;
+      }
+    }
+  }
 }
 
-// Контент заголовка
+/* Контент заголовка */
 .vt-th {
   &__content {
     display: flex;
@@ -296,11 +383,7 @@
     box-sizing: border-box;
     position: relative;
 
-
-    // Якщо потрібно вертикальне центрування
     &--centered {
-      display: flex;
-      align-items: center;
       height: 100%;
     }
   }
@@ -328,13 +411,13 @@
         color: var(--color-primary-main);
       }
 
-      &:first-child { // arrowTop
+      &:first-child {
         bottom: 4px;
         left: 50%;
         transform: translateX(-50%);
       }
 
-      &:last-child { // arrowDown
+      &:last-child {
         top: 4px;
         left: 50%;
         transform: translateX(-50%);
@@ -347,28 +430,52 @@
   }
 }
 
-// Стилі для активного ресайзингу
+/* Інші глобальні стилі */
 .vt-table__resizer--active {
   background-color: var(--color-primary-main);
 }
 
-// Селекція під час ресайзу
 body.vt-table-resizing {
   user-select: none;
   cursor: col-resize;
 }
 
-// Responsive стилі
-@media (max-width: 768px) {
-  .vt-table {
-    &-wrapper {
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
+@keyframes insertLineAppear {
+  from {
+    opacity: 0;
+    transform: scaleX(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
 
-    &__th,
-    &__td {
-      min-width: 80px;
+/* Responsive */
+@media (max-width: 768px) {
+  .vt-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .vt-table__th,
+  .vt-table__td {
+    min-width: 80px;
+  }
+
+  .vt-table__drag-handle {
+    padding: 6px 8px;
+
+    svg {
+      width: 16px;
+      height: 16px;
     }
+  }
+
+  .vt-table__th--drag-handle,
+  .vt-table__td--drag-handle {
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
   }
 }
