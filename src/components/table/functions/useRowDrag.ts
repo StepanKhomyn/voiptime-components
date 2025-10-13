@@ -22,7 +22,6 @@ export function useRowDrag(getData: () => Record<string, any>[], emit: (...args:
 
   const handleDragStart = (event: DragEvent, row: Record<string, any>, index: number) => {
     if (!event.dataTransfer) return;
-
     dragState.value.draggedIndex = index;
     dragState.value.draggedRow = row;
     dragState.value.isDragging = true;
