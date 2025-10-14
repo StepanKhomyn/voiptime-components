@@ -15,8 +15,8 @@ import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
 import ListBulletIcon from './actions/ListBulletIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PrompterIcon from './actions/PrompterIcon.vue';
 import PromptIcon from './actions/PromptIcon.vue';
+import PrompterIcon from './actions/PrompterIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
@@ -80,9 +80,11 @@ import AddIcon from './others/AddIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
 import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
+import ImportIcon from './others/ImportIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
+import NotificationIcon from './others/NotificationIcon.vue';
+import NotificationReadIcon from './others/NotificationReadIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
@@ -98,6 +100,7 @@ import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -133,8 +136,8 @@ export const icons = {
   listBullet: ListBulletIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompter: PrompterIcon,
   prompt: PromptIcon,
+  prompter: PrompterIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   star: StarIcon,
@@ -212,9 +215,11 @@ export const icons = {
   dsr: DsrIcon,
   emptyRound: EmptyRoundIcon,
   hold: HoldIcon,
+  import: ImportIcon,
   ivr: IvrIcon,
   minus: MinusIcon,
-  operator: operatorIcon,
+  notification: NotificationIcon,
+  notificationRead: NotificationReadIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
@@ -230,6 +235,7 @@ export const icons = {
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
   windowStart: WindowStartIcon,
+  operator: operatorIcon,
 
   // player icons
   pause: PauseIcon,
