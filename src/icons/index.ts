@@ -38,6 +38,7 @@ import KeyboardCallIcon from './call/KeyboardCallIcon.vue';
 import MicrophoneCallIcon from './call/MicrophoneCallIcon.vue';
 import OutboundCallIcon from './call/OutboundCallIcon.vue';
 import OwnCallIcon from './call/OwnCallIcon.vue';
+import PhoneArrowDownIcon from './call/PhoneArrowDownIcon.vue';
 import PhoneCancelRecallIcon from './call/PhoneCancelRecallIcon.vue';
 import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
 import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
@@ -163,6 +164,7 @@ export const icons = {
   microphoneCall: MicrophoneCallIcon,
   outboundCall: OutboundCallIcon,
   ownCall: OwnCallIcon,
+  phoneArrowDown: PhoneArrowDownIcon,
   phoneCancelRecall: PhoneCancelRecallIcon,
   phoneExecuteRecall: PhoneExecuteRecallIcon,
   phoneHangup: PhoneHangupIcon,
