@@ -15,8 +15,8 @@ import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
 import ListBulletIcon from './actions/ListBulletIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
+import PromptIcon from './actions/PromptIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
@@ -43,6 +43,7 @@ import PhoneCancelRecallIcon from './call/PhoneCancelRecallIcon.vue';
 import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
 import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
 import PhoneRecallIcon from './call/PhoneRecallIcon.vue';
+import PhoneTransferIcon from './call/PhoneTransferIcon.vue';
 import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
 import TelemarketCallIcon from './call/TelemarketCallIcon.vue';
 import TransferCallIcon from './call/TransferCallIcon.vue';
@@ -96,6 +97,7 @@ import IvrIcon from './others/IvrIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
 import NotificationIcon from './others/NotificationIcon.vue';
 import NotificationReadIcon from './others/NotificationReadIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
@@ -111,7 +113,6 @@ import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -147,8 +148,8 @@ export const icons = {
   listBullet: ListBulletIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompt: PromptIcon,
   prompter: PrompterIcon,
+  prompt: PromptIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   star: StarIcon,
@@ -179,6 +180,7 @@ export const icons = {
   phoneExecuteRecall: PhoneExecuteRecallIcon,
   phoneHangup: PhoneHangupIcon,
   phoneRecall: PhoneRecallIcon,
+  phoneTransfer: PhoneTransferIcon,
   scenarioCall: ScenarioCallIcon,
   telemarketCall: TelemarketCallIcon,
   transferCall: TransferCallIcon,
@@ -244,6 +246,7 @@ export const icons = {
   minus: MinusIcon,
   notification: NotificationIcon,
   notificationRead: NotificationReadIcon,
+  operator: operatorIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
@@ -259,7 +262,6 @@ export const icons = {
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
   windowStart: WindowStartIcon,
-  operator: operatorIcon,
 
   // player icons
   pause: PauseIcon,
