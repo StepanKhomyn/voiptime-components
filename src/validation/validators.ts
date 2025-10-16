@@ -32,6 +32,17 @@ export const sameAs = (compare: () => any, msg?: string): ValidatorFn =>
     { $params: { eq: compare }, $validatorName: 'sameAs' }
   );
 
+export const phoneNumber: ValidatorFn = (v: any) => {
+  if (v == null || v === '') return true;
+
+  const str = v.toString().trim();
+
+  const valid = /^\+?\d+$/.test(str);
+
+  return valid || 'Номер повинен містити лише цифри або починатися з +';
+};
+withName('phoneNumber', phoneNumber);
+
 export const numeric: ValidatorFn = (v: any) =>
   (v == null || v === '' ? true : !isNaN(Number(v))) || 'Повинно бути числом';
 withName('numeric', numeric);
