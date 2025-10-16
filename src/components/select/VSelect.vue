@@ -12,7 +12,6 @@
     VtSelectProps,
   } from '@/components/select/types';
   import { VtSelectContextKey } from '@/components/select/types';
-  import { debounce } from 'lodash-es';
 
   import {
     calculateVisibleTagsCount,
@@ -500,6 +499,14 @@
       }
     }, 100);
   };
+
+  function debounce<F extends (...args: any[]) => any>(func: F, wait = 300) {
+    let timeout: ReturnType<typeof setTimeout> | null;
+    return function (this: any, ...args: Parameters<F>) {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+  }
 
   const handleFilterInput = debounce((event: Event) => {
     const inputValue = (event.target as HTMLInputElement).value;
