@@ -101,7 +101,7 @@ import EmailOutgoingIcon from './mail/EmailOutgoingIcon.vue';
 import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
 import AddIcon from './others/AddIcon.vue';
-import DimonInSquareIcon from './others/DimonInSquareIcon.vue';
+import DiamondInSquareIcon from './others/DiamondInSquareIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
 import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
@@ -266,7 +266,7 @@ export const icons = {
 
   // others icons
   add: AddIcon,
-  dimonInSquare: DimonInSquareIcon,
+  diamondInSquare: DiamondInSquareIcon,
   dsr: DsrIcon,
   emptyRound: EmptyRoundIcon,
   hold: HoldIcon,
