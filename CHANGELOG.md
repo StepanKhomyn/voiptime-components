@@ -1,3 +1,10 @@
+## [1.12.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.20...v1.12.21) (2025-10-16)
+
+
+### Bug Fixes
+
+* add tab icns ([e3b6408](https://github.com/StepanKhomyn/voiptime-components/commit/e3b64082ff628034369a29d5a9ed21f3fe74f760))
+
 ## [1.12.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.19...v1.12.20) (2025-10-16)
 
 
