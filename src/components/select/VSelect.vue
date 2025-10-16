@@ -12,6 +12,7 @@
     VtSelectProps,
   } from '@/components/select/types';
   import { VtSelectContextKey } from '@/components/select/types';
+  import { debounce } from 'lodash-es';
 
   import {
     calculateVisibleTagsCount,
@@ -500,7 +501,7 @@
     }, 100);
   };
 
-  const handleFilterInput = (event: Event) => {
+  const handleFilterInput = debounce((event: Event) => {
     const inputValue = (event.target as HTMLInputElement).value;
 
     state.filterQuery.value = inputValue;
@@ -509,7 +510,7 @@
     if (props.allowRemoteFilter) {
       console.log('Remote filter query:', inputValue);
     }
-  };
+  }, 500);
 
   const handleFilterClear = () => {
     state.filterQuery.value = '';
