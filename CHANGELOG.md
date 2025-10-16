@@ -1,3 +1,11 @@
+## [1.12.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.17...v1.12.18) (2025-10-16)
+
+
+### Bug Fixes
+
+* add debounce on search input ([80a2886](https://github.com/StepanKhomyn/voiptime-components/commit/80a28863fff8e3de844b7e5687c886588a605137))
+* add types ([d6622f9](https://github.com/StepanKhomyn/voiptime-components/commit/d6622f94d8b07a2c8dc514716c577a297a605a16))
+
 ## [1.12.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.16...v1.12.17) (2025-10-16)
 
 
