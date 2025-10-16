@@ -44,8 +44,18 @@ import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
 import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
 import PhoneRecallIcon from './call/PhoneRecallIcon.vue';
 import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
+import TelemarketCallIcon from './call/TelemarketCallIcon.vue';
 import TransferCallIcon from './call/TransferCallIcon.vue';
 import VolumeCallIcon from './call/VolumeCallIcon.vue';
+import ClientActivityIcon from './client/ClientActivityIcon.vue';
+import ClientCommentIcon from './client/ClientCommentIcon.vue';
+import ClientContactsIcon from './client/ClientContactsIcon.vue';
+import ClientDigitalChannelIcon from './client/ClientDigitalChannelIcon.vue';
+import ClientHistoryIcon from './client/ClientHistoryIcon.vue';
+import ClientLocationIcon from './client/ClientLocationIcon.vue';
+import ClientSocialIcon from './client/ClientSocialIcon.vue';
+import ClientTaskIcon from './client/ClientTaskIcon.vue';
+import ClientVoiceChannelIcon from './client/ClientVoiceChannelIcon.vue';
 import EmptyImgIcon from './files/EmptyImgIcon.vue';
 import FileChooseIcon from './files/FileChooseIcon.vue';
 import FileDocIcon from './files/FileDocIcon.vue';
@@ -170,8 +180,20 @@ export const icons = {
   phoneHangup: PhoneHangupIcon,
   phoneRecall: PhoneRecallIcon,
   scenarioCall: ScenarioCallIcon,
+  telemarketCall: TelemarketCallIcon,
   transferCall: TransferCallIcon,
   volumeCall: VolumeCallIcon,
+
+  // client icons
+  clientActivity: ClientActivityIcon,
+  clientComment: ClientCommentIcon,
+  clientContacts: ClientContactsIcon,
+  clientDigitalChannel: ClientDigitalChannelIcon,
+  clientHistory: ClientHistoryIcon,
+  clientLocation: ClientLocationIcon,
+  clientSocial: ClientSocialIcon,
+  clientTask: ClientTaskIcon,
+  clientVoiceChannel: ClientVoiceChannelIcon,
 
   // files icons
   emptyImg: EmptyImgIcon,
