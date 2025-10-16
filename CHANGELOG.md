@@ -1,3 +1,10 @@
+## [1.12.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.19...v1.12.20) (2025-10-16)
+
+
+### Bug Fixes
+
+* add phone transfer icon ([1f92d50](https://github.com/StepanKhomyn/voiptime-components/commit/1f92d50e148160a058c5fb4d72691f9942d5575b))
+
 ## [1.12.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.18...v1.12.19) (2025-10-16)
 
 
