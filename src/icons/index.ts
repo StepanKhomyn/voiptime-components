@@ -51,6 +51,7 @@ import VolumeCallIcon from './call/VolumeCallIcon.vue';
 import ChatAttentionIcon from './chat/ChatAttentionIcon.vue';
 import ChatBlockIcon from './chat/ChatBlockIcon.vue';
 import ChatCheckIcon from './chat/ChatCheckIcon.vue';
+import ChatDabbleIcon from './chat/ChatDabbleIcon.vue';
 import ChatDeleteIcon from './chat/ChatDeleteIcon.vue';
 import ChatFlashIcon from './chat/ChatFlashIcon.vue';
 import ChatForwardIcon from './chat/ChatForwardIcon.vue';
@@ -100,6 +101,7 @@ import EmailOutgoingIcon from './mail/EmailOutgoingIcon.vue';
 import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
 import AddIcon from './others/AddIcon.vue';
+import DimonInSquareIcon from './others/DimonInSquareIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
 import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
@@ -131,6 +133,7 @@ import AnketBlockIcon from './scenario/AnketBlockIcon.vue';
 import IframBlockIcon from './scenario/IframBlockIcon.vue';
 import InfoBlockIcon from './scenario/InfoBlockIcon.vue';
 import ProposalBlockIcon from './scenario/ProposalBlockIcon.vue';
+import StatsDiagramPieIcon from './stats/StatsDiagramPieIcon.vue';
 import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
 import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
 import EmptyIcon from './table/EmptyIcon.vue';
@@ -201,6 +204,7 @@ export const icons = {
   chatAttention: ChatAttentionIcon,
   chatBlock: ChatBlockIcon,
   chatCheck: ChatCheckIcon,
+  chatDabble: ChatDabbleIcon,
   chatDelete: ChatDeleteIcon,
   chatFlash: ChatFlashIcon,
   chatForward: ChatForwardIcon,
@@ -262,6 +266,7 @@ export const icons = {
 
   // others icons
   add: AddIcon,
+  dimonInSquare: DimonInSquareIcon,
   dsr: DsrIcon,
   emptyRound: EmptyRoundIcon,
   hold: HoldIcon,
@@ -297,6 +302,9 @@ export const icons = {
   iframBlock: IframBlockIcon,
   infoBlock: InfoBlockIcon,
   proposalBlock: ProposalBlockIcon,
+
+  // stats icons
+  statsDiagramPie: StatsDiagramPieIcon,
 
   // table icons
   columnInsert: ColumnInsertIcon,
