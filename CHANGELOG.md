@@ -1,3 +1,10 @@
+## [1.12.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.18...v1.12.19) (2025-10-16)
+
+
+### Bug Fixes
+
+* add phoneNumber validation ([635dd1c](https://github.com/StepanKhomyn/voiptime-components/commit/635dd1c7b21ec70ef3cb3ed00711d154a9a7bb72))
+
 ## [1.12.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.17...v1.12.18) (2025-10-16)
 
 
