@@ -1,5 +1,5 @@
-<script setup lang="ts">
-  import { ref } from 'vue';
+<script lang="ts" setup>
+  import { computed, ref } from 'vue';
   import { icons } from '@/icons';
   import VIcon from '@/components/icon/VIcon.vue';
 
@@ -35,6 +35,18 @@
     color="#007bff"
   />
 </template>`;
+
+  const sortedIcons = computed(() =>
+    Object.entries(icons)
+      .sort(([aName], [bName]) => aName.localeCompare(bName))
+      .reduce(
+        (acc, [key, value]) => {
+          acc[key] = value;
+          return acc;
+        },
+        {} as typeof icons
+      )
+  );
 </script>
 
 <template>
@@ -43,15 +55,15 @@
     <div class="icons-section">
       <div class="icons-grid">
         <div
-          v-for="(iconComponent, iconName) in icons"
+          v-for="(iconComponent, iconName) in sortedIcons"
           :key="iconName"
-          class="icon-item"
           :class="{ copied: copiedIcon === iconName }"
-          @click="copyIconName(iconName)"
           :title="`Клікніть для копіювання: ${iconName}`"
+          class="icon-item"
+          @click="copyIconName(iconName)"
         >
           <div class="icon-wrapper">
-            <VIcon :name="iconName" :width="32" :height="32" />
+            <VIcon :height="32" :name="iconName" :width="32" />
           </div>
           <div class="icon-name">{{ iconName }}</div>
           <div v-if="copiedIcon === iconName" class="copied-indicator"> ✓ Скопійовано!</div>
@@ -114,20 +126,20 @@
           <div class="example">
             <div class="example-title">Різні розміри:</div>
             <div class="example-content">
-              <VIcon name="arrowDown" :width="16" :height="16" />
-              <VIcon name="arrowDown" :width="24" :height="24" />
-              <VIcon name="arrowDown" :width="32" :height="32" />
-              <VIcon name="arrowDown" :width="48" :height="48" />
+              <VIcon :height="16" :width="16" name="arrowDown" />
+              <VIcon :height="24" :width="24" name="arrowDown" />
+              <VIcon :height="32" :width="32" name="arrowDown" />
+              <VIcon :height="48" :width="48" name="arrowDown" />
             </div>
           </div>
 
           <div class="example">
             <div class="example-title">Різні кольори:</div>
             <div class="example-content">
-              <VIcon name="filterSave" color="#ff0000" />
-              <VIcon name="filterSave" color="#00ff00" />
-              <VIcon name="filterSave" color="#0000ff" />
-              <VIcon name="filterSave" color="#ff6600" />
+              <VIcon color="#ff0000" name="filterSave" />
+              <VIcon color="#00ff00" name="filterSave" />
+              <VIcon color="#0000ff" name="filterSave" />
+              <VIcon color="#ff6600" name="filterSave" />
             </div>
           </div>
         </div>
@@ -136,7 +148,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .icon-showcase {
     max-width: 1200px;
     margin: 0 auto;

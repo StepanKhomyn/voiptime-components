@@ -1810,7 +1810,7 @@ const formatSalary = (value: number) =&gt; {
             <tr>
               <td><code>row-reorder</code></td>
               <td><code>RowReorderEventData</code></td>
-              <td>Досягнення кінця скролу</td>
+              <td>Зміна порядковості рядка</td>
             </tr>
           </tbody>
         </table>
