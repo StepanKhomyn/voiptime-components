@@ -1,3 +1,10 @@
+## [1.12.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.23...v1.12.24) (2025-10-20)
+
+
+### Bug Fixes
+
+* add vupload config to entry ([eca5376](https://github.com/StepanKhomyn/voiptime-components/commit/eca537683bb1a042c740979651456298091f569c))
+
 ## [1.12.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.22...v1.12.23) (2025-10-20)
 
 
