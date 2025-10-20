@@ -176,8 +176,17 @@ export type {
 // VTabs
 export type { VTabsProps, VTabItemProps, VTabsEmits } from './components/tabs/types';
 
-export type { UploadFile, VUploadProps, VUploadEmits, UploadError } from './components/upload/types';
-export { FileValidator } from './components/upload/types';
+// ----------------- Upload -----------------
+export { FileValidator, FileParser } from './components/upload/types';
+
+export type {
+  UploadFile,
+  VUploadProps,
+  VUploadEmits,
+  UploadError,
+  ParseResult,
+  SheetParseResult,
+} from './components/upload/types';
 
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
