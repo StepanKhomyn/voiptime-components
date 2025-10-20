@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { computed, ref } from 'vue';
   import type { UploadError, UploadFile, VUploadEmits, VUploadProps } from './types';
-  import { FileValidator } from './types';
+  import { FileParser, FileValidator } from './types';
   import VButton from '@/components/button/VButton.vue';
   import VIcon from '@/components/icon/VIcon.vue';
 
@@ -10,11 +10,14 @@
     accept: undefined,
     maxSize: undefined,
     maxFiles: undefined,
+    maxRows: undefined,
     multiple: true,
     type: 'button',
     disabled: false,
     placeholder: 'Drop file here or click to upload',
     tip: undefined,
+    returnData: false,
+    parseFiles: false,
   });
 
   const emit = defineEmits<VUploadEmits>();
@@ -45,6 +48,10 @@
 
     if (props.maxSize) {
       parts.push(`files with a size less than ${FileValidator.formatFileSize(props.maxSize)}`);
+    }
+
+    if (props.maxRows) {
+      parts.push(`max ${props.maxRows} rows`);
     }
 
     return parts.join(' ');
@@ -83,7 +90,7 @@
     target.value = '';
   };
 
-  const handleFiles = (files: File[]) => {
+  const handleFiles = async (files: File[]) => {
     if (!canAddMoreFiles.value) {
       emit('exceed', files);
       return;
@@ -112,6 +119,26 @@
       };
 
       validFiles.push(uploadFile);
+
+      // Парсинг файлу якщо потрібно
+      if (props.parseFiles && FileParser.isDataFile(file)) {
+        try {
+          const parseResult = await FileParser.parseFile(file, props.maxRows, props.returnData);
+
+          // Перевірка ліміту рядків
+          if (props.maxRows && parseResult.rows > props.maxRows) {
+            emit('rowsExceed', { file: uploadFile, rows: parseResult.rows, maxRows: props.maxRows });
+          }
+
+          emit('parse', { file: uploadFile, result: parseResult });
+        } catch (error) {
+          emit('error', {
+            type: 'parse',
+            message: `Failed to parse file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            file,
+          });
+        }
+      }
     }
 
     if (validFiles.length > 0) {

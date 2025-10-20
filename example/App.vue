@@ -21,6 +21,7 @@
   import DemoLoader from './DemoLoader.vue';
   import DemoValidationForm from './DemoValidationForm.vue';
   import DemoUpload from './DemoUpload.vue';
+  import DemoUpload2 from './DemoUpload2.vue';
 
   const activeSlot = ref(null);
 
@@ -46,6 +47,7 @@
     { id: 20, name: 'Лоадер', icon: '🔘' },
     { id: 21, name: 'Валідація', icon: '✅' },
     { id: 22, name: 'Upload', icon: '✅' },
+    { id: 23, name: 'Upload2', icon: '✅' },
   ];
 </script>
 
@@ -100,6 +102,7 @@
       <DemoLoader v-if="activeSlot === 20" />
       <DemoValidationForm v-if="activeSlot === 21" />
       <DemoUpload v-if="activeSlot === 22" />
+      <DemoUpload2 v-if="activeSlot === 23" />
       <!-- і т.д. -->
     </div>
   </div>
