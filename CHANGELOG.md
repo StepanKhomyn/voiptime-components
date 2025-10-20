@@ -1,3 +1,10 @@
+## [1.12.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.21...v1.12.22) (2025-10-20)
+
+
+### Bug Fixes
+
+* додано парсинг файлів на аплоаді ([5472ca0](https://github.com/StepanKhomyn/voiptime-components/commit/5472ca040a5a598bc0f88b6bd031b746d31e8e5e))
+
 ## [1.12.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.20...v1.12.21) (2025-10-16)
 
 
