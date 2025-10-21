@@ -4,7 +4,7 @@
 
     <VUpload
       v-model="files"
-      :max-files="3"
+      :max-files="1"
       :max-rows="10000"
       :max-size="15 * 1024 * 1024"
       :parse-files="true"
