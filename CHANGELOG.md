@@ -1,3 +1,10 @@
+## [1.12.25](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.24...v1.12.25) (2025-10-21)
+
+
+### Bug Fixes
+
+* add proggres to import ([3024644](https://github.com/StepanKhomyn/voiptime-components/commit/302464411f73327bf6b88143771115dd3932b292))
+
 ## [1.12.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.23...v1.12.24) (2025-10-20)
 
 
