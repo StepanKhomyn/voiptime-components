@@ -777,7 +777,7 @@
     hour: now.getHours(),
     minute: now.getMinutes(),
     second: now.getSeconds(),
-    period: now.getHours() >= 12 ? 'PM' : 'AM',
+    period: (now.getHours() >= 12 ? 'PM' : 'AM') as 'AM' | 'PM',
   };
 
   // ===== LIFECYCLE HOOKS =====
