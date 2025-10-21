@@ -80,19 +80,25 @@
   const parseTimeValue = (value: TimeValue): TimeObject | null => {
     if (!value) return null;
 
+    let result: TimeObject | null = null;
+
     if (value instanceof Date) {
-      return {
+      result = {
         hour: value.getHours(),
         minute: value.getMinutes(),
         second: value.getSeconds(),
       };
+    } else if (typeof value === 'string' && isValidTimeString(value)) {
+      result = parseTimeString(value);
     }
 
-    if (typeof value === 'string' && isValidTimeString(value)) {
-      return parseTimeString(value);
+    if (result && props.use12Hours) {
+      const hour12 = result.hour === 0 ? 12 : result.hour > 12 ? result.hour - 12 : result.hour;
+      const period = result.hour >= 12 ? 'PM' : 'AM';
+      return { ...result, hour: hour12, period };
     }
 
-    return null;
+    return result;
   };
 
   const validateTime = (value: TimePickerValue, required = false) => {
@@ -276,7 +282,7 @@
     }
 
     // Створити зону перетину в центрі контейнера (між лініями)
-    const rootMargin = `${-container.clientHeight / 2 + 16}px 0px ${-container.clientHeight / 2 + 16}px 0px`;
+    const rootMargin = `${-container.clientHeight / 2 + 15}px 0px ${-container.clientHeight / 2 + 15}px 0px`;
 
     const observer = new IntersectionObserver(
       (entries: IntersectionObserverEntry[]) => {
@@ -382,6 +388,54 @@
           setupIntersectionObserver(elementsArray[2], 'second', false);
         }
       }
+
+      elementsArray.forEach(el => setupAutoScrollSnap(el));
+    });
+  };
+
+  const setupAutoScrollSnap = (container: HTMLElement) => {
+    let scrollTimeout: number | null = null;
+
+    container.addEventListener('scroll', () => {
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+
+      // Після зупинки скролу (через 150 мс)
+      scrollTimeout = window.setTimeout(() => {
+        const buttons = Array.from(container.querySelectorAll('.vt-timepicker__option')) as HTMLElement[];
+        if (!buttons.length) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const containerCenter = containerRect.top + containerRect.height / 2;
+
+        // Знайти найближчу кнопку до центру
+        let closestButton: HTMLElement | null = null;
+        let minDistance = Infinity;
+
+        for (const btn of buttons) {
+          const rect = btn.getBoundingClientRect();
+          const btnCenter = rect.top + rect.height / 2;
+          const distance = Math.abs(btnCenter - containerCenter);
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestButton = btn;
+          }
+        }
+
+        if (closestButton) {
+          const buttonRect = closestButton.getBoundingClientRect();
+          const scrollTop =
+            container.scrollTop +
+            (buttonRect.top - containerRect.top) -
+            container.clientHeight / 2 +
+            buttonRect.height / 2;
+
+          container.scrollTo({
+            top: scrollTop,
+            behavior: 'smooth',
+          });
+        }
+      }, 150);
     });
   };
 
@@ -668,44 +722,49 @@
   watch(
     () => props.modelValue,
     newValue => {
-      if (newValue) {
-        if (isRange.value && Array.isArray(newValue)) {
-          const startTime = parseTimeValue(newValue[0]);
-          const endTime = parseTimeValue(newValue[1]);
+      if (!newValue) return;
 
-          if (startTime) {
-            let hour = startTime.hour;
-            if (props.use12Hours) {
-              currentPeriod.value = hour >= 12 ? 'PM' : 'AM';
-              hour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-            }
-            currentHour.value = hour;
-            currentMinute.value = startTime.minute;
-            currentSecond.value = startTime.second;
-          }
+      if (isRange.value && Array.isArray(newValue)) {
+        const [start, end] = newValue.map(parseTimeValue);
 
-          if (endTime) {
-            let hour = endTime.hour;
-            if (props.use12Hours) {
-              endPeriod.value = hour >= 12 ? 'PM' : 'AM';
-              hour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-            }
-            endHour.value = hour;
-            endMinute.value = endTime.minute;
-            endSecond.value = endTime.second;
-          }
-        } else if (!isRange.value) {
-          const time = parseTimeValue(newValue as TimeValue);
-          if (time) {
-            let hour = time.hour;
-            if (props.use12Hours) {
-              currentPeriod.value = hour >= 12 ? 'PM' : 'AM';
-              hour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-            }
-            currentHour.value = hour;
-            currentMinute.value = time.minute;
-            currentSecond.value = time.second;
-          }
+        if (start) {
+          currentPeriod.value = start.hour >= 12 ? 'PM' : 'AM';
+          currentHour.value = props.use12Hours
+            ? start.hour === 0
+              ? 12
+              : start.hour > 12
+                ? start.hour - 12
+                : start.hour
+            : start.hour;
+          currentMinute.value = start.minute;
+          currentSecond.value = start.second;
+        }
+
+        if (end) {
+          endPeriod.value = end.hour >= 12 ? 'PM' : 'AM';
+          endHour.value = props.use12Hours
+            ? end.hour === 0
+              ? 12
+              : end.hour > 12
+                ? end.hour - 12
+                : end.hour
+            : end.hour;
+          endMinute.value = end.minute;
+          endSecond.value = end.second;
+        }
+      } else {
+        const time = parseTimeValue(newValue as TimeValue);
+        if (time) {
+          currentPeriod.value = time.hour >= 12 ? 'PM' : 'AM';
+          currentHour.value = props.use12Hours
+            ? time.hour === 0
+              ? 12
+              : time.hour > 12
+                ? time.hour - 12
+                : time.hour
+            : time.hour;
+          currentMinute.value = time.minute;
+          currentSecond.value = time.second;
         }
       }
     },
@@ -713,28 +772,13 @@
   );
 
   // ===== INITIALIZATION VALUES =====
-  const initialTime = (() => {
-    const now = new Date();
-    let hour = now.getHours();
-
-    if (props.use12Hours) {
-      const period: 'AM' | 'PM' = hour >= 12 ? 'PM' : 'AM';
-      hour = hour === 0 ? 12 : hour > 12 ? hour - 12 : hour;
-      return {
-        hour,
-        minute: now.getMinutes(),
-        second: now.getSeconds(),
-        period,
-      };
-    }
-
-    return {
-      hour,
-      minute: now.getMinutes(),
-      second: now.getSeconds(),
-      period: 'AM' as const,
-    };
-  })();
+  const now = new Date();
+  const initialTime = {
+    hour: now.getHours(),
+    minute: now.getMinutes(),
+    second: now.getSeconds(),
+    period: now.getHours() >= 12 ? 'PM' : 'AM',
+  };
 
   // ===== LIFECYCLE HOOKS =====
   onMounted(() => {
