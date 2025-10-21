@@ -23,6 +23,9 @@
   const emit = defineEmits<VUploadEmits>();
 
   const isDragging = ref(false);
+  const isProcessing = ref(false);
+  const processingProgress = ref(0);
+  const processingFileName = ref('');
   const fileInputRef = ref<HTMLInputElement | null>(null);
 
   const uploadedFiles = computed({
@@ -62,20 +65,22 @@
     return uploadedFiles.value.length < props.maxFiles;
   });
 
+  const isDisabled = computed(() => props.disabled || isProcessing.value);
+
   const handleDragOver = (e: DragEvent) => {
-    if (props.disabled) return;
+    if (isDisabled.value) return;
     e.preventDefault();
     isDragging.value = true;
   };
 
   const handleDragLeave = (e: DragEvent) => {
-    if (props.disabled) return;
+    if (isDisabled.value) return;
     e.preventDefault();
     isDragging.value = false;
   };
 
   const handleDrop = (e: DragEvent) => {
-    if (props.disabled) return;
+    if (isDisabled.value) return;
     e.preventDefault();
     isDragging.value = false;
 
@@ -96,12 +101,18 @@
       return;
     }
 
-    const remainingSlots = props.maxFiles ? props.maxFiles - uploadedFiles.value.length : files.length;
+    isProcessing.value = true;
+    processingProgress.value = 0;
 
+    const remainingSlots = props.maxFiles ? props.maxFiles - uploadedFiles.value.length : files.length;
     const filesToProcess = files.slice(0, remainingSlots);
     const validFiles: UploadFile[] = [];
 
-    for (const file of filesToProcess) {
+    for (let i = 0; i < filesToProcess.length; i++) {
+      const file = filesToProcess[i];
+      processingFileName.value = file.name;
+      processingProgress.value = Math.round(((i + 0.3) / filesToProcess.length) * 100);
+
       const error = validateFile(file);
 
       if (error) {
@@ -122,6 +133,8 @@
 
       // Парсинг файлу якщо потрібно
       if (props.parseFiles && FileParser.isDataFile(file)) {
+        processingProgress.value = Math.round(((i + 0.6) / filesToProcess.length) * 100);
+
         try {
           const parseResult = await FileParser.parseFile(file, props.maxRows, props.returnData);
 
@@ -139,6 +152,8 @@
           });
         }
       }
+
+      processingProgress.value = Math.round(((i + 1) / filesToProcess.length) * 100);
     }
 
     if (validFiles.length > 0) {
@@ -148,6 +163,13 @@
     if (files.length > remainingSlots) {
       emit('exceed', files.slice(remainingSlots));
     }
+
+    // Затримка для плавності анімації
+    await new Promise(resolve => setTimeout(resolve, 300));
+
+    isProcessing.value = false;
+    processingProgress.value = 0;
+    processingFileName.value = '';
   };
 
   const validateFile = (file: File): UploadError | null => {
@@ -171,24 +193,45 @@
   };
 
   const removeFile = (file: UploadFile) => {
+    if (isProcessing.value) return;
     uploadedFiles.value = uploadedFiles.value.filter(f => f.id !== file.id);
     emit('remove', file);
   };
 
   const openFileDialog = () => {
-    if (props.disabled || !canAddMoreFiles.value) return;
+    if (isDisabled.value || !canAddMoreFiles.value) return;
     fileInputRef.value?.click();
   };
 </script>
 
 <template>
   <div class="vt-upload">
+    <!-- Processing Bar -->
+    <div v-if="isProcessing" class="vt-upload__processing">
+      <div class="vt-upload__processing-header">
+        <div class="vt-upload__processing-icon">
+          <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+          </svg>
+        </div>
+        <div class="vt-upload__processing-info">
+          <div class="vt-upload__processing-title">Processing files...</div>
+          <div class="vt-upload__processing-filename">{{ processingFileName }}</div>
+        </div>
+        <div class="vt-upload__processing-percentage">{{ processingProgress }}%</div>
+      </div>
+      <div class="vt-upload__progress-bar">
+        <div :style="{ width: `${processingProgress}%` }" class="vt-upload__progress-bar-fill"></div>
+      </div>
+    </div>
+
     <!-- Drag & Drop Area -->
     <div
       v-if="type === 'drag'"
       :class="{
         'vt-upload__drag-area--active': isDragging,
-        'vt-upload__drag-area--disabled': disabled || !canAddMoreFiles,
+        'vt-upload__drag-area--disabled': isDisabled || !canAddMoreFiles,
+        'vt-upload__drag-area--processing': isProcessing,
       }"
       class="vt-upload__drag-area"
       @click="openFileDialog"
@@ -228,7 +271,13 @@
     </div>
 
     <!-- Button Upload -->
-    <VButton v-else :disabled="disabled || !canAddMoreFiles" icon="uploadCloud" type="primary" @click="openFileDialog">
+    <VButton
+      v-else
+      :disabled="isDisabled || !canAddMoreFiles"
+      icon="uploadCloud"
+      type="primary"
+      @click="openFileDialog"
+    >
       Upload Files
     </VButton>
 
@@ -244,7 +293,7 @@
           <div class="vt-upload__list-item-size">{{ FileValidator.formatFileSize(file.size) }}</div>
         </div>
 
-        <button :disabled="disabled" class="vt-upload__list-item-remove" type="button" @click="removeFile(file)">
+        <button :disabled="isDisabled" class="vt-upload__list-item-remove" type="button" @click="removeFile(file)">
           <VIcon name="delete" />
         </button>
       </div>
@@ -254,7 +303,7 @@
     <input
       ref="fileInputRef"
       :accept="accept"
-      :disabled="disabled"
+      :disabled="isDisabled"
       :multiple="multiple"
       class="vt-upload__input"
       type="file"
