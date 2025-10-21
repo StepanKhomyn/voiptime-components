@@ -1,3 +1,10 @@
+## [1.12.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.25...v1.12.26) (2025-10-21)
+
+
+### Bug Fixes
+
+* Якщо стоїть праметр з макс к-стю файлів - 1, тоді приховується поле на завантаження ([4586d5e](https://github.com/StepanKhomyn/voiptime-components/commit/4586d5e2b1652aa6f21f0c0aded4d64fabaadb62))
+
 ## [1.12.25](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.24...v1.12.25) (2025-10-21)
 
 
