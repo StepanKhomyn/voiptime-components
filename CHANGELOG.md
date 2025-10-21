@@ -1,3 +1,11 @@
+## [1.12.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.27...v1.12.28) (2025-10-21)
+
+
+### Bug Fixes
+
+* fix problem with time picker ([8d83453](https://github.com/StepanKhomyn/voiptime-components/commit/8d83453ae8fc96869530f3b7b3e9f1a26c12fc06))
+* fix type ([a8d924a](https://github.com/StepanKhomyn/voiptime-components/commit/a8d924a5be659aa9673c348c23700ddb816608e4))
+
 ## [1.12.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.26...v1.12.27) (2025-10-21)
 
 
