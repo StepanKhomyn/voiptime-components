@@ -26,6 +26,7 @@
   const isProcessing = ref(false);
   const processingProgress = ref(0);
   const processingFileName = ref('');
+  const processingStage = ref(''); // 'validating', 'parsing', 'completing'
   const fileInputRef = ref<HTMLInputElement | null>(null);
 
   const uploadedFiles = computed({
@@ -58,6 +59,15 @@
     }
 
     return parts.join(' ');
+  });
+
+  const processingText = computed(() => {
+    const stages = {
+      validating: 'Validating file...',
+      parsing: 'Parsing data...',
+      completing: 'Completing...',
+    };
+    return stages[processingStage.value as keyof typeof stages] || 'Processing files...';
   });
 
   const canAddMoreFiles = computed(() => {
@@ -102,6 +112,30 @@
     target.value = '';
   };
 
+  // Функція для плавного оновлення прогресу
+  const updateProgress = async (targetProgress: number, duration: number = 200) => {
+    const startProgress = processingProgress.value;
+    const diff = targetProgress - startProgress;
+    const startTime = Date.now();
+
+    return new Promise<void>(resolve => {
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        processingProgress.value = Math.round(startProgress + diff * progress);
+
+        if (progress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          resolve();
+        }
+      };
+
+      requestAnimationFrame(animate);
+    });
+  };
+
   const handleFiles = async (files: File[]) => {
     if (!canAddMoreFiles.value) {
       emit('exceed', files);
@@ -110,6 +144,7 @@
 
     isProcessing.value = true;
     processingProgress.value = 0;
+    processingStage.value = 'validating';
 
     const remainingSlots = props.maxFiles ? props.maxFiles - uploadedFiles.value.length : files.length;
     const filesToProcess = files.slice(0, remainingSlots);
@@ -118,7 +153,11 @@
     for (let i = 0; i < filesToProcess.length; i++) {
       const file = filesToProcess[i];
       processingFileName.value = file.name;
-      processingProgress.value = Math.round(((i + 0.3) / filesToProcess.length) * 100);
+
+      // Етап 1: Валідація (0-20%)
+      processingStage.value = 'validating';
+      const baseProgress = (i / filesToProcess.length) * 100;
+      await updateProgress(baseProgress + 10);
 
       const error = validateFile(file);
 
@@ -126,6 +165,8 @@
         emit('error', error);
         continue;
       }
+
+      await updateProgress(baseProgress + 20);
 
       const uploadFile: UploadFile = {
         id: FileValidator.generateId(),
@@ -140,10 +181,14 @@
 
       // Парсинг файлу якщо потрібно
       if (props.parseFiles && FileParser.isDataFile(file)) {
-        processingProgress.value = Math.round(((i + 0.6) / filesToProcess.length) * 100);
+        // Етап 2: Парсинг (20-80%)
+        processingStage.value = 'parsing';
+        await updateProgress(baseProgress + 40);
 
         try {
           const parseResult = await FileParser.parseFile(file, props.maxRows, props.returnData);
+
+          await updateProgress(baseProgress + 70);
 
           // Перевірка ліміту рядків
           if (props.maxRows && parseResult.rows > props.maxRows) {
@@ -158,9 +203,16 @@
             file,
           });
         }
+
+        await updateProgress(baseProgress + 90);
+      } else {
+        // Якщо парсинг не потрібен, одразу до 90%
+        await updateProgress(baseProgress + 90);
       }
 
-      processingProgress.value = Math.round(((i + 1) / filesToProcess.length) * 100);
+      // Етап 3: Завершення (90-100%)
+      processingStage.value = 'completing';
+      await updateProgress(((i + 1) / filesToProcess.length) * 100);
     }
 
     if (validFiles.length > 0) {
@@ -171,12 +223,14 @@
       emit('exceed', files.slice(remainingSlots));
     }
 
-    // Затримка для плавності анімації
+    // Показуємо 100% перед закриттям
+    await updateProgress(100, 100);
     await new Promise(resolve => setTimeout(resolve, 300));
 
     isProcessing.value = false;
     processingProgress.value = 0;
     processingFileName.value = '';
+    processingStage.value = '';
   };
 
   const validateFile = (file: File): UploadError | null => {
@@ -216,12 +270,16 @@
     <div v-if="isProcessing" class="vt-upload__processing">
       <div class="vt-upload__processing-header">
         <div class="vt-upload__processing-icon">
-          <svg fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" />
+          <svg class="spinner" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="12" cy="12" opacity="0.25" r="10" stroke="currentColor" stroke-width="2" />
+            <path
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              fill="currentColor"
+            />
           </svg>
         </div>
         <div class="vt-upload__processing-info">
-          <div class="vt-upload__processing-title">Processing files...</div>
+          <div class="vt-upload__processing-title">{{ processingText }}</div>
           <div class="vt-upload__processing-filename">{{ processingFileName }}</div>
         </div>
         <div class="vt-upload__processing-percentage">{{ processingProgress }}%</div>
