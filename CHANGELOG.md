@@ -1,3 +1,10 @@
+## [1.12.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.26...v1.12.27) (2025-10-21)
+
+
+### Bug Fixes
+
+* реалізовано плавний лоадер на імпорт файлу ([2d84047](https://github.com/StepanKhomyn/voiptime-components/commit/2d84047f2267bf83509f9491c633300736358929))
+
 ## [1.12.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.25...v1.12.26) (2025-10-21)
 
 
