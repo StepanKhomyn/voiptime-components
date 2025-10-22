@@ -306,9 +306,43 @@
   const isMultiple = computed(() => props.multiple);
 
   const selectedOptions = computed((): VtSelectOption[] => {
-    if (!registeredOptions.value.length) return [];
+    const found = getSelectedOptions(props.modelValue, registeredOptions.value, isMultiple.value, props.valueKey);
 
-    return getSelectedOptions(props.modelValue, registeredOptions.value, isMultiple.value, props.valueKey);
+    // Якщо всі знайдені, повертаємо
+    if (isMultiple.value) {
+      const modelArray = Array.isArray(props.modelValue) ? props.modelValue : [];
+      if (found.length === modelArray.length) return found;
+
+      // Додаємо відсутні значення як опції
+      const foundValues = new Set(found.map(opt => getOptionKey(opt.value)));
+      const missing = modelArray
+        .filter(val => !foundValues.has(getOptionKey(val)))
+        .map(val => ({
+          value: val,
+          label: typeof val === 'object' ? val.label || val.name || JSON.stringify(val) : String(val),
+          disabled: false,
+        }));
+
+      return [...found, ...missing];
+    } else {
+      if (found.length > 0) return found;
+
+      // Якщо нічого не знайдено, але є modelValue
+      if (props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '') {
+        return [
+          {
+            value: props.modelValue,
+            label:
+              typeof props.modelValue === 'object'
+                ? props.modelValue.label || props.modelValue.name || JSON.stringify(props.modelValue)
+                : String(props.modelValue),
+            disabled: false,
+          },
+        ];
+      }
+    }
+
+    return found;
   });
 
   const visibleTags = computed(() => {
