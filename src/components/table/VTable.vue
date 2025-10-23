@@ -203,16 +203,9 @@
       if (isScrollingDown && (isNearBottom || isAtBottom)) {
         infinityScrollTriggered.value = true;
         emit('infinity-scroll');
-
-        setTimeout(() => {
-          infinityScrollTriggered.value = false;
-        }, 1000);
+        infinityScrollTriggered.value = false;
       }
     }, 50);
-  };
-
-  const resetInfinityScroll = () => {
-    infinityScrollTriggered.value = false;
   };
 
   onMounted(() => {
