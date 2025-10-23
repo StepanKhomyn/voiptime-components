@@ -433,7 +433,6 @@
     clearSelection,
     getSelectionRows,
     setSelectionRows,
-    resetInfinityScroll,
   });
 </script>
 
