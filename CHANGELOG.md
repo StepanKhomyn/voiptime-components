@@ -1,3 +1,11 @@
+## [1.12.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.29...v1.12.30) (2025-10-23)
+
+
+### Bug Fixes
+
+* fix scroll on table ([59d6695](https://github.com/StepanKhomyn/voiptime-components/commit/59d669501735a5bc154947ffab1fc1c759ef6c3d))
+* fix scroll on table2 ([c4d86de](https://github.com/StepanKhomyn/voiptime-components/commit/c4d86dee453dfae14d8ba961abbbf21f9c713213))
+
 ## [1.12.29](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.28...v1.12.29) (2025-10-22)
 
 
