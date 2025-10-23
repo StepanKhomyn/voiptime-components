@@ -1,3 +1,10 @@
+## [1.12.29](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.28...v1.12.29) (2025-10-22)
+
+
+### Bug Fixes
+
+* виправлено відображення вибраних опцій в мультиселекті ([2d564ab](https://github.com/StepanKhomyn/voiptime-components/commit/2d564ab855cbf5beda1b00e265b3b8e500cbab33))
+
 ## [1.12.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.27...v1.12.28) (2025-10-21)
 
 
