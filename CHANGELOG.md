@@ -1,3 +1,10 @@
+## [1.12.31](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.30...v1.12.31) (2025-11-03)
+
+
+### Bug Fixes
+
+* add scroll buttons on tabs ([c5ae097](https://github.com/StepanKhomyn/voiptime-components/commit/c5ae097b3a848d5ec3d75c86cbe3282616e4a851))
+
 ## [1.12.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.29...v1.12.30) (2025-10-23)
 
 
