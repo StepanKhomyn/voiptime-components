@@ -130,6 +130,7 @@ import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
 import AnketBlockIcon from './scenario/AnketBlockIcon.vue';
+import CallSubjectIcon from './scenario/CallSubjectIcon.vue';
 import IframBlockIcon from './scenario/IframBlockIcon.vue';
 import InfoBlockIcon from './scenario/InfoBlockIcon.vue';
 import ProposalBlockIcon from './scenario/ProposalBlockIcon.vue';
@@ -299,6 +300,7 @@ export const icons = {
 
   // scenario icons
   anketBlock: AnketBlockIcon,
+  callSubject: CallSubjectIcon,
   iframBlock: IframBlockIcon,
   infoBlock: InfoBlockIcon,
   proposalBlock: ProposalBlockIcon,
