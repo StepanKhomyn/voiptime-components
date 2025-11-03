@@ -1,3 +1,10 @@
+## [1.12.32](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.31...v1.12.32) (2025-11-03)
+
+
+### Bug Fixes
+
+* add call subject icon ([0ad3908](https://github.com/StepanKhomyn/voiptime-components/commit/0ad39088bf0af858c02367ce92613d74ab111e3c))
+
 ## [1.12.31](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.30...v1.12.31) (2025-11-03)
 
 
