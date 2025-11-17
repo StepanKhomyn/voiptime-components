@@ -3,7 +3,7 @@
 @mixin button-type($type-name, $color-prefix) {
   &--#{$type-name} {
     background-color: var(--color-#{$color-prefix}-main);
-    color: white;
+    color: if($type-name == 'info' or $type-name == 'warning', var(--color-gray-1), white);
 
     &:hover:not(.vt-button--disabled) {
       background-color: var(--color-#{$color-prefix}-hover);
