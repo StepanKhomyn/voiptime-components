@@ -1,3 +1,10 @@
+## [1.12.36](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.35...v1.12.36) (2025-11-17)
+
+
+### Bug Fixes
+
+* parse html in table toltip2 ([bdd48f3](https://github.com/StepanKhomyn/voiptime-components/commit/bdd48f32916b8622c22cc4dcd50afa2b059e70f6))
+
 ## [1.12.35](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.34...v1.12.35) (2025-11-17)
 
 
