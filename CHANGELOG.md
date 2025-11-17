@@ -1,3 +1,11 @@
+## [1.12.33](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.32...v1.12.33) (2025-11-17)
+
+
+### Bug Fixes
+
+* виправелно колір кнопок ([cea4d86](https://github.com/StepanKhomyn/voiptime-components/commit/cea4d8694ca112c278d0be654c423f7276070b9f))
+* виправелно колір кнопок2 ([d04c471](https://github.com/StepanKhomyn/voiptime-components/commit/d04c471be1738cb55d117d07ca95e4076d6967da))
+
 ## [1.12.32](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.31...v1.12.32) (2025-11-03)
 
 
