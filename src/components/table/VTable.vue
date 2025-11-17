@@ -332,10 +332,22 @@
     return getFooterStyle(col, index, getStickyOffset, getDefaultColumnWidth);
   };
 
+  const stripHtml = (html: string): string => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || '';
+  };
+
   const getTooltipText = (row: any, col: VTableColumnProps): string => {
-    if (!col || !col.prop) return '';
+    if (!col?.prop) return '';
+
     const value = row[col.prop];
-    return value == null ? '' : String(value);
+    if (value == null) return '';
+
+    if (typeof value === 'string' && value.includes('<')) {
+      return stripHtml(value);
+    }
+
+    return String(value);
   };
 
   const summaryData = computed<Record<string, any>>(() => {
