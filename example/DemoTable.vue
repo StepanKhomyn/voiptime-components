@@ -806,7 +806,7 @@
             </VTableColumn>
             <!--            <VTableColumn :min-width="120" label="Статус" prop="status" />-->
             <!--            <VTableColumn :min-width="150" label="Дата" prop="date" />-->
-            <VTableColumn :width="60" label="Рахунок" prop="score" />
+            <VTableColumn label="Дії" manage prop="score" />
           </VTable>
         </div>
       </div>
@@ -1706,6 +1706,12 @@ const formatSalary = (value: number) =&gt; {
             </tr>
             <tr>
               <td><code>actionColumn</code></td>
+              <td><code>boolean</code></td>
+              <td>false</td>
+              <td>Управління колонками (дії)</td>
+            </tr>
+            <tr>
+              <td><code>manage</code></td>
               <td><code>boolean</code></td>
               <td>false</td>
               <td>Чи є колонка колонкою дій</td>

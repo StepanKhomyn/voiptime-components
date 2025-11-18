@@ -436,6 +436,23 @@
       }
     }
   }
+
+  &__th--manage,
+  &__td--manage {
+    width: 20px !important;
+
+    .vt-table__cell-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  &__th--manage {
+    .vt-th__content {
+      padding: 0 !important;
+    }
+  }
 }
 
 /* Контент заголовка */

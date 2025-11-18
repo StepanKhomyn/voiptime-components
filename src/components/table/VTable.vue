@@ -496,6 +496,7 @@
                 'vt-table__th--pinned-left': col.pinnedLeft,
                 'vt-table__th--pinned-right': col.pinnedRight,
                 'vt-table__th--sortable': col.sortable,
+                'vt-table__th--manage': col.manage,
               },
             ]"
             :style="getHeaderStyleWithContext(col, index)"
@@ -505,7 +506,7 @@
                 {{ col.label }}
               </div>
 
-              <div v-if="col.sortable" class="vt-th__sortable">
+              <div v-if="col.sortable && !col.manage" class="vt-th__sortable">
                 <VIcon
                   :class="getSortIconClasses(col, sortState).asc"
                   name="arrowTop"
@@ -519,7 +520,7 @@
               </div>
 
               <ColumnActions
-                v-if="col.actionColumn"
+                v-if="col.actionColumn && !col.manage"
                 :all-columns="sortedColumns"
                 :column="col"
                 :columnsSelector="props.columnsSelector"
@@ -528,7 +529,12 @@
               />
             </div>
 
-            <div :data-resizer="col.prop" class="vt-table__resizer" @mousedown="e => handleMouseDown(e, col)" />
+            <div
+              v-if="!col.manage"
+              :data-resizer="col.prop"
+              class="vt-table__resizer"
+              @mousedown="e => handleMouseDown(e, col)"
+            />
           </th>
         </tr>
       </thead>
@@ -610,6 +616,7 @@
                 {
                   'vt-table__td--pinned-left': col.pinnedLeft,
                   'vt-table__td--pinned-right': col.pinnedRight,
+                  'vt-table__td--manage': col.manage,
                 },
               ]"
               :style="getColumnStyleWithContext(col, colIndex)"
@@ -628,7 +635,12 @@
                 />
                 <span v-else>{{ row[col.prop] }}</span>
               </div>
-              <div :data-resizer="col.prop" class="vt-table__resizer" @mousedown="e => handleMouseDown(e, col)" />
+              <div
+                v-if="!col.manage"
+                :data-resizer="col.prop"
+                class="vt-table__resizer"
+                @mousedown="e => handleMouseDown(e, col)"
+              />
             </td>
           </tr>
           <tr
@@ -671,6 +683,7 @@
               {
                 'vt-table__td--pinned-left': col.pinnedLeft,
                 'vt-table__td--pinned-right': col.pinnedRight,
+                'vt-table__td--manage': col.manage,
               },
             ]"
             :style="getFooterStyleWithContext(col, colIndex)"

@@ -71,6 +71,7 @@ export interface VTableColumnProps {
   actionColumn?: boolean;
   showOverflowTooltip?: boolean;
   selectable?: boolean;
+  manage?: boolean;
   renderSlot?: VTableRenderSlot;
   sortMethod?: Function;
 }
@@ -138,4 +139,5 @@ export const DEFAULT_COLUMN_CONFIG = {
   visible: true,
   pinnedLeft: false,
   pinnedRight: false,
+  manage: false,
 } as const;

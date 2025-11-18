@@ -34,6 +34,7 @@
     pinnedLeft: props.pinnedLeft,
     pinnedRight: props.pinnedRight,
     actionColumn: props.actionColumn,
+    manage: props.manage,
     showOverflowTooltip: props.showOverflowTooltip,
     selectable: props.selectable,
     // Зберігаємо слот - пріоритет: назва колонки -> default -> slot
