@@ -1,3 +1,10 @@
+## [1.12.37](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.36...v1.12.37) (2025-11-18)
+
+
+### Bug Fixes
+
+* add table manage props ([0d1f0c7](https://github.com/StepanKhomyn/voiptime-components/commit/0d1f0c72fd1a3db1ef789030cd453711d3ebd466))
+
 ## [1.12.36](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.35...v1.12.36) (2025-11-17)
 
 
