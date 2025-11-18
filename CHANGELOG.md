@@ -1,3 +1,10 @@
+## [1.12.38](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.37...v1.12.38) (2025-11-18)
+
+
+### Bug Fixes
+
+* fixed table styles ([c236916](https://github.com/StepanKhomyn/voiptime-components/commit/c236916d054cfedb41906c0da0e5aaeef05736a2))
+
 ## [1.12.37](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.36...v1.12.37) (2025-11-18)
 
 
