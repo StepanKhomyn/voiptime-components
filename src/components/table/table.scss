@@ -448,7 +448,9 @@
 
   &__th--manage,
   &__td--manage {
-    width: 20px !important;
+    min-width: 40px !important;
+    width: 40px !important;
+    max-width: 40px !important;
 
     .vt-table__cell-content {
       display: flex;
