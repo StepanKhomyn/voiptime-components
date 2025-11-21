@@ -38,10 +38,12 @@ import KeyboardCallIcon from './call/KeyboardCallIcon.vue';
 import MicrophoneCallIcon from './call/MicrophoneCallIcon.vue';
 import OutboundCallIcon from './call/OutboundCallIcon.vue';
 import OwnCallIcon from './call/OwnCallIcon.vue';
+import PhoneActiveTalkIcon from './call/PhoneActiveTalkIcon.vue';
 import PhoneArrowDownIcon from './call/PhoneArrowDownIcon.vue';
 import PhoneCancelRecallIcon from './call/PhoneCancelRecallIcon.vue';
 import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
 import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
+import PhoneInactiveTalkIcon from './call/PhoneInactiveTalkIcon.vue';
 import PhoneRecallIcon from './call/PhoneRecallIcon.vue';
 import PhoneTransferIcon from './call/PhoneTransferIcon.vue';
 import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
@@ -190,10 +192,12 @@ export const icons = {
   microphoneCall: MicrophoneCallIcon,
   outboundCall: OutboundCallIcon,
   ownCall: OwnCallIcon,
+  phoneActiveTalk: PhoneActiveTalkIcon,
   phoneArrowDown: PhoneArrowDownIcon,
   phoneCancelRecall: PhoneCancelRecallIcon,
   phoneExecuteRecall: PhoneExecuteRecallIcon,
   phoneHangup: PhoneHangupIcon,
+  phoneInactiveTalk: PhoneInactiveTalkIcon,
   phoneRecall: PhoneRecallIcon,
   phoneTransfer: PhoneTransferIcon,
   scenarioCall: ScenarioCallIcon,
