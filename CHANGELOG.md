@@ -1,3 +1,10 @@
+## [1.12.40](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.39...v1.12.40) (2025-11-18)
+
+
+### Bug Fixes
+
+* fixed eit column width ([2fe037f](https://github.com/StepanKhomyn/voiptime-components/commit/2fe037f36a38fce5fd91599a122cea5ef5edf4a8))
+
 ## [1.12.39](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.38...v1.12.39) (2025-11-18)
 
 
