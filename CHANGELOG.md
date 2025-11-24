@@ -1,3 +1,10 @@
+## [1.12.41](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.40...v1.12.41) (2025-11-21)
+
+
+### Bug Fixes
+
+* add acnive inactive phone icons ([ba54e55](https://github.com/StepanKhomyn/voiptime-components/commit/ba54e559b0d2d0952a4f66fce20027d6e672f3ed))
+
 ## [1.12.40](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.39...v1.12.40) (2025-11-18)
 
 
