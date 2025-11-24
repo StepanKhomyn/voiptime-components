@@ -147,14 +147,6 @@
     box-sizing: border-box;
     max-height: 100px;
 
-    * {
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
-      margin: 0;
-      padding: 0;
-    }
-
     &--ellipsis {
       overflow: hidden !important;
       text-overflow: ellipsis !important;
