@@ -207,10 +207,6 @@
 
   // Outlined стиль
   &--outlined {
-    .vt-input__container {
-      padding-top: 8px;
-    }
-
     .vt-input__floating-label {
       position: absolute;
       left: 12px;
@@ -223,10 +219,6 @@
       pointer-events: none;
       transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1;
-    }
-
-    &.vt-input--has-prefix .vt-input__floating-label {
-      left: 44px;
     }
 
     &.vt-input--label-floating {
