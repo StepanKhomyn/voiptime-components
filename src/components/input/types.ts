@@ -32,6 +32,7 @@ export interface VtInputProps {
   placeholder?: string;
   helperText?: string;
   errorMessage?: string;
+  outlined?: boolean;
 
   // HTML атрибути
   id?: string;

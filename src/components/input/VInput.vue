@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
   import type { VtInputEmits, VtInputMethods, VtInputProps } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -11,6 +11,7 @@
     disabled: false,
     clearable: false,
     showPassword: false,
+    outlined: false,
     rows: 3,
     resize: 'vertical',
     autosize: false,
@@ -272,6 +273,12 @@
     return 'default';
   });
 
+  // Для outlined стилю визначаємо чи label має бути вгорі
+  const isLabelFloating = computed(() => {
+    if (!props.outlined) return false;
+    return isFocused.value || (props.modelValue !== undefined && props.modelValue !== '');
+  });
+
   const inputClasses = computed(() => [
     'vt-input',
     props.size ? `vt-input--${props.size}` : 'vt-input--medium',
@@ -283,6 +290,8 @@
       'vt-input--has-prefix': hasPrefix.value,
       'vt-input--has-suffix': hasSuffix.value,
       'vt-input--invalid': !isValid.value,
+      'vt-input--outlined': props.outlined,
+      'vt-input--label-floating': isLabelFloating.value,
     },
   ]);
 
@@ -547,89 +556,95 @@
 
 <template>
   <div :class="inputClasses">
-    <!-- Label -->
-    <label v-if="label" class="vt-input__label" :for="id">
+    <!-- Label для не-outlined стилю -->
+    <label v-if="label && !outlined" :for="id" class="vt-input__label">
       {{ label }}
       <span v-if="required" class="vt-input__required">*</span>
     </label>
 
     <!-- Input Container -->
     <div class="vt-input__container">
+      <!-- Floating Label для outlined стилю -->
+      <label v-if="label && outlined" :for="id" class="vt-input__floating-label">
+        {{ label }}
+        <span v-if="required" class="vt-input__required">*</span>
+      </label>
+
       <!-- Prefix Icon -->
       <div v-if="hasPrefix" class="vt-input__prefix">
-        <VIcon :name="finalPrefixIcon!" :class="prefixIconClass" />
+        <VIcon :class="prefixIconClass" :name="finalPrefixIcon!" />
       </div>
 
       <!-- Input Element -->
       <textarea
         v-if="isTextarea"
+        :id="id"
         ref="textareaRef"
-        :value="modelValue"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :rows="rows"
+        :autocomplete="autocomplete"
         :cols="cols"
+        :disabled="disabled"
         :maxlength="maxlength"
         :minlength="minlength"
-        :required="required"
         :name="name"
-        :id="id"
-        :tabindex="tabindex"
-        :autocomplete="autocomplete"
+        :placeholder="outlined ? '' : placeholder"
+        :required="required"
+        :rows="rows"
         :style="{ resize: textareaResize, height: textareaHeight }"
+        :tabindex="tabindex"
+        :value="modelValue"
         class="vt-input__field vt-input__textarea"
-        @input="handleInput"
-        @change="handleChange"
-        @focus="handleFocus"
         @blur="handleBlur"
-        @mousedown="handleMouseDown"
-        @keydown="$emit('keydown', $event)"
-        @keyup="$emit('keyup', $event)"
-        @keypress="$emit('keypress', $event)"
+        @change="handleChange"
         @click="$emit('click', $event)"
+        @focus="handleFocus"
+        @input="handleInput"
+        @keydown="$emit('keydown', $event)"
+        @keypress="$emit('keypress', $event)"
+        @keyup="$emit('keyup', $event)"
+        @mousedown="handleMouseDown"
       />
 
       <input
         v-else
+        :id="id"
         ref="inputRef"
+        :autocomplete="autocomplete"
+        :disabled="disabled"
+        :max="max"
+        :maxlength="maxlength"
+        :min="min"
+        :minlength="minlength"
+        :name="name"
+        :pattern="pattern"
+        :placeholder="outlined ? '' : placeholder"
+        :required="required"
+        :step="step"
+        :tabindex="tabindex"
         :type="currentInputType"
         :value="modelValue"
-        :placeholder="placeholder"
-        :disabled="disabled"
-        :maxlength="maxlength"
-        :minlength="minlength"
-        :min="min"
-        :max="max"
-        :step="step"
-        :required="required"
-        :pattern="pattern"
-        :name="name"
-        :id="id"
-        :tabindex="tabindex"
-        :autocomplete="autocomplete"
         class="vt-input__field"
-        @input="handleInput"
-        @change="handleChange"
-        @focus="handleFocus"
         @blur="handleBlur"
-        @keydown="$emit('keydown', $event)"
-        @keyup="$emit('keyup', $event)"
-        @keypress="$emit('keypress', $event)"
+        @change="handleChange"
         @click="$emit('click', $event)"
+        @focus="handleFocus"
+        @input="handleInput"
+        @keydown="$emit('keydown', $event)"
+        @keypress="$emit('keypress', $event)"
+        @keyup="$emit('keyup', $event)"
       />
 
       <!-- Suffix Icons -->
       <div v-if="hasSuffix" class="vt-input__suffix">
         <!-- Clear Button -->
-        <button v-if="showClearButton" type="button" class="vt-input__clear-btn" @click="handleClear">
-          <VIcon name="close" class="vt-input__icon" />
+        <button v-if="showClearButton" class="vt-input__clear-btn" type="button" @click="handleClear">
+          <VIcon class="vt-input__icon" name="close" />
         </button>
 
         <!-- Password Toggle -->
         <button
           v-if="showPassword && type === 'password'"
-          type="button"
           class="vt-input__password-btn"
+          type="button"
           @click="togglePasswordVisibility"
         >
           <VIcon :name="isPasswordVisible ? 'eyeOpened' : 'eyeClosed'" class="vt-input__icon" />
@@ -638,10 +653,15 @@
         <!-- Suffix Icon -->
         <VIcon v-if="finalSuffixIcon" :name="finalSuffixIcon" class="vt-input__icon" />
       </div>
+
+      <!-- Error Message на бордері для outlined -->
+      <div v-if="outlined && displayErrorMessage" class="vt-input__border-error">
+        {{ displayErrorMessage }}
+      </div>
     </div>
 
-    <!-- Helper Text / Error Message -->
-    <div v-if="helperText || displayErrorMessage" class="vt-input__help">
+    <!-- Helper Text / Error Message для не-outlined -->
+    <div v-if="!outlined && (helperText || displayErrorMessage)" class="vt-input__help">
       <span v-if="displayErrorMessage" class="vt-input__error">
         {{ displayErrorMessage }}
       </span>
@@ -650,8 +670,15 @@
       </span>
     </div>
 
+    <!-- Helper Text для outlined (без помилок) -->
+    <div v-if="outlined && helperText && !displayErrorMessage" class="vt-input__help">
+      <span class="vt-input__helper">
+        {{ helperText }}
+      </span>
+    </div>
+
     <!-- Multiple Validation Errors -->
-    <div v-if="validationErrors.length > 1 && showAllErrors" class="vt-input__errors">
+    <div v-if="!outlined && validationErrors.length > 1 && showAllErrors" class="vt-input__errors">
       <div v-for="(error, index) in validationErrors" :key="index" class="vt-input__error-item">
         <span>{{ error }}</span>
       </div>

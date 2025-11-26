@@ -81,6 +81,15 @@
             placeholder="••••••••"
             type="password"
           />
+          <VInput
+            v-model="demoData.email"
+            :required="true"
+            label="Outlined"
+            outlined
+            placeholder="example@email.com"
+            type="email"
+            @validation="onValidation('email', $event)"
+          />
         </div>
 
         <div class="demo-item">
@@ -218,6 +227,12 @@
               <td><code>string</code></td>
               <td>-</td>
               <td>Текст підказки</td>
+            </tr>
+            <tr>
+              <td><code>outlined</code></td>
+              <td><code>boolean</code></td>
+              <td>false</td>
+              <td>Виводити помилки та плейсхолдер на бордері</td>
             </tr>
             <tr>
               <td><code>helperText</code></td>

@@ -82,10 +82,9 @@
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    color: var(--color-gray-4); // Дефолтний колір
+    color: var(--color-gray-4);
     transition: color 0.2s ease-in-out;
 
-    // Кольорові модифікатори для іконок
     &--error {
       color: var(--color-danger-main) !important;
     }
@@ -204,6 +203,110 @@
 
   &--has-suffix .vt-input__field {
     padding-right: 8px;
+  }
+
+  // Outlined стиль
+  &--outlined {
+    .vt-input__container {
+      padding-top: 8px;
+    }
+
+    .vt-input__floating-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      color: var(--color-gray-4);
+      background-color: #ffffff;
+      padding: 0 4px;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    &.vt-input--has-prefix .vt-input__floating-label {
+      left: 44px;
+    }
+
+    &.vt-input--label-floating {
+      .vt-input__floating-label {
+        top: 0;
+        transform: translateY(-50%);
+        font-size: 12px;
+        color: var(--color-primary-main);
+      }
+    }
+
+    &.vt-input--focused {
+      .vt-input__floating-label {
+        color: var(--color-primary-main);
+      }
+    }
+
+    &.vt-input--error {
+      .vt-input__floating-label {
+        color: var(--color-danger-main);
+      }
+    }
+
+    &.vt-input--success {
+      .vt-input__floating-label {
+        color: var(--color-success-main);
+      }
+    }
+
+    &.vt-input--warning {
+      .vt-input__floating-label {
+        color: var(--color-warning-main);
+      }
+    }
+
+    &.vt-input--disabled {
+      .vt-input__floating-label {
+        color: var(--color-gray-4);
+        background-color: var(--color-gray-6);
+      }
+    }
+
+    .vt-input__border-error {
+      position: absolute;
+      left: 12px;
+      bottom: -1px;
+      font-size: 11px;
+      color: var(--color-danger-main);
+      background-color: #ffffff;
+      padding: 0 6px;
+      transform: translateY(50%);
+      white-space: nowrap;
+      max-width: calc(100% - 24px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: slideInError 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    &.vt-input--textarea {
+      .vt-input__floating-label {
+        top: 20px;
+      }
+
+      &.vt-input--label-floating .vt-input__floating-label {
+        top: 0;
+      }
+    }
+  }
+}
+
+// Анімація появи помилки
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(50%);
   }
 }
 
