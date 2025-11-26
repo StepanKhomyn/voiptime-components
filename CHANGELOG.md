@@ -1,3 +1,10 @@
+## [1.12.43](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.42...v1.12.43) (2025-11-26)
+
+
+### Bug Fixes
+
+* add outlined to input ([8ae02e3](https://github.com/StepanKhomyn/voiptime-components/commit/8ae02e3631a3ece195c11d843d43f5e2342bcc35))
+
 ## [1.12.42](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.41...v1.12.42) (2025-11-24)
 
 
