@@ -360,9 +360,6 @@
 
     // Для multiple select з тегами
     &.vt-select--multiple {
-      .vt-select__floating-label {
-        top: 12px;
-      }
 
       &.vt-select--label-floating .vt-select__floating-label {
         top: 0;
