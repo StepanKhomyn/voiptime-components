@@ -1,3 +1,10 @@
+## [1.12.47](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.46...v1.12.47) (2025-11-27)
+
+
+### Bug Fixes
+
+* add lock unlock icons ([4714782](https://github.com/StepanKhomyn/voiptime-components/commit/4714782e941d186e2f96d0d72a7fa2529fb999bf))
+
 ## [1.12.46](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.45...v1.12.46) (2025-11-27)
 
 
