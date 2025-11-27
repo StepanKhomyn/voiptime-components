@@ -138,6 +138,17 @@
 
           <VSelect
             v-model="demoData.searchable"
+            clearable
+            label="Outlined"
+            outlined
+            required
+            style="margin: 10px 0"
+          >
+            <VOption v-for="item in countries" :key="item.value" :label="item.label" :value="item.value" />
+          </VSelect>
+
+          <VSelect
+            v-model="demoData.searchable"
             filterable
             label="З іконками"
             placeholder="Знайдіть країну..."
@@ -279,6 +290,12 @@
             <td><code>string</code></td>
             <td>-</td>
             <td>Текст лейбла</td>
+          </tr>
+          <tr>
+            <td><code>outlined</code></td>
+            <td><code>boolean</code></td>
+            <td>false</td>
+            <td>Виводити помилки та лейбл на бордері</td>
           </tr>
           <tr>
             <td><code>placeholder</code></td>

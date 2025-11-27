@@ -283,6 +283,104 @@
       color: var(--color-gray-4);
     }
   }
+
+  // Outlined стиль
+  &--outlined {
+
+    .vt-select__floating-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-4);
+      background-color: #ffffff;
+      padding: 0 4px;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    &.vt-select--label-floating {
+      .vt-select__floating-label {
+        top: 0;
+        transform: translateY(-50%);
+        font-size: 12px;
+        color: var(--color-primary-main);
+      }
+    }
+
+    &.vt-select--focused {
+      .vt-select__floating-label {
+        color: var(--color-primary-main);
+      }
+    }
+
+    &.vt-select--error {
+      .vt-select__floating-label {
+        color: var(--color-danger-main);
+      }
+    }
+
+    &.vt-select--success {
+      .vt-select__floating-label {
+        color: var(--color-success-main);
+      }
+    }
+
+    &.vt-select--warning {
+      .vt-select__floating-label {
+        color: var(--color-warning-main);
+      }
+    }
+
+    &.vt-select--disabled {
+      .vt-select__floating-label {
+        color: var(--color-gray-4);
+        background-color: var(--color-gray-6);
+      }
+    }
+
+    .vt-select__border-error {
+      position: absolute;
+      left: 12px;
+      bottom: -1px;
+      font-size: 11px;
+      color: var(--color-danger-main);
+      background-color: #ffffff;
+      padding: 0 6px;
+      transform: translateY(50%);
+      white-space: nowrap;
+      max-width: calc(100% - 24px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: slideInError 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    // Для multiple select з тегами
+    &.vt-select--multiple {
+      .vt-select__floating-label {
+        top: 12px;
+      }
+
+      &.vt-select--label-floating .vt-select__floating-label {
+        top: 0;
+      }
+    }
+  }
+}
+
+// Анімація появи помилки
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(50%);
+  }
 }
 
 // Dropdown menu

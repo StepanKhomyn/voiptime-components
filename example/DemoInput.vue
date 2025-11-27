@@ -232,7 +232,7 @@
               <td><code>outlined</code></td>
               <td><code>boolean</code></td>
               <td>false</td>
-              <td>Виводити помилки та плейсхолдер на бордері</td>
+              <td>Виводити помилки та лейбл на бордері</td>
             </tr>
             <tr>
               <td><code>helperText</code></td>

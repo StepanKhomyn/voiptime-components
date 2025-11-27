@@ -20,7 +20,8 @@
     disabled: false,
     clearable: true,
     size: 'default',
-    // Time props
+    outlined: false,
+    required: false,
     hourStep: 1,
     minuteStep: 1,
     secondStep: 1,
@@ -28,7 +29,7 @@
     use12Hours: false,
     hideDisabledOptions: false,
     maxDateRange: Infinity,
-    previousDateDisabled: false
+    previousDateDisabled: false,
   });
 
   // ===== EMITS =====
@@ -325,6 +326,8 @@
       'vt-datepicker--open': isDropdownVisible.value,
       'vt-datepicker--with-time': showTimePicker.value,
       'vt-datepicker--error': !!props.errorMessage,
+      'vt-datepicker--outlined': props.outlined,
+      'vt-datepicker--label-floating': isLabelFloating.value,
     },
   ]);
 
@@ -342,6 +345,11 @@
 
   const showDualCalendar = computed(() => {
     return (props.type === 'daterange' || props.type === 'datetimerange') && state.viewMode.value === 'date';
+  });
+
+  const isLabelFloating = computed(() => {
+    if (!props.outlined) return false;
+    return isDropdownVisible.value || hasDisplayValue.value;
   });
 
   // ===== SELECTION LOGIC =====
@@ -1008,6 +1016,12 @@
 
 <template>
   <div ref="datePickerRef" :class="pickerClasses">
+    <!-- Label для не-outlined стилю -->
+    <label v-if="label && !outlined" :for="id" class="vt-datepicker__label">
+      {{ label }}
+      <span v-if="required" class="vt-datepicker__required">*</span>
+    </label>
+
     <!-- Trigger -->
     <div
       ref="triggerRef"
@@ -1017,6 +1031,12 @@
       @click="handleTriggerClick"
       @focus="handleFocus"
     >
+      <!-- Floating Label для outlined стилю -->
+      <label v-if="label && outlined" :for="id" class="vt-datepicker__floating-label">
+        {{ label }}
+        <span v-if="required" class="vt-datepicker__required">*</span>
+      </label>
+
       <div class="vt-datepicker__input">
         <div class="vt-datepicker__icon">
           <VIcon :name="isDateTimeType ? 'clock' : 'calendar'" />
@@ -1034,12 +1054,12 @@
         </div>
         <div v-else class="vt-datepicker__placeholder">
           <template v-if="isRange">
-            <span>{{ props.startPlaceholder }}</span>
-            <span class="vt-datepicker__separator">{{ props.rangeSeparator }}</span>
-            <span>{{ props.endPlaceholder }}</span>
+            <span>{{ outlined ? '' : props.startPlaceholder }}</span>
+            <span v-if="!outlined" class="vt-datepicker__separator">{{ props.rangeSeparator }}</span>
+            <span v-if="!outlined">{{ props.endPlaceholder }}</span>
           </template>
           <template v-else>
-            {{ currentPlaceholder }}
+            {{ outlined ? '' : currentPlaceholder }}
           </template>
         </div>
 
@@ -1054,6 +1074,11 @@
             <VIcon name="close" />
           </button>
         </div>
+      </div>
+
+      <!-- Error Message на бордері для outlined -->
+      <div v-if="outlined && displayErrorMessage" class="vt-datepicker__border-error">
+        {{ displayErrorMessage }}
       </div>
     </div>
 
@@ -1319,7 +1344,7 @@
                             isRange && state.startDate.value && isSameDate(date, state.startDate.value),
                           'vt-datepicker__date--range-end':
                             isRange && state.endDate.value && isSameDate(date, state.endDate.value),
-                            'vt-datepicker__date--disabled': !isDateClickable(date, false, true)
+                          'vt-datepicker__date--disabled': !isDateClickable(date, false, true),
                         },
                       ]"
                       @click="handleDateClick(date)"
@@ -1390,10 +1415,20 @@
         </div>
       </transition>
     </Teleport>
-    <!-- Helper Text / Error Message -->
-    <div v-if="displayErrorMessage" class="vt-datepicker__help">
+    <!-- Helper Text / Error Message для не-outlined -->
+    <div v-if="!outlined && (helperText || displayErrorMessage)" class="vt-datepicker__help">
       <span v-if="displayErrorMessage" class="vt-datepicker__error">
         {{ displayErrorMessage }}
+      </span>
+      <span v-else-if="helperText" class="vt-datepicker__helper">
+        {{ helperText }}
+      </span>
+    </div>
+
+    <!-- Helper Text для outlined (без помилок) -->
+    <div v-if="outlined && helperText && !displayErrorMessage" class="vt-datepicker__help">
+      <span class="vt-datepicker__helper">
+        {{ helperText }}
       </span>
     </div>
   </div>

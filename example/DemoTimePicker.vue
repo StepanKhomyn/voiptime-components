@@ -3,6 +3,7 @@
   import VTimePicker from '@/components/timepicker/VTimePicker.vue';
 
   const selectedTime = ref('14:30:00');
+  const selectedTime2 = ref('14:30:00');
   const selectedTimeRange = ref(['09:00:00', '17:00:00']);
   const selectedTime12h = ref('02:30:00 PM');
   const selectedTimeNoSeconds = ref('14:30');
@@ -29,6 +30,27 @@ const selectedTime = ref('14:30:00');
 
 &lt;template&gt;
   &lt;VTimePicker v-model="selectedTime" placeholder="Оберіть час" /&gt;
+&lt;/template&gt;
+        </code>
+      </pre>
+    </div>
+
+    <div class="example-section">
+      <h3>Outlined</h3>
+      <p>Вибраний час: {{ selectedTime2 }}</p>
+
+      <VTimePicker v-model="selectedTime2" label="Outlined" outlined />
+
+      <pre class="code-simple">
+        <code>
+&lt;script setup lang="ts"&gt;
+import { ref } from 'vue';
+
+const selectedTime = ref('14:30:00');
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;VTimePicker v-model="selectedTime" label="Outlined" outlined /&gt;
 &lt;/template&gt;
         </code>
       </pre>
@@ -252,6 +274,18 @@ const disabledTime = ref('10:15:30');
             <td><code>string</code></td>
             <td><code>'Оберіть час'</code></td>
             <td>Placeholder текст для одиночного вибору</td>
+          </tr>
+          <tr>
+            <td><code>label</code></td>
+            <td><code>string</code></td>
+            <td>-</td>
+            <td>Текст лейбла</td>
+          </tr>
+          <tr>
+            <td><code>outlined</code></td>
+            <td><code>boolean</code></td>
+            <td>false</td>
+            <td>Виводити помилки та лейбл на бордері</td>
           </tr>
           <tr>
             <td><code>startPlaceholder</code></td>

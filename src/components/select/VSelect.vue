@@ -35,6 +35,7 @@
     multiple: false,
     filterable: false,
     collapsedTags: false,
+    outlined: false,
     placeholder: 'Оберіть опцію',
     noDataText: 'Немає даних',
     loadingText: 'Завантаження...',
@@ -404,6 +405,19 @@
     return 'default';
   });
 
+  // Для outlined стилю визначаємо чи label має бути вгорі
+  const isLabelFloating = computed(() => {
+    if (!props.outlined) return false;
+
+    // Label плаває якщо є фокус, dropdown відкритий, або є значення
+    return (
+      state.isFocused.value ||
+      isDropdownVisible.value ||
+      (props.multiple && selectedOptions.value.length > 0) ||
+      (!props.multiple && displayText.value !== '')
+    );
+  });
+
   const selectClasses = computed(() => [
     'vt-select',
     `vt-select--${currentStatus.value}`,
@@ -412,12 +426,15 @@
       'vt-select--focused': state.isFocused.value,
       'vt-select--multiple': isMultiple.value,
       'vt-select--open': isDropdownVisible.value,
+      'vt-select--outlined': props.outlined,
+      'vt-select--label-floating': isLabelFloating.value,
     },
   ]);
 
   // Повернення помилки
   const displayErrorMessage = computed(() => {
     if (props.errorMessage) return props.errorMessage;
+    if (state.validationErrors.value.length > 0) return state.validationErrors.value[0];
     return '';
   });
 
@@ -768,8 +785,8 @@
 
 <template>
   <div ref="selectRef" :class="selectClasses">
-    <!-- Label -->
-    <label v-if="label" :for="id" class="vt-select__label">
+    <!-- Label для не-outlined стилю -->
+    <label v-if="label && !outlined" :for="id" class="vt-select__label">
       {{ label }}
       <span v-if="required" class="vt-select__required">*</span>
     </label>
@@ -784,6 +801,12 @@
       @focus="handleFocus"
       @keydown="handleKeydown"
     >
+      <!-- Floating Label для outlined стилю -->
+      <label v-if="label && outlined" :for="id" class="vt-select__floating-label">
+        {{ label }}
+        <span v-if="required" class="vt-select__required">*</span>
+      </label>
+
       <!-- Display Field -->
       <div class="vt-select__field">
         <!-- Multiple selected tags -->
@@ -820,8 +843,8 @@
           <span v-else>{{ displayText }}</span>
         </span>
 
-        <!-- Placeholder -->
-        <span v-else class="vt-select__placeholder">
+        <!-- Placeholder (тільки для не-outlined) -->
+        <span v-else-if="!outlined" class="vt-select__placeholder">
           {{ placeholder }}
         </span>
       </div>
@@ -850,11 +873,16 @@
           name="arrowDown"
         />
       </div>
+
+      <!-- Error Message на бордері для outlined -->
+      <div v-if="outlined && displayErrorMessage" class="vt-select__border-error">
+        {{ displayErrorMessage }}
+      </div>
     </div>
 
-    <!-- Validation messages -->
+    <!-- Validation messages для не-outlined -->
     <transition name="fade">
-      <div v-if="state.validationErrors && state.validationErrors.value.length" class="vt-select__help">
+      <div v-if="!outlined && state.validationErrors && state.validationErrors.value.length" class="vt-select__help">
         <div v-for="(error, index) in state.validationErrors.value" :key="`error-${index}`" class="vt-select__error">
           {{ error }}
         </div>
@@ -942,8 +970,8 @@
       </transition>
     </Teleport>
 
-    <!-- Helper Text / Error Message -->
-    <div v-if="displayErrorMessage" class="vt-select__help">
+    <!-- Helper Text / Error Message для не-outlined -->
+    <div v-if="!outlined && displayErrorMessage" class="vt-select__help">
       <span v-if="displayErrorMessage" class="vt-select__error">
         {{ displayErrorMessage }}
       </span>

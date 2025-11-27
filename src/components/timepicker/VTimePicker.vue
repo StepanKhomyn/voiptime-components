@@ -28,6 +28,7 @@
     format: 'HH:mm:ss',
     disabled: false,
     clearable: true,
+    outlined: false,
     size: 'default',
     hourStep: 1,
     minuteStep: 1,
@@ -167,6 +168,8 @@
       'vt-timepicker--range': isRange.value,
       'vt-timepicker--open': isDropdownVisible.value,
       'vt-timepicker--error': !!props.errorMessage,
+      'vt-timepicker--outlined': props.outlined, // НОВИЙ КЛАС
+      'vt-timepicker--label-floating': isLabelFloating.value, // НОВИЙ КЛАС
     },
   ]);
 
@@ -231,6 +234,11 @@
   });
 
   const periodOptions = computed(() => ['AM', 'PM']);
+
+  const isLabelFloating = computed(() => {
+    if (!props.outlined) return false;
+    return state.isFocused.value || isDropdownVisible.value || hasDisplayValue.value;
+  });
 
   // ===== DROPDOWN INTEGRATION =====
   const {
@@ -808,6 +816,12 @@
 
 <template>
   <div ref="timePickerRef" :class="pickerClasses">
+    <!-- Label для не-outlined стилю -->
+    <label v-if="label && !outlined" class="vt-timepicker__label">
+      {{ label }}
+      <span v-if="required" class="vt-timepicker__required">*</span>
+    </label>
+
     <!-- Trigger -->
     <div
       ref="triggerRef"
@@ -817,6 +831,12 @@
       @click="handleTriggerClick"
       @focus="handleFocus"
     >
+      <!-- Floating Label для outlined стилю -->
+      <label v-if="label && outlined" class="vt-timepicker__floating-label">
+        {{ label }}
+        <span v-if="required" class="vt-timepicker__required">*</span>
+      </label>
+
       <div class="vt-timepicker__input">
         <div class="vt-timepicker__icon">
           <VIcon name="clock" />
@@ -832,7 +852,7 @@
             {{ displayText }}
           </template>
         </div>
-        <div v-else class="vt-timepicker__placeholder">
+        <div v-else-if="!outlined" class="vt-timepicker__placeholder">
           <template v-if="isRange">
             <span>{{ props.startPlaceholder }}</span>
             <span>{{ props.rangeSeparator }}</span>
@@ -854,6 +874,11 @@
             <VIcon name="close" />
           </button>
         </div>
+      </div>
+
+      <!-- Error Message на бордері для outlined -->
+      <div v-if="outlined && displayErrorMessage" class="vt-timepicker__border-error">
+        {{ displayErrorMessage }}
       </div>
     </div>
 
@@ -1122,10 +1147,18 @@
         </div>
       </transition>
     </Teleport>
-    <!-- Helper Text / Error Message -->
-    <div v-if="displayErrorMessage" class="vt-timepicker__help">
-      <span v-if="displayErrorMessage" class="vt-timepicker__error">
+
+    <!-- Helper Text / Error Message для не-outlined -->
+    <div v-if="!outlined && displayErrorMessage" class="vt-timepicker__help">
+      <span class="vt-timepicker__error">
         {{ displayErrorMessage }}
+      </span>
+    </div>
+
+    <!-- Helper Text для outlined (без помилок) -->
+    <div v-if="outlined && helperText && !displayErrorMessage" class="vt-timepicker__help">
+      <span class="vt-timepicker__helper">
+        {{ helperText }}
       </span>
     </div>
   </div>

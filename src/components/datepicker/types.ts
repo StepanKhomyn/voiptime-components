@@ -30,12 +30,18 @@ export interface VDatePickerProps {
   size?: DatePickerSize;
   disabledDate?: (date: Date) => boolean;
   shortcuts?: DatePickerShortcut[];
-  unlinkPanels?: boolean; // For range pickers
+  unlinkPanels?: boolean;
   defaultValue?: DatePickerValue;
   defaultTime?: string | string[];
 
+  label?: string;
+  outlined?: boolean;
+  required?: boolean;
+  id?: string;
+
   // Тексти
   errorMessage?: string;
+  helperText?: string;
 
   // Time picker props (для datetime типів)
   hourStep?: number;
@@ -187,11 +193,8 @@ export const isValidDate = (value: any): boolean => {
   return false;
 };
 
-// Перевірка чи є значення порожнім для range типів
 const isEmptyRangeValue = (value: any): boolean => {
   if (!Array.isArray(value)) return false;
-
-  // Перевіряємо чи масив порожній або містить тільки null/undefined значення
   return value.length === 0 || value.every(item => !item);
 };
 
@@ -203,7 +206,6 @@ export const validateDateValue = (
   const errors: string[] = [];
   const isRange = ['daterange', 'datetimerange', 'monthrange', 'yearrange'].includes(type);
 
-  // Перевірка на обов'язковість
   if (required) {
     if (!value) {
       errors.push("Це поле є обов'язковим");
@@ -212,7 +214,6 @@ export const validateDateValue = (
     }
   }
 
-  // Якщо значення є, валідуємо його структуру та формат
   if (value) {
     if (isRange && !Array.isArray(value)) {
       errors.push('Для діапазону очікується масив з двох дат');
@@ -220,9 +221,7 @@ export const validateDateValue = (
       errors.push('Для одиночного вибору очікується одна дата');
     }
 
-    // Валідація формату дати
     if (Array.isArray(value)) {
-      // Для range перевіряємо кожен елемент
       if (value.length !== 2) {
         errors.push('Діапазон повинен містити дві дати');
       } else {
@@ -232,7 +231,6 @@ export const validateDateValue = (
           }
         });
 
-        // Перевіряємо що початкова дата не пізніше кінцевої
         if (value[0] && value[1]) {
           const startDate = new Date(value[0]);
           const endDate = new Date(value[1]);

@@ -42,6 +42,18 @@
               <td>Placeholder text</td>
             </tr>
             <tr>
+              <td><code>label</code></td>
+              <td><code>string</code></td>
+              <td>-</td>
+              <td>Текст лейбла</td>
+            </tr>
+            <tr>
+              <td><code>outlined</code></td>
+              <td><code>boolean</code></td>
+              <td>false</td>
+              <td>Виводити помилки та лейбл на бордері</td>
+            </tr>
+            <tr>
               <td><code>startPlaceholder</code></td>
               <td><code>string</code></td>
               <td><code>'Початкова дата'</code></td>
@@ -273,8 +285,22 @@
         <VDatePicker
           v-model="basicDate"
           placeholder="Select date"
-          type="date"
           previous-date-disabled
+          type="date"
+          @change="handleChange('Basic Date', $event)"
+        />
+        <p class="demo-result">Selected: {{ basicDate || 'None' }}</p>
+      </div>
+
+      <!-- Date Picker -->
+      <div class="demo-item">
+        <h3>Date Picker Outlined</h3>
+        <p>Basic date selection</p>
+        <VDatePicker
+          v-model="basicDate"
+          label="Select date"
+          outlined
+          type="date"
           @change="handleChange('Basic Date', $event)"
         />
         <p class="demo-result">Selected: {{ basicDate || 'None' }}</p>
@@ -287,8 +313,8 @@
         <VDatePicker
           v-model="basicDateTime"
           placeholder="Select dateTime"
-          type="datetime"
           previous-date-disabled
+          type="datetime"
           @change="handleChange('Basic DateTime', $event)"
         />
         <p class="demo-result">Selected: {{ basicDateTime || 'None' }}</p>
@@ -341,11 +367,11 @@
         <p>Select datetime range</p>
         <VDatePicker
           v-model="dateTimeRange"
+          :max-date-range="31"
           end-placeholder="End date"
           range-separator=" to "
           start-placeholder="Start date"
           type="datetimerange"
-          :max-date-range="31"
           @change="handleChange('DateTime Range', $event)"
         />
         <p class="demo-result">Selected: {{ dateTimeRange ? `[${dateTimeRange[0]}, ${dateTimeRange[1]}]` : 'None' }}</p>

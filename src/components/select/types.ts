@@ -32,6 +32,7 @@ export interface VtSelectProps {
   hideTimeout?: number;
   status?: 'default' | 'success' | 'warning' | 'error';
   label?: string;
+  outlined?: boolean;
   id?: string;
   required?: boolean;
   requiredMessage?: string;

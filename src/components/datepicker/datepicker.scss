@@ -7,6 +7,19 @@
   display: inline-block;
   width: 100%;
 
+  &__label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  &__required {
+    color: var(--color-danger-main);
+    margin-left: 2px;
+  }
+
   &--disabled {
     .vt-datepicker__trigger {
       background-color: #f5f5f5;
@@ -22,6 +35,7 @@
   }
 
   &__trigger {
+    position: relative;
     display: flex;
     align-items: center;
     height: 36px;
@@ -40,7 +54,8 @@
 
   &--error {
     .vt-datepicker__trigger {
-      border-color: var(--color-danger-main);    }
+      border-color: var(--color-danger-main);
+    }
 
     &.vt-datepicker--focused .vt-datepicker__trigger {
       border-color: var(--color-danger-main);
@@ -58,6 +73,7 @@
     display: flex;
     flex-shrink: 0;
     color: var(--color-gray-4);
+    height: 20px;
   }
 
   &__text {
@@ -107,6 +123,68 @@
 
     &:active {
       background-color: #e5e7eb;
+    }
+  }
+
+  // Outlined стиль
+  &--outlined {
+    .vt-datepicker__floating-label {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: var(--font-size-sm);
+      color: var(--color-gray-4);
+      background-color: #ffffff;
+      padding: 0 4px;
+      pointer-events: none;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    &.vt-datepicker--label-floating {
+      .vt-datepicker__floating-label {
+        top: 0;
+        transform: translateY(-50%);
+        font-size: 12px;
+        color: var(--color-primary-main);
+      }
+    }
+
+    &.vt-datepicker--focused {
+      .vt-datepicker__floating-label {
+        color: var(--color-primary-main);
+      }
+    }
+
+    &.vt-datepicker--error {
+      .vt-datepicker__floating-label {
+        color: var(--color-danger-main);
+      }
+    }
+
+    &.vt-datepicker--disabled {
+      .vt-datepicker__floating-label {
+        color: var(--color-gray-4);
+        background-color: var(--color-gray-6);
+      }
+    }
+
+    .vt-datepicker__border-error {
+      position: absolute;
+      left: 12px;
+      bottom: -1px;
+      font-size: 11px;
+      color: var(--color-danger-main);
+      background-color: #ffffff;
+      padding: 0 6px;
+      transform: translateY(50%);
+      white-space: nowrap;
+      max-width: calc(100% - 24px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      animation: slideInError 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
     }
   }
 
@@ -255,7 +333,6 @@
       color: var(--color-primary-main);
     }
 
-    // Звичайний вибраний стан (для одиночних дат і початку/кінця range)
     &--selected {
       background-color: var(--color-primary-main);
       color: #ffffff;
@@ -266,7 +343,6 @@
       }
     }
 
-    // Дати в діапазоні (не початок і не кінець)
     &--in-range {
       background-color: var(--color-primary-bg);
       color: var(--color-primary-main);
@@ -278,7 +354,6 @@
       }
     }
 
-    // Початок діапазону
     &--range-start {
       background-color: var(--color-primary-main);
       color: #ffffff;
@@ -286,7 +361,6 @@
       border-bottom-right-radius: 0;
     }
 
-    // Кінець діапазону
     &--range-end {
       background-color: var(--color-primary-main);
       color: #ffffff;
@@ -294,7 +368,6 @@
       border-bottom-left-radius: 0;
     }
 
-    // Якщо початок і кінець - одна дата
     &--range-start.vt-datepicker__date--range-end {
       border-radius: 4px;
     }
@@ -449,13 +522,16 @@
     justify-content: flex-end;
     gap: var(--vt-gap-base);
     padding: var(--vt-padding-base);
-    //background-color: var(--color-gray-7);
   }
 
   &__help {
     margin-top: 6px;
     font-size: 12px;
     line-height: 1.4;
+  }
+
+  &__helper {
+    color: #6b7280;
   }
 
   &__error {
@@ -479,6 +555,18 @@
       left: 0 !important;
       right: 0 !important;
     }
+  }
+}
+
+// Анімація появи помилки
+@keyframes slideInError {
+  from {
+    opacity: 0;
+    transform: translateY(30%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(50%);
   }
 }
 

@@ -212,7 +212,7 @@
       left: 12px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 14px;
+      font-size: var(--font-size-sm);
       color: var(--color-gray-4);
       background-color: #ffffff;
       padding: 0 4px;
