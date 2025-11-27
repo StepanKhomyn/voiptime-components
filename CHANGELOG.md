@@ -1,3 +1,10 @@
+## [1.12.45](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.44...v1.12.45) (2025-11-27)
+
+
+### Bug Fixes
+
+* add outline to select and datepicker ([383d1b4](https://github.com/StepanKhomyn/voiptime-components/commit/383d1b40c32b182aede6780800524bbdad5286c2))
+
 ## [1.12.44](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.43...v1.12.44) (2025-11-26)
 
 
