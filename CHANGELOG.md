@@ -1,3 +1,10 @@
+## [1.12.46](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.45...v1.12.46) (2025-11-27)
+
+
+### Bug Fixes
+
+* add outline to select styles ([cbc1478](https://github.com/StepanKhomyn/voiptime-components/commit/cbc147888038b9e72bca3a4d71f777396fde4f26))
+
 ## [1.12.45](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.44...v1.12.45) (2025-11-27)
 
 
