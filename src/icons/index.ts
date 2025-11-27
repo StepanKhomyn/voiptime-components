@@ -13,15 +13,17 @@ import ForwardIcon from './actions/ForwardIcon.vue';
 import GoToIcon from './actions/GoToIcon.vue';
 import ListBulletHorizontalIcon from './actions/ListBulletHorizontalIcon.vue';
 import ListBulletIcon from './actions/ListBulletIcon.vue';
+import LockIcon from './actions/LockIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
+import PromptIcon from './actions/PromptIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
 import StatusChange2Icon from './actions/StatusChange2Icon.vue';
 import StatusChangeIcon from './actions/StatusChangeIcon.vue';
+import UnlockIcon from './actions/UnlockIcon.vue';
 import UploadCloudIcon from './actions/UploadCloudIcon.vue';
 import UsersGroupIcon from './actions/UsersGroupIcon.vue';
 import ArrowDownIcon from './arrow/ArrowDownIcon.vue';
@@ -112,6 +114,7 @@ import IvrIcon from './others/IvrIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
 import NotificationIcon from './others/NotificationIcon.vue';
 import NotificationReadIcon from './others/NotificationReadIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
@@ -127,7 +130,6 @@ import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -163,15 +165,17 @@ export const icons = {
   goTo: GoToIcon,
   listBulletHorizontal: ListBulletHorizontalIcon,
   listBullet: ListBulletIcon,
+  lock: LockIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompt: PromptIcon,
   prompter: PrompterIcon,
+  prompt: PromptIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   star: StarIcon,
   statusChange2: StatusChange2Icon,
   statusChange: StatusChangeIcon,
+  unlock: UnlockIcon,
   uploadCloud: UploadCloudIcon,
   usersGroup: UsersGroupIcon,
 
@@ -280,6 +284,7 @@ export const icons = {
   minus: MinusIcon,
   notification: NotificationIcon,
   notificationRead: NotificationReadIcon,
+  operator: operatorIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
@@ -295,7 +300,6 @@ export const icons = {
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
   windowStart: WindowStartIcon,
-  operator: operatorIcon,
 
   // player icons
   pause: PauseIcon,
