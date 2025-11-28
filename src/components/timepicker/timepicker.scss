@@ -1,3 +1,4 @@
+// VTimePicker.scss - Enhanced styling like Element UI
 @use '../../assets/fonts' as *;
 @use '../../assets/scrollbar' as *;
 
@@ -9,14 +10,9 @@
   &__label {
     display: block;
     margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     line-height: 1.4;
-  }
-
-  &__required {
-    color: var(--color-danger-main);
-    margin-left: 2px;
   }
 
   &--disabled {
@@ -25,13 +21,12 @@
       background-color: var(--color-gray-6);
       color: var(--color-gray-4);
       cursor: not-allowed;
-      opacity: 0.6;
     }
   }
 
-  &--focused {
+  &--focused :not(.vt-timepicker--disabled) {
     .vt-timepicker__trigger {
-      border-color: var(--color-primary-main);
+      border-color: var(--color-primary-hover);
     }
   }
 
@@ -48,83 +43,15 @@
     cursor: pointer;
     transition: all 0.3s;
 
-    &:hover {
+    &:hover:not(.vt-timepicker--disabled &) {
       border-color: var(--color-primary-hover);
-    }
-  }
-
-  &--error {
-    .vt-timepicker__trigger {
-      border-color: var(--color-danger-main);
-    }
-
-    &.vt-timepicker--focused .vt-timepicker__trigger {
-      border-color: var(--color-danger-main);
-    }
-  }
-
-  &__input {
-    display: flex;
-    align-items: center;
-    width: 100%;
-    gap: 8px;
-  }
-
-  &__icon {
-    flex-shrink: 0;
-    color: var(--color-gray-4);
-    font-size: 14px;
-    height: 20px;
-  }
-
-  &__text {
-    flex: 1;
-    color: var(--color-gray-1);
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-  }
-
-  &__placeholder {
-    flex: 1;
-    width: 100%;
-    color: var(--color-gray-4);
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
-  }
-
-  &__suffix {
-    display: flex;
-    align-items: center;
-  }
-
-  &__clear {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 4px;
-    border: none;
-    background: transparent;
-    border-radius: var(--radius-main);
-    color: var(--color-gray-4);
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-
-    &:hover {
-      background-color: var(--color-gray-7);
-    }
-
-    &:active {
-      background-color: #e5e7eb;
     }
   }
 
   &--outlined {
     .vt-timepicker__floating-label {
       position: absolute;
-      left: 12px;
+      left: 32px;
       top: 50%;
       transform: translateY(-50%);
       font-size: var(--font-size-sm);
@@ -182,6 +109,55 @@
     }
   }
 
+  &--error {
+    .vt-timepicker__trigger {
+      border-color: var(--color-danger-main);
+    }
+
+    &.vt-timepicker--focused .vt-timepicker__trigger {
+      border-color: var(--color-danger-main);
+    }
+  }
+
+  &__input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    color: var(--color-gray-4);
+    font-size: 14px;
+  }
+
+
+  &__placeholder {
+    flex: 1;
+    width: 100%;
+    color: var(--color-gray-4);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  &__text {
+    flex: 1;
+    color: var(--color-gray-1);
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
+  &__suffix {
+    display: flex;
+    align-items: center;
+  }
+
   &__dropdown {
     background: white;
     border: 1px solid var(--color-gray-5);
@@ -193,6 +169,7 @@
     min-width: 320px;
   }
 
+  // Dual Panel Layout for Range
   &__dual-panel {
     display: flex;
     border-bottom: 1px solid var(--color-gray-5);
@@ -216,6 +193,7 @@
     border-bottom: 1px solid var(--color-gray-5);
   }
 
+  // Single Panel Layout
   &__single-panel {
     border-bottom: 1px solid var(--color-gray-5);
   }
@@ -236,6 +214,7 @@
       border-right: none;
     }
 
+    // Selection indicator lines (Element UI style)
     &::before,
     &::after {
       content: '';
@@ -261,7 +240,9 @@
     @include vt-scrollbar;
     flex: 1;
     overflow-y: auto;
-    padding: 80px 0;
+    overflow-x: hidden;
+    position: relative;
+    padding: 80px 0; // Padding to allow centering
     scroll-behavior: smooth;
 
     &::before {
@@ -273,11 +254,12 @@
       width: calc(100% - 12px);
       background-color: #f5f7fa;
       border-radius: 3px;
-      transform: translateX(-50%);
       z-index: 1;
       pointer-events: none;
+      transform: translateX(-50%);
     }
 
+    // Custom scrollbar
     &::-webkit-scrollbar {
       width: 6px;
     }
@@ -287,17 +269,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
     height: 32px;
     border: none;
-    margin: 0 6px;
-    background-color: #fff;
     color: var(--color-gray-1);
     cursor: pointer;
     transition: all 0.2s ease;
-    border-radius: 3px;
+    position: relative;
     z-index: 2;
+    border-radius: 3px;
+    margin: 0 6px;
+    background-color: #FFFFFF;
 
-    &:hover:not(.vt-timepicker__option--selected):not(.vt-timepicker__option--disabled) {
+    &:hover:not(:disabled):not(.vt-timepicker__option--selected) {
       background-color: #f5f7fa;
       transform: scale(1.02);
     }
@@ -309,11 +293,27 @@
 
     &--disabled {
       opacity: 0.4;
+      background-color: transparent;
       color: var(--color-gray-4);
       cursor: not-allowed;
+      transform: none;
 
       &:hover {
-        background: transparent;
+        background-color: transparent;
+        color: var(--color-gray-4);
+        transform: none;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      color: var(--color-gray-4);
+      cursor: not-allowed;
+      background-color: transparent;
+
+      &:hover {
+        background-color: transparent;
+        color: var(--color-gray-4);
         transform: none;
       }
     }
@@ -329,17 +329,19 @@
 
   &__action {
     padding: 8px 20px;
-    border-radius: 4px;
-    font-size: 12px;
     border: 1px solid var(--color-gray-5);
+    border-radius: 4px;
     background: #ffffff;
+    color: #606266;
+    font-size: 12px;
     cursor: pointer;
     transition: all 0.2s ease;
+    line-height: 1;
 
     &:hover {
       color: #409eff;
-      background-color: #ecf5ff;
       border-color: #c6e2ff;
+      background-color: #ecf5ff;
     }
 
     &--confirm {
@@ -350,26 +352,24 @@
       &:hover {
         background-color: #337ecc;
         border-color: #337ecc;
+        color: #ffffff;
+      }
+    }
+
+    &--cancel {
+      &:hover {
+        color: #409eff;
+        border-color: #c6e2ff;
+        background-color: #ecf5ff;
       }
     }
   }
 
-  &__help {
-    margin-top: 6px;
-    font-size: 12px;
-  }
-
-  &__helper {
-    color: #6b7280;
-  }
-
-  &__error {
-    color: var(--color-danger-main);
-  }
-
+  // Size variants (Element UI sizes)
   &--small {
     .vt-timepicker__trigger {
       height: 32px;
+      padding: 0 12px;
       font-size: 12px;
     }
   }
@@ -377,11 +377,12 @@
   &--large {
     .vt-timepicker__trigger {
       height: 48px;
-      font-size: 16px;
       padding: 0 20px;
+      font-size: 16px;
     }
   }
 
+  // Responsive adjustments
   @media (max-width: 768px) {
     &__dropdown {
       width: 100vw;
@@ -418,7 +419,6 @@
     }
   }
 }
-
 
 @keyframes slideInError {
   from {

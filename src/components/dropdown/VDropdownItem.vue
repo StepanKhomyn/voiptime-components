@@ -1,5 +1,5 @@
 <!-- VDropdownItem.vue -->
-<script setup lang="ts">
+<script lang="ts" setup>
   import { inject } from 'vue';
   import type { DropdownContext, DropdownItemEmits, DropdownItemProps } from './types';
   import { DropdownContextKey } from './types';
@@ -17,14 +17,10 @@
 
   const handleClick = (event: MouseEvent): void => {
     if (props.disabled) return;
-
-    console.log('VDropdownItem click:', props.command); // Debug log
-
     emit('click', event);
 
     // Викликаємо команду через контекст
     if (props.command !== undefined && dropdownContext) {
-      console.log('Calling handleCommand with:', props.command); // Debug log
       dropdownContext.handleCommand(props.command);
     }
   };
@@ -32,11 +28,11 @@
 
 <template>
   <li
-    class="vt-dropdown-item"
     :class="{
       'is-disabled': disabled,
       'vt-dropdown-item--divided': divided,
     }"
+    class="vt-dropdown-item"
     @click="handleClick"
   >
     <i v-if="icon" :class="icon" class="vt-dropdown-item__icon"></i>
