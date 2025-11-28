@@ -10,8 +10,8 @@
   &__label {
     display: block;
     margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     line-height: 1.4;
   }
 

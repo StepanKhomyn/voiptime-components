@@ -87,7 +87,8 @@
             label="Outlined"
             outlined
             placeholder="example@email.com"
-            type="email"
+            prefix-icon="url"
+            style="margin-top: 10px"
             @validation="onValidation('email', $event)"
           />
         </div>
@@ -113,6 +114,33 @@
             error-message="Це поле є обов'язковим"
             label="Помилка"
             status="error"
+            value="Невалідні дані"
+          />
+        </div>
+        <div class="demo-item">
+          <h4>Стани</h4>
+          <VInput
+            v-model="demoData.success"
+            helper-text="Дані введені правильно"
+            label="Успіх"
+            outlined
+            status="success"
+            value="Валідні дані"
+          />
+          <VInput
+            v-model="demoData.warning"
+            helper-text="Перевірте введені дані"
+            label="Попередження"
+            outlined
+            status="warning"
+            value="Потенційна проблема"
+          />
+          <VInput
+            v-model="demoData.error"
+            error-message="Це поле є обов'язковим"
+            label="Помилка"
+            outlined
+            required
             value="Невалідні дані"
           />
         </div>

@@ -10,8 +10,8 @@
   &__label {
     display: block;
     margin-bottom: 8px;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
     line-height: 1.4;
   }
 
@@ -73,7 +73,6 @@
     display: flex;
     flex-shrink: 0;
     color: var(--color-gray-4);
-    height: 20px;
   }
 
   &__text {
@@ -130,7 +129,7 @@
   &--outlined {
     .vt-datepicker__floating-label {
       position: absolute;
-      left: 12px;
+      left: 32px;
       top: 50%;
       transform: translateY(-50%);
       font-size: var(--font-size-sm);

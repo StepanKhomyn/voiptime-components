@@ -139,6 +139,7 @@
           <VSelect
             v-model="demoData.searchable"
             clearable
+            filterable
             label="Outlined"
             outlined
             required

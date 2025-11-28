@@ -535,11 +535,6 @@
   };
 
   const handleBlur = (event?: FocusEvent) => {
-    // Перевіряємо, чи фокус не переходить на dropdown
-    if (event?.relatedTarget && dropdownRef.value?.contains(event.relatedTarget as Node)) {
-      return;
-    }
-
     state.isFocused.value = false;
     emit('blur');
 
