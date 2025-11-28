@@ -138,6 +138,9 @@ import CallSubjectIcon from './scenario/CallSubjectIcon.vue';
 import IframBlockIcon from './scenario/IframBlockIcon.vue';
 import InfoBlockIcon from './scenario/InfoBlockIcon.vue';
 import ProposalBlockIcon from './scenario/ProposalBlockIcon.vue';
+import CommentIcon from './schedule/CommentIcon.vue';
+import TimeManagementCircleIcon from './schedule/TimeManagementCircleIcon.vue';
+import TimerIcon from './schedule/TimerIcon.vue';
 import StatsDiagramPieIcon from './stats/StatsDiagramPieIcon.vue';
 import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
 import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
@@ -312,6 +315,11 @@ export const icons = {
   iframBlock: IframBlockIcon,
   infoBlock: InfoBlockIcon,
   proposalBlock: ProposalBlockIcon,
+
+  // schedule icons
+  comment: CommentIcon,
+  timeManagementCircle: TimeManagementCircleIcon,
+  timer: TimerIcon,
 
   // stats icons
   statsDiagramPie: StatsDiagramPieIcon,
