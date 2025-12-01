@@ -576,7 +576,7 @@ const handleDateChange = (value) => {
   import VDatePicker from '@/components/datepicker/VDatePicker.vue';
 
   // Basic examples
-  const basicDate = ref<Date | null>(null);
+  const basicDate = ref<Date | null>(new Date());
   const basicDateTime = ref<Date | null>(null);
   const monthDate = ref<Date | null>(null);
   const yearDate = ref<Date | null>(null);

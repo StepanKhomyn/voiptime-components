@@ -97,7 +97,8 @@ export const useDatePicker = (
   type: Ref<DatePickerType>,
   format: Ref<string | undefined>,
   valueFormat: Ref<string | undefined>,
-  rangeSeparator: Ref<string>
+  rangeSeparator: Ref<string>,
+  checkRequired: boolean = false
 ) => {
   const { formatDate, parseDate, getDefaultFormat } = useDateFormatter();
 
@@ -174,14 +175,14 @@ export const useDatePicker = (
     }
   };
 
-  const validate = (checkRequired = true) => {
+  const validate = () => {
     const errors: string[] = [];
 
-    if (checkRequired && props.required && !hasDisplayValue.value) {
+    if (checkRequired && !hasDisplayValue.value) {
       errors.push("Це поле є обов'язковим");
     }
 
-    const dateValidation = validateDateValue(modelValueRef.value, typeRef.value, props.required);
+    const dateValidation = validateDateValue(modelValue.value, type.value, checkRequired);
 
     return {
       isValid: errors.length === 0 && dateValidation.isValid,
