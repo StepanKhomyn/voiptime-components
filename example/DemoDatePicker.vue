@@ -300,6 +300,7 @@
           v-model="basicDate"
           label="Select date"
           outlined
+          required
           type="date"
           @change="handleChange('Basic Date', $event)"
         />

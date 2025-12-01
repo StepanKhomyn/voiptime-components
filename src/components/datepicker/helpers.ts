@@ -174,8 +174,19 @@ export const useDatePicker = (
     }
   };
 
-  const validate = (required = false) => {
-    return validateDateValue(modelValue.value, type.value, required);
+  const validate = (checkRequired = true) => {
+    const errors: string[] = [];
+
+    if (checkRequired && props.required && !hasDisplayValue.value) {
+      errors.push("Це поле є обов'язковим");
+    }
+
+    const dateValidation = validateDateValue(modelValueRef.value, typeRef.value, props.required);
+
+    return {
+      isValid: errors.length === 0 && dateValidation.isValid,
+      errors: [...errors, ...dateValidation.errors],
+    };
   };
 
   return {

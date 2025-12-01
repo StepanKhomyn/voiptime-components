@@ -325,15 +325,22 @@
       'vt-datepicker--range': isRange.value,
       'vt-datepicker--open': isDropdownVisible.value,
       'vt-datepicker--with-time': showTimePicker.value,
-      'vt-datepicker--error': !!props.errorMessage,
+      'vt-datepicker--error': !!displayErrorMessage.value,
       'vt-datepicker--outlined': props.outlined,
       'vt-datepicker--label-floating': isLabelFloating.value,
     },
   ]);
 
-  // Повернення помилки
+  const validationError = computed(() => {
+    if (props.required && !hasDisplayValue.value) {
+      return "Це поле є обов'язковим";
+    }
+    return '';
+  });
+
   const displayErrorMessage = computed(() => {
     if (props.errorMessage) return props.errorMessage;
+    if (validationError.value) return validationError.value;
     return '';
   });
 
@@ -639,7 +646,14 @@
 
   const handleBlur = () => {
     state.isFocused.value = false;
-    emit('blur', datePickerRef.value);
+
+    // Перевірка required при втраті фокусу
+    if (props.required && !hasDisplayValue.value) {
+      // Можна емітити помилку або встановити внутрішній стан
+      emit('blur', datePickerRef.value);
+    } else {
+      emit('blur', datePickerRef.value);
+    }
   };
 
   const handleClear = () => {
