@@ -34,9 +34,6 @@ export function findOptionByValue(
 export function isOptionSelected(value: any, modelValue: any, multiple: boolean, valueKey?: string): boolean {
   if (multiple) {
     if (!Array.isArray(modelValue)) return false;
-    console.log('value', value);
-    console.log('modelValue', modelValue);
-    console.log(modelValue.some(item => compareValues(item, value, valueKey)));
     return modelValue.some(item => compareValues(item, value, valueKey));
   }
 
