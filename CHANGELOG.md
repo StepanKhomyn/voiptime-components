@@ -1,3 +1,11 @@
+## [1.12.50](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.49...v1.12.50) (2025-12-01)
+
+
+### Bug Fixes
+
+* add required to datepicker ([5cb4a78](https://github.com/StepanKhomyn/voiptime-components/commit/5cb4a78e0cec2a8c01e67a3294310904c6476584))
+* fixed build ([22e9da3](https://github.com/StepanKhomyn/voiptime-components/commit/22e9da32dcd58d81a92959a7fa74acb6eb13bf0e))
+
 ## [1.12.49](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.48...v1.12.49) (2025-11-28)
 
 
