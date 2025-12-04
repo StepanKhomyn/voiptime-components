@@ -1,3 +1,10 @@
+## [1.12.51](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.50...v1.12.51) (2025-12-04)
+
+
+### Bug Fixes
+
+* add logs for debagg ([2104479](https://github.com/StepanKhomyn/voiptime-components/commit/210447973bb745d34df21057ab88ef702ed24a08))
+
 ## [1.12.50](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.49...v1.12.50) (2025-12-01)
 
 
