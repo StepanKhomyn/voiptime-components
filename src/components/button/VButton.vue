@@ -67,9 +67,10 @@
     }
 
     const button = buttonRef.value;
-    const parent = button.parentElement;
 
-    if (!parent) return;
+    // Отримуємо поточну ширину кнопки (фактично зайнятий простір)
+    const currentButtonRect = button.getBoundingClientRect();
+    const currentButtonWidth = currentButtonRect.width;
 
     // Створюємо invisible wrapper для виміру повної ширини кнопки
     const measureWrapper = document.createElement('div');
@@ -93,6 +94,7 @@
     clone.style.fontFamily = computedStyles.fontFamily;
     clone.style.fontWeight = computedStyles.fontWeight;
     clone.style.borderRadius = computedStyles.borderRadius;
+    clone.style.border = computedStyles.border;
     clone.style.display = 'inline-flex';
     clone.style.width = 'auto';
 
@@ -122,19 +124,10 @@
 
     document.body.removeChild(measureWrapper);
 
-    // Вимірюємо доступну ширину в батьківському контейнері
-    const parentWidth = parent.getBoundingClientRect().width;
-
-    // Отримуємо padding батька
-    const parentStyles = window.getComputedStyle(parent);
-    const parentPaddingLeft = parseFloat(parentStyles.paddingLeft);
-    const parentPaddingRight = parseFloat(parentStyles.paddingRight);
-
-    const availableWidth = parentWidth - parentPaddingLeft - parentPaddingRight;
-
-    // Якщо кнопка з текстом не вміщається - колапсуємо
-    // Додаємо запас 4px для безпеки
-    const shouldCollapse = fullButtonWidth > availableWidth - 4;
+    // КЛЮЧОВА ЗМІНА: порівнюємо з поточною шириною кнопки
+    // Якщо повна ширина більша за поточну - значить не вміщається
+    // Додаємо невеликий запас (2px) для точності обчислень
+    const shouldCollapse = fullButtonWidth > currentButtonWidth + 2;
 
     if (isCollapsed.value !== shouldCollapse) {
       isCollapsed.value = shouldCollapse;

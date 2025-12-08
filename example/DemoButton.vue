@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { ref } from 'vue';
   import { icons } from '@/icons';
   import VButton from '@/components/button/VButton.vue';
@@ -105,8 +105,8 @@
       <div class="button-grid">
         <div v-for="type in buttonTypes" :key="`loading-${type}`" class="button-item">
           <VButton
-            :type="type"
             :loading="loadingButtons.has(`loading-${type}`)"
+            :type="type"
             @click="simulateLoading(`loading-${type}`)"
           >
             {{ type }}
@@ -133,7 +133,7 @@
       <h2>Кнопки з іконками</h2>
       <div class="button-grid">
         <div v-for="(iconName, index) in iconNames" :key="`icon-${iconName}`" class="button-item">
-          <VButton :type="buttonTypes[index % buttonTypes.length]" :icon="iconName">
+          <VButton :icon="iconName" :type="buttonTypes[index % buttonTypes.length]">
             {{ iconName }}
           </VButton>
           <div class="button-code">
@@ -160,7 +160,7 @@
       <h2>Іконка-кнопки (круглі)</h2>
       <div class="button-grid">
         <div v-for="(type, index) in buttonTypes" :key="`circle-${type}`" class="button-item">
-          <VButton :type="type" :icon="iconNames[index]" shape="circle" tooltip> {{ type }} action</VButton>
+          <VButton :icon="iconNames[index]" :type="type" shape="circle" tooltip> {{ type }} action</VButton>
           <div class="button-code">
             <code
               @click="
@@ -184,7 +184,7 @@
       <h2>Іконка-кнопки (квадратні)</h2>
       <div class="button-grid">
         <div v-for="(type, index) in buttonTypes" :key="`square-${type}`" class="button-item">
-          <VButton :type="type" :icon="iconNames[index]" shape="square" tooltip> {{ type }} action</VButton>
+          <VButton :icon="iconNames[index]" :type="type" shape="square" tooltip> {{ type }} action</VButton>
           <div class="button-code">
             <code
               @click="
@@ -273,6 +273,12 @@
               <td>#FFFFFF</td>
               <td>Зміна кольору вмісту кнопки</td>
             </tr>
+            <tr>
+              <td><code>adaptive</code></td>
+              <td><code>boolean</code></td>
+              <td>false</td>
+              <td>Адаптивно змінює тип форми з звичайного на shape="square"</td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -325,7 +331,7 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   .button-showcase {
     max-width: 1200px;
     margin: 0 auto;
