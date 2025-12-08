@@ -1,3 +1,10 @@
+## [1.12.54](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.53...v1.12.54) (2025-12-08)
+
+
+### Bug Fixes
+
+* fixed adaptive buton settings ([7f30068](https://github.com/StepanKhomyn/voiptime-components/commit/7f30068abafbba5cff0c3bed5162adb4e5a193a9))
+
 ## [1.12.53](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.52...v1.12.53) (2025-12-08)
 
 
