@@ -1,3 +1,10 @@
+## [1.12.53](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.52...v1.12.53) (2025-12-08)
+
+
+### Bug Fixes
+
+* add adaptive to button ([f83187e](https://github.com/StepanKhomyn/voiptime-components/commit/f83187e39c3dbe153a4af9841ed5d1247084096c))
+
 ## [1.12.52](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.51...v1.12.52) (2025-12-04)
 
 
