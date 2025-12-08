@@ -1,3 +1,10 @@
+## [1.12.56](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.55...v1.12.56) (2025-12-08)
+
+
+### Bug Fixes
+
+* забрав adaptive з VButton ([2f6b6b2](https://github.com/StepanKhomyn/voiptime-components/commit/2f6b6b270850647baa0e20b94f7e1f53f58967f3))
+
 ## [1.12.55](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.54...v1.12.55) (2025-12-08)
 
 
