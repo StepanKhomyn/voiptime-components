@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onMounted, onUnmounted, ref, useSlots } from 'vue';
+  import { computed, nextTick, onMounted, onUnmounted, ref, useSlots, watch } from 'vue';
   import VIcon from '@/components/icon/VIcon.vue';
   import type { VButtonEmits, VButtonProps } from './types';
   import VLoader from '@/components/loader/VLoader.vue';
@@ -12,7 +12,7 @@
     tooltip: false,
     tooltipPlacement: 'top',
     color: '',
-    adaptive: true,
+    adaptive: false,
   });
 
   const emit = defineEmits<VButtonEmits>();
@@ -62,40 +62,124 @@
   });
 
   const checkButtonWidth = () => {
-    if (!props.adaptive || !buttonRef.value || !props.icon) return;
+    if (!props.adaptive || !buttonRef.value || !props.icon || !slotText.value) {
+      return;
+    }
 
     const button = buttonRef.value;
     const parent = button.parentElement;
 
     if (!parent) return;
 
-    // Тимчасово показуємо повний текст для вимірювання
-    isCollapsed.value = false;
+    // Створюємо invisible wrapper для виміру повної ширини кнопки
+    const measureWrapper = document.createElement('div');
+    measureWrapper.style.position = 'absolute';
+    measureWrapper.style.visibility = 'hidden';
+    measureWrapper.style.pointerEvents = 'none';
+    measureWrapper.style.left = '-9999px';
+    measureWrapper.style.top = '-9999px';
+    measureWrapper.style.width = 'max-content';
 
-    requestAnimationFrame(() => {
-      const buttonWidth = button.scrollWidth;
-      const availableWidth = parent.clientWidth;
+    // Клонуємо кнопку з повним текстом
+    const clone = button.cloneNode(true) as HTMLElement;
 
-      // Якщо кнопка не вміщується, колапсуємо
-      isCollapsed.value = buttonWidth > availableWidth;
-    });
+    // Видаляємо класи що змінюють відображення
+    clone.classList.remove('vt-button--square', 'vt-button--icon-only');
+
+    // Копіюємо важливі стилі
+    const computedStyles = window.getComputedStyle(button);
+    clone.style.padding = computedStyles.padding;
+    clone.style.fontSize = computedStyles.fontSize;
+    clone.style.fontFamily = computedStyles.fontFamily;
+    clone.style.fontWeight = computedStyles.fontWeight;
+    clone.style.borderRadius = computedStyles.borderRadius;
+    clone.style.display = 'inline-flex';
+    clone.style.width = 'auto';
+
+    // Переконуємось що іконка і текст присутні
+    const cloneIcon = clone.querySelector('.vt-button__icon');
+    let cloneContent = clone.querySelector('.vt-button__content');
+
+    if (!cloneContent) {
+      cloneContent = document.createElement('span');
+      cloneContent.className = 'vt-button__content';
+      cloneContent.textContent = slotText.value;
+      clone.appendChild(cloneContent);
+    } else {
+      cloneContent.textContent = slotText.value;
+    }
+
+    // Показуємо іконку якщо вона є
+    if (cloneIcon && cloneIcon instanceof HTMLElement) {
+      cloneIcon.style.display = 'flex';
+    }
+
+    measureWrapper.appendChild(clone);
+    document.body.appendChild(measureWrapper);
+
+    // Вимірюємо повну ширину кнопки з текстом
+    const fullButtonWidth = clone.getBoundingClientRect().width;
+
+    document.body.removeChild(measureWrapper);
+
+    // Вимірюємо доступну ширину в батьківському контейнері
+    const parentWidth = parent.getBoundingClientRect().width;
+
+    // Отримуємо padding батька
+    const parentStyles = window.getComputedStyle(parent);
+    const parentPaddingLeft = parseFloat(parentStyles.paddingLeft);
+    const parentPaddingRight = parseFloat(parentStyles.paddingRight);
+
+    const availableWidth = parentWidth - parentPaddingLeft - parentPaddingRight;
+
+    // Якщо кнопка з текстом не вміщається - колапсуємо
+    // Додаємо запас 4px для безпеки
+    const shouldCollapse = fullButtonWidth > availableWidth - 4;
+
+    if (isCollapsed.value !== shouldCollapse) {
+      isCollapsed.value = shouldCollapse;
+    }
   };
 
-  onMounted(() => {
-    if (props.adaptive && props.icon) {
-      checkButtonWidth();
+  // Спостерігач за зміною тексту в слоті
+  watch(
+    () => slotText.value,
+    () => {
+      if (props.adaptive && props.icon) {
+        nextTick(() => {
+          checkButtonWidth();
+        });
+      }
+    }
+  );
 
-      // Спостерігаємо за змінами розміру батьківського контейнера
+  onMounted(() => {
+    if (props.adaptive && props.icon && slotText.value) {
+      // Початкова перевірка
+      nextTick(() => {
+        setTimeout(() => {
+          checkButtonWidth();
+        }, 100);
+      });
+
+      // Спостерігаємо за змінами розміру БАТЬКІВСЬКОГО контейнера
       const parent = buttonRef.value?.parentElement;
       if (parent) {
         resizeObserver.value = new ResizeObserver(() => {
-          checkButtonWidth();
+          // Додаємо невелику затримку щоб дати час на рендер
+          setTimeout(() => {
+            checkButtonWidth();
+          }, 10);
         });
         resizeObserver.value.observe(parent);
       }
 
-      // Також слухаємо зміни розміру вікна
-      window.addEventListener('resize', checkButtonWidth);
+      // Слухаємо зміни розміру вікна
+      window.addEventListener('resize', () => {
+        setTimeout(() => {
+          checkButtonWidth();
+        }, 10);
+      });
     }
   });
 
