@@ -1,3 +1,10 @@
+## [1.12.55](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.54...v1.12.55) (2025-12-08)
+
+
+### Bug Fixes
+
+* fix adaptive 2 ([6cde493](https://github.com/StepanKhomyn/voiptime-components/commit/6cde49304be2966def4b7c94b514624fd039bcd4))
+
 ## [1.12.54](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.53...v1.12.54) (2025-12-08)
 
 
