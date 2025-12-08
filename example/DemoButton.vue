@@ -273,12 +273,6 @@
               <td>#FFFFFF</td>
               <td>Зміна кольору вмісту кнопки</td>
             </tr>
-            <tr>
-              <td><code>adaptive</code></td>
-              <td><code>boolean</code></td>
-              <td>false</td>
-              <td>Адаптивно змінює тип форми з звичайного на shape="square"</td>
-            </tr>
           </tbody>
         </table>
       </div>
