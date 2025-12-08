@@ -1,3 +1,10 @@
+## [1.12.57](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.56...v1.12.57) (2025-12-08)
+
+
+### Bug Fixes
+
+* changed empty row  color ([51058f4](https://github.com/StepanKhomyn/voiptime-components/commit/51058f48512d7bc0a73a11580586e09992759d8b))
+
 ## [1.12.56](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.55...v1.12.56) (2025-12-08)
 
 
