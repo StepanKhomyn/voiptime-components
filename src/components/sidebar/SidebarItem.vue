@@ -138,7 +138,7 @@
           <li v-if="collapsed"
             ><span class="hub-submenu-parent-label">{{ item.i18n }}</span></li
           >
-          <li v-for="child in item.children" :key="child.name" class="hub-submenu-item" @click="navigate(child)">
+          <li v-for="child in item.children" :key="child.i18n" class="hub-submenu-item" @click="navigate(child)">
             <span class="hub-submenu-label">{{ child.i18n }}</span>
           </li>
         </ul>

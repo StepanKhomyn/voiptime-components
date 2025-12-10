@@ -48,7 +48,7 @@
       <ul class="hub-sidebar-list">
         <SidebarItem
           v-for="item in items"
-          :key="item.name"
+          :key="item.i18n"
           :item="item"
           :collapsed="collapsed"
           @navigate="onNavigate"
