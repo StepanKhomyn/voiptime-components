@@ -21,6 +21,7 @@ import VCollapseItem from './components/collapse/VCollapseItem.vue';
 import VTabs from './components/tabs/VTabs.vue';
 import VTabItem from './components/tabs/VTabItem.vue';
 import VUpload from './components/upload/VUpload.vue';
+import VSidebar from './components/sidebar/VSidebar.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -51,6 +52,7 @@ export {
   VTabs,
   VTabItem,
   VUpload,
+  VSidebar
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -251,6 +253,7 @@ const VUIPlugin = {
     app.component(`${prefix}Tabs`, VTabs);
     app.component(`${prefix}TabItem`, VTabItem);
     app.component(`${prefix}Upload`, VUpload);
+    app.component(`${prefix}Sidebar`, VSidebar);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
