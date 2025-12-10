@@ -1,23 +1,3 @@
-<template>
-  <aside class="hub-sidebar" :class="{ collapsed }">
-    <nav class="hub-sidebar-nav">
-      <ul class="hub-sidebar-list">
-        <SidebarItem
-          v-for="item in items"
-          :key="item.name"
-          :item="item"
-          :collapsed="collapsed"
-          @navigate="onNavigate"
-        />
-      </ul>
-    </nav>
-    <div @click="toggleCollapse" class="hub-sidebar-footer" :class="{ collapsed }">
-      <VIcon v-if="collapsed" color="#9ac9d6" name="arrowRight"></VIcon>
-      <VIcon v-else color="#9ac9d6" name="arrowLeft"></VIcon>
-    </div>
-  </aside>
-</template>
-
 <script setup lang="ts">
   import { ref, watch, onMounted, defineProps, defineEmits } from 'vue';
   import type { SidebarItemRaw } from './types';
@@ -36,7 +16,6 @@
 
   const collapsed = ref(props.collapsed);
   const scrollEl = ref<HTMLElement | null>(null);
-
 
   const toggleCollapse = () => {
     collapsed.value = !collapsed.value;
@@ -62,6 +41,26 @@
     }
   );
 </script>
+
+<template>
+  <aside class="hub-sidebar" :class="{ collapsed }">
+    <nav class="hub-sidebar-nav">
+      <ul class="hub-sidebar-list">
+        <SidebarItem
+          v-for="item in items"
+          :key="item.name"
+          :item="item"
+          :collapsed="collapsed"
+          @navigate="onNavigate"
+        />
+      </ul>
+    </nav>
+    <div @click="toggleCollapse" class="hub-sidebar-footer" :class="{ collapsed }">
+      <VIcon v-if="collapsed" color="#9ac9d6" name="arrowRight"></VIcon>
+      <VIcon v-else color="#9ac9d6" name="arrowLeft"></VIcon>
+    </div>
+  </aside>
+</template>
 
 <style scoped lang="scss">
   @import 'sidebar';

@@ -1,16 +1,3 @@
-<template>
-  <div class="demo-container">
-    <VSidebar :items="menuItems" v-model:collapsed="collapsed" />
-    <div class="demo-main">
-      <h2>Main Content Area</h2>
-      <p>Here is the main view. Use the sidebar to navigate.</p>
-      <button @click="collapsed = !collapsed">
-        {{ collapsed ? 'Expand Sidebar' : 'Collapse Sidebar' }}
-      </button>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
   import { ref } from 'vue';
   import VSidebar from '../src/components/sidebar/VSidebar.vue';
@@ -73,6 +60,19 @@
     },
   ];
 </script>
+
+<template>
+  <div class="demo-container">
+    <VSidebar :items="menuItems" v-model:collapsed="collapsed" />
+    <div class="demo-main">
+      <h2>Main Content Area</h2>
+      <p>Here is the main view. Use the sidebar to navigate.</p>
+      <button @click="collapsed = !collapsed">
+        {{ collapsed ? 'Expand Sidebar' : 'Collapse Sidebar' }}
+      </button>
+    </div>
+  </div>
+</template>
 
 <style scoped>
   .demo-container {
