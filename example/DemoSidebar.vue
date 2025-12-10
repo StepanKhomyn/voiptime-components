@@ -65,7 +65,7 @@
   <div class="demo-container">
     <VSidebar :items="menuItems" v-model:collapsed="collapsed" />
     <div class="demo-main">
-      <h2>Main Content Area</h2>
+      <h2>Main Content Area Test</h2>
       <p>Here is the main view. Use the sidebar to navigate.</p>
       <button @click="collapsed = !collapsed">
         {{ collapsed ? 'Expand Sidebar' : 'Collapse Sidebar' }}
