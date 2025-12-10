@@ -141,6 +141,24 @@ import ProposalBlockIcon from './scenario/ProposalBlockIcon.vue';
 import CommentIcon from './schedule/CommentIcon.vue';
 import TimeManagementCircleIcon from './schedule/TimeManagementCircleIcon.vue';
 import TimerIcon from './schedule/TimerIcon.vue';
+import CallQualityIcon from './sidebar/CallQualityIcon.vue';
+import CallQualityStatisticIcon from './sidebar/CallQualityStatisticIcon.vue';
+import ClientsIcon from './sidebar/ClientsIcon.vue';
+import CollectionIcon from './sidebar/CollectionIcon.vue';
+import CrmIcon from './sidebar/CrmIcon.vue';
+import DashboardIcon from './sidebar/DashboardIcon.vue';
+import GroupIcon from './sidebar/GroupIcon.vue';
+import HomeIcon from './sidebar/HomeIcon.vue';
+import IntegrationIcon from './sidebar/IntegrationIcon.vue';
+import ITRIcon from './sidebar/ITRIcon.vue';
+import Ivr2Icon from './sidebar/Ivr2Icon.vue';
+import PbxIcon from './sidebar/PbxIcon.vue';
+import ScenarioIcon from './sidebar/ScenarioIcon.vue';
+import ScenariosIcon from './sidebar/ScenariosIcon.vue';
+import SettingsIcon from './sidebar/SettingsIcon.vue';
+import TasksIcon from './sidebar/TasksIcon.vue';
+import UsersIcon from './sidebar/UsersIcon.vue';
+import WFMIcon from './sidebar/WFMIcon.vue';
 import StatsDiagramPieIcon from './stats/StatsDiagramPieIcon.vue';
 import ColumnInsertIcon from './table/ColumnInsertIcon.vue';
 import ColumnsMoveIcon from './table/ColumnsMoveIcon.vue';
@@ -320,6 +338,26 @@ export const icons = {
   comment: CommentIcon,
   timeManagementCircle: TimeManagementCircleIcon,
   timer: TimerIcon,
+
+  // sidebar icons
+  callQuality: CallQualityIcon,
+  callQualityStatistic: CallQualityStatisticIcon,
+  clients: ClientsIcon,
+  collection: CollectionIcon,
+  crm: CrmIcon,
+  dashboard: DashboardIcon,
+  group: GroupIcon,
+  home: HomeIcon,
+  integration: IntegrationIcon,
+  iTR: ITRIcon,
+  ivr2: Ivr2Icon,
+  pbx: PbxIcon,
+  scenario: ScenarioIcon,
+  scenarios: ScenariosIcon,
+  settings: SettingsIcon,
+  tasks: TasksIcon,
+  users: UsersIcon,
+  wFM: WFMIcon,
 
   // stats icons
   statsDiagramPie: StatsDiagramPieIcon,
