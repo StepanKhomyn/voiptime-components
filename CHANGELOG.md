@@ -1,3 +1,10 @@
+## [1.13.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.3...v1.13.4) (2025-12-10)
+
+
+### Bug Fixes
+
+* fix sidebar width ([7c60e0a](https://github.com/StepanKhomyn/voiptime-components/commit/7c60e0a3d9d0995141497805163bc66bae7aa04e))
+
 ## [1.13.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.2...v1.13.3) (2025-12-10)
 
 
