@@ -1,3 +1,18 @@
+# [1.13.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.57...v1.13.0) (2025-12-10)
+
+
+### Bug Fixes
+
+* change npm token ([02864c2](https://github.com/StepanKhomyn/voiptime-components/commit/02864c2a27e6bf4a4866196f1a913a00c820d4ef))
+* change npm token2 ([f101ec9](https://github.com/StepanKhomyn/voiptime-components/commit/f101ec9547600ae74e6e6a5e4bb3efc59ccb8999))
+* fix for build ([dd51fbf](https://github.com/StepanKhomyn/voiptime-components/commit/dd51fbfc8c2ba16535fcf6d314c836f17d9f09ad))
+* fix sidebar ([db723f2](https://github.com/StepanKhomyn/voiptime-components/commit/db723f2d8ea1381a463f6dafff72dc4fe77edd67))
+
+
+### Features
+
+* add sidebar ([85c8992](https://github.com/StepanKhomyn/voiptime-components/commit/85c8992030f662d9c89173885eb9188d7b50a93b))
+
 ## [1.12.57](https://github.com/StepanKhomyn/voiptime-components/compare/v1.12.56...v1.12.57) (2025-12-08)
 
 
