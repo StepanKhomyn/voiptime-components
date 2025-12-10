@@ -4,6 +4,10 @@
   import SidebarItem from './SidebarItem.vue';
   import VIcon from '@/components/icon/VIcon.vue';
 
+  const onNavigate = (to: string) => {
+    emit('navigate', to);
+  };
+
   const props = defineProps<{
     items: SidebarItemRaw[];
     collapsed: boolean;
@@ -20,10 +24,6 @@
   const toggleCollapse = () => {
     collapsed.value = !collapsed.value;
     emit('update:collapsed', collapsed.value);
-  };
-
-  const onNavigate = (to: string) => {
-    emit('navigate', to);
   };
 
   onMounted(() => {
