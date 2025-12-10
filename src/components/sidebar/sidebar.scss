@@ -9,7 +9,7 @@
 }
 
 .hub-sidebar.collapsed {
-  width: 40px;
+  width: 60px;
 }
 
 .hub-sidebar-nav {
@@ -138,6 +138,15 @@
 .hub-submenu-item:hover {
   color: #ffffff;
   background-color: #00546a;
+}
+
+.hub-submenu-parent-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  margin: 10px;
+  font-size: 16px;
 }
 
 .hub-submenu-label {

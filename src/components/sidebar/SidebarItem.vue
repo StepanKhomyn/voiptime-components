@@ -65,11 +65,11 @@
     let top: number | string = rect.top;
     let bottom: string | number = 'auto';
 
-    const overflows = top + submenuHeight > viewportHeight - 10;
+    const overflows = top + submenuHeight > viewportHeight - 20;
 
     if (overflows) {
       // Якщо виходить за нижню межу — прижимаємо вниз
-      bottom = 10;
+      bottom = 15;
       top = 'auto';
     } else {
       if (top < 10) top = 10; // невеликий відступ зверху
@@ -133,6 +133,9 @@
         "
       >
         <ul class="hub-submenu-list">
+          <li v-if="collapsed"
+            ><span class="hub-submenu-parent-label">{{ item.i18n }}</span></li
+          >
           <li v-for="child in item.children" :key="child.name" class="hub-submenu-item" @click="navigate(child)">
             <span class="hub-submenu-label">{{ child.i18n }}</span>
           </li>
