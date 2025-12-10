@@ -1,3 +1,11 @@
+## [1.13.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.4...v1.13.5) (2025-12-10)
+
+
+### Bug Fixes
+
+* change name to i18n ([fac2d31](https://github.com/StepanKhomyn/voiptime-components/commit/fac2d31b1f58913bb3d24c9022feef34e9f5c874))
+* fix change types ([90fe9f0](https://github.com/StepanKhomyn/voiptime-components/commit/90fe9f0878e49c491436245018b860bd02472b46))
+
 ## [1.13.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.3...v1.13.4) (2025-12-10)
 
 
