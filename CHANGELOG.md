@@ -1,3 +1,10 @@
+## [1.13.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.5...v1.13.6) (2025-12-10)
+
+
+### Bug Fixes
+
+* add sidebar icons ([d88cdd5](https://github.com/StepanKhomyn/voiptime-components/commit/d88cdd56025f680152c5dd0648858f260d9fac28))
+
 ## [1.13.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.4...v1.13.5) (2025-12-10)
 
 
