@@ -18,7 +18,7 @@
         copiedCode.value = null;
       }, 2000);
     } catch (err) {
-      console.error('Не  вдалося скопіювати:', err);
+      console.error('Не вдалося скопіювати:', err);
     }
   }
 
