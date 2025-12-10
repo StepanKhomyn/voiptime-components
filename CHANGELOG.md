@@ -1,3 +1,10 @@
+## [1.13.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.1...v1.13.2) (2025-12-10)
+
+
+### Bug Fixes
+
+* fix sidebar height and collapsed view and router push ([cfd618f](https://github.com/StepanKhomyn/voiptime-components/commit/cfd618f489febd8e11ecf753c47af2af13a445b8))
+
 ## [1.13.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.0...v1.13.1) (2025-12-10)
 
 
