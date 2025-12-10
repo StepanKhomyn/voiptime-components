@@ -3,9 +3,7 @@
   import type { SidebarItemRaw } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
   import type { IconName } from '@/icons';
-  import { useRouter } from 'vue-router';
 
-  const router = useRouter();
   const props = defineProps<{
     item: SidebarItemRaw;
     collapsed: boolean;
