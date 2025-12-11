@@ -3,6 +3,9 @@
   import type { SidebarItemRaw } from './types';
   import SidebarItem from './SidebarItem.vue';
   import VIcon from '@/components/icon/VIcon.vue';
+  import { useRoute } from 'vue-router';
+
+  const route = useRoute();
 
   const activeRoute = ref<string | null>(null);
 
@@ -36,6 +39,14 @@
       });
     }
   });
+
+  watch(
+    () => route.fullPath,
+    (newVal) => {
+      activeRoute.value = newVal;
+    },
+    { immediate: true }
+  );
 
   watch(
     () => props.collapsed,
