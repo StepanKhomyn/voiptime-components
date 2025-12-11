@@ -1,3 +1,11 @@
+## [1.13.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.11...v1.13.12) (2025-12-11)
+
+
+### Bug Fixes
+
+* fix router ([abc2c3b](https://github.com/StepanKhomyn/voiptime-components/commit/abc2c3b74f62719190de9d0ce84c54ddf58e9575))
+* remove router ([1eb47fe](https://github.com/StepanKhomyn/voiptime-components/commit/1eb47fef5244288da07eda0cf681b11574ccac33))
+
 ## [1.13.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.10...v1.13.11) (2025-12-11)
 
 
