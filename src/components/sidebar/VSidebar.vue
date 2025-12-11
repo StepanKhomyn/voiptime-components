@@ -4,18 +4,18 @@
   import SidebarItem from './SidebarItem.vue';
   import VIcon from '@/components/icon/VIcon.vue';
 
-  const activeRoute = ref<string | null>(null);
-
-  const onNavigate = (to: string) => {
-    activeRoute.value = to;
-
-    emit('navigate', to);
-  };
-
   const props = defineProps<{
     items: SidebarItemRaw[];
     collapsed: boolean;
+    currentRoute?: string | null;
   }>();
+
+  const activeRoute = ref<string | null>(props.currentRoute ?? null);
+
+  const onNavigate = (to: string) => {
+    activeRoute.value = to;
+    emit('navigate', to);
+  };
 
   const emit = defineEmits<{
     (e: 'update:collapsed', value: boolean): void;
@@ -37,6 +37,11 @@
       });
     }
   });
+
+  watch(
+    () => props.currentRoute,
+    v => activeRoute.value = v ?? null
+  );
 
   watch(
     () => props.collapsed,

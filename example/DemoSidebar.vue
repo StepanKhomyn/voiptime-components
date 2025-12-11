@@ -5,10 +5,6 @@
   const collapsed = ref(true);
 
   const menuItems = [
-    { name: 'marketing', i18n: 'Marketing', icon: 'chatCheck', route: '/marketing' },
-    { name: 'content', i18n: 'Content', icon: 'calendar', route: '/content' },
-    { name: 'sales', i18n: 'Sales', icon: 'channelsChange', route: '/sales' },
-    { name: 'commerce', i18n: 'Commerce', icon: 'chatAttention', route: '/commerce' },
     {
       name: 'service',
       i18n: 'Service',
