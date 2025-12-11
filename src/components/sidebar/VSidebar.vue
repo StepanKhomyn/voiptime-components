@@ -11,6 +11,7 @@
 
   const onNavigate = (to: string) => {
     activeRoute.value = to;
+
     emit('navigate', to);
   };
 
