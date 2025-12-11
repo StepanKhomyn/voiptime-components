@@ -1,3 +1,10 @@
+## [1.13.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.14...v1.13.15) (2025-12-11)
+
+
+### Bug Fixes
+
+* add hover on collapsed ([0941e78](https://github.com/StepanKhomyn/voiptime-components/commit/0941e780dab0b6f3d1f87004feefceb5c065e7e6))
+
 ## [1.13.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.13...v1.13.14) (2025-12-11)
 
 
