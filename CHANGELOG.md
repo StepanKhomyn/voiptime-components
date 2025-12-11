@@ -1,3 +1,11 @@
+## [1.13.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.10...v1.13.11) (2025-12-11)
+
+
+### Bug Fixes
+
+* add adaptive routes ([909ddcb](https://github.com/StepanKhomyn/voiptime-components/commit/909ddcb040faae1fa180b5e04971b2568a6c1f70))
+* add vue router ([77a8d0c](https://github.com/StepanKhomyn/voiptime-components/commit/77a8d0c2403cc035d24557dacdc07ca06573569f))
+
 ## [1.13.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.9...v1.13.10) (2025-12-11)
 
 
