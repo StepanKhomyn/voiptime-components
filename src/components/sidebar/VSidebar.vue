@@ -7,6 +7,8 @@
 
   const route = useRoute();
 
+  const getFullPath = () => route?.fullPath ?? null;
+
   const activeRoute = ref<string | null>(null);
 
   const onNavigate = (to: string) => {
@@ -42,8 +44,9 @@
   });
 
   watch(
-    () => route.fullPath,
+    () => getFullPath,
     (newVal) => {
+      console.log(route);
       activeRoute.value = newVal;
     },
     { immediate: true }
