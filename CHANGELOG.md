@@ -1,3 +1,10 @@
+## [1.13.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.16...v1.13.17) (2025-12-11)
+
+
+### Bug Fixes
+
+* add more bottom height ([f9482df](https://github.com/StepanKhomyn/voiptime-components/commit/f9482dff2f7aa505674972884f0b4166fb262577))
+
 ## [1.13.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.15...v1.13.16) (2025-12-11)
 
 
