@@ -61,8 +61,9 @@
       </ul>
     </nav>
     <div @click="toggleCollapse" class="hub-sidebar-footer" :class="{ collapsed }">
-      <VIcon v-if="collapsed" color="#9ac9d6" name="arrowRight"></VIcon>
-      <VIcon v-else color="#9ac9d6" name="arrowLeft"></VIcon>
+      <VIcon v-if="collapsed" name="arrowRight"></VIcon>
+<!--      <span v-if="!collapsed" class="hub-sidebar-footer__label">Згорнути меню</span>-->
+      <VIcon v-if="!collapsed" name="arrowLeft"></VIcon>
     </div>
   </aside>
 </template>
