@@ -20,10 +20,15 @@
   const openTimeout: any = ref(null);
   const closeTimeout: any = ref(null);
   const itemEl = ref<HTMLElement | null>(null);
+
   const isParentActive = computed(() => {
     if (!props.item.children) return false;
     return props.item.children.some(ch => ch.route === props.activeRoute);
   });
+
+  const isChildActive = (child: SidebarItemRaw) => {
+    return child.route === props.activeRoute;
+  };
 
   const submenuStyle = ref({
     top: '0px',
@@ -139,7 +144,7 @@
           <li v-if="collapsed"
             ><span class="hub-submenu-parent-label">{{ item.i18n }}</span></li
           >
-          <li v-for="child in item.children" :key="child.i18n" class="hub-submenu-item" @click="navigate(child)">
+          <li v-for="child in item.children" :key="child.i18n" class="hub-submenu-item" :class="{ active: isChildActive(child) }" @click="navigate(child)">
             <span class="hub-submenu-label">{{ child.i18n }}</span>
           </li>
         </ul>

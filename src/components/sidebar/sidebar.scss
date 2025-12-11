@@ -148,6 +148,12 @@
   margin: 10px;
   border-radius: 5px;
   cursor: pointer;
+
+  &.active {
+    background-color: #00546a;
+    color: #ffffff;
+    border-radius: 5px;
+  }
 }
 
 .hub-submenu-item:hover {
