@@ -1,3 +1,31 @@
+## [1.13.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.9...v1.13.10) (2025-12-11)
+
+
+### Bug Fixes
+
+* додано іконку нод дерева ([0cffff7](https://github.com/StepanKhomyn/voiptime-components/commit/0cffff7a77b02ada0279232c3a7a83590449705a))
+
+## [1.13.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.8...v1.13.9) (2025-12-11)
+
+
+### Bug Fixes
+
+* test 2fa 2 ([88f909e](https://github.com/StepanKhomyn/voiptime-components/commit/88f909e09c2bef989b11fcc4c33676880157698d))
+
+## [1.13.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.7...v1.13.8) (2025-12-11)
+
+
+### Bug Fixes
+
+* test 2fa ([7bfbb49](https://github.com/StepanKhomyn/voiptime-components/commit/7bfbb49e8d6e35cfbb849bfd8e2aa955f736b5b9))
+
+## [1.13.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.6...v1.13.7) (2025-12-11)
+
+
+### Bug Fixes
+
+* add active route and color ([58909f3](https://github.com/StepanKhomyn/voiptime-components/commit/58909f3a640187bb6c647e0575ba8fa7a7b6fd29))
+
 ## [1.13.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.5...v1.13.6) (2025-12-10)
 
 
