@@ -1,3 +1,10 @@
+## [1.13.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.6...v1.13.7) (2025-12-11)
+
+
+### Bug Fixes
+
+* add active route and color ([58909f3](https://github.com/StepanKhomyn/voiptime-components/commit/58909f3a640187bb6c647e0575ba8fa7a7b6fd29))
+
 ## [1.13.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.5...v1.13.6) (2025-12-10)
 
 
