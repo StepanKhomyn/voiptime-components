@@ -1,3 +1,10 @@
+## [1.13.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.9...v1.13.10) (2025-12-11)
+
+
+### Bug Fixes
+
+* додано іконку нод дерева ([0cffff7](https://github.com/StepanKhomyn/voiptime-components/commit/0cffff7a77b02ada0279232c3a7a83590449705a))
+
 ## [1.13.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.8...v1.13.9) (2025-12-11)
 
 
