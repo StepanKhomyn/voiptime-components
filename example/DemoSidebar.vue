@@ -16,17 +16,17 @@
       route: '/service',
       children: [
         { name: 'reports', i18n: 'Reports', route: '/reporting/reports' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
-        { name: 'dashboards', i18n: 'TEst', route: '/reporting/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingx/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingz/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingl/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingk/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingj/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingh/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingg/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingf/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingd/dashboards' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportinga/dashboards' },
+        { name: 'dashboards', i18n: 'TEst', route: '/reportings/dashboards' },
       ],
     },
     {
@@ -35,8 +35,8 @@
       icon: 'chatIn',
       route: '/automation',
       children: [
-        { name: 'reports', i18n: 'Reports', route: '/reporting/reports' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
+        { name: 'reports', i18n: 'Reports', route: '/reportingat/reports' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingar/dashboards' },
       ],
     },
     {
@@ -44,8 +44,8 @@
       i18n: 'Reporting & Analytics',
       icon: 'clientDigitalChannel',
       children: [
-        { name: 'reports', i18n: 'Reports', route: '/reporting/reports' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
+        { name: 'reports', i18n: 'Reports', route: '/reportingaq/reports' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingaw/dashboards' },
       ],
     },
     {
@@ -54,8 +54,8 @@
       icon: 'clientActivity',
       route: '/settings',
       children: [
-        { name: 'reports', i18n: 'Reports', route: '/reporting/reports' },
-        { name: 'dashboards', i18n: 'Dashboards', route: '/reporting/dashboards' },
+        { name: 'reports', i18n: 'Reports', route: '/reportingaqt/reports' },
+        { name: 'dashboards', i18n: 'Dashboards', route: '/reportingaqu/dashboards' },
       ],
     },
   ];

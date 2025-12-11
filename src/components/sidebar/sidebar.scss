@@ -52,17 +52,30 @@
   height: 40px;
   margin: 5px 0;
   background-color: #063f4e;
+  color: #9ac9d6;
 
   &.active {
     background-color: #00546a;
     color: #ffffff;
     border-radius: 5px;
+
+    .hub-item-icon,
+    .hub-item-label,
+    .hub-item-arrow {
+      color: #ffffff;
+    }
   }
 
   &:hover {
     background-color: #00546a;
     color: #ffffff;
     border-radius: 5px;
+
+    .hub-item-icon,
+    .hub-item-label,
+    .hub-item-arrow {
+      color: #ffffff;
+    }
   }
 }
 

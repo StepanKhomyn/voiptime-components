@@ -4,7 +4,10 @@
   import SidebarItem from './SidebarItem.vue';
   import VIcon from '@/components/icon/VIcon.vue';
 
+  const activeRoute = ref<string | null>(null);
+
   const onNavigate = (to: string) => {
+    activeRoute.value = to;
     emit('navigate', to);
   };
 
@@ -51,6 +54,7 @@
           :key="item.i18n"
           :item="item"
           :collapsed="collapsed"
+          :active-route="activeRoute"
           @navigate="onNavigate"
         />
       </ul>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, defineProps, defineEmits, onBeforeUnmount } from 'vue';
+  import { ref, defineProps, defineEmits, onBeforeUnmount, computed } from 'vue';
   import type { SidebarItemRaw } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
   import type { IconName } from '@/icons';
@@ -7,6 +7,7 @@
   const props = defineProps<{
     item: SidebarItemRaw;
     collapsed: boolean;
+    activeRoute: string | null;
   }>();
 
   const emit = defineEmits<{
@@ -19,6 +20,10 @@
   const openTimeout: any = ref(null);
   const closeTimeout: any = ref(null);
   const itemEl = ref<HTMLElement | null>(null);
+  const isParentActive = computed(() => {
+    if (!props.item.children) return false;
+    return props.item.children.some(ch => ch.route === props.activeRoute);
+  });
 
   const submenuStyle = ref({
     top: '0px',
@@ -90,10 +95,6 @@
       positionSubmenu();
       return;
     }
-
-    if (!props.item.children && props.item.route) {
-      emit('navigate', props.item.route);
-    }
   };
 
   const navigate = (child: SidebarItemRaw) => {
@@ -110,10 +111,10 @@
 <template>
   <li class="hub-item" @mouseenter="openSubmenu" @mouseleave="closeSubmenu" ref="itemEl">
     <!-- MAIN ROW -->
-    <div class="hub-item-main" @click="handleClick" :class="{ collapsed, active: hoveringItem || showSub }">
-      <VIcon class="hub-item-icon" color="#9ac9d6" :name="(item.icon ?? 'empty') as IconName" />
+    <div class="hub-item-main" @click="handleClick" :class="{ collapsed, active: hoveringItem || showSub || isParentActive }">
+      <VIcon class="hub-item-icon" :name="(item.icon ?? 'empty') as IconName" />
       <span v-if="!collapsed" class="hub-item-label">{{ item.i18n }}</span>
-      <VIcon v-if="item.children && !collapsed" class="hub-item-arrow" color="#9ac9d6" name="arrowRight"></VIcon>
+      <VIcon v-if="item.children && !collapsed" class="hub-item-arrow" name="arrowRight"></VIcon>
     </div>
 
     <!-- DIVIDER -->
