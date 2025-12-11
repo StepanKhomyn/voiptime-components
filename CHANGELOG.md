@@ -1,3 +1,10 @@
+## [1.13.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.12...v1.13.13) (2025-12-11)
+
+
+### Bug Fixes
+
+* increase height in sidebar child ([47c82ce](https://github.com/StepanKhomyn/voiptime-components/commit/47c82ce1a19ef679145bf233e769f7ce27071784))
+
 ## [1.13.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.11...v1.13.12) (2025-12-11)
 
 
