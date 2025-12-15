@@ -1,3 +1,11 @@
+## [1.13.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.20...v1.13.21) (2025-12-15)
+
+
+### Bug Fixes
+
+* fix tabs ([4395e66](https://github.com/StepanKhomyn/voiptime-components/commit/4395e66ae5ffa5d4028651295e1ac09255bf9262))
+* fix tabs ([40d668f](https://github.com/StepanKhomyn/voiptime-components/commit/40d668fa712e8f4feb8e3f93a7efc8fc4d93bf0a))
+
 ## [1.13.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.19...v1.13.20) (2025-12-15)
 
 
