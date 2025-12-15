@@ -1,3 +1,10 @@
+## [1.13.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.18...v1.13.19) (2025-12-15)
+
+
+### Bug Fixes
+
+* fix problem with not right tabs displayed ([f6745ed](https://github.com/StepanKhomyn/voiptime-components/commit/f6745ed92b23df5181f3bfc071b6e75ae90268a4))
+
 ## [1.13.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.17...v1.13.18) (2025-12-15)
 
 
