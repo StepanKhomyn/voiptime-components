@@ -20,11 +20,13 @@
   const visitedTabs = ref<Set<string>>(new Set());
 
   watch(currentValue, val => {
-    if (val) {
-      visitedTabs.value.add(val);
+    if (!tabs.value.find(t => t.name === val)) {
+      currentValue.value = tabs.value[0]?.name;
+      return;
     }
-  },
-    { immediate: true });
+
+    visitedTabs.value.add(val!);
+  });
 
   watch(
     () => props.modelValue,
