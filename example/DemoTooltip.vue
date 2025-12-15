@@ -61,24 +61,24 @@
         <div class="demo-grid">
           <div class="demo-item">
             <h4>Зверху (top)</h4>
-            <button class="demo-button" v-tooltip="'Це підказка зверху'" data-placement="top"> Наведи на мене</button>
+            <button v-tooltip="'Це підказка зверху'" class="demo-button" data-placement="top"> Наведи на мене</button>
           </div>
 
           <div class="demo-item">
             <h4>Знизу (bottom)</h4>
-            <button class="demo-button" v-tooltip="'Це підказка знизу'" data-placement="bottom">
+            <button v-tooltip="'Це підказка знизу'" class="demo-button" data-placement="bottom">
               Наведи на мене
             </button>
           </div>
 
           <div class="demo-item">
             <h4>Зліва (left)</h4>
-            <button class="demo-button" v-tooltip="'Це підказка зліва'" data-placement="left"> Наведи на мене</button>
+            <button v-tooltip="'Це підказка зліва'" class="demo-button" data-placement="left"> Наведи на мене</button>
           </div>
 
           <div class="demo-item">
             <h4>Справа (right)</h4>
-            <button class="demo-button" v-tooltip="'Це підказка справа'" data-placement="right">
+            <button v-tooltip="'Це підказка справа'" class="demo-button" data-placement="right">
               Наведи на мене
             </button>
           </div>
@@ -91,16 +91,41 @@
         <div class="demo-grid">
           <div class="demo-item">
             <h4>Короткий текст</h4>
-            <span class="demo-text" v-tooltip="'Короткий'"> Короткий tooltip </span>
+            <span v-tooltip="'Короткий'" class="demo-text"> Короткий tooltip </span>
           </div>
 
           <div class="demo-item">
             <h4>Довгий текст</h4>
             <span
-              class="demo-text"
               v-tooltip="
-                'Це досить довгий текст для tooltip, який автоматично переноситься на наступні рядки і має максимальну ширину'
+                '\n' +
+                '  beforeUnmount(el: TooltipHTMLElement) {\n' +
+                '    // Видаляємо tooltip з DOM\n' +
+                '    if (el.__tooltipEl && el.__tooltipEl.parentElement) {\n' +
+                '      el.__tooltipEl.parentElement.removeChild(el.__tooltipEl);\n' +
+                '      delete el.__tooltipEl;\n' +
+                '    }\n' +
+                '\n' +
+                '    // Видаляємо обробники подій\n' +
+                '    if (el.__mouseenterHandler) {\n' +
+                '      el.removeEventListener(\'mouseenter\', el.__mouseenterHandler);\n' +
+                '      delete el.__mouseenterHandler;\n' +
+                '    }\n' +
+                '\n' +
+                '    if (el.__mouseleaveHandler) {\n' +
+                '      el.removeEventListener(\'mouseleave\', el.__mouseleaveHandler);\n' +
+                '      delete el.__mouseleaveHandler;\n' +
+                '    }\n' +
+                '\n' +
+                '    if (el.__scrollHandler) {\n' +
+                '      window.removeEventListener(\'scroll\', el.__scrollHandler, true);\n' +
+                '      window.removeEventListener(\'resize\', el.__scrollHandler);\n' +
+                '      delete el.__scrollHandler;\n' +
+                '    }\n' +
+                '  },\n' +
+                '};'
               "
+              class="demo-text"
             >
               Довгий tooltip
             </span>
@@ -108,7 +133,7 @@
 
           <div class="demo-item">
             <h4>Динамічний контент</h4>
-            <button class="demo-button" v-tooltip="dynamicTooltip" @click="updateDynamicTooltip">
+            <button v-tooltip="dynamicTooltip" class="demo-button" @click="updateDynamicTooltip">
               {{ dynamicTooltip || 'Клікни для зміни' }}
             </button>
           </div>
@@ -116,7 +141,7 @@
           <div class="demo-item">
             <h4>Умовний tooltip</h4>
             <label class="demo-checkbox">
-              <input type="checkbox" v-model="showConditionalTooltip" />
+              <input v-model="showConditionalTooltip" type="checkbox" />
               <span v-tooltip="showConditionalTooltip ? 'Tooltip активний!' : ''"> Показати tooltip </span>
             </label>
           </div>
@@ -158,15 +183,15 @@
         <div class="form-demo">
           <div class="form-group">
             <label v-tooltip="'Введіть ваше повне ім\'я'"> Ім'я користувача </label>
-            <input type="text" v-tooltip="'Мінімум 2 символи, максимум 50'" placeholder="Введіть ім'я" />
+            <input v-tooltip="'Мінімум 2 символи, максимум 50'" placeholder="Введіть ім'я" type="text" />
           </div>
 
           <div class="form-group">
             <label v-tooltip="'Пароль має містити мінімум 8 символів'"> Пароль </label>
             <input
-              type="password"
               v-tooltip="'Використовуйте літери, цифри та спеціальні символи'"
               placeholder="Введіть пароль"
+              type="password"
             />
           </div>
 
@@ -468,7 +493,7 @@ const getPlacementForIndex = (index) => {
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
   import { ref } from 'vue';
   // Реактивні дані для демонстрації
   const dynamicTooltip = ref('Початковий текст');

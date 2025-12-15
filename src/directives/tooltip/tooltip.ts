@@ -30,16 +30,11 @@ const createTooltip = (text: string, placement: TooltipPlacement): HTMLDivElemen
     opacity: '0',
     transition: 'opacity 0.2s ease, visibility 0.2s ease',
     maxWidth: '300px',
-    minWidth: 'max-content',
     wordWrap: 'break-word',
     whiteSpace: 'normal',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.2)',
+    // Видаляємо minWidth: 'max-content' - це може викликати overflow
   });
-
-  // Якщо текст короткий, залишаємо в одну лінію
-  if (text.length < 50) {
-    tooltip.style.whiteSpace = 'nowrap';
-  }
 
   // Стрілка для tooltip
   const arrow = document.createElement('div');
@@ -98,9 +93,19 @@ const createTooltip = (text: string, placement: TooltipPlacement): HTMLDivElemen
 // Функція для позиціонування tooltip
 const positionTooltip = (tooltip: HTMLDivElement, target: HTMLElement, placement: TooltipPlacement) => {
   const targetRect = target.getBoundingClientRect();
-  const tooltipRect = tooltip.getBoundingClientRect();
   const scrollX = window.pageXOffset || document.documentElement.scrollLeft;
   const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  const PADDING = 8;
+
+  // Обмежуємо максимальну ширину tooltip в залежності від viewport
+  const maxTooltipWidth = Math.min(300, viewportWidth - PADDING * 2);
+  tooltip.style.maxWidth = `${maxTooltipWidth}px`;
+
+  // Тепер отримуємо розміри після встановлення maxWidth
+  const tooltipRect = tooltip.getBoundingClientRect();
 
   let top = 0;
   let left = 0;
@@ -124,29 +129,27 @@ const positionTooltip = (tooltip: HTMLDivElement, target: HTMLElement, placement
       break;
   }
 
-  // Перевіряємо межі viewport і коригуємо позицію
-  const viewportWidth = window.innerWidth;
-  const viewportHeight = window.innerHeight;
-
-  // Горизонтальні межі
-  if (left < 8) {
-    left = 8;
-  } else if (left + tooltipRect.width > viewportWidth - 8) {
-    left = viewportWidth - tooltipRect.width - 8;
+  // Перевіряємо горизонтальні межі
+  if (left < PADDING) {
+    left = PADDING;
+  } else if (left + tooltipRect.width > viewportWidth - PADDING) {
+    left = viewportWidth - tooltipRect.width - PADDING;
   }
 
-  // Вертикальні межі
-  if (top < scrollY + 8) {
+  // Перевіряємо вертикальні межі
+  if (top < scrollY + PADDING) {
+    // Якщо tooltip зверху виходить за межі, показуємо знизу
     if (placement === 'top') {
       top = targetRect.bottom + scrollY + 8;
     } else {
-      top = scrollY + 8;
+      top = scrollY + PADDING;
     }
-  } else if (top + tooltipRect.height > scrollY + viewportHeight - 8) {
+  } else if (top + tooltipRect.height > scrollY + viewportHeight - PADDING) {
+    // Якщо tooltip знизу виходить за межі, показуємо зверху
     if (placement === 'bottom') {
       top = targetRect.top + scrollY - tooltipRect.height - 8;
     } else {
-      top = scrollY + viewportHeight - tooltipRect.height - 8;
+      top = scrollY + viewportHeight - tooltipRect.height - PADDING;
     }
   }
 
