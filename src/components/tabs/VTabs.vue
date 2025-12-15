@@ -41,14 +41,16 @@
   });
 
   const addTab = (tab: any) => {
+    if (tabs.value.some(t => t.name === tab.name)) return;
+
     tabs.value.push(tab);
+
     if (!currentValue.value) {
       currentValue.value = tab.name;
       visitedTabs.value.add(tab.name);
     }
-    nextTick(() => {
-      updateArrows();
-    });
+
+    nextTick(updateArrows);
   };
 
   const removeTab = (name: string) => {
