@@ -1,3 +1,10 @@
+## [1.13.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.19...v1.13.20) (2025-12-15)
+
+
+### Bug Fixes
+
+* first tab by default and rewrite component after switch ([a1b37b3](https://github.com/StepanKhomyn/voiptime-components/commit/a1b37b3ae3ac7ace09122d2eab7fa6d4f5d15936))
+
 ## [1.13.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.18...v1.13.19) (2025-12-15)
 
 
