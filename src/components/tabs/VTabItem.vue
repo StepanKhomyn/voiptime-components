@@ -42,7 +42,7 @@
       v-if="isRendered"
       v-show="isActive"
       class="vt-tabs__pane"
-      :key="props.name + '-' + context.currentValue.value"
+      :key="props.name"
     >
       <slot />
     </div>
