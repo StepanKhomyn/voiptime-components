@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, inject, onMounted, onBeforeUnmount } from 'vue';
+  import { computed, inject, onMounted, useSlots } from 'vue';
 
   const props = defineProps({
     name: { type: String, required: true },
@@ -10,16 +10,14 @@
   });
 
   const context = inject<any>('VTabsContext');
-
   if (!context) {
     throw new Error('VTabItem must be used inside VTabs');
   }
 
-  const isActive = computed(() => context.currentValue.value === props.name);
+  const slots = useSlots();
 
-  const isRendered = computed(() =>
-    context.visitedTabs.value.has(props.name)
-  );
+  const isActive = computed(() => context.currentValue.value === props.name);
+  const isRendered = computed(() => context.visitedTabs.value.has(props.name));
 
   onMounted(() => {
     context.addTab({
@@ -30,21 +28,16 @@
       icon: props.icon,
     });
   });
-
-  onBeforeUnmount(() => {
-    context.removeTab(props.name);
-  });
 </script>
 
 <template>
   <KeepAlive>
-    <div
+    <component
       v-if="isRendered"
       v-show="isActive"
-      class="vt-tabs__pane"
+      :is="slots.default?.()[0]"
       :key="props.name"
-    >
-      <slot />
-    </div>
+      class="vt-tabs__pane"
+    />
   </KeepAlive>
 </template>
