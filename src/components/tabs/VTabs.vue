@@ -23,7 +23,8 @@
     if (val) {
       visitedTabs.value.add(val);
     }
-  });
+  },
+    { immediate: true });
 
   watch(
     () => props.modelValue,
@@ -43,6 +44,7 @@
     tabs.value.push(tab);
     if (!currentValue.value) {
       currentValue.value = tab.name;
+      visitedTabs.value.add(tab.name);
     }
     nextTick(() => {
       updateArrows();
