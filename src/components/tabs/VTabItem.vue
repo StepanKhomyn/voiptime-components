@@ -37,14 +37,7 @@
 </script>
 
 <template>
-  <KeepAlive>
-    <div
-      v-if="isRendered"
-      v-show="isActive"
-      class="vt-tabs__pane"
-      :key="props.name"
-    >
-      <slot />
-    </div>
-  </KeepAlive>
+  <div v-if="isRendered" v-show="isActive" class="vt-tabs__pane">
+    <slot />
+  </div>
 </template>

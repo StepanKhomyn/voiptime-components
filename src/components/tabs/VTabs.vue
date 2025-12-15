@@ -20,12 +20,9 @@
   const visitedTabs = ref<Set<string>>(new Set());
 
   watch(currentValue, val => {
-    if (!tabs.value.find(t => t.name === val)) {
-      currentValue.value = tabs.value[0]?.name;
-      return;
+    if (val) {
+      visitedTabs.value.add(val);
     }
-
-    visitedTabs.value.add(val!);
   });
 
   watch(
@@ -43,16 +40,13 @@
   });
 
   const addTab = (tab: any) => {
-    if (tabs.value.some(t => t.name === tab.name)) return;
-
     tabs.value.push(tab);
-
     if (!currentValue.value) {
       currentValue.value = tab.name;
-      visitedTabs.value.add(tab.name);
     }
-
-    nextTick(updateArrows);
+    nextTick(() => {
+      updateArrows();
+    });
   };
 
   const removeTab = (name: string) => {
