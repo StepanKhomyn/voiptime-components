@@ -17,6 +17,10 @@
 
   const isActive = computed(() => context.currentValue.value === props.name);
 
+  const isRendered = computed(() =>
+    context.visitedTabs.value.has(props.name)
+  );
+
   onMounted(() => {
     context.addTab({
       name: props.name,
@@ -33,7 +37,14 @@
 </script>
 
 <template>
-  <div v-show="isActive" class="vt-tabs__pane">
-    <slot />
-  </div>
+  <KeepAlive>
+    <div
+      v-if="isRendered"
+      v-show="isActive"
+      class="vt-tabs__pane"
+      :key="props.name + '-' + context.currentValue.value"
+    >
+      <slot />
+    </div>
+  </KeepAlive>
 </template>
