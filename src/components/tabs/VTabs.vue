@@ -41,9 +41,16 @@
 
   const addTab = (tab: any) => {
     tabs.value.push(tab);
-    if (!currentValue.value) {
+
+    // якщо це активна таба — одразу відмічаємо як відвідану
+    if (
+      currentValue.value === tab.name ||
+      (!currentValue.value && tabs.value.length === 1)
+    ) {
       currentValue.value = tab.name;
+      visitedTabs.value.add(tab.name);
     }
+
     nextTick(() => {
       updateArrows();
     });
