@@ -17,11 +17,6 @@
 
   const isActive = computed(() => context.currentValue.value === props.name);
 
-  const isRendered = computed(() =>
-    context.currentValue.value === props.name ||
-    context.visitedTabs.value.has(props.name)
-  );
-
   onMounted(() => {
     context.addTab({
       name: props.name,
@@ -31,15 +26,14 @@
       icon: props.icon,
     });
   });
+
+  onBeforeUnmount(() => {
+    context.removeTab(props.name);
+  });
 </script>
 
 <template>
-  <div
-    v-if="isRendered"
-    v-show="isActive"
-    class="vt-tabs__pane"
-    :key="props.name"
-  >
+  <div v-show="isActive" class="vt-tabs__pane">
     <slot />
   </div>
 </template>
