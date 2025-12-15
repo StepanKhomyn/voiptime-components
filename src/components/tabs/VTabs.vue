@@ -17,6 +17,13 @@
   const scrollableRef = ref<HTMLElement | null>(null);
   const showLeftArrow = ref(false);
   const showRightArrow = ref(false);
+  const visitedTabs = ref<Set<string>>(new Set());
+
+  watch(currentValue, val => {
+    if (val) {
+      visitedTabs.value.add(val);
+    }
+  });
 
   watch(
     () => props.modelValue,
@@ -116,6 +123,7 @@
 
   provide('VTabsContext', {
     currentValue,
+    visitedTabs,
     addTab,
     removeTab,
     selectTab,

@@ -1,17 +1,14 @@
-<!-- VTabItem.vue - Спрощена версія -->
-<script lang="ts" setup>
-  import { computed, inject, onBeforeUnmount, onMounted, useSlots } from 'vue';
-  import type { VTabItemProps } from './types';
+<script setup lang="ts">
+  import { computed, inject, onMounted, onBeforeUnmount } from 'vue';
 
-  const props = withDefaults(defineProps<VTabItemProps>(), {
-    label: '',
-    disabled: false,
-    name: undefined,
-    closable: false,
-    icon: undefined,
+  const props = defineProps({
+    name: { type: String, required: true },
+    label: String,
+    disabled: Boolean,
+    closable: Boolean,
+    icon: String,
   });
 
-  const slots = useSlots();
   const context = inject<any>('VTabsContext');
 
   if (!context) {
@@ -20,14 +17,14 @@
 
   const isActive = computed(() => context.currentValue.value === props.name);
 
-  onMounted(() => {
-    if (!props.name) {
-      console.warn('⚠️ VTabItem requires a unique `name` prop.');
-    }
+  const isRendered = computed(() =>
+    context.visitedTabs.value.has(props.name)
+  );
 
+  onMounted(() => {
     context.addTab({
-      label: props.label,
       name: props.name,
+      label: props.label,
       disabled: props.disabled,
       closable: props.closable,
       icon: props.icon,
@@ -40,7 +37,9 @@
 </script>
 
 <template>
-  <div v-show="isActive" class="vt-tabs__pane">
-    <slot />
-  </div>
+  <KeepAlive>
+    <div v-if="isRendered" v-show="isActive" class="vt-tabs__pane">
+      <slot />
+    </div>
+  </KeepAlive>
 </template>
