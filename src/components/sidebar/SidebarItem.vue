@@ -75,7 +75,7 @@
     let top: number | string = rect.top;
     let bottom: string | number = 'auto';
 
-    const overflows = top + submenuHeight > viewportHeight - 50;
+    const overflows = top + submenuHeight > viewportHeight - 100;
 
     if (overflows) {
       // Якщо виходить за нижню межу — прижимаємо вниз
