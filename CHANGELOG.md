@@ -1,3 +1,10 @@
+## [1.13.34](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.33...v1.13.34) (2025-12-16)
+
+
+### Bug Fixes
+
+* dixed workers import from another file ([301931a](https://github.com/StepanKhomyn/voiptime-components/commit/301931a66918bbac457ce90528eccf7f0eff3543))
+
 ## [1.13.33](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.32...v1.13.33) (2025-12-16)
 
 
