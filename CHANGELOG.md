@@ -1,3 +1,10 @@
+## [1.13.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.27...v1.13.28) (2025-12-15)
+
+
+### Bug Fixes
+
+* fixed tooltip ([eb5b3df](https://github.com/StepanKhomyn/voiptime-components/commit/eb5b3df73783cc06f8d5a5a11c1f86a4d85c0f7b))
+
 ## [1.13.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.26...v1.13.27) (2025-12-15)
 
 
