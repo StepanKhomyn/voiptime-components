@@ -1,3 +1,10 @@
+## [1.13.31](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.30...v1.13.31) (2025-12-16)
+
+
+### Bug Fixes
+
+* refactored vupload to workers ([627f57a](https://github.com/StepanKhomyn/voiptime-components/commit/627f57a299938fc6b9eec2b5aa91e9cc750b9a66))
+
 ## [1.13.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.29...v1.13.30) (2025-12-16)
 
 
