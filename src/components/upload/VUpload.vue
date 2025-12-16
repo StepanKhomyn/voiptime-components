@@ -181,16 +181,18 @@
 
       // Парсинг файлу якщо потрібно
       if (props.parseFiles && FileParser.isDataFile(file)) {
-        // Етап 2: Парсинг (20-80%)
         processingStage.value = 'parsing';
-        await updateProgress(baseProgress + 40);
 
         try {
-          const parseResult = await FileParser.parseFile(file, props.maxRows, props.returnData);
+          // Callback для оновлення прогресу під час парсингу
+          const parseResult = await FileParser.parseFile(file, props.maxRows, props.returnData, progress => {
+            // Мапимо 0-90% парсингу на 20-90% загального прогресу
+            const mappedProgress = baseProgress + 20 + progress * 0.7;
+            processingProgress.value = Math.round(mappedProgress);
+          });
 
-          await updateProgress(baseProgress + 70);
+          await updateProgress(baseProgress + 90);
 
-          // Перевірка ліміту рядків
           if (props.maxRows && parseResult.rows > props.maxRows) {
             emit('rowsExceed', { file: uploadFile, rows: parseResult.rows, maxRows: props.maxRows });
           }
@@ -203,10 +205,7 @@
             file,
           });
         }
-
-        await updateProgress(baseProgress + 90);
       } else {
-        // Якщо парсинг не потрібен, одразу до 90%
         await updateProgress(baseProgress + 90);
       }
 
@@ -223,7 +222,6 @@
       emit('exceed', files.slice(remainingSlots));
     }
 
-    // Показуємо 100% перед закриттям
     await updateProgress(100, 100);
     await new Promise(resolve => setTimeout(resolve, 300));
 

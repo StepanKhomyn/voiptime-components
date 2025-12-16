@@ -106,11 +106,16 @@ export class FileParser {
     return ['csv', 'xls', 'xlsx'].includes(ext || '');
   }
 
-  static async parseFile(file: File, maxRows?: number, returnData = false): Promise<ParseResult> {
+  static async parseFile(
+    file: File,
+    maxRows?: number,
+    returnData = false,
+    onProgress?: (progress: number) => void // додаємо callback
+  ): Promise<ParseResult> {
     const ext = file.name.split('.').pop()?.toLowerCase();
 
     if (ext === 'csv') {
-      const result = await this.parseCSV(file, maxRows, returnData);
+      const result = await this.parseCSV(file, maxRows, returnData, onProgress);
       return {
         sheets: [{ ...result, name: 'CSV' }],
         ...result,
@@ -118,19 +123,27 @@ export class FileParser {
     }
 
     if (ext === 'xls' || ext === 'xlsx') {
-      return this.parseExcel(file, maxRows, returnData);
+      return this.parseExcel(file, maxRows, returnData, onProgress);
     }
 
     throw new Error('Unsupported file format');
   }
 
-  private static async parseCSV(file: File, maxRows?: number, returnData = false): Promise<SheetParseResult> {
+  private static async parseCSV(
+    file: File,
+    maxRows?: number,
+    returnData = false,
+    onProgress?: (progress: number) => void
+  ): Promise<SheetParseResult> {
     const text = await file.text();
+    onProgress?.(20); // 20% - файл прочитано
+
     const lines = text.split('\n').filter(l => l.trim());
     if (lines.length === 0) throw new Error('File is empty');
 
     const headers = this.parseCSVLine(lines[0]);
     const rows = lines.length - 1;
+    onProgress?.(40); // 40% - заголовки оброблено
 
     const result: SheetParseResult = {
       name: file.name,
@@ -141,17 +154,26 @@ export class FileParser {
     if (returnData) {
       const rowsToRead = maxRows ? Math.min(rows, maxRows) : rows;
       const data: any[] = [];
+      const chunkSize = 50; // обробляємо по 50 рядків за раз
 
       for (let i = 1; i <= rowsToRead; i++) {
         const values = this.parseCSVLine(lines[i]);
         const row: Record<string, string> = {};
         headers.forEach((header, idx) => (row[header] = values[idx] || ''));
         data.push(row);
+
+        // Кожні chunkSize рядків - даємо браузеру подихати + оновлюємо прогрес
+        if (i % chunkSize === 0) {
+          await new Promise(resolve => setTimeout(resolve, 0));
+          const progress = 40 + Math.floor((i / rowsToRead) * 50); // 40-90%
+          onProgress?.(progress);
+        }
       }
 
       result.data = data;
     }
 
+    onProgress?.(90); // 90% - дані оброблено
     return result;
   }
 
@@ -176,9 +198,19 @@ export class FileParser {
     return result;
   }
 
-  private static async parseExcel(file: File, maxRows?: number, returnData = false): Promise<ParseResult> {
+  private static async parseExcel(
+    file: File,
+    maxRows?: number,
+    returnData = false,
+    onProgress?: (progress: number) => void
+  ): Promise<ParseResult> {
     const arrayBuffer = await file.arrayBuffer();
+    onProgress?.(20); // 20% - файл прочитано
+
+    // XLSX.read - це найважча операція, даємо браузеру подихати
+    await new Promise(resolve => setTimeout(resolve, 0));
     const workbook = XLSX.read(arrayBuffer, { type: 'array' });
+    onProgress?.(50); // 50% - workbook створено
 
     const sheets: SheetParseResult[] = [];
 
@@ -186,7 +218,7 @@ export class FileParser {
       const worksheet = workbook.Sheets[sheetName];
       const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
 
-      const totalRows = range.e.r; // без заголовка
+      const totalRows = range.e.r;
       const headers: string[] = [];
 
       for (let c = range.s.c; c <= range.e.c; c++) {
@@ -203,17 +235,23 @@ export class FileParser {
 
       if (returnData) {
         const rowsToRead = maxRows ? Math.min(totalRows, maxRows) : totalRows;
+
+        // sheet_to_json - теж важка операція
+        await new Promise(resolve => setTimeout(resolve, 0));
         const json = XLSX.utils.sheet_to_json(worksheet, {
           range: 1,
           header: headers,
           defval: '',
         });
+        onProgress?.(80); // 80% - JSON конвертовано
 
         sheetResult.data = json.slice(0, rowsToRead);
       }
 
       sheets.push(sheetResult);
     }
+
+    onProgress?.(90); // 90% - всі sheets оброблено
 
     const first = sheets[0] || { rows: 0, columns: [] };
 
