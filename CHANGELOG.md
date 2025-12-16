@@ -1,3 +1,10 @@
+## [1.13.35](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.34...v1.13.35) (2025-12-16)
+
+
+### Bug Fixes
+
+* hide scroll in sidebar ([9986542](https://github.com/StepanKhomyn/voiptime-components/commit/9986542a7fce71453345bfe90d4d055865b57405))
+
 ## [1.13.34](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.33...v1.13.34) (2025-12-16)
 
 
