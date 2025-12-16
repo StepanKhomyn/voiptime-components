@@ -1,3 +1,5 @@
+import ParserWorker from '@/components/upload/parser.worker?worker&inline';
+
 // types.ts
 export interface UploadFile {
   id: string;
@@ -146,26 +148,26 @@ export class WorkerPool {
 
   private initWorker() {
     try {
-      // Створюємо worker з окремого файлу використовуючи правильний синтаксис для Vite
-      // Додаємо ?worker до шляху для Vite
-      const workerUrl = new URL('./parser.worker.ts', import.meta.url);
-      this.worker = new Worker(workerUrl, { type: 'module' });
+      if (typeof window === 'undefined') return;
 
-      this.worker.onmessage = (e: MessageEvent) => {
+      const worker = new ParserWorker();
+      this.worker = worker;
+
+      worker.onmessage = (e: MessageEvent) => {
         const { id, type, result, error } = e.data;
         const callbacks = this.resolveMap.get(id);
+        if (!callbacks) return;
 
-        if (callbacks) {
-          if (type === 'success') {
-            callbacks.resolve(result);
-          } else if (type === 'error') {
-            callbacks.reject(new Error(error));
-          }
-          this.resolveMap.delete(id);
+        if (type === 'success') {
+          callbacks.resolve(result);
+        } else if (type === 'error') {
+          callbacks.reject(new Error(error));
         }
+
+        this.resolveMap.delete(id);
       };
 
-      this.worker.onerror = error => {
+      worker.onerror = (error: any) => {
         console.error('Worker error:', error);
         this.resolveMap.forEach(({ reject }) => {
           reject(new Error('Worker error occurred'));
