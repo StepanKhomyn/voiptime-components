@@ -1,5 +1,4 @@
 // types.ts
-
 export interface UploadFile {
   id: string;
   file: File;
@@ -133,7 +132,7 @@ export class WorkerPool {
           returnData,
         },
         [arrayBuffer]
-      ); // Transferable object для швидкості
+      );
     });
   }
 
@@ -147,10 +146,10 @@ export class WorkerPool {
 
   private initWorker() {
     try {
-      // Створюємо worker з файлу parser.worker.ts
-      this.worker = new Worker(new URL('./parser.worker.ts', import.meta.url), {
-        type: 'module',
-      });
+      // Створюємо worker з окремого файлу використовуючи правильний синтаксис для Vite
+      // Додаємо ?worker до шляху для Vite
+      const workerUrl = new URL('./parser.worker.ts', import.meta.url);
+      this.worker = new Worker(workerUrl, { type: 'module' });
 
       this.worker.onmessage = (e: MessageEvent) => {
         const { id, type, result, error } = e.data;
@@ -201,7 +200,6 @@ export class FileParser {
       throw new Error('Unsupported file format');
     }
 
-    // Використовуємо worker pool для парсингу
     const workerPool = this.getWorkerPool();
     return workerPool.parseFile(file, maxRows, returnData);
   }
