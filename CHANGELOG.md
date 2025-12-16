@@ -1,3 +1,10 @@
+## [1.13.29](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.28...v1.13.29) (2025-12-16)
+
+
+### Bug Fixes
+
+* fixed vupload file parsing ([ef3f17f](https://github.com/StepanKhomyn/voiptime-components/commit/ef3f17f4e4ef1e232f4099834734820c15d4a070))
+
 ## [1.13.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.27...v1.13.28) (2025-12-15)
 
 
