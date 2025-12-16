@@ -1,3 +1,5 @@
+// types.ts
+
 export interface UploadFile {
   id: string;
   file: File;
@@ -98,49 +100,116 @@ export class FileValidator {
   }
 }
 
+// Клас для роботи з Worker Pool
+export class WorkerPool {
+  private worker: Worker | null = null;
+  private resolveMap = new Map<number, { resolve: (value: any) => void; reject: (error: any) => void }>();
+  private messageId = 0;
+
+  constructor() {
+    this.initWorker();
+  }
+
+  async parseFile(file: File, maxRows?: number, returnData = false): Promise<ParseResult> {
+    if (!this.worker) {
+      throw new Error('Worker not initialized');
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const id = this.messageId++;
+
+    return new Promise((resolve, reject) => {
+      this.resolveMap.set(id, { resolve, reject });
+
+      this.worker!.postMessage(
+        {
+          id,
+          type: 'parse',
+          file: {
+            name: file.name,
+            arrayBuffer,
+          },
+          maxRows,
+          returnData,
+        },
+        [arrayBuffer]
+      ); // Transferable object для швидкості
+    });
+  }
+
+  terminate() {
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
+    this.resolveMap.clear();
+  }
+
+  private initWorker() {
+    try {
+      // Створюємо worker з файлу parser.worker.ts
+      this.worker = new Worker(new URL('./parser.worker.ts', import.meta.url), {
+        type: 'module',
+      });
+
+      this.worker.onmessage = (e: MessageEvent) => {
+        const { id, type, result, error } = e.data;
+        const callbacks = this.resolveMap.get(id);
+
+        if (callbacks) {
+          if (type === 'success') {
+            callbacks.resolve(result);
+          } else if (type === 'error') {
+            callbacks.reject(new Error(error));
+          }
+          this.resolveMap.delete(id);
+        }
+      };
+
+      this.worker.onerror = error => {
+        console.error('Worker error:', error);
+        this.resolveMap.forEach(({ reject }) => {
+          reject(new Error('Worker error occurred'));
+        });
+        this.resolveMap.clear();
+      };
+    } catch (error) {
+      console.error('Failed to create worker:', error);
+    }
+  }
+}
+
 export class FileParser {
-  private static worker: Worker | null = null;
+  private static workerPool: WorkerPool | null = null;
+
+  static getWorkerPool(): WorkerPool {
+    if (!this.workerPool) {
+      this.workerPool = new WorkerPool();
+    }
+    return this.workerPool;
+  }
 
   static isDataFile(file: File): boolean {
     const ext = file.name.split('.').pop()?.toLowerCase();
     return ['csv', 'xls', 'xlsx'].includes(ext || '');
   }
 
-  static async parseFile(
-    file: File,
-    maxRows?: number,
-    returnData = false,
-    onProgress?: (progress: number) => void
-  ): Promise<ParseResult> {
-    return new Promise((resolve, reject) => {
-      // Створюємо worker
-      if (!this.worker) {
-        this.worker = new Worker(new URL('./parser.worker.ts', import.meta.url), {
-          type: 'module',
-        });
-      }
+  static async parseFile(file: File, maxRows?: number, returnData = false): Promise<ParseResult> {
+    const ext = file.name.split('.').pop()?.toLowerCase();
 
-      this.worker.onmessage = e => {
-        if (e.data.type === 'progress') {
-          onProgress?.(e.data.progress);
-        } else if (e.data.type === 'result') {
-          resolve(e.data.result);
-        } else if (e.data.type === 'error') {
-          reject(new Error(e.data.error));
-        }
-      };
+    if (!['csv', 'xls', 'xlsx'].includes(ext || '')) {
+      throw new Error('Unsupported file format');
+    }
 
-      this.worker.onerror = error => {
-        reject(error);
-      };
+    // Використовуємо worker pool для парсингу
+    const workerPool = this.getWorkerPool();
+    return workerPool.parseFile(file, maxRows, returnData);
+  }
 
-      // Відправляємо файл у worker
-      this.worker.postMessage({
-        type: 'parse',
-        file,
-        maxRows,
-        returnData,
-      });
-    });
+  static terminateWorkers() {
+    if (this.workerPool) {
+      this.workerPool.terminate();
+      this.workerPool = null;
+    }
   }
 }
