@@ -1,5 +1,6 @@
-import * as XLSX from 'xlsx';
+import ParserWorker from '@/components/upload/parser.worker?worker&inline';
 
+// types.ts
 export interface UploadFile {
   id: string;
   file: File;
@@ -100,7 +101,95 @@ export class FileValidator {
   }
 }
 
+// Клас для роботи з Worker Pool
+export class WorkerPool {
+  private worker: Worker | null = null;
+  private resolveMap = new Map<number, { resolve: (value: any) => void; reject: (error: any) => void }>();
+  private messageId = 0;
+
+  constructor() {
+    this.initWorker();
+  }
+
+  async parseFile(file: File, maxRows?: number, returnData = false): Promise<ParseResult> {
+    if (!this.worker) {
+      throw new Error('Worker not initialized');
+    }
+
+    const arrayBuffer = await file.arrayBuffer();
+    const id = this.messageId++;
+
+    return new Promise((resolve, reject) => {
+      this.resolveMap.set(id, { resolve, reject });
+
+      this.worker!.postMessage(
+        {
+          id,
+          type: 'parse',
+          file: {
+            name: file.name,
+            arrayBuffer,
+          },
+          maxRows,
+          returnData,
+        },
+        [arrayBuffer]
+      );
+    });
+  }
+
+  terminate() {
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+    }
+    this.resolveMap.clear();
+  }
+
+  private initWorker() {
+    try {
+      if (typeof window === 'undefined') return;
+
+      const worker = new ParserWorker();
+      this.worker = worker;
+
+      worker.onmessage = (e: MessageEvent) => {
+        const { id, type, result, error } = e.data;
+        const callbacks = this.resolveMap.get(id);
+        if (!callbacks) return;
+
+        if (type === 'success') {
+          callbacks.resolve(result);
+        } else if (type === 'error') {
+          callbacks.reject(new Error(error));
+        }
+
+        this.resolveMap.delete(id);
+      };
+
+      worker.onerror = (error: any) => {
+        console.error('Worker error:', error);
+        this.resolveMap.forEach(({ reject }) => {
+          reject(new Error('Worker error occurred'));
+        });
+        this.resolveMap.clear();
+      };
+    } catch (error) {
+      console.error('Failed to create worker:', error);
+    }
+  }
+}
+
 export class FileParser {
+  private static workerPool: WorkerPool | null = null;
+
+  static getWorkerPool(): WorkerPool {
+    if (!this.workerPool) {
+      this.workerPool = new WorkerPool();
+    }
+    return this.workerPool;
+  }
+
   static isDataFile(file: File): boolean {
     const ext = file.name.split('.').pop()?.toLowerCase();
     return ['csv', 'xls', 'xlsx'].includes(ext || '');
@@ -109,119 +198,18 @@ export class FileParser {
   static async parseFile(file: File, maxRows?: number, returnData = false): Promise<ParseResult> {
     const ext = file.name.split('.').pop()?.toLowerCase();
 
-    if (ext === 'csv') {
-      const result = await this.parseCSV(file, maxRows, returnData);
-      return {
-        sheets: [{ ...result, name: 'CSV' }],
-        ...result,
-      };
+    if (!['csv', 'xls', 'xlsx'].includes(ext || '')) {
+      throw new Error('Unsupported file format');
     }
 
-    if (ext === 'xls' || ext === 'xlsx') {
-      return this.parseExcel(file, maxRows, returnData);
-    }
-
-    throw new Error('Unsupported file format');
+    const workerPool = this.getWorkerPool();
+    return workerPool.parseFile(file, maxRows, returnData);
   }
 
-  private static async parseCSV(file: File, maxRows?: number, returnData = false): Promise<SheetParseResult> {
-    const text = await file.text();
-    const lines = text.split('\n').filter(l => l.trim());
-    if (lines.length === 0) throw new Error('File is empty');
-
-    const headers = this.parseCSVLine(lines[0]);
-    const rows = lines.length - 1;
-
-    const result: SheetParseResult = {
-      name: file.name,
-      rows,
-      columns: headers,
-    };
-
-    if (returnData) {
-      const rowsToRead = maxRows ? Math.min(rows, maxRows) : rows;
-      const data: any[] = [];
-
-      for (let i = 1; i <= rowsToRead; i++) {
-        const values = this.parseCSVLine(lines[i]);
-        const row: Record<string, string> = {};
-        headers.forEach((header, idx) => (row[header] = values[idx] || ''));
-        data.push(row);
-      }
-
-      result.data = data;
+  static terminateWorkers() {
+    if (this.workerPool) {
+      this.workerPool.terminate();
+      this.workerPool = null;
     }
-
-    return result;
-  }
-
-  private static parseCSVLine(line: string): string[] {
-    const result: string[] = [];
-    let current = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < line.length; i++) {
-      const c = line[i];
-      if (c === '"') {
-        inQuotes = !inQuotes;
-      } else if (c === ',' && !inQuotes) {
-        result.push(current.trim());
-        current = '';
-      } else {
-        current += c;
-      }
-    }
-
-    result.push(current.trim());
-    return result;
-  }
-
-  private static async parseExcel(file: File, maxRows?: number, returnData = false): Promise<ParseResult> {
-    const arrayBuffer = await file.arrayBuffer();
-    const workbook = XLSX.read(arrayBuffer, { type: 'array' });
-
-    const sheets: SheetParseResult[] = [];
-
-    for (const sheetName of workbook.SheetNames) {
-      const worksheet = workbook.Sheets[sheetName];
-      const range = XLSX.utils.decode_range(worksheet['!ref'] || 'A1');
-
-      const totalRows = range.e.r; // без заголовка
-      const headers: string[] = [];
-
-      for (let c = range.s.c; c <= range.e.c; c++) {
-        const addr = XLSX.utils.encode_cell({ r: 0, c });
-        const cell = worksheet[addr];
-        headers.push(cell ? String(cell.v) : `Column${c + 1}`);
-      }
-
-      const sheetResult: SheetParseResult = {
-        name: sheetName,
-        rows: totalRows,
-        columns: headers,
-      };
-
-      if (returnData) {
-        const rowsToRead = maxRows ? Math.min(totalRows, maxRows) : totalRows;
-        const json = XLSX.utils.sheet_to_json(worksheet, {
-          range: 1,
-          header: headers,
-          defval: '',
-        });
-
-        sheetResult.data = json.slice(0, rowsToRead);
-      }
-
-      sheets.push(sheetResult);
-    }
-
-    const first = sheets[0] || { rows: 0, columns: [] };
-
-    return {
-      sheets,
-      rows: first.rows,
-      columns: first.columns,
-      data: first.data,
-    };
   }
 }

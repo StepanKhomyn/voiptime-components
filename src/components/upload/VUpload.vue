@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, ref } from 'vue';
+  import { computed, onUnmounted, ref } from 'vue';
   import type { UploadError, UploadFile, VUploadEmits, VUploadProps } from './types';
   import { FileParser, FileValidator } from './types';
   import VButton from '@/components/button/VButton.vue';
@@ -181,16 +181,25 @@
 
       // Парсинг файлу якщо потрібно
       if (props.parseFiles && FileParser.isDataFile(file)) {
-        // Етап 2: Парсинг (20-80%)
         processingStage.value = 'parsing';
         await updateProgress(baseProgress + 40);
 
         try {
+          // Даємо браузеру "подихати" перед важкою операцією
+          await new Promise(resolve => setTimeout(resolve, 50));
+
+          // Симулюємо прогрес під час парсингу
+          const progressInterval = setInterval(() => {
+            if (processingProgress.value < baseProgress + 75) {
+              processingProgress.value += 2;
+            }
+          }, 100);
+
           const parseResult = await FileParser.parseFile(file, props.maxRows, props.returnData);
 
+          clearInterval(progressInterval);
           await updateProgress(baseProgress + 70);
 
-          // Перевірка ліміту рядків
           if (props.maxRows && parseResult.rows > props.maxRows) {
             emit('rowsExceed', { file: uploadFile, rows: parseResult.rows, maxRows: props.maxRows });
           }
@@ -263,6 +272,11 @@
     if (isDisabled.value || !canAddMoreFiles.value) return;
     fileInputRef.value?.click();
   };
+
+  // Cleanup при знищенні компонента
+  onUnmounted(() => {
+    FileParser.terminateWorkers();
+  });
 </script>
 
 <template>

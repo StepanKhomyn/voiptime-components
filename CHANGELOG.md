@@ -1,3 +1,45 @@
+## [1.13.34](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.33...v1.13.34) (2025-12-16)
+
+
+### Bug Fixes
+
+* dixed workers import from another file ([301931a](https://github.com/StepanKhomyn/voiptime-components/commit/301931a66918bbac457ce90528eccf7f0eff3543))
+
+## [1.13.33](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.32...v1.13.33) (2025-12-16)
+
+
+### Bug Fixes
+
+* vupload workers ([005d6da](https://github.com/StepanKhomyn/voiptime-components/commit/005d6da0e266bfe100ab92b6ff4b8e58410c7526))
+
+## [1.13.32](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.31...v1.13.32) (2025-12-16)
+
+
+### Bug Fixes
+
+* fixed vupload workers ([d3f775d](https://github.com/StepanKhomyn/voiptime-components/commit/d3f775d0d815f271d6660bb2336e84a711590cee))
+
+## [1.13.31](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.30...v1.13.31) (2025-12-16)
+
+
+### Bug Fixes
+
+* refactored vupload to workers ([627f57a](https://github.com/StepanKhomyn/voiptime-components/commit/627f57a299938fc6b9eec2b5aa91e9cc750b9a66))
+
+## [1.13.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.29...v1.13.30) (2025-12-16)
+
+
+### Bug Fixes
+
+* vuploader fixed parse file timeout ([af2fe6e](https://github.com/StepanKhomyn/voiptime-components/commit/af2fe6e45da647da95ad60f833cb99dd34ba11fa))
+
+## [1.13.29](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.28...v1.13.29) (2025-12-16)
+
+
+### Bug Fixes
+
+* fixed vupload file parsing ([ef3f17f](https://github.com/StepanKhomyn/voiptime-components/commit/ef3f17f4e4ef1e232f4099834734820c15d4a070))
+
 ## [1.13.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.27...v1.13.28) (2025-12-15)
 
 
