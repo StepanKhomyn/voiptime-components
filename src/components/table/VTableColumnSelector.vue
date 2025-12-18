@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, onMounted, ref } from 'vue';
   import type { VTableColumnGroup, VTableColumnProps } from '@/components/table/types';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -322,21 +322,21 @@
           :key="col.prop"
           :class="getItemClasses(index)"
           :draggable="canDragColumn(col)"
-          @dragstart="handleDragStart($event, index)"
-          @dragover="handleDragOver($event, index)"
-          @dragleave="handleDragLeave"
-          @drop="handleDrop($event, index)"
           @dragend="handleDragEnd"
+          @dragleave="handleDragLeave"
+          @dragover="handleDragOver($event, index)"
+          @dragstart="handleDragStart($event, index)"
+          @drop="handleDrop($event, index)"
         >
           <VIcon
+            :class="{ 'vt-columns-selector__panel-item-icon--draggable': canDragColumn(col) }"
             :name="canDragColumn(col) ? 'columnsMove' : 'freeze'"
             class="vt-columns-selector__panel-item-icon"
-            :class="{ 'vt-columns-selector__panel-item-icon--draggable': canDragColumn(col) }"
           />
           <VCheckbox
-            :label="col.label"
             :checked="true"
             :disabled="isPinned(col)"
+            :label="col.label"
             @change="checked => handleColumnToggle(col, checked)"
             @click.stop
           />
@@ -349,9 +349,9 @@
         <div v-for="group in regularGroups" :key="group.name" class="vt-columns-selector__group">
           <div class="vt-columns-selector__group-header" @click="toggleGroup(group.name)">
             <VCheckbox
-              :label="group.label"
               :checked="groupStatuses[group.name]?.checked || false"
               :indeterminate="groupStatuses[group.name]?.indeterminate || false"
+              :label="group.label"
               @change="checked => handleGroupToggle(group, checked)"
               @click.stop
             />
@@ -361,9 +361,9 @@
           <div v-if="expandedGroups.has(group.name)" class="vt-columns-selector__group-columns">
             <div v-for="col in group.columns" :key="col.prop" class="vt-columns-selector__group-column">
               <VCheckbox
-                :label="col.label"
                 :checked="isColumnSelected(col)"
                 :disabled="!canToggleColumn(col)"
+                :label="col.label"
                 @change="checked => handleColumnToggle(col, checked)"
               />
               <span v-if="!canToggleColumn(col)" class="vt-columns-selector__pinned-note"> (закріплена) </span>
@@ -376,7 +376,7 @@
     <!-- Кнопки -->
     <div class="vt-modal__content-button">
       <VButton @click="handleCancel">Скасувати</VButton>
-      <VButton type="primary" @click="handleSave">Зберегти</VButton>
+      <VButton icon="save" type="primary" @click="handleSave">Зберегти</VButton>
     </div>
   </div>
 </template>
