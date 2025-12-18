@@ -1,3 +1,10 @@
+## [1.13.37](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.36...v1.13.37) (2025-12-18)
+
+
+### Bug Fixes
+
+* demo collapse ([3475771](https://github.com/StepanKhomyn/voiptime-components/commit/34757711859f1db6bbde7231486a61e8010405ec))
+
 ## [1.13.36](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.35...v1.13.36) (2025-12-18)
 
 
