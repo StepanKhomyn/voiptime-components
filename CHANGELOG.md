@@ -1,3 +1,11 @@
+## [1.13.36](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.35...v1.13.36) (2025-12-18)
+
+
+### Bug Fixes
+
+* demo collapse ([86f4510](https://github.com/StepanKhomyn/voiptime-components/commit/86f4510b9bc0f07284381372224ff7b46a6aa996))
+* make manage column pined right ([fc729e6](https://github.com/StepanKhomyn/voiptime-components/commit/fc729e6acef6de0b40e233c1c380875f0d8b6c94))
+
 ## [1.13.35](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.34...v1.13.35) (2025-12-16)
 
 
