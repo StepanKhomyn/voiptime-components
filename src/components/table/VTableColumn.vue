@@ -32,7 +32,7 @@
     maxWidth: props.maxWidth,
     sortable: props.sortable,
     pinnedLeft: props.pinnedLeft,
-    pinnedRight: props.pinnedRight,
+    pinnedRight: props.pinnedRight || props.manage,
     actionColumn: props.actionColumn,
     manage: props.manage,
     showOverflowTooltip: props.showOverflowTooltip,
