@@ -23,7 +23,7 @@
           </div>
           <div
             >Consistent within interface: all elements should be consistent, such as: design style, icons and texts,
-            position of elements, etc
+            position of elements, etc.
           </div>
         </VCollapseItem>
 
