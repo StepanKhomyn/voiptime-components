@@ -16,8 +16,8 @@ import ListBulletIcon from './actions/ListBulletIcon.vue';
 import LockIcon from './actions/LockIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
+import PromptIcon from './actions/PromptIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
@@ -64,6 +64,15 @@ import ChatOutIcon from './chat/ChatOutIcon.vue';
 import ChatRemoveIcon from './chat/ChatRemoveIcon.vue';
 import ChatStarIcon from './chat/ChatStarIcon.vue';
 import ChatTagIcon from './chat/ChatTagIcon.vue';
+import FacebookEChatIcon from './chat/FacebookEChatIcon.vue';
+import FacebookIcon from './chat/FacebookIcon.vue';
+import InstagramIcon from './chat/InstagramIcon.vue';
+import TelegramEChatIcon from './chat/TelegramEChatIcon.vue';
+import TelegramIcon from './chat/TelegramIcon.vue';
+import ViberEChatIcon from './chat/ViberEChatIcon.vue';
+import ViberIcon from './chat/ViberIcon.vue';
+import WhatsUpIcon from './chat/WhatsUpIcon.vue';
+import WidgetIcon from './chat/WidgetIcon.vue';
 import ClientActivityIcon from './client/ClientActivityIcon.vue';
 import ClientCommentIcon from './client/ClientCommentIcon.vue';
 import ClientContactsIcon from './client/ClientContactsIcon.vue';
@@ -115,6 +124,7 @@ import MinusIcon from './others/MinusIcon.vue';
 import NodeTreeIcon from './others/NodeTreeIcon.vue';
 import NotificationIcon from './others/NotificationIcon.vue';
 import NotificationReadIcon from './others/NotificationReadIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
@@ -130,7 +140,6 @@ import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -150,8 +159,8 @@ import CrmIcon from './sidebar/CrmIcon.vue';
 import DashboardIcon from './sidebar/DashboardIcon.vue';
 import GroupIcon from './sidebar/GroupIcon.vue';
 import HomeIcon from './sidebar/HomeIcon.vue';
-import ITRIcon from './sidebar/ITRIcon.vue';
 import IntegrationIcon from './sidebar/IntegrationIcon.vue';
+import ITRIcon from './sidebar/ITRIcon.vue';
 import Ivr2Icon from './sidebar/Ivr2Icon.vue';
 import PbxIcon from './sidebar/PbxIcon.vue';
 import ScenarioIcon from './sidebar/ScenarioIcon.vue';
@@ -190,8 +199,8 @@ export const icons = {
   lock: LockIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompt: PromptIcon,
   prompter: PrompterIcon,
+  prompt: PromptIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   star: StarIcon,
@@ -244,6 +253,15 @@ export const icons = {
   chatRemove: ChatRemoveIcon,
   chatStar: ChatStarIcon,
   chatTag: ChatTagIcon,
+  facebookEChat: FacebookEChatIcon,
+  facebook: FacebookIcon,
+  instagram: InstagramIcon,
+  telegramEChat: TelegramEChatIcon,
+  telegram: TelegramIcon,
+  viberEChat: ViberEChatIcon,
+  viber: ViberIcon,
+  whatsUp: WhatsUpIcon,
+  widget: WidgetIcon,
 
   // client icons
   clientActivity: ClientActivityIcon,
@@ -307,6 +325,7 @@ export const icons = {
   nodeTree: NodeTreeIcon,
   notification: NotificationIcon,
   notificationRead: NotificationReadIcon,
+  operator: operatorIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
@@ -322,7 +341,6 @@ export const icons = {
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
   windowStart: WindowStartIcon,
-  operator: operatorIcon,
 
   // player icons
   pause: PauseIcon,
@@ -350,8 +368,8 @@ export const icons = {
   dashboard: DashboardIcon,
   group: GroupIcon,
   home: HomeIcon,
-  iTR: ITRIcon,
   integration: IntegrationIcon,
+  iTR: ITRIcon,
   ivr2: Ivr2Icon,
   pbx: PbxIcon,
   scenario: ScenarioIcon,
