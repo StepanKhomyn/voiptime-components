@@ -1,3 +1,10 @@
+## [1.13.45](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.44...v1.13.45) (2025-12-22)
+
+
+### Bug Fixes
+
+* fixed collapsed tags in myltyselect ([914c89f](https://github.com/StepanKhomyn/voiptime-components/commit/914c89f97a239c7947d53ef6684147d88523b20e))
+
 ## [1.13.44](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.43...v1.13.44) (2025-12-22)
 
 
