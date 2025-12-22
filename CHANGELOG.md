@@ -1,3 +1,10 @@
+## [1.13.44](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.43...v1.13.44) (2025-12-22)
+
+
+### Bug Fixes
+
+* add chats icons ([87f813b](https://github.com/StepanKhomyn/voiptime-components/commit/87f813b8622a6dd3756fcb53a4f9a40ded29e3a8))
+
 ## [1.13.43](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.42...v1.13.43) (2025-12-22)
 
 
