@@ -105,7 +105,7 @@
 
   // Ініціалізуємо drag & drop composable
   const dragComposable = props.rowDraggable ? useRowDrag(() => sortedData.value, emit) : null;
-  const SELECTION_COLUMN_WIDTH = 50;
+  const SELECTION_COLUMN_WIDTH = 40;
   const DRAG_HANDLE_WIDTH = 40;
 
   const getSelectionColumnStyle = () => {

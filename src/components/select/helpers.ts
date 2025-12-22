@@ -136,23 +136,35 @@ export function calculateVisibleTagsCount(
 ): number {
   if (!container || !tagElements.length) return totalCount;
 
-  const containerWidth = container.offsetWidth;
-  const reservedSpace = 100; // Простір для кнопки "+N"
+  const containerWidth = container.offsetWidth - 80;
   let usedWidth = 0;
   let visibleCount = 0;
-
+  // Спочатку рахуємо скільки тегів влізе
   for (let i = 0; i < tagElements.length && i < totalCount; i++) {
-    const tagWidth = tagElements[i]?.offsetWidth || 0;
+    const tag = tagElements[i];
+    if (!tag) continue;
+    const tagWidth = tag.offsetWidth;
+    const totalTagWidth = tagWidth + 4;
 
-    if (usedWidth + tagWidth + reservedSpace <= containerWidth) {
-      usedWidth += tagWidth;
+    if (usedWidth + totalTagWidth <= containerWidth) {
+      usedWidth += totalTagWidth;
       visibleCount++;
     } else {
       break;
     }
   }
 
-  return Math.max(1, visibleCount);
+  // Якщо не всі теги влізли, віднімаємо один для кнопки "+N"
+  if (visibleCount < totalCount) {
+    const collapsedButtonWidth = 50; // Приблизна ширина "+N"
+
+    // Перевіряємо чи є місце для кнопки
+    if (usedWidth + collapsedButtonWidth > containerWidth && visibleCount > 1) {
+      visibleCount = Math.max(1, visibleCount - 1);
+    }
+  }
+
+  return visibleCount;
 }
 
 /**

@@ -163,6 +163,15 @@
     flex: 1;
     overflow: hidden;
     align-items: center;
+
+    &--hidden {
+      position: absolute;
+      visibility: hidden;
+      pointer-events: none;
+      height: 0;
+      overflow: hidden;
+      white-space: nowrap;
+    }
   }
 
   &__tag {

@@ -59,6 +59,7 @@
   const dropdownRef = ref<HTMLElement>();
   const containerRef = ref<HTMLElement>();
   const tagRefs = ref<HTMLElement[]>([]);
+  const measureTagRefs = ref<HTMLElement[]>([]);
   const scrollContainerRef = ref<HTMLElement>();
   const filterInputRef = ref<InstanceType<typeof VInput>>();
 
@@ -353,7 +354,9 @@
       return selectedOptions.value;
     }
 
-    return selectedOptions.value.slice(0, state.visibleCount.value);
+    // Завжди показуємо мінімум 1 тег, максимум - скільки є
+    const count = Math.max(1, Math.min(state.visibleCount.value || 1, selectedOptions.value.length));
+    return selectedOptions.value.slice(0, count);
   });
 
   const displayText = computed(() => {
@@ -587,17 +590,17 @@
   };
 
   const calcVisibleCount = () => {
-    if (!props.collapsedTags || !containerRef.value || selectedOptions.value.length === 0) {
+    if (!props.collapsedTags) {
       state.visibleCount.value = selectedOptions.value.length;
       return;
     }
 
     nextTick(() => {
-      if (!containerRef.value) return;
+      if (!containerRef.value || measureTagRefs.value.length === 0) return;
 
-      const count = calculateVisibleTagsCount(containerRef.value, tagRefs.value, selectedOptions.value.length);
+      const count = calculateVisibleTagsCount(containerRef.value, measureTagRefs.value, selectedOptions.value.length);
 
-      state.visibleCount.value = count;
+      state.visibleCount.value = Math.max(1, count);
     });
   };
 
@@ -706,16 +709,24 @@
   watch(
     selectedOptions,
     () => {
-      calcVisibleCount();
+      if (props.collapsedTags) {
+        // Скидаємо refs перед новим рендером - це критично!
+        tagRefs.value = [];
+        nextTick(() => {
+          calcVisibleCount();
+        });
+      }
     },
-    { deep: true }
+    { deep: true, immediate: true } // Додаємо immediate
   );
 
   watch(
     () => containerRef.value,
     () => {
-      if (containerRef.value) {
-        calcVisibleCount();
+      if (containerRef.value && props.collapsedTags) {
+        nextTick(() => {
+          calcVisibleCount();
+        });
       }
     }
   );
@@ -764,12 +775,43 @@
       validation.validate();
     }
 
-    nextTick(() => {
-      calcVisibleCount();
+    // Початковий розрахунок для collapsed tags
+    if (props.collapsedTags) {
+      nextTick(() => {
+        calcVisibleCount();
+      });
+    }
+
+    // Використовуємо ResizeObserver замість window.resize
+    const resizeObserver = new ResizeObserver(() => {
+      if (props.collapsedTags && containerRef.value) {
+        calcVisibleCount();
+      }
     });
 
-    window.addEventListener('resize', calcVisibleCount);
+    if (containerRef.value) {
+      resizeObserver.observe(containerRef.value);
+    }
+
+    // Спостерігаємо за змінами containerRef
+    watch(
+      () => containerRef.value,
+      (newContainer, oldContainer) => {
+        if (oldContainer) {
+          resizeObserver.unobserve(oldContainer);
+        }
+        if (newContainer) {
+          resizeObserver.observe(newContainer);
+        }
+      }
+    );
+
     document.addEventListener('click', handleClickOutside);
+
+    // Cleanup в onUnmounted
+    onUnmounted(() => {
+      resizeObserver.disconnect();
+    });
   });
 
   onUnmounted(() => {
@@ -809,8 +851,12 @@
           <!-- Visible tags -->
           <div
             v-for="(option, index) in visibleTags"
-            :key="`tag-${typeof option.value === 'object' ? JSON.stringify(option.value) : option.value}-${index}`"
-            :ref="el => el && (tagRefs[index] = el as HTMLElement)"
+            :key="`tag-${getOptionKey(option.value)}-${index}`"
+            :ref="
+              el => {
+                if (el) tagRefs[index] = el as HTMLElement;
+              }
+            "
             class="vt-select__tag"
           >
             <span class="vt-select__tag-text">{{ option.label }}</span>
@@ -830,8 +876,22 @@
           >
             <span class="vt-select__tag-text">+{{ collapsedCount }}</span>
           </div>
-        </div>
 
+          <div ref="measureContainer" class="vt-select__tags vt-select__tags--hidden">
+            <div
+              v-for="(option, index) in selectedOptions"
+              :key="'measure-' + getOptionKey(option.value)"
+              :ref="
+                el => {
+                  if (el) measureTagRefs[index] = el as HTMLElement;
+                }
+              "
+              class="vt-select__tag"
+            >
+              {{ option.label }}
+            </div>
+          </div>
+        </div>
         <!-- Single select display -->
         <span v-else-if="!multiple && displayText" class="vt-select__display-text">
           <slot v-if="$slots.selected && selectedOptions[0]" :option="selectedOptions[0]" name="selected" />
