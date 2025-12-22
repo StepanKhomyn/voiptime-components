@@ -1,3 +1,11 @@
+## [1.13.40](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.39...v1.13.40) (2025-12-22)
+
+
+### Bug Fixes
+
+* add possibility to force render ([9c72890](https://github.com/StepanKhomyn/voiptime-components/commit/9c72890f4e22c30b1c21efb3fbe62f9980028fb2))
+* add possibility to force render ([6d82c78](https://github.com/StepanKhomyn/voiptime-components/commit/6d82c787456ea3dae5461c90b76e89aeac661c42))
+
 ## [1.13.39](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.38...v1.13.39) (2025-12-18)
 
 
