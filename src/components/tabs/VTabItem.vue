@@ -7,6 +7,10 @@
     disabled: Boolean,
     closable: Boolean,
     icon: String,
+    forceRender: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const context = inject<any>('VTabsContext');
@@ -15,11 +19,16 @@
     throw new Error('VTabItem must be used inside VTabs');
   }
 
+  const renderKey = ref(0);
+
   const isActive = computed(() => context.currentValue.value === props.name);
 
-  const isRendered = computed(() =>
-    context.visitedTabs.value.has(props.name)
-  );
+  const isRendered = computed(() => {
+    if (props.forceRender) {
+      return isActive.value; // рендеримо тільки коли активна
+    }
+    return context.visitedTabs.value.has(props.name);
+  });
 
   onMounted(() => {
     context.addTab({
@@ -34,10 +43,16 @@
   onBeforeUnmount(() => {
     context.removeTab(props.name);
   });
+
+  watch(isActive, val => {
+    if (val && props.forceRender) {
+      renderKey.value++;
+    }
+  });
 </script>
 
 <template>
-  <div v-if="isRendered" v-show="isActive" class="vt-tabs__pane">
+  <div v-if="isRendered" v-show="isActive" :key="renderKey" class="vt-tabs__pane">
     <slot />
   </div>
 </template>
