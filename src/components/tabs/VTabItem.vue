@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { computed, inject, onMounted, onBeforeUnmount } from 'vue';
+  import { computed, inject, onMounted, onBeforeUnmount, ref, watch } from 'vue';
 
   const props = defineProps({
     name: { type: String, required: true },
@@ -44,7 +44,7 @@
     context.removeTab(props.name);
   });
 
-  watch(isActive, val => {
+  watch(isActive, (val: boolean) => {
     if (val && props.forceRender) {
       renderKey.value++;
     }
