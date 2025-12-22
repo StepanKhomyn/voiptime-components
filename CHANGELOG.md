@@ -1,3 +1,10 @@
+## [1.13.41](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.40...v1.13.41) (2025-12-22)
+
+
+### Bug Fixes
+
+* add pading bottom to select-options ([a35f220](https://github.com/StepanKhomyn/voiptime-components/commit/a35f2209574baeb403fb899f14ed4b6a5899330b))
+
 ## [1.13.40](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.39...v1.13.40) (2025-12-22)
 
 
