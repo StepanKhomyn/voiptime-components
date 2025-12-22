@@ -1,3 +1,31 @@
+## [1.13.44](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.43...v1.13.44) (2025-12-22)
+
+
+### Bug Fixes
+
+* add chats icons ([87f813b](https://github.com/StepanKhomyn/voiptime-components/commit/87f813b8622a6dd3756fcb53a4f9a40ded29e3a8))
+
+## [1.13.43](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.42...v1.13.43) (2025-12-22)
+
+
+### Bug Fixes
+
+* sidebar fixes ([bcdc63b](https://github.com/StepanKhomyn/voiptime-components/commit/bcdc63b35389e2d67b2bb2084e80b75a88a78aa9))
+
+## [1.13.42](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.41...v1.13.42) (2025-12-22)
+
+
+### Bug Fixes
+
+* fix tabs styles ([7175c98](https://github.com/StepanKhomyn/voiptime-components/commit/7175c98bf0794007fcd2c0f283d0b0e2f47fa5fc))
+
+## [1.13.41](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.40...v1.13.41) (2025-12-22)
+
+
+### Bug Fixes
+
+* add pading bottom to select-options ([a35f220](https://github.com/StepanKhomyn/voiptime-components/commit/a35f2209574baeb403fb899f14ed4b6a5899330b))
+
 ## [1.13.40](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.39...v1.13.40) (2025-12-22)
 
 

@@ -18,21 +18,19 @@
 
   &__scrollable {
     flex: 1;
-    overflow-x: auto;
-    overflow-y: hidden;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
 
-    // Приховуємо скролбар
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
 
     &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Opera */
+      display: none !important;
     }
   }
 
   &__items {
     display: flex;
-    gap: var(--vt-gap-lg);
     min-width: min-content;
   }
 
@@ -76,7 +74,7 @@
 
   &__nav-item {
     @include vt-typography('vt-tabs');
-    padding: 10px 20px;
+    padding: 10px;
     cursor: pointer;
     position: relative;
     color: var(--color-gray-4);
