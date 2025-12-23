@@ -1,3 +1,10 @@
+## [1.13.46](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.45...v1.13.46) (2025-12-23)
+
+
+### Bug Fixes
+
+* fixed manage column ([cc274b7](https://github.com/StepanKhomyn/voiptime-components/commit/cc274b726cb89ea750dafaa35d995a80fef68354))
+
 ## [1.13.45](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.44...v1.13.45) (2025-12-22)
 
 
