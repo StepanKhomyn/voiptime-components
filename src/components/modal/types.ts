@@ -27,7 +27,7 @@ export interface VModalConfig {
   title?: string;
   content?: string;
   component?: any;
-  props?: Record<string, any>;
+  props?: Record<any, any>;
   size?: VModalSize;
   showCloseButton?: boolean;
   closeOnBackdropClick?: boolean;
