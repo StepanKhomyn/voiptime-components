@@ -1,3 +1,10 @@
+## [1.13.47](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.46...v1.13.47) (2025-12-29)
+
+
+### Bug Fixes
+
+* modal type ([e32333e](https://github.com/StepanKhomyn/voiptime-components/commit/e32333e88d60a0ad63525765e6d4a1bfe42d6636))
+
 ## [1.13.46](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.45...v1.13.46) (2025-12-23)
 
 
