@@ -18,7 +18,6 @@
     compareValues,
     createCollapsedTooltip,
     getEmptyValue,
-    getSelectedOptions,
     handleOptionSelection,
     isOptionSelected,
     removeTagFromValue,
@@ -78,7 +77,9 @@
   const optionSlots = ref<Map<any, any>>(new Map());
 
   const getOptionKey = (value: any): string => {
-    if (props.valueKey && typeof value === 'object' && value !== null) {
+    if (value === null || value === undefined) return String(value);
+
+    if (props.valueKey && typeof value === 'object') {
       return String(value[props.valueKey]);
     }
     return typeof value === 'object' ? JSON.stringify(value) : String(value);
@@ -308,44 +309,56 @@
   const isMultiple = computed(() => props.multiple);
 
   const selectedOptions = computed((): VtSelectOption[] => {
-    const found = getSelectedOptions(props.modelValue, registeredOptions.value, isMultiple.value, props.valueKey);
+    if (!props.modelValue) return [];
 
-    // Якщо всі знайдені, повертаємо
-    if (isMultiple.value) {
-      const modelArray = Array.isArray(props.modelValue) ? props.modelValue : [];
-      if (found.length === modelArray.length) return found;
+    const modelArray = isMultiple.value
+      ? Array.isArray(props.modelValue)
+        ? props.modelValue
+        : []
+      : [props.modelValue];
 
-      // Додаємо відсутні значення як опції
-      const foundValues = new Set(found.map(opt => getOptionKey(opt.value)));
-      const missing = modelArray
-        .filter(val => !foundValues.has(getOptionKey(val)))
-        .map(val => ({
-          value: val,
-          label: typeof val === 'object' ? val.label || val.name || JSON.stringify(val) : String(val),
+    if (modelArray.length === 0) return [];
+
+    const result: VtSelectOption[] = [];
+
+    // Для кожного значення з modelValue шукаємо відповідну опцію
+    for (const modelVal of modelArray) {
+      const key = getOptionKey(modelVal);
+      const foundOption = allRegisteredOptions.value.get(key);
+
+      if (foundOption && activeOptionKeys.value.has(key)) {
+        // Знайдена зареєстрована опція
+        result.push(foundOption);
+      } else {
+        // Опція ще не зареєстрована, створюємо тимчасову
+        const tempOption: VtSelectOption = {
+          value: modelVal,
+          label: getLabelFromValue(modelVal),
           disabled: false,
-        }));
-
-      return [...found, ...missing];
-    } else {
-      if (found.length > 0) return found;
-
-      // Якщо нічого не знайдено, але є modelValue
-      if (props.modelValue !== undefined && props.modelValue !== null && props.modelValue !== '') {
-        return [
-          {
-            value: props.modelValue,
-            label:
-              typeof props.modelValue === 'object'
-                ? props.modelValue.label || props.modelValue.name || JSON.stringify(props.modelValue)
-                : String(props.modelValue),
-            disabled: false,
-          },
-        ];
+        };
+        result.push(tempOption);
       }
     }
 
-    return found;
+    return result;
   });
+
+  // Допоміжна функція для отримання label з value
+  const getLabelFromValue = (value: any): string => {
+    if (value === null || value === undefined) return '';
+
+    if (typeof value === 'object') {
+      // Спробуємо знайти label, name або інше текстове поле
+      if (value.label) return String(value.label);
+      if (value.name) return String(value.name);
+      if (props.valueKey && value[props.valueKey]) return String(value[props.valueKey]);
+
+      // В крайньому випадку повертаємо JSON (але це не ідеально)
+      return JSON.stringify(value);
+    }
+
+    return String(value);
+  };
 
   const visibleTags = computed(() => {
     if (!props.multiple || selectedOptions.value.length === 0) return [];
@@ -364,22 +377,6 @@
 
     const selected = selectedOptions.value[0];
     if (selected) return selected.label;
-
-    // Для об'єктів спробуємо показати label, якщо є
-    if (props.modelValue && typeof props.modelValue === 'object') {
-      if (props.modelValue.label) return props.modelValue.label;
-      if (props.modelValue.name) return props.modelValue.name;
-      return JSON.stringify(props.modelValue);
-    }
-
-    if (
-      props.modelValue !== undefined &&
-      props.modelValue !== null &&
-      props.modelValue !== '' &&
-      !Array.isArray(props.modelValue)
-    ) {
-      return String(props.modelValue);
-    }
 
     return '';
   });
@@ -717,7 +714,7 @@
         });
       }
     },
-    { deep: true, immediate: true } // Додаємо immediate
+    { deep: true, immediate: true }
   );
 
   watch(
