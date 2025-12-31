@@ -160,10 +160,41 @@
   // Computed для отримання тільки активних опцій у правильному порядку
   const registeredOptions = computed(() => {
     const result: VtSelectOption[] = [];
+    const addedKeys = new Set<string>();
 
+    // Спочатку додаємо зареєстровані активні опції
     for (const [key, option] of allRegisteredOptions.value.entries()) {
       if (activeOptionKeys.value.has(key)) {
         result.push(option);
+        addedKeys.add(key);
+      }
+    }
+
+    // Тепер додаємо опції з modelValue, які ще не зареєстровані
+    if (props.modelValue) {
+      let modelArray: any[];
+
+      if (isMultiple.value) {
+        modelArray = Array.isArray(props.modelValue) ? props.modelValue : [];
+      } else {
+        modelArray = [props.modelValue];
+      }
+
+      // Для кожного значення з modelValue
+      for (const modelVal of modelArray) {
+        const key = getOptionKey(modelVal);
+
+        // Якщо опція ще не додана
+        if (!addedKeys.has(key)) {
+          // Створюємо тимчасову опцію
+          const tempOption: VtSelectOption = {
+            value: modelVal,
+            label: getLabelFromValue(modelVal),
+            disabled: false,
+          };
+          result.push(tempOption);
+          addedKeys.add(key);
+        }
       }
     }
 
@@ -349,7 +380,7 @@
         result.push(tempOption);
       }
     }
-
+    console.log(result);
     return result;
   });
 
