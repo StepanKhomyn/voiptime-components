@@ -311,11 +311,21 @@
   const selectedOptions = computed((): VtSelectOption[] => {
     if (!props.modelValue) return [];
 
-    const modelArray = isMultiple.value
-      ? Array.isArray(props.modelValue)
-        ? props.modelValue
-        : []
-      : [props.modelValue];
+    // Для мультиселекту modelValue має бути масивом
+    // Для одиночного селекту - одне значення
+    let modelArray: any[];
+
+    if (isMultiple.value) {
+      // Для мультиселекту modelValue повинен бути масивом
+      if (!Array.isArray(props.modelValue)) {
+        console.warn('VSelect: modelValue for multiple select should be an array');
+        return [];
+      }
+      modelArray = props.modelValue;
+    } else {
+      // Для одиночного селекту загортаємо в масив для уніфікації обробки
+      modelArray = [props.modelValue];
+    }
 
     if (modelArray.length === 0) return [];
 
