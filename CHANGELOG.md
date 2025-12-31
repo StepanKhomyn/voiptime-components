@@ -1,3 +1,10 @@
+## [1.13.50](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.49...v1.13.50) (2025-12-31)
+
+
+### Bug Fixes
+
+* fixed multyselect 2 ([2e561a0](https://github.com/StepanKhomyn/voiptime-components/commit/2e561a05d4179daf08127dfa6c38c8432058b11e))
+
 ## [1.13.49](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.48...v1.13.49) (2025-12-31)
 
 
