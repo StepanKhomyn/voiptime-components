@@ -1,3 +1,10 @@
+## [1.13.48](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.47...v1.13.48) (2025-12-31)
+
+
+### Bug Fixes
+
+* fixed change select value for empty ([98b33c3](https://github.com/StepanKhomyn/voiptime-components/commit/98b33c304c7a98e02700ee82484b0391cbfb3858))
+
 ## [1.13.47](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.46...v1.13.47) (2025-12-29)
 
 
