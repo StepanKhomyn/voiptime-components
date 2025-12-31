@@ -1,3 +1,10 @@
+## [1.13.52](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.51...v1.13.52) (2025-12-31)
+
+
+### Bug Fixes
+
+* took off console log from select ([821cbc8](https://github.com/StepanKhomyn/voiptime-components/commit/821cbc82f15467be940447e304ba913a87882fab))
+
 ## [1.13.51](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.50...v1.13.51) (2025-12-31)
 
 
