@@ -380,7 +380,6 @@
         result.push(tempOption);
       }
     }
-    console.log(result);
     return result;
   });
 
