@@ -96,7 +96,7 @@ export function removeTagFromValue(value: any, modelValue: any, valueKey?: strin
  * Отримує порожнє значення
  */
 export function getEmptyValue(multiple: boolean): any {
-  return multiple ? [] : undefined;
+  return multiple ? [] : null;
 }
 
 /**
