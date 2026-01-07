@@ -1,3 +1,10 @@
+## [1.13.53](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.52...v1.13.53) (2026-01-07)
+
+
+### Bug Fixes
+
+* add dblclick to table ([6e196b4](https://github.com/StepanKhomyn/voiptime-components/commit/6e196b4033d00f9473060c712b118c222b3a398f))
+
 ## [1.13.52](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.51...v1.13.52) (2025-12-31)
 
 
