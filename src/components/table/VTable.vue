@@ -286,6 +286,14 @@
     }
   };
 
+  const onRowDblClick = (row: Record<string, any>, column: VTableColumnProps, event: Event): void => {
+    emit('row-dblclick', { row, column, event });
+
+    if (props.highlightCurrentRow && selectionComposable) {
+      selectionComposable.setCurrentRow(row);
+    }
+  };
+
   const handleCheckboxChange = (isChecked: boolean, row: Record<string, any>, event: Event): void => {
     event.stopPropagation();
     if (selectionComposable) {
@@ -571,6 +579,7 @@
             ]"
             :draggable="props.rowDraggable"
             @click="handleRowClick(row, sortedColumns[0], $event)"
+            @dblclick="onRowDblClick(row, sortedColumns[0], $event)"
             @dragend="dragComposable ? dragComposable.handleDragEnd($event) : null"
             @dragenter="dragComposable ? dragComposable.handleDragEnter($event, rowIndex) : null"
             @dragleave="dragComposable ? dragComposable.handleDragLeave($event) : null"

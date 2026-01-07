@@ -121,6 +121,13 @@ export interface VTableEmits {
     },
   ];
   'row-click': [payload: { row: Record<string, any>; column: VTableColumnProps; event: Event }];
+  'row-dblclick': [
+    payload: {
+      row: Record<string, any>;
+      column: VTableColumnProps;
+      event: Event;
+    },
+  ];
   'update:columns': [payload: VTableColumnProps[]];
   'column-pin': [payload: { column: VTableColumnProps; position: 'left' | 'right' | 'none' }];
   'column-resize': [payload: { column: VTableColumnProps; width: number; oldWidth?: number }];

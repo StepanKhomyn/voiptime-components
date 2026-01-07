@@ -29,6 +29,7 @@ declare const VTable: DefineComponent<
       oldCurrentRow: Record<string, any> | null;
     }) => any;
     'row-click': (payload: { row: Record<string, any>; column: VTableColumnProps; event: Event }) => any;
+    'row-dblclick': (payload: { row: Record<string, any>; column: VTableColumnProps; event: Event }) => any;
     'update:columns': (payload: VTableColumnProps[]) => any;
     'column-pin': (payload: { column: VTableColumnProps; position: 'left' | 'right' | 'none' }) => any;
     'column-resize': (payload: { column: VTableColumnProps; width: number; oldWidth?: number }) => any;
@@ -48,6 +49,9 @@ declare const VTable: DefineComponent<
         | ((payload: { currentRow: Record<string, any> | null; oldCurrentRow: Record<string, any> | null }) => any)
         | undefined;
       'onRow-click'?:
+        | ((payload: { row: Record<string, any>; column: VTableColumnProps; event: Event }) => any)
+        | undefined;
+      'onRow-dblclick'?:
         | ((payload: { row: Record<string, any>; column: VTableColumnProps; event: Event }) => any)
         | undefined;
       'onUpdate:columns'?: ((payload: VTableColumnProps[]) => any) | undefined;
