@@ -13,6 +13,7 @@ class VMessageManager {
     const instance = this.ensureInstance();
     return instance.addMessage({
       message: options.message || '',
+      title: options.title || '',
       type: options.type || 'primary',
       showClose: options.showClose || false,
       duration: options.duration !== undefined ? options.duration : 3000,

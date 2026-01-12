@@ -62,7 +62,8 @@ import { VMessage } from '@/plugins/message-plugin';
           type="success"
           @click="
             VMessage({
-              type: 'success',
+              type: 'warning',
+              title: 'Без закриття',
               message:
                 'Без автозакриття Без автозакриття Без автозакриття Без автозакриття Без автозакриття Без автозакриття Без автозакриття Без автозакриття Без автозакриття',
               showClose: true,

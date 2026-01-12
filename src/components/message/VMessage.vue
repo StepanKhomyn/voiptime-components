@@ -1,32 +1,3 @@
-<template>
-  <teleport to="body">
-    <div class="vt-message-container">
-      <transition-group name="vt-message" tag="div">
-        <div
-          v-for="message in messages"
-          :key="message.id"
-          :class="[
-            'vt-message-item',
-            `vt-message-item--${message.type}`,
-            { 'vt-message-item--closable': message.showClose },
-          ]"
-        >
-          <div class="vt-message-icon">
-            <VIcon :color="message.type === 'primary' ? '#00475A' : ''" :name="getIcon(message.type)" />
-          </div>
-          <div class="vt-message-content">
-            <div v-if="message.dangerouslyUseHTMLString" class="vt-message-text" v-html="message.message" />
-            <div v-else class="vt-message-text">{{ message.message }}</div>
-          </div>
-          <button v-if="message.showClose" class="vt-message-close" type="button" @click="removeMessage(message.id)">
-            <VIcon name="close" />
-          </button>
-        </div>
-      </transition-group>
-    </div>
-  </teleport>
-</template>
-
 <script lang="ts" setup>
   import { ref } from 'vue';
   import type { VMessageInstance, VMessageOptions, VMessageType } from './types';
@@ -52,6 +23,7 @@
     const message: VMessageInstance = {
       id,
       message: options.message || '',
+      title: options.title || null,
       type: options.type || 'primary',
       showClose: options.showClose || false,
       duration: options.duration !== undefined ? options.duration : 3000,
@@ -82,3 +54,34 @@
     removeMessage,
   });
 </script>
+
+<template>
+  <teleport to="body">
+    <div class="vt-message-container">
+      <transition-group name="vt-message" tag="div">
+        <div
+          v-for="message in messages"
+          :key="message.id"
+          :class="[
+            'vt-message-item',
+            `vt-message-item--${message.type}`,
+            { 'vt-message-item--closable': message.showClose },
+          ]"
+        >
+          <div class="vt-message-icon">
+            <VIcon :color="message.type === 'primary' ? '#00475A' : ''" :name="getIcon(message.type)" />
+          </div>
+          <div class="vt-message-content">
+            <div v-if="message.title" class="vt-message-title">{{ message.title }}</div>
+
+            <div v-if="message.dangerouslyUseHTMLString" class="vt-message-text" v-html="message.message" />
+            <div v-else class="vt-message-text">{{ message.message }}</div>
+          </div>
+          <button v-if="message.showClose" class="vt-message-close" type="button" @click="removeMessage(message.id)">
+            <VIcon name="close" />
+          </button>
+        </div>
+      </transition-group>
+    </div>
+  </teleport>
+</template>

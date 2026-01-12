@@ -4,7 +4,13 @@ $vt-message-prefix: 'vt-message';
   &--#{$type-name} {
     background-color: var(--color-#{$type-name}-bg);;
     border-color: var(--color-#{$type-name}-main);;
-    color: var(--color-gray-1);;
+    color: var(--color-gray-1);
+
+    .#{$vt-message-prefix}-title {
+      color: var(--color-#{$type-name}-main);
+      font-size: var(--font-size-medium);
+      font-weight: var(--font-weight-semibold);
+    }
   }
 }
 
@@ -46,6 +52,12 @@ $vt-message-prefix: 'vt-message';
 .#{$vt-message-prefix}-content {
   flex: 1;
   align-self: flex-start
+}
+
+.#{$vt-message-prefix}-title {
+  flex: 1;
+  align-self: flex-start;
+  margin-bottom: 10px;
 }
 
 .#{$vt-message-prefix}-close {

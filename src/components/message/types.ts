@@ -2,6 +2,7 @@ export type VMessageType = 'success' | 'warning' | 'primary' | 'danger';
 
 export interface VMessageOptions {
   message: string;
+  title?: string;
   type?: VMessageType;
   showClose?: boolean;
   duration?: number;
