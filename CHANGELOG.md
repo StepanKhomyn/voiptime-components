@@ -1,3 +1,11 @@
+## [1.13.54](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.53...v1.13.54) (2026-01-12)
+
+
+### Bug Fixes
+
+* add title to message ([75f0fa9](https://github.com/StepanKhomyn/voiptime-components/commit/75f0fa98c37419f79d01a6449c9ff27c285bf33c))
+* fixed build by vMESSAGE types ([3303bcf](https://github.com/StepanKhomyn/voiptime-components/commit/3303bcff98656d22fdd3e7840aa3bfa9127a6f6b))
+
 ## [1.13.53](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.52...v1.13.53) (2026-01-07)
 
 
