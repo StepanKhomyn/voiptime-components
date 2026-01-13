@@ -2,7 +2,7 @@
   import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   const props = defineProps({
-    name: { type: String | Number, required: true },
+    name: { type: [String, Number], required: true },
     label: String,
     disabled: Boolean,
     closable: Boolean,

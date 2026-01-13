@@ -11,13 +11,13 @@
   const emit = defineEmits<VTabsEmits>();
   const slots = useSlots();
 
-  const currentValue = ref<string | undefined>(props.modelValue);
+  const currentValue = ref<string | number | undefined>(props.modelValue);
   const tabs = ref<any[]>([]);
   const navRef = ref<HTMLElement | null>(null);
   const scrollableRef = ref<HTMLElement | null>(null);
   const showLeftArrow = ref(false);
   const showRightArrow = ref(false);
-  const visitedTabs = ref<Set<string>>(new Set());
+  const visitedTabs = ref<Set<string | number>>(new Set());
 
   watch(currentValue, val => {
     if (val) {
@@ -43,10 +43,7 @@
     tabs.value.push(tab);
 
     // якщо це активна таба — одразу відмічаємо як відвідану
-    if (
-      currentValue.value === tab.name ||
-      (!currentValue.value && tabs.value.length === 1)
-    ) {
+    if (currentValue.value === tab.name || (!currentValue.value && tabs.value.length === 1)) {
       currentValue.value = tab.name;
       visitedTabs.value.add(tab.name);
     }
