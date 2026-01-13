@@ -1,13 +1,13 @@
 import type { IconName } from '@/icons';
 
 export interface VTabsProps {
-  modelValue?: string;
+  modelValue?: string | number;
 }
 
 export interface VTabItemProps {
   label?: string;
   disabled?: boolean;
-  name?: string;
+  name?: string | number;
   closable?: boolean;
   icon?: IconName;
 }

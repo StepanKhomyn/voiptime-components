@@ -1,8 +1,8 @@
-<script setup lang="ts">
-  import { computed, inject, onMounted, onBeforeUnmount, ref, watch } from 'vue';
+<script lang="ts" setup>
+  import { computed, inject, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 
   const props = defineProps({
-    name: { type: String, required: true },
+    name: { type: String | Number, required: true },
     label: String,
     disabled: Boolean,
     closable: Boolean,
