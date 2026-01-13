@@ -1,3 +1,11 @@
+## [1.13.55](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.54...v1.13.55) (2026-01-13)
+
+
+### Bug Fixes
+
+* add  type number to vtab name ([fe66694](https://github.com/StepanKhomyn/voiptime-components/commit/fe66694a300f59e9133ec904df3f84c682a715cb))
+* add  type number to vtab name 2 ([71f9f6b](https://github.com/StepanKhomyn/voiptime-components/commit/71f9f6b6f98e371c6c529f8883ee284d462d6126))
+
 ## [1.13.54](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.53...v1.13.54) (2026-01-12)
 
 
