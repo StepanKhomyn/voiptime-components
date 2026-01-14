@@ -340,7 +340,7 @@
   const isMultiple = computed(() => props.multiple);
 
   const selectedOptions = computed((): VtSelectOption[] => {
-    if (!props.modelValue) return [];
+    if (props.modelValue === null || props.modelValue === undefined) return [];
 
     // Для мультиселекту modelValue має бути масивом
     // Для одиночного селекту - одне значення
