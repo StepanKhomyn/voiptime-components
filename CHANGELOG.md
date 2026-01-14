@@ -1,3 +1,10 @@
+## [1.13.56](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.55...v1.13.56) (2026-01-14)
+
+
+### Bug Fixes
+
+* vselect ([cea2e42](https://github.com/StepanKhomyn/voiptime-components/commit/cea2e42c0fcc834f5efe9db939d748b7e94c6f44))
+
 ## [1.13.55](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.54...v1.13.55) (2026-01-13)
 
 
