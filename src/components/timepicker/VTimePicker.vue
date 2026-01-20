@@ -17,13 +17,17 @@
     type VTimePickerProps,
   } from '@/components/timepicker/types';
   import VButton from '@/components/button/VButton.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
+
+  const { t } = useI18n();
 
   // ===== PROPS & DEFAULTS =====
   const props = withDefaults(defineProps<VTimePickerProps>(), {
     type: 'time',
-    placeholder: 'Оберіть час',
-    startPlaceholder: 'Початковий час',
-    endPlaceholder: 'Кінцевий час',
+    placeholder: undefined,
+    startPlaceholder: undefined,
+    endPlaceholder: undefined,
     rangeSeparator: ' - ',
     format: 'HH:mm:ss',
     disabled: false,
@@ -151,11 +155,11 @@
   const currentPlaceholder = computed(() => {
     if (isRange.value) {
       if (state.isSelectingEnd.value) {
-        return props.endPlaceholder;
+        return actualEndPlaceholder.value;
       }
-      return props.startPlaceholder;
+      return actualStartPlaceholder.value;
     }
-    return props.placeholder;
+    return actualPlaceholder.value;
   });
 
   const pickerClasses = computed(() => [
@@ -239,6 +243,12 @@
     if (!props.outlined) return false;
     return state.isFocused.value || isDropdownVisible.value || hasDisplayValue.value;
   });
+
+  const actualPlaceholder = computed(() => props.placeholder || t(LOCALE_KEYS.TIME_PICKER_PLACEHOLDER));
+
+  const actualStartPlaceholder = computed(() => props.startPlaceholder || t(LOCALE_KEYS.TIME_PICKER_START_PLACEHOLDER));
+
+  const actualEndPlaceholder = computed(() => props.endPlaceholder || t(LOCALE_KEYS.TIME_PICKER_END_PLACEHOLDER));
 
   // ===== DROPDOWN INTEGRATION =====
   const {
@@ -889,7 +899,7 @@
           <div v-if="isRange" class="vt-timepicker__dual-panel">
             <!-- Start Time Panel -->
             <div class="vt-timepicker__panel">
-              <div class="vt-timepicker__panel-header">Початковий час</div>
+              <div class="vt-timepicker__panel-header">{{ t(LOCALE_KEYS.TIME_PICKER_START_PLACEHOLDER) }}</div>
               <div class="vt-timepicker__time-columns">
                 <!-- Hours -->
                 <div class="vt-timepicker__column">
@@ -975,7 +985,7 @@
 
             <!-- End Time Panel -->
             <div class="vt-timepicker__panel">
-              <div class="vt-timepicker__panel-header">Кінцевий час</div>
+              <div class="vt-timepicker__panel-header">{{ t(LOCALE_KEYS.TIME_PICKER_END_PLACEHOLDER) }}</div>
               <div class="vt-timepicker__time-columns">
                 <!-- Hours -->
                 <div class="vt-timepicker__column">
@@ -1141,7 +1151,7 @@
 
           <!-- Actions -->
           <div class="vt-timepicker__actions">
-            <VButton @click="handleCancel">Скасувати</VButton>
+            <VButton @click="handleCancel">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
             <VButton type="primary" @click="handleTimeSelect">OK</VButton>
           </div>
         </div>

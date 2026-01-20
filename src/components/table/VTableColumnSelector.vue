@@ -5,6 +5,8 @@
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
   import VButton from '@/components/button/VButton.vue';
   import { modalManager } from '@/components/modal/plugin';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
 
   interface Props {
     columns: VTableColumnProps[];
@@ -18,6 +20,8 @@
   const emit = defineEmits<{
     'update-columns': [columns: VTableColumnProps[]];
   }>();
+
+  const { t } = useI18n();
 
   // Стан компонента
   const workingColumns = ref<VTableColumnProps[]>([]);
@@ -366,7 +370,9 @@
                 :label="col.label"
                 @change="checked => handleColumnToggle(col, checked)"
               />
-              <span v-if="!canToggleColumn(col)" class="vt-columns-selector__pinned-note"> (закріплена) </span>
+              <span v-if="!canToggleColumn(col)" class="vt-columns-selector__pinned-note">
+                {{ t(LOCALE_KEYS.TABLE_PINNED) }}
+              </span>
             </div>
           </div>
         </div>
@@ -375,8 +381,8 @@
 
     <!-- Кнопки -->
     <div class="vt-modal__content-button">
-      <VButton @click="handleCancel">Скасувати</VButton>
-      <VButton icon="save" type="primary" @click="handleSave">Зберегти</VButton>
+      <VButton @click="handleCancel">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
+      <VButton icon="save" type="primary" @click="handleSave">{{ t(LOCALE_KEYS.BUTTON_SAVE) }}</VButton>
     </div>
   </div>
 </template>

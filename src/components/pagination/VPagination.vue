@@ -5,6 +5,8 @@
   import VIcon from '@/components/icon/VIcon.vue';
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
+  import { LOCALE_KEYS } from '@/locales/types';
+  import { useI18n } from '@/locales/useI18n';
   // Props
   const props = withDefaults(defineProps<PaginationProps>(), {
     pageSize: 10,
@@ -25,6 +27,8 @@
     get: () => props.pageSize,
     set: (value: number) => emit('update:pageSize', value),
   });
+
+  const { t } = useI18n();
 
   const totalPages = computed(() => Math.ceil(props.totalItems / currentPageSize.value));
 
@@ -120,7 +124,7 @@
     <div class="vt-pagination__info">
       <!-- Селект для кількості рядків на сторінку -->
       <div class="vt-pagination__rows-per-page">
-        <label class="vt-pagination__label" for="rowsSelect">Рядків на сторінку:</label>
+        <label class="vt-pagination__label" for="rowsSelect">{{ t(LOCALE_KEYS.PAGINATION_ROWS_PER_PAGE) }}</label>
         <VSelect id="rowsSelect" v-model="currentPageSize" class="vt-pagination__select" @change="handlePageSizeChange">
           <VOption v-for="option in pageSizeOptions" :key="option" :label="option" :value="option">
             {{ option }}
@@ -169,7 +173,7 @@
     <!-- Релоад -->
     <div>
       <VButton icon="arrowReload" shape="circle" tooltip tooltipPlacement="left" @click="reloadData"
-        >Оновити дані
+        >{{ t(LOCALE_KEYS.PAGINATION_RELOAD) }}
       </VButton>
     </div>
   </div>

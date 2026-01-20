@@ -1,4 +1,4 @@
-// index.ts - оновлений головний файл бібліотеки з VMessage та VTabs
+// index.ts - оновлений головний файл бібліотеки
 import type { App } from 'vue';
 import VButton from './components/button/VButton.vue';
 import VIcon from './components/icon/VIcon.vue';
@@ -28,6 +28,8 @@ import { tooltipDirective } from './directives/tooltip/tooltip';
 import { loaderDirective } from './directives/loader/loader';
 import { VModalPlugin } from './components/modal/plugin';
 import { VMessagePlugin } from './components/message/message-plugin';
+import { I18nPlugin, setLocale as internalSetLocale } from './locales/index';
+import { LANGUAGES } from './locales/types';
 
 // ----------------- Експортуємо компоненти -----------------
 export {
@@ -52,7 +54,7 @@ export {
   VTabs,
   VTabItem,
   VUpload,
-  VSidebar
+  VSidebar,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -81,7 +83,6 @@ export type { VCheckboxProps, VCheckboxEmits, VCheckboxSlots } from './component
 export type { VRadioboxProps, VRadioboxEmits } from './components/radiobox/types';
 
 // ----------------- Експортуємо валідацію -----------------
-
 export * from './validation';
 
 // Таблиця
@@ -196,16 +197,7 @@ export { DropdownContextKey } from './components/dropdown/types';
 export { VtSelectContextKey } from './components/select/types';
 
 // VDatePicker константи
-export {
-  FORMAT_TOKENS,
-  MONTH_NAMES,
-  MONTH_NAMES_SHORT,
-  WEEKDAY_NAMES,
-  WEEKDAY_NAMES_SHORT,
-  DEFAULT_FORMATS,
-  isValidDate,
-  validateDateValue,
-} from './components/datepicker/types';
+export { FORMAT_TOKENS, DEFAULT_FORMATS, isValidDate, validateDateValue } from './components/datepicker/types';
 
 // VTimePicker константи
 export {
@@ -221,15 +213,26 @@ export {
 export { VModalPlugin, modalManager } from './components/modal/plugin';
 export { VMessagePlugin, VMessage, messageManager } from './components/message/message-plugin';
 
+// ----------------- Локалізація (тільки публічний API) -----------------
+
+// Публічна функція для зміни мови
+export function setLocale(locale: LANGUAGES): void {
+  internalSetLocale(locale);
+}
+
+export { LANGUAGES };
+
+// ----------------- Інтерфейс опцій плагіна -----------------
 export interface VUIPluginOptions {
   prefix?: string;
   modal?: boolean;
   message?: boolean;
+  locale?: LANGUAGES; // Початкова мова (за замовчуванням: uk)
 }
 
 const VUIPlugin = {
   install(app: App, options: VUIPluginOptions = {}) {
-    const { prefix = 'V', modal = true, message = true } = options;
+    const { prefix = 'V', modal = true, message = true, locale = LANGUAGES.uk } = options;
 
     // Реєстрація компонентів
     app.component(`${prefix}Button`, VButton);
@@ -267,6 +270,9 @@ const VUIPlugin = {
     if (message) {
       app.use(VMessagePlugin);
     }
+
+    // Ініціалізація локалізації з вибраною мовою
+    app.use(I18nPlugin, { locale: locale as LANGUAGES });
   },
 };
 

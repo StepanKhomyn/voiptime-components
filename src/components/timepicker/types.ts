@@ -1,4 +1,5 @@
-// types/VTimePicker.ts
+import { LOCALE_KEYS } from '@/locales/types';
+import { useI18n } from '@/locales/useI18n';
 
 export type TimePickerType = 'time' | 'timerange';
 export type TimePickerSize = 'small' | 'default' | 'large';
@@ -27,7 +28,6 @@ export interface VTimePickerProps {
   disabledMinutes?: (selectedHour: number) => number[];
   disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
   hideDisabledOptions?: boolean;
-  // Тексти
   label?: string;
   helperText?: string;
   errorMessage?: string;
@@ -68,7 +68,6 @@ export interface TimeValidationResult {
   errors: string[];
 }
 
-// Default formats for different use cases
 export const DEFAULT_TIME_FORMATS = {
   '24h': 'HH:mm:ss',
   '24h_no_seconds': 'HH:mm',
@@ -76,17 +75,14 @@ export const DEFAULT_TIME_FORMATS = {
   '12h_no_seconds': 'hh:mm A',
 } as const;
 
-// Time validation utilities
 export const isValidTimeString = (timeStr: string): boolean => {
   if (!timeStr) return false;
-
   const timeFormats = [
-    /^([01]?\d|2[0-3]):([0-5]\d):([0-5]\d)$/, // HH:mm:ss (24h)
-    /^([01]?\d|2[0-3]):([0-5]\d)$/, // HH:mm (24h)
-    /^(0?[1-9]|1[0-2]):([0-5]\d):([0-5]\d)\s?(AM|PM)$/i, // hh:mm:ss AM/PM (12h)
-    /^(0?[1-9]|1[0-2]):([0-5]\d)\s?(AM|PM)$/i, // hh:mm AM/PM (12h)
+    /^([01]?\d|2[0-3]):([0-5]\d):([0-5]\d)$/,
+    /^([01]?\d|2[0-3]):([0-5]\d)$/,
+    /^(0?[1-9]|1[0-2]):([0-5]\d):([0-5]\d)\s?(AM|PM)$/i,
+    /^(0?[1-9]|1[0-2]):([0-5]\d)\s?(AM|PM)$/i,
   ];
-
   return timeFormats.some(format => format.test(timeStr.trim()));
 };
 
@@ -95,54 +91,51 @@ export const validateTimeValue = (
   type: TimePickerType,
   required?: boolean
 ): TimeValidationResult => {
+  const { t } = useI18n();
+
   const errors: string[] = [];
   const isRange = type === 'timerange';
 
-  // Check if required
   if (required) {
     if (!value) {
-      errors.push("Це поле є обов'язковим");
+      errors.push(t(LOCALE_KEYS.VALIDATION_REQUIRED));
     } else if (isRange && Array.isArray(value)) {
       if (value.length !== 2 || !value[0] || !value[1]) {
-        errors.push('Необхідно вибрати початковий та кінцевий час');
+        errors.push(t(LOCALE_KEYS.VALIDATION_TIME_RANGE_REQUIRED));
       }
     }
   }
 
-  // Validate format and structure
   if (value) {
     if (isRange && !Array.isArray(value)) {
-      errors.push('Для діапазону очікується масив з двох значень часу');
+      errors.push(t(LOCALE_KEYS.VALIDATION_TIME_RANGE_EXPECTED));
     } else if (!isRange && Array.isArray(value)) {
-      errors.push('Для одиночного вибору очікується одне значення часу');
+      errors.push(t(LOCALE_KEYS.VALIDATION_TIME_SINGLE_EXPECTED));
     }
 
-    // Validate time format
     if (Array.isArray(value)) {
       value.forEach((v, index) => {
         if (v) {
           if (typeof v === 'string' && !isValidTimeString(v)) {
-            errors.push(`Некоректний формат часу ${index + 1}`);
+            errors.push(t(LOCALE_KEYS.VALIDATION_INVALID_TIME_FORMAT_INDEX, { index: index + 1 }));
           } else if (v instanceof Date && isNaN(v.getTime())) {
-            errors.push(`Некоректне значення часу ${index + 1}`);
+            errors.push(t(LOCALE_KEYS.VALIDATION_INVALID_TIME_VALUE_INDEX, { index: index + 1 }));
           }
         }
       });
 
-      // Check time range logic
       if (value.length === 2 && value[0] && value[1]) {
         const startTime = parseTimeToMinutes(value[0]);
         const endTime = parseTimeToMinutes(value[1]);
-
         if (startTime !== null && endTime !== null && startTime >= endTime) {
-          errors.push('Початковий час повинен бути раніше кінцевого');
+          errors.push(t(LOCALE_KEYS.VALIDATION_TIME_START_AFTER_END));
         }
       }
     } else if (value) {
       if (typeof value === 'string' && !isValidTimeString(value)) {
-        errors.push('Некоректний формат часу');
+        errors.push(t(LOCALE_KEYS.VALIDATION_INVALID_TIME_FORMAT));
       } else if (value instanceof Date && isNaN(value.getTime())) {
-        errors.push('Некоректне значення часу');
+        errors.push(t(LOCALE_KEYS.VALIDATION_INVALID_TIME_VALUE));
       }
     }
   }
@@ -153,43 +146,35 @@ export const validateTimeValue = (
   };
 };
 
-// Helper to convert time to minutes for comparison
 const parseTimeToMinutes = (time: TimeValue): number | null => {
   if (!time) return null;
-
   if (time instanceof Date) {
     return time.getHours() * 60 + time.getMinutes();
   }
-
   if (typeof time === 'string') {
     const timeFormats = [
-      /^(\d{1,2}):(\d{2}):(\d{2})$/, // HH:mm:ss
-      /^(\d{1,2}):(\d{2})$/, // HH:mm
-      /^(\d{1,2}):(\d{2}):(\d{2})\s?(AM|PM)$/i, // HH:mm:ss AM/PM
-      /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i, // HH:mm AM/PM
+      /^(\d{1,2}):(\d{2}):(\d{2})$/,
+      /^(\d{1,2}):(\d{2})$/,
+      /^(\d{1,2}):(\d{2}):(\d{2})\s?(AM|PM)$/i,
+      /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i,
     ];
-
     for (const format of timeFormats) {
       const match = time.match(format);
       if (match) {
         let hour = parseInt(match[1]);
         const minute = parseInt(match[2]);
         const period = match[4]?.toUpperCase();
-
         if (period) {
           if (period === 'PM' && hour !== 12) hour += 12;
           if (period === 'AM' && hour === 12) hour = 0;
         }
-
         return hour * 60 + minute;
       }
     }
   }
-
   return null;
 };
 
-// Time formatting utilities
 export const formatTime = (
   hour: number,
   minute: number,
@@ -224,15 +209,14 @@ export const formatTime = (
   return result;
 };
 
-// Parse time string to time object
 export const parseTimeString = (timeStr: string): TimeObject | null => {
   if (!timeStr) return null;
 
   const formats = [
-    /^(\d{1,2}):(\d{2}):(\d{2})$/, // HH:mm:ss
-    /^(\d{1,2}):(\d{2})$/, // HH:mm
-    /^(\d{1,2}):(\d{2}):(\d{2})\s?(AM|PM)$/i, // HH:mm:ss AM/PM
-    /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i, // HH:mm AM/PM
+    /^(\d{1,2}):(\d{2}):(\d{2})$/,
+    /^(\d{1,2}):(\d{2})$/,
+    /^(\d{1,2}):(\d{2}):(\d{2})\s?(AM|PM)$/i,
+    /^(\d{1,2}):(\d{2})\s?(AM|PM)$/i,
   ];
 
   for (const format of formats) {
@@ -255,7 +239,6 @@ export const parseTimeString = (timeStr: string): TimeObject | null => {
   return null;
 };
 
-// Generate time options for dropdowns
 export const generateTimeOptions = (
   min: number = 0,
   max: number = 59,
@@ -263,7 +246,6 @@ export const generateTimeOptions = (
   disabled: number[] = []
 ): Array<{ value: number; label: string; disabled: boolean }> => {
   const options = [];
-
   for (let i = min; i <= max; i += step) {
     options.push({
       value: i,
@@ -271,6 +253,5 @@ export const generateTimeOptions = (
       disabled: disabled.includes(i),
     });
   }
-
   return options;
 };

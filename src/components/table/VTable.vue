@@ -8,6 +8,8 @@
   import ColumnActions from '@/components/table/ColumnActions.vue';
   import VIcon from '@/components/icon/VIcon.vue';
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
 
   const props = withDefaults(defineProps<VTableProps>(), {
     selectable: false,
@@ -26,6 +28,8 @@
     rowDraggable: false,
     showDragHandle: true,
   });
+
+  const { t } = useI18n();
 
   const emit = defineEmits<VTableEmits>();
 
@@ -556,7 +560,7 @@
           >
             <div class="vt-table__empty-content">
               <VIcon class="vt-table__empty-icon" name="empty" />
-              <span class="vt-table__empty-text">Немає даних!</span>
+              <span class="vt-table__empty-text">{{ t(LOCALE_KEYS.TABLE_EMPTY) }}</span>
             </div>
           </td>
         </tr>

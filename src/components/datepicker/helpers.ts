@@ -1,9 +1,18 @@
 import { computed, type Ref } from 'vue';
-import type { DatePickerType, DatePickerValue, DateValue } from './types';
-import { DEFAULT_FORMATS, MONTH_NAMES, MONTH_NAMES_SHORT, validateDateValue } from './types';
+import {
+  type DatePickerType,
+  type DatePickerValue,
+  type DateValue,
+  DEFAULT_FORMATS,
+  useDateLocale,
+  validateDateValue,
+} from './types';
+import { LOCALE_KEYS } from '@/locales/types';
+import { useI18n } from '@/locales/useI18n';
 
 export const useDateFormatter = () => {
   const formatDate = (date: Date, formatStr: string): string => {
+    const dateLocale = useDateLocale();
     if (!date || !(date instanceof Date) || isNaN(date.getTime())) return '';
 
     const year = date.getFullYear();
@@ -22,8 +31,8 @@ export const useDateFormatter = () => {
     result = result.replace(/yy/g, String(year).slice(-2));
 
     // Month
-    result = result.replace(/MMMM/g, MONTH_NAMES[month]);
-    result = result.replace(/MMM/g, MONTH_NAMES_SHORT[month]);
+    result = result.replace(/MMMM/g, dateLocale.months.value[month]);
+    result = result.replace(/MMM/g, dateLocale.monthsShort.value[month]);
     result = result.replace(/MM/g, String(month + 1).padStart(2, '0'));
     result = result.replace(/M/g, String(month + 1));
 
@@ -101,6 +110,7 @@ export const useDatePicker = (
   checkRequired: boolean = false
 ) => {
   const { formatDate, parseDate, getDefaultFormat } = useDateFormatter();
+  const { t } = useI18n();
 
   const isRange = computed(() => {
     return ['datetimerange', 'daterange', 'monthrange', 'yearrange'].includes(type.value);
@@ -177,9 +187,8 @@ export const useDatePicker = (
 
   const validate = () => {
     const errors: string[] = [];
-
     if (checkRequired && !hasDisplayValue.value) {
-      errors.push("Це поле є обов'язковим");
+      errors.push(t(LOCALE_KEYS.VALIDATION_REQUIRED));
     }
 
     const dateValidation = validateDateValue(modelValue.value, type.value, checkRequired);
@@ -229,7 +238,9 @@ export const useCalendar = (currentDate: Ref<Date>) => {
   });
 
   const monthsInYear = computed(() => {
-    return MONTH_NAMES_SHORT.map((name, index) => ({
+    const dateLocale = useDateLocale();
+
+    return dateLocale.monthsShort.value.map((name, index) => ({
       name,
       index,
       value: new Date(currentDate.value.getFullYear(), index, 1),

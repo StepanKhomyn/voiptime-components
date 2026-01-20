@@ -1,6 +1,8 @@
 // helpers.ts - оновлені хелпери для підтримки об'єктів
 
 import type { VtSelectOption } from './types';
+import { useI18n } from '@/locales/useI18n';
+import { LOCALE_KEYS } from '@/locales/types';
 
 /**
  * Порівнює два значення, враховуючи можливість об'єктів
@@ -108,6 +110,8 @@ export function validateSelectValue(
   required: boolean,
   requiredMessage?: string
 ): { isValid: boolean; errors: string[] } {
+  const { t } = useI18n();
+
   const errors: string[] = [];
 
   if (required) {
@@ -116,7 +120,7 @@ export function validateSelectValue(
       : value === undefined || value === null || value === '';
 
     if (isEmpty) {
-      errors.push(requiredMessage || "Це поле є обов'язковим");
+      errors.push(requiredMessage || t(LOCALE_KEYS.VALIDATION_REQUIRED));
     }
   }
 

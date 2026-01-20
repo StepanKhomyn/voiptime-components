@@ -1,5 +1,7 @@
 import { computed, isRef, reactive, ref, watch } from 'vue';
 import type { FieldValidation, RulesObject, ValidationGroup, ValidatorFn, WrappedValidator } from './types';
+import { LOCALE_KEYS } from '@/locales/types';
+import { useI18n } from '@/locales/useI18n';
 
 type AnyObject = Record<string, any>;
 
@@ -72,6 +74,8 @@ function createFieldNode(
   const _errors = ref<Array<{ $message: string; $validator: string; $params?: any; $pending?: boolean }>>([]);
 
   async function runValidators(value: any) {
+    const { t } = useI18n();
+
     const token = ++lastValidateToken.t;
     $pending.value = true;
     const errs: Array<{ $message: string; $validator: string; $params?: any; $pending?: boolean }> = [];
@@ -93,7 +97,7 @@ function createFieldNode(
           const message =
             typeof wrapped.$message === 'function'
               ? wrapped.$message(wrapped.$params)
-              : wrapped.$message || 'Невалідне поле';
+              : wrapped.$message || t(LOCALE_KEYS.VALIDATION_ERROR);
           errs.push({
             $message: message as string,
             $validator: wrapped.$validatorName || wrapped.name || 'validator',
@@ -103,7 +107,7 @@ function createFieldNode(
       } catch (e: any) {
         const wrapped = v as WrappedValidator;
         errs.push({
-          $message: e?.message || 'Validator error',
+          $message: e?.message || t(LOCALE_KEYS.VALIDATION_ERROR),
           $validator: wrapped.$validatorName || wrapped.name || 'validator',
         });
       }

@@ -1,4 +1,6 @@
-// types/VDatePicker.ts
+import { computed } from 'vue';
+import { LOCALE_KEYS } from '@/locales/types';
+import { useI18n } from '@/locales/useI18n';
 
 export type DatePickerType =
   | 'date'
@@ -11,10 +13,12 @@ export type DatePickerType =
   | 'yearrange';
 
 export type DatePickerSize = 'small' | 'default' | 'large';
-
 export type DateValue = string | number | Date;
 export type DateRangeValue = [DateValue, DateValue];
 export type DatePickerValue = DateValue | DateRangeValue | null | undefined;
+
+// Тип функції перекладу (такий самий як у TimePicker)
+export type TranslateFunction = (key: LOCALE_KEYS, params?: Record<string, string | number>) => string;
 
 export interface VDatePickerProps {
   modelValue?: DatePickerValue;
@@ -33,17 +37,12 @@ export interface VDatePickerProps {
   unlinkPanels?: boolean;
   defaultValue?: DatePickerValue;
   defaultTime?: string | string[];
-
   label?: string;
   outlined?: boolean;
   required?: boolean;
   id?: string;
-
-  // Тексти
   errorMessage?: string;
   helperText?: string;
-
-  // Time picker props (для datetime типів)
   hourStep?: number;
   minuteStep?: number;
   secondStep?: number;
@@ -53,7 +52,6 @@ export interface VDatePickerProps {
   disabledMinutes?: (selectedHour: number) => number[];
   disabledSeconds?: (selectedHour: number, selectedMinute: number) => number[];
   hideDisabledOptions?: boolean;
-
   maxDateRange?: number;
   previousDateDisabled?: boolean;
 }
@@ -89,7 +87,6 @@ export interface VDatePickerMethods {
   handleClose(): void;
 }
 
-// Format tokens mapping
 export interface FormatToken {
   pattern: RegExp;
   replacement: (date: Date) => string;
@@ -142,27 +139,67 @@ export const FORMAT_TOKENS: Record<string, FormatToken> = {
   },
 };
 
-// Month names for formatting
-export const MONTH_NAMES = [
-  'Січень',
-  'Лютий',
-  'Березень',
-  'Квітень',
-  'Травень',
-  'Червень',
-  'Липень',
-  'Серпень',
-  'Вересень',
-  'Жовтень',
-  'Листопад',
-  'Грудень',
-];
+export const useDateLocale = () => {
+  const { t } = useI18n();
 
-export const MONTH_NAMES_SHORT = ['Січ', 'Лют', 'Бер', 'Кві', 'Тра', 'Чер', 'Лип', 'Сер', 'Вер', 'Жов', 'Лис', 'Гру'];
-export const WEEKDAY_NAMES = ['Неділя', 'Понеділок', 'Вівторок', 'Середа', 'Четвер', "П'ятниця", 'Субота'];
-export const WEEKDAY_NAMES_SHORT = ['Нд', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб'];
+  const months = computed(() => [
+    t(LOCALE_KEYS.MONTH_JANUARY),
+    t(LOCALE_KEYS.MONTH_FEBRUARY),
+    t(LOCALE_KEYS.MONTH_MARCH),
+    t(LOCALE_KEYS.MONTH_APRIL),
+    t(LOCALE_KEYS.MONTH_MAY),
+    t(LOCALE_KEYS.MONTH_JUNE),
+    t(LOCALE_KEYS.MONTH_JULY),
+    t(LOCALE_KEYS.MONTH_AUGUST),
+    t(LOCALE_KEYS.MONTH_SEPTEMBER),
+    t(LOCALE_KEYS.MONTH_OCTOBER),
+    t(LOCALE_KEYS.MONTH_NOVEMBER),
+    t(LOCALE_KEYS.MONTH_DECEMBER),
+  ]);
 
-// Default formats for different picker types
+  const monthsShort = computed(() => [
+    t(LOCALE_KEYS.MONTH_SHORT_JANUARY),
+    t(LOCALE_KEYS.MONTH_SHORT_FEBRUARY),
+    t(LOCALE_KEYS.MONTH_SHORT_MARCH),
+    t(LOCALE_KEYS.MONTH_SHORT_APRIL),
+    t(LOCALE_KEYS.MONTH_SHORT_MAY),
+    t(LOCALE_KEYS.MONTH_SHORT_JUNE),
+    t(LOCALE_KEYS.MONTH_SHORT_JULY),
+    t(LOCALE_KEYS.MONTH_SHORT_AUGUST),
+    t(LOCALE_KEYS.MONTH_SHORT_SEPTEMBER),
+    t(LOCALE_KEYS.MONTH_SHORT_OCTOBER),
+    t(LOCALE_KEYS.MONTH_SHORT_NOVEMBER),
+    t(LOCALE_KEYS.MONTH_SHORT_DECEMBER),
+  ]);
+
+  const weekdays = computed(() => [
+    t(LOCALE_KEYS.WEEKDAY_SUNDAY),
+    t(LOCALE_KEYS.WEEKDAY_MONDAY),
+    t(LOCALE_KEYS.WEEKDAY_TUESDAY),
+    t(LOCALE_KEYS.WEEKDAY_WEDNESDAY),
+    t(LOCALE_KEYS.WEEKDAY_THURSDAY),
+    t(LOCALE_KEYS.WEEKDAY_FRIDAY),
+    t(LOCALE_KEYS.WEEKDAY_SATURDAY),
+  ]);
+
+  const weekdaysShort = computed(() => [
+    t(LOCALE_KEYS.WEEKDAY_SHORT_SUN),
+    t(LOCALE_KEYS.WEEKDAY_SHORT_MON),
+    t(LOCALE_KEYS.WEEKDAY_SHORT_TUE),
+    t(LOCALE_KEYS.WEEKDAY_SHORT_WED),
+    t(LOCALE_KEYS.WEEKDAY_SHORT_THU),
+    t(LOCALE_KEYS.WEEKDAY_SHORT_FRI),
+    t(LOCALE_KEYS.WEEKDAY_SHORT_SAT),
+  ]);
+
+  return {
+    months,
+    monthsShort,
+    weekdays,
+    weekdaysShort,
+  };
+};
+
 export const DEFAULT_FORMATS: Record<DatePickerType, string> = {
   date: 'yyyy-MM-dd',
   datetime: 'yyyy-MM-dd HH:mm:ss',
@@ -174,7 +211,6 @@ export const DEFAULT_FORMATS: Record<DatePickerType, string> = {
   yearrange: 'yyyy',
 };
 
-// Validation utilities
 export interface DateValidationResult {
   isValid: boolean;
   errors: string[];
@@ -184,12 +220,10 @@ export const isValidDate = (value: any): boolean => {
   if (value instanceof Date) {
     return !isNaN(value.getTime());
   }
-
   if (typeof value === 'string' || typeof value === 'number') {
     const date = new Date(value);
     return !isNaN(date.getTime());
   }
-
   return false;
 };
 
@@ -203,31 +237,33 @@ export const validateDateValue = (
   type: DatePickerType,
   required?: boolean
 ): DateValidationResult => {
+  const { t } = useI18n();
+
   const errors: string[] = [];
   const isRange = ['daterange', 'datetimerange', 'monthrange', 'yearrange'].includes(type);
 
   if (required) {
     if (!value) {
-      errors.push("Це поле є обов'язковим");
+      errors.push(t(LOCALE_KEYS.VALIDATION_REQUIRED));
     } else if (isRange && isEmptyRangeValue(value)) {
-      errors.push("Це поле є обов'язковим");
+      errors.push(t(LOCALE_KEYS.VALIDATION_REQUIRED));
     }
   }
 
   if (value) {
     if (isRange && !Array.isArray(value)) {
-      errors.push('Для діапазону очікується масив з двох дат');
+      errors.push(t(LOCALE_KEYS.VALIDATION_RANGE_EXPECTED));
     } else if (!isRange && Array.isArray(value)) {
-      errors.push('Для одиночного вибору очікується одна дата');
+      errors.push(t(LOCALE_KEYS.VALIDATION_SINGLE_EXPECTED));
     }
 
     if (Array.isArray(value)) {
       if (value.length !== 2) {
-        errors.push('Діапазон повинен містити дві дати');
+        errors.push(t(LOCALE_KEYS.VALIDATION_RANGE_EXPECTED));
       } else {
         value.forEach((v, index) => {
           if (v && !isValidDate(v)) {
-            errors.push(`Некоректний формат дати ${index + 1}`);
+            errors.push(`${t(LOCALE_KEYS.VALIDATION_INVALID_DATE)} ${index + 1}`);
           }
         });
 
@@ -235,12 +271,12 @@ export const validateDateValue = (
           const startDate = new Date(value[0]);
           const endDate = new Date(value[1]);
           if (startDate > endDate) {
-            errors.push('Початкова дата не може бути пізніше кінцевої');
+            errors.push(t(LOCALE_KEYS.VALIDATION_START_AFTER_END));
           }
         }
       }
     } else if (!isValidDate(value)) {
-      errors.push('Некоректний формат дати');
+      errors.push(t(LOCALE_KEYS.VALIDATION_INVALID_DATE));
     }
   }
 

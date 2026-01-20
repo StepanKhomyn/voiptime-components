@@ -2,6 +2,10 @@
   import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
   import type { VtInputEmits, VtInputMethods, VtInputProps } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
+
+  const { t } = useI18n();
 
   // Пропси з дефолтними значеннями
   const props = withDefaults(defineProps<VtInputProps>(), {
@@ -91,7 +95,7 @@
 
     // Перевірка required
     if (props.required && !validators.required(value)) {
-      errors.push(props.requiredMessage || "Це поле є обов'язковим");
+      errors.push(props.requiredMessage || t(LOCALE_KEYS.VALIDATION_REQUIRED));
     }
 
     // Якщо значення порожнє і не required, пропускаємо інші валідації
@@ -105,51 +109,51 @@
     switch (props.type) {
       case 'email':
         if (stringValue && !validators.email(stringValue)) {
-          errors.push(props.emailMessage || 'Введіть коректну email адресу');
+          errors.push(props.emailMessage || t(LOCALE_KEYS.VALIDATION_INVALID_EMAIL));
         }
         break;
 
       case 'url':
         if (stringValue && !validators.url(stringValue)) {
-          errors.push(props.urlMessage || 'Введіть коректний URL');
+          errors.push(props.urlMessage || t(LOCALE_KEYS.VALIDATION_INVALID_URL));
         }
         break;
 
       case 'number':
         if (stringValue && !validators.number(stringValue)) {
-          errors.push(props.numberMessage || 'Введіть коректне число');
+          errors.push(props.numberMessage || t(LOCALE_KEYS.VALIDATION_INVALID_NUMBER));
         }
         break;
     }
 
     // Валідація довжини
     if (props.minlength && stringValue && !validators.minlength(stringValue, props.minlength)) {
-      errors.push(props.minlengthMessage || `Мінімальна довжина: ${props.minlength} символів`);
+      errors.push(props.minlengthMessage || t(LOCALE_KEYS.VALIDATION_MIN_LENGTH, { length: props.minlength }));
     }
 
     if (props.maxlength && stringValue && !validators.maxlength(stringValue, props.maxlength)) {
-      errors.push(props.maxlengthMessage || `Максимальна довжина: ${props.maxlength} символів`);
+      errors.push(props.maxlengthMessage || t(LOCALE_KEYS.VALIDATION_MAX_LENGTH, { length: props.maxlength }));
     }
 
     // Валідація діапазону для чисел
     if (props.type === 'number' && stringValue && validators.number(stringValue)) {
       if (props.min !== undefined && !validators.min(stringValue, props.min)) {
-        errors.push(props.minMessage || `Мінімальне значення: ${props.min}`);
+        errors.push(props.minMessage || t(LOCALE_KEYS.VALIDATION_MIN_NUMBER, { number: props.min }));
       }
 
       if (props.max !== undefined && !validators.max(stringValue, props.max)) {
-        errors.push(props.maxMessage || `Максимальне значення: ${props.max}`);
+        errors.push(props.maxMessage || t(LOCALE_KEYS.VALIDATION_MAX_NUMBER, { number: props.max }));
       }
     }
 
     // Валідація за патерном
     if (props.pattern && stringValue && !validators.pattern(stringValue, props.pattern)) {
-      errors.push(props.patternMessage || 'Значення не відповідає вимогам формату');
+      errors.push(props.patternMessage || t(LOCALE_KEYS.VALIDATION_INVALID_FORMAT));
     }
 
     // Кастомна валідація
     if (props.customValidator && !validators.custom(value, props.customValidator)) {
-      errors.push(props.customValidatorMessage || 'Значення не проходить валідацію');
+      errors.push(props.customValidatorMessage || t(LOCALE_KEYS.VALIDATION_INVALID_FORMAT));
     }
 
     validationErrors.value = errors;

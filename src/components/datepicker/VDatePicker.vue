@@ -1,803 +1,808 @@
 <script lang="ts" setup>
-import { computed, nextTick, onMounted, onUnmounted, ref, toRef, watch } from 'vue';
-import VIcon from '@/components/icon/VIcon.vue';
-import VButton from '@/components/button/VButton.vue';
-import { useDropdown } from '@/components/dropdown/useDropdown';
-import { useCalendar, useDatePicker } from '@/components/datepicker/helpers';
-import { type VDatePickerEmits, type VDatePickerProps, WEEKDAY_NAMES_SHORT } from '@/components/datepicker/types';
-import VTimePicker from '@/components/timepicker/VTimePicker.vue';
-import type { TimePickerValue } from '@/components/timepicker/types';
+  import { computed, nextTick, onMounted, onUnmounted, ref, toRef, watch } from 'vue';
+  import VIcon from '@/components/icon/VIcon.vue';
+  import VButton from '@/components/button/VButton.vue';
+  import { useDropdown } from '@/components/dropdown/useDropdown';
+  import { useCalendar, useDatePicker } from '@/components/datepicker/helpers';
+  import { useDateLocale, type VDatePickerEmits, type VDatePickerProps } from '@/components/datepicker/types';
+  import VTimePicker from '@/components/timepicker/VTimePicker.vue';
+  import type { TimePickerValue } from '@/components/timepicker/types';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
 
-// ===== PROPS & DEFAULTS =====
-const props = withDefaults(defineProps<VDatePickerProps>(), {
-  type: 'date',
-  placeholder: 'Оберіть дату',
-  startPlaceholder: 'Початкова дата',
-  endPlaceholder: 'Кінцева дата',
-  rangeSeparator: ' - ',
-  format: '',
-  valueFormat: '',
-  disabled: false,
-  clearable: true,
-  size: 'default',
-  outlined: false,
-  required: false,
-  hourStep: 1,
-  minuteStep: 1,
-  secondStep: 1,
-  showSeconds: true,
-  use12Hours: false,
-  hideDisabledOptions: false,
-  maxDateRange: Infinity,
-  previousDateDisabled: false,
-});
+  const { t } = useI18n();
+  const dateLocale = useDateLocale();
 
-// ===== EMITS =====
-const emit = defineEmits<VDatePickerEmits>();
+  // ===== PROPS & DEFAULTS =====
+  const props = withDefaults(defineProps<VDatePickerProps>(), {
+    type: 'date',
+    placeholder: undefined,
+    startPlaceholder: undefined,
+    endPlaceholder: undefined,
+    rangeSeparator: ' - ',
+    format: '',
+    valueFormat: '',
+    disabled: false,
+    clearable: true,
+    size: 'default',
+    outlined: false,
+    required: false,
+    hourStep: 1,
+    minuteStep: 1,
+    secondStep: 1,
+    showSeconds: true,
+    use12Hours: false,
+    hideDisabledOptions: false,
+    maxDateRange: Infinity,
+    previousDateDisabled: false,
+  });
 
-// ===== TEMPLATE REFS =====
-const datePickerRef = ref<HTMLElement>();
-const triggerRef = ref<HTMLElement>();
-const dropdownRef = ref<HTMLElement>();
-const startTimePickerRef = ref<InstanceType<typeof VTimePicker>>();
-const endTimePickerRef = ref<InstanceType<typeof VTimePicker>>();
+  // ===== EMITS =====
+  const emit = defineEmits<VDatePickerEmits>();
 
-// ===== INITIAL TIME VALUES =====
-const formatDefaultTime = (hours: number, minutes: number, seconds: number): string => {
-  if (props.use12Hours) {
-    const period = hours >= 12 ? 'PM' : 'AM';
-    const adjustedHours = hours % 12 || 12;
-    return props.showSeconds
-      ? `${String(adjustedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${period}`
-      : `${String(adjustedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${period}`;
-  } else {
-    return props.showSeconds
-      ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-      : `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
-  }
-};
+  // ===== TEMPLATE REFS =====
+  const datePickerRef = ref<HTMLElement>();
+  const triggerRef = ref<HTMLElement>();
+  const dropdownRef = ref<HTMLElement>();
+  const startTimePickerRef = ref<InstanceType<typeof VTimePicker>>();
+  const endTimePickerRef = ref<InstanceType<typeof VTimePicker>>();
 
-const resolveDate = (val: unknown): Date | null => {
-  if (val instanceof Date) return val;
-  if (typeof val === 'number') return new Date(val);
-  return null;
-};
+  // ===== INITIAL TIME VALUES =====
+  const formatDefaultTime = (hours: number, minutes: number, seconds: number): string => {
+    if (props.use12Hours) {
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const adjustedHours = hours % 12 || 12;
+      return props.showSeconds
+        ? `${String(adjustedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')} ${period}`
+        : `${String(adjustedHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${period}`;
+    } else {
+      return props.showSeconds
+        ? `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
+        : `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+    }
+  };
 
-const getInitialStartTime = () => {
-  if (props.modelValue) {
-    if (props.type === 'datetimerange' && Array.isArray(props.modelValue)) {
-      const start = resolveDate(props.modelValue[0]);
-      if (start) {
-        return formatDefaultTime(start.getHours(), start.getMinutes(), start.getSeconds());
+  const resolveDate = (val: unknown): Date | null => {
+    if (val instanceof Date) return val;
+    if (typeof val === 'number') return new Date(val);
+    return null;
+  };
+
+  const getInitialStartTime = () => {
+    if (props.modelValue) {
+      if (props.type === 'datetimerange' && Array.isArray(props.modelValue)) {
+        const start = resolveDate(props.modelValue[0]);
+        if (start) {
+          return formatDefaultTime(start.getHours(), start.getMinutes(), start.getSeconds());
+        }
       }
+      if (props.type === 'datetime') {
+        const date = resolveDate(props.modelValue);
+        if (date) {
+          return formatDefaultTime(date.getHours(), date.getMinutes(), date.getSeconds());
+        }
+      }
+    }
+
+    // дефолти
+    if (props.type === 'datetimerange') {
+      return formatDefaultTime(0, 0, 0);
     }
     if (props.type === 'datetime') {
-      const date = resolveDate(props.modelValue);
-      if (date) {
-        return formatDefaultTime(date.getHours(), date.getMinutes(), date.getSeconds());
-      }
+      const now = new Date();
+      return formatDefaultTime(now.getHours(), now.getMinutes(), now.getSeconds());
     }
-  }
-
-  // дефолти
-  if (props.type === 'datetimerange') {
     return formatDefaultTime(0, 0, 0);
-  }
-  if (props.type === 'datetime') {
-    const now = new Date();
-    return formatDefaultTime(now.getHours(), now.getMinutes(), now.getSeconds());
-  }
-  return formatDefaultTime(0, 0, 0);
-};
+  };
 
-const getInitialEndTime = () => {
-  if (props.modelValue) {
-    if (props.type === 'datetimerange' && Array.isArray(props.modelValue)) {
-      const end = resolveDate(props.modelValue[1]);
-      if (end) {
-        return formatDefaultTime(end.getHours(), end.getMinutes(), end.getSeconds());
+  const getInitialEndTime = () => {
+    if (props.modelValue) {
+      if (props.type === 'datetimerange' && Array.isArray(props.modelValue)) {
+        const end = resolveDate(props.modelValue[1]);
+        if (end) {
+          return formatDefaultTime(end.getHours(), end.getMinutes(), end.getSeconds());
+        }
       }
+      if (props.type === 'datetime') {
+        const date = resolveDate(props.modelValue);
+        if (date) {
+          return formatDefaultTime(date.getHours(), date.getMinutes(), date.getSeconds());
+        }
+      }
+    }
+
+    // дефолти
+    if (props.type === 'datetimerange') {
+      return formatDefaultTime(23, 59, 59);
     }
     if (props.type === 'datetime') {
-      const date = resolveDate(props.modelValue);
-      if (date) {
-        return formatDefaultTime(date.getHours(), date.getMinutes(), date.getSeconds());
-      }
+      const now = new Date();
+      return formatDefaultTime(now.getHours(), now.getMinutes(), now.getSeconds());
     }
-  }
-
-  // дефолти
-  if (props.type === 'datetimerange') {
     return formatDefaultTime(23, 59, 59);
-  }
-  if (props.type === 'datetime') {
-    const now = new Date();
-    return formatDefaultTime(now.getHours(), now.getMinutes(), now.getSeconds());
-  }
-  return formatDefaultTime(23, 59, 59);
-};
-
-// ===== STATE =====
-const state = {
-  isFocused: ref(false),
-  currentDate: ref(new Date()),
-  rightCurrentDate: ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)),
-  viewMode: ref<'date' | 'month' | 'year'>('date'),
-  startDate: ref<Date | null>(null),
-  endDate: ref<Date | null>(null),
-  isSelectingEnd: ref(false),
-  hoverDate: ref<Date | null>(null),
-  // Time state for datetime types
-  startTime: ref<TimePickerValue>(getInitialStartTime()),
-  endTime: ref<TimePickerValue>(getInitialEndTime()),
-};
-
-// ===== COMPOSABLES =====
-const modelValueRef = toRef(props, 'modelValue');
-const typeRef = toRef(props, 'type');
-const formatRef = toRef(props, 'format');
-const valueFormatRef = toRef(props, 'valueFormat');
-const rangeSeparatorRef = toRef(props, 'rangeSeparator');
-
-const {
-  isRange,
-  displayFormat,
-  outputFormat,
-  parsedValue,
-  displayText,
-  hasDisplayValue,
-  formatOutput,
-  validate,
-  formatDate,
-  parseDate,
-} = useDatePicker(modelValueRef, typeRef, formatRef, valueFormatRef, rangeSeparatorRef, props.required);
-
-// Календар для лівої частини
-const {
-  calendarDates: leftCalendarDates,
-  monthsInYear: leftMonthsInYear,
-  yearsInDecade: leftYearsInDecade,
-  decadeRange: leftDecadeRange,
-  isDateInCurrentMonth: leftIsDateInCurrentMonth,
-  isToday,
-  isSameDate,
-  isSameMonth,
-  isSameYear,
-  navigateMonth: leftNavigateMonth,
-  navigateYear: leftNavigateYear,
-  navigateDecade: leftNavigateDecade,
-} = useCalendar(state.currentDate);
-
-// Календар для правої частини
-const {
-  calendarDates: rightCalendarDates,
-  monthsInYear: rightMonthsInYear,
-  yearsInDecade: rightYearsInDecade,
-  decadeRange: rightDecadeRange,
-  isDateInCurrentMonth: rightIsDateInCurrentMonth,
-  navigateMonth: rightNavigateMonth,
-  navigateYear: rightNavigateYear,
-  navigateDecade: rightNavigateDecade,
-} = useCalendar(state.rightCurrentDate);
-
-// ===== COMPUTED VALUES =====
-const getInitialViewMode = (type: string): 'date' | 'month' | 'year' => {
-  switch (type) {
-    case 'year':
-    case 'yearrange':
-      return 'year';
-    case 'month':
-    case 'monthrange':
-      return 'month';
-    default:
-      return 'date';
-  }
-};
-
-const isDateTimeType = computed(() => {
-  return props.type === 'datetime' || props.type === 'datetimerange';
-});
-
-const showTimePicker = computed(() => {
-  return isDateTimeType.value;
-});
-
-const disabledHoursValue = computed<() => number[]>(() => {
-  // Return a function, not call it
-  return () => {
-    const now = new Date();
-    let hours: number[] = [];
-
-    if (props.disabledHours) {
-      hours = [...props.disabledHours()]; // Call the function from props
-    }
-
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours();
-      for (let h = 0; h < currentHour; h++) {
-        if (!hours.includes(h)) {
-          hours.push(h);
-        }
-      }
-    }
-
-    return hours;
   };
-});
 
-const disabledMinutesValue = computed<(selectedHour: number) => number[]>(() => {
-  return (selectedHour: number) => {
-    const now = new Date();
-    let minutes: number[] = [];
+  // ===== STATE =====
+  const state = {
+    isFocused: ref(false),
+    currentDate: ref(new Date()),
+    rightCurrentDate: ref(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 1)),
+    viewMode: ref<'date' | 'month' | 'year'>('date'),
+    startDate: ref<Date | null>(null),
+    endDate: ref<Date | null>(null),
+    isSelectingEnd: ref(false),
+    hoverDate: ref<Date | null>(null),
+    // Time state for datetime types
+    startTime: ref<TimePickerValue>(getInitialStartTime()),
+    endTime: ref<TimePickerValue>(getInitialEndTime()),
+  };
 
-    if (props.disabledMinutes) {
-      minutes = [...props.disabledMinutes(selectedHour)]; // Call with selectedHour
+  // ===== COMPOSABLES =====
+  const modelValueRef = toRef(props, 'modelValue');
+  const typeRef = toRef(props, 'type');
+  const formatRef = toRef(props, 'format');
+  const valueFormatRef = toRef(props, 'valueFormat');
+  const rangeSeparatorRef = toRef(props, 'rangeSeparator');
+
+  const {
+    isRange,
+    displayFormat,
+    outputFormat,
+    parsedValue,
+    displayText,
+    hasDisplayValue,
+    formatOutput,
+    validate,
+    formatDate,
+    parseDate,
+  } = useDatePicker(modelValueRef, typeRef, formatRef, valueFormatRef, rangeSeparatorRef, props.required);
+
+  // Календар для лівої частини
+  const {
+    calendarDates: leftCalendarDates,
+    monthsInYear: leftMonthsInYear,
+    yearsInDecade: leftYearsInDecade,
+    decadeRange: leftDecadeRange,
+    isDateInCurrentMonth: leftIsDateInCurrentMonth,
+    isToday,
+    isSameDate,
+    isSameMonth,
+    isSameYear,
+    navigateMonth: leftNavigateMonth,
+    navigateYear: leftNavigateYear,
+    navigateDecade: leftNavigateDecade,
+  } = useCalendar(state.currentDate);
+
+  // Календар для правої частини
+  const {
+    calendarDates: rightCalendarDates,
+    monthsInYear: rightMonthsInYear,
+    yearsInDecade: rightYearsInDecade,
+    decadeRange: rightDecadeRange,
+    isDateInCurrentMonth: rightIsDateInCurrentMonth,
+    navigateMonth: rightNavigateMonth,
+    navigateYear: rightNavigateYear,
+    navigateDecade: rightNavigateDecade,
+  } = useCalendar(state.rightCurrentDate);
+
+  // ===== COMPUTED VALUES =====
+  const getInitialViewMode = (type: string): 'date' | 'month' | 'year' => {
+    switch (type) {
+      case 'year':
+      case 'yearrange':
+        return 'year';
+      case 'month':
+      case 'monthrange':
+        return 'month';
+      default:
+        return 'date';
     }
+  };
 
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
+  const isDateTimeType = computed(() => {
+    return props.type === 'datetime' || props.type === 'datetimerange';
+  });
 
-      if (selectedHour === currentHour) {
-        for (let m = 0; m < currentMinute; m++) {
-          if (!minutes.includes(m)) {
-            minutes.push(m);
+  const showTimePicker = computed(() => {
+    return isDateTimeType.value;
+  });
+
+  const disabledHoursValue = computed<() => number[]>(() => {
+    // Return a function, not call it
+    return () => {
+      const now = new Date();
+      let hours: number[] = [];
+
+      if (props.disabledHours) {
+        hours = [...props.disabledHours()]; // Call the function from props
+      }
+
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        for (let h = 0; h < currentHour; h++) {
+          if (!hours.includes(h)) {
+            hours.push(h);
           }
         }
       }
-    }
 
-    return minutes;
-  };
-});
+      return hours;
+    };
+  });
 
-const disabledSecondsValue = computed<(selectedHour: number, selectedMinute: number) => number[]>(() => {
-  return (selectedHour: number, selectedMinute: number) => {
-    const now = new Date();
-    let seconds: number[] = [];
+  const disabledMinutesValue = computed<(selectedHour: number) => number[]>(() => {
+    return (selectedHour: number) => {
+      const now = new Date();
+      let minutes: number[] = [];
 
-    if (props.disabledSeconds) {
-      seconds = [...props.disabledSeconds(selectedHour, selectedMinute)]; // Call with both params
-    }
+      if (props.disabledMinutes) {
+        minutes = [...props.disabledMinutes(selectedHour)]; // Call with selectedHour
+      }
 
-    if (props.previousDateDisabled) {
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const currentSecond = now.getSeconds();
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
 
-      if (selectedHour === currentHour && selectedMinute === currentMinute) {
-        for (let s = 0; s < currentSecond; s++) {
-          if (!seconds.includes(s)) {
-            seconds.push(s);
+        if (selectedHour === currentHour) {
+          for (let m = 0; m < currentMinute; m++) {
+            if (!minutes.includes(m)) {
+              minutes.push(m);
+            }
           }
         }
       }
+
+      return minutes;
+    };
+  });
+
+  const disabledSecondsValue = computed<(selectedHour: number, selectedMinute: number) => number[]>(() => {
+    return (selectedHour: number, selectedMinute: number) => {
+      const now = new Date();
+      let seconds: number[] = [];
+
+      if (props.disabledSeconds) {
+        seconds = [...props.disabledSeconds(selectedHour, selectedMinute)]; // Call with both params
+      }
+
+      if (props.previousDateDisabled) {
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        const currentSecond = now.getSeconds();
+
+        if (selectedHour === currentHour && selectedMinute === currentMinute) {
+          for (let s = 0; s < currentSecond; s++) {
+            if (!seconds.includes(s)) {
+              seconds.push(s);
+            }
+          }
+        }
+      }
+
+      return seconds;
+    };
+  });
+
+  const daysShort = computed(() => dateLocale.weekdaysShort.value);
+
+  // ===== DROPDOWN INTEGRATION =====
+  const {
+    visible: isDropdownVisible,
+    parentVisible,
+    dropdownPosition,
+    show: showDropdown,
+    hide: hideDropdown,
+    toggle: toggleDropdown,
+    updatePosition,
+  } = useDropdown(triggerRef, dropdownRef, {
+    trigger: 'click',
+    placement: 'bottom-start',
+    showTimeout: 0,
+    hideTimeout: 150,
+    disabled: props.disabled,
+    hideOnClick: false,
+    onVisibleChange: visible => {
+      if (visible) {
+        nextTick(() => updatePosition());
+      }
+    },
+  });
+
+  const showClearButton = computed(() => {
+    return props.clearable && !props.disabled && hasDisplayValue.value;
+  });
+
+  const currentPlaceholder = computed(() => {
+    if (isRange.value) {
+      if (state.isSelectingEnd.value) {
+        return props.endPlaceholder || t(LOCALE_KEYS.DATE_PICKER_END_PLACEHOLDER);
+      }
+      return props.startPlaceholder || t(LOCALE_KEYS.DATE_PICKER_START_PLACEHOLDER);
     }
+    return props.placeholder || t(LOCALE_KEYS.DATE_PICKER_PLACEHOLDER);
+  });
 
-    return seconds;
-  };
-});
+  const pickerClasses = computed(() => [
+    'vt-datepicker',
+    `vt-datepicker--${props.size}`,
+    `vt-datepicker--${props.type}`,
+    {
+      'vt-datepicker--disabled': props.disabled,
+      'vt-datepicker--focused': state.isFocused.value,
+      'vt-datepicker--range': isRange.value,
+      'vt-datepicker--open': isDropdownVisible.value,
+      'vt-datepicker--with-time': showTimePicker.value,
+      'vt-datepicker--error': !!displayErrorMessage.value,
 
-// ===== DROPDOWN INTEGRATION =====
-const {
-  visible: isDropdownVisible,
-  parentVisible,
-  dropdownPosition,
-  show: showDropdown,
-  hide: hideDropdown,
-  toggle: toggleDropdown,
-  updatePosition,
-} = useDropdown(triggerRef, dropdownRef, {
-  trigger: 'click',
-  placement: 'bottom-start',
-  showTimeout: 0,
-  hideTimeout: 150,
-  disabled: props.disabled,
-  hideOnClick: false,
-  onVisibleChange: visible => {
-    if (visible) {
-      nextTick(() => updatePosition());
+      'vt-datepicker--outlined': props.outlined,
+      'vt-datepicker--label-floating': isLabelFloating.value,
+    },
+  ]);
+
+  const validationError = computed(() => {
+    if (props.required && !hasDisplayValue.value) {
+      return t(LOCALE_KEYS.VALIDATION_REQUIRED);
     }
-  },
-});
+    return '';
+  });
 
-const showClearButton = computed(() => {
-  return props.clearable && !props.disabled && hasDisplayValue.value;
-});
+  const displayErrorMessage = computed(() => {
+    if (props.errorMessage) return props.errorMessage;
+    if (validationError.value) return validationError.value;
+    return '';
+  });
 
-const currentPlaceholder = computed(() => {
-  if (isRange.value) {
-    if (state.isSelectingEnd.value) {
-      return props.endPlaceholder;
-    }
-    return props.startPlaceholder;
-  }
-  return props.placeholder;
-});
+  const dropdownStyle = computed(() => ({
+    ...dropdownPosition.value,
+    position: 'absolute' as const,
+    zIndex: 2000,
+  }));
 
-const pickerClasses = computed(() => [
-  'vt-datepicker',
-  `vt-datepicker--${props.size}`,
-  `vt-datepicker--${props.type}`,
-  {
-    'vt-datepicker--disabled': props.disabled,
-    'vt-datepicker--focused': state.isFocused.value,
-    'vt-datepicker--range': isRange.value,
-    'vt-datepicker--open': isDropdownVisible.value,
-    'vt-datepicker--with-time': showTimePicker.value,
-    'vt-datepicker--error': !!displayErrorMessage.value,
+  const showDualCalendar = computed(() => {
+    return (props.type === 'daterange' || props.type === 'datetimerange') && state.viewMode.value === 'date';
+  });
 
-    'vt-datepicker--outlined': props.outlined,
-    'vt-datepicker--label-floating': isLabelFloating.value,
-  },
-]);
+  const isLabelFloating = computed(() => {
+    if (!props.outlined) return false;
+    return isDropdownVisible.value || hasDisplayValue.value;
+  });
 
-const validationError = computed(() => {
-  if (props.required && !hasDisplayValue.value) {
-    return 'Це поле є обов\'язковим';
-  }
-  return '';
-});
-
-const displayErrorMessage = computed(() => {
-  if (props.errorMessage) return props.errorMessage;
-  if (validationError.value) return validationError.value;
-  return '';
-});
-
-const dropdownStyle = computed(() => ({
-  ...dropdownPosition.value,
-  position: 'absolute' as const,
-  zIndex: 2000,
-}));
-
-const showDualCalendar = computed(() => {
-  return (props.type === 'daterange' || props.type === 'datetimerange') && state.viewMode.value === 'date';
-});
-
-const isLabelFloating = computed(() => {
-  if (!props.outlined) return false;
-  return isDropdownVisible.value || hasDisplayValue.value;
-});
-
-// ===== SELECTION LOGIC =====
-const isDateClickable = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
-  if (props.type === 'daterange' || props.type === 'datetimerange') {
-    if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
-      return false;
-    }
-    if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
-      return false;
-    }
-  }
-
-  // previousDate: забороняє вибір дат у минулому
-  if (props.previousDateDisabled) {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const checkDate = new Date(date);
-    checkDate.setHours(0, 0, 0, 0);
-    if (checkDate < today) {
-      return false;
-    }
-  }
-
-  // maxDateRange: перевірка максимального діапазону
-  if (props.maxDateRange && (props.type === 'daterange' || props.type === 'datetimerange')) {
-    if (state.startDate.value && state.isSelectingEnd.value) {
-      const start = new Date(state.startDate.value);
-      start.setHours(0, 0, 0, 0);
-      const checkDate = new Date(date);
-      checkDate.setHours(0, 0, 0, 0);
-
-      const diffTime = Math.abs(checkDate.getTime() - start.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays > props.maxDateRange) {
+  // ===== SELECTION LOGIC =====
+  const isDateClickable = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
+      if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
+        return false;
+      }
+      if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
         return false;
       }
     }
-  }
 
-  return true;
-};
-
-const isDateSelected = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
-  if (props.type === 'daterange' || props.type === 'datetimerange') {
-    if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
-      return false;
+    // previousDate: забороняє вибір дат у минулому
+    if (props.previousDateDisabled) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const checkDate = new Date(date);
+      checkDate.setHours(0, 0, 0, 0);
+      if (checkDate < today) {
+        return false;
+      }
     }
-    if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
-      return false;
-    }
-  }
 
-  if (isRange.value) {
+    // maxDateRange: перевірка максимального діапазону
+    if (props.maxDateRange && (props.type === 'daterange' || props.type === 'datetimerange')) {
+      if (state.startDate.value && state.isSelectingEnd.value) {
+        const start = new Date(state.startDate.value);
+        start.setHours(0, 0, 0, 0);
+        const checkDate = new Date(date);
+        checkDate.setHours(0, 0, 0, 0);
+
+        const diffTime = Math.abs(checkDate.getTime() - start.getTime());
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays > props.maxDateRange) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
+  const isDateSelected = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
+      if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
+        return false;
+      }
+      if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
+        return false;
+      }
+    }
+
+    if (isRange.value) {
+      if (state.startDate.value && state.endDate.value) {
+        const start = new Date(state.startDate.value);
+        const end = new Date(state.endDate.value);
+        const currentDate = new Date(date);
+
+        start.setHours(0, 0, 0, 0);
+        end.setHours(0, 0, 0, 0);
+        currentDate.setHours(0, 0, 0, 0);
+
+        return currentDate.getTime() === start.getTime() || currentDate.getTime() === end.getTime();
+      } else if (state.startDate.value) {
+        const start = new Date(state.startDate.value);
+        const currentDate = new Date(date);
+
+        start.setHours(0, 0, 0, 0);
+        currentDate.setHours(0, 0, 0, 0);
+
+        return currentDate.getTime() === start.getTime();
+      }
+      return false;
+    } else {
+      const selected = state.startDate.value || (parsedValue.value as Date | null);
+      if (!selected) return false;
+
+      const selectedDate = new Date(selected);
+      const currentDate = new Date(date);
+
+      selectedDate.setHours(0, 0, 0, 0);
+      currentDate.setHours(0, 0, 0, 0);
+
+      return currentDate.getTime() === selectedDate.getTime();
+    }
+  };
+
+  const isDateInRange = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
+    if (!isRange.value) return false;
+
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
+      if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
+        return false;
+      }
+      if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
+        return false;
+      }
+    }
+
     if (state.startDate.value && state.endDate.value) {
       const start = new Date(state.startDate.value);
       const end = new Date(state.endDate.value);
-      const currentDate = new Date(date);
-
       start.setHours(0, 0, 0, 0);
       end.setHours(0, 0, 0, 0);
+      const currentDate = new Date(date);
       currentDate.setHours(0, 0, 0, 0);
 
-      return currentDate.getTime() === start.getTime() || currentDate.getTime() === end.getTime();
-    } else if (state.startDate.value) {
+      return currentDate >= start && currentDate <= end;
+    }
+
+    if (state.startDate.value && state.isSelectingEnd.value && state.hoverDate.value) {
       const start = new Date(state.startDate.value);
+      const hover = new Date(state.hoverDate.value);
       const currentDate = new Date(date);
 
       start.setHours(0, 0, 0, 0);
+      hover.setHours(0, 0, 0, 0);
       currentDate.setHours(0, 0, 0, 0);
 
-      return currentDate.getTime() === start.getTime();
+      const minDate = start <= hover ? start : hover;
+      const maxDate = start <= hover ? hover : start;
+
+      return currentDate >= minDate && currentDate <= maxDate;
     }
+
     return false;
-  } else {
-    const selected = state.startDate.value || (parsedValue.value as Date | null);
-    if (!selected) return false;
+  };
 
-    const selectedDate = new Date(selected);
-    const currentDate = new Date(date);
+  const isMonthSelected = (monthIndex: number, currentDateRef: Date): boolean => {
+    if (isRange.value) {
+      if (state.startDate.value && state.endDate.value) {
+        const currentYear = currentDateRef.getFullYear();
+        const startMonth = state.startDate.value.getMonth();
+        const startYear = state.startDate.value.getFullYear();
+        const endMonth = state.endDate.value.getMonth();
+        const endYear = state.endDate.value.getFullYear();
 
-    selectedDate.setHours(0, 0, 0, 0);
-    currentDate.setHours(0, 0, 0, 0);
-
-    return currentDate.getTime() === selectedDate.getTime();
-  }
-};
-
-const isDateInRange = (date: Date, isLeftCalendar = false, isRightCalendar = false): boolean => {
-  if (!isRange.value) return false;
-
-  if (props.type === 'daterange' || props.type === 'datetimerange') {
-    if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
+        return (
+          (currentYear === startYear && monthIndex === startMonth) ||
+          (currentYear === endYear && monthIndex === endMonth)
+        );
+      } else if (state.startDate.value) {
+        const startMonth = state.startDate.value.getMonth();
+        const startYear = state.startDate.value.getFullYear();
+        return currentDateRef.getFullYear() === startYear && monthIndex === startMonth;
+      }
       return false;
+    } else {
+      const selected = parsedValue.value as Date | null;
+      return selected
+        ? selected.getFullYear() === currentDateRef.getFullYear() && selected.getMonth() === monthIndex
+        : false;
     }
-    if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
-      return false;
-    }
-  }
+  };
 
-  if (state.startDate.value && state.endDate.value) {
-    const start = new Date(state.startDate.value);
-    const end = new Date(state.endDate.value);
-    start.setHours(0, 0, 0, 0);
-    end.setHours(0, 0, 0, 0);
-    const currentDate = new Date(date);
-    currentDate.setHours(0, 0, 0, 0);
+  const isMonthInRange = (monthIndex: number, currentDateRef: Date): boolean => {
+    if (!isRange.value) return false;
 
-    return currentDate >= start && currentDate <= end;
-  }
+    const currentYear = currentDateRef.getFullYear();
+    const currentMonth = new Date(currentYear, monthIndex, 1);
 
-  if (state.startDate.value && state.isSelectingEnd.value && state.hoverDate.value) {
-    const start = new Date(state.startDate.value);
-    const hover = new Date(state.hoverDate.value);
-    const currentDate = new Date(date);
-
-    start.setHours(0, 0, 0, 0);
-    hover.setHours(0, 0, 0, 0);
-    currentDate.setHours(0, 0, 0, 0);
-
-    const minDate = start <= hover ? start : hover;
-    const maxDate = start <= hover ? hover : start;
-
-    return currentDate >= minDate && currentDate <= maxDate;
-  }
-
-  return false;
-};
-
-const isMonthSelected = (monthIndex: number, currentDateRef: Date): boolean => {
-  if (isRange.value) {
     if (state.startDate.value && state.endDate.value) {
-      const currentYear = currentDateRef.getFullYear();
-      const startMonth = state.startDate.value.getMonth();
+      const start = new Date(state.startDate.value.getFullYear(), state.startDate.value.getMonth(), 1);
+      const end = new Date(state.endDate.value.getFullYear(), state.endDate.value.getMonth(), 1);
+
+      return currentMonth >= start && currentMonth <= end && !isMonthSelected(monthIndex, currentDateRef);
+    }
+
+    if (state.startDate.value && state.isSelectingEnd.value && state.hoverDate.value) {
+      const start = new Date(state.startDate.value.getFullYear(), state.startDate.value.getMonth(), 1);
+      const hover = new Date(state.hoverDate.value.getFullYear(), state.hoverDate.value.getMonth(), 1);
+
+      const minDate = start <= hover ? start : hover;
+      const maxDate = start <= hover ? hover : start;
+
+      return currentMonth >= minDate && currentMonth <= maxDate && !isMonthSelected(monthIndex, currentDateRef);
+    }
+
+    return false;
+  };
+
+  const isYearSelected = (year: number): boolean => {
+    if (isRange.value) {
+      if (state.startDate.value && state.endDate.value) {
+        return year === state.startDate.value.getFullYear() || year === state.endDate.value.getFullYear();
+      } else if (state.startDate.value) {
+        return state.startDate.value.getFullYear() === year;
+      }
+      return false;
+    } else {
+      const selected = parsedValue.value as Date | null;
+      return selected ? selected.getFullYear() === year : false;
+    }
+  };
+
+  const isYearInRange = (year: number): boolean => {
+    if (!isRange.value) return false;
+
+    if (state.startDate.value && state.endDate.value) {
       const startYear = state.startDate.value.getFullYear();
-      const endMonth = state.endDate.value.getMonth();
       const endYear = state.endDate.value.getFullYear();
 
-      return (
-        (currentYear === startYear && monthIndex === startMonth) ||
-        (currentYear === endYear && monthIndex === endMonth)
-      );
-    } else if (state.startDate.value) {
-      const startMonth = state.startDate.value.getMonth();
+      return year >= startYear && year <= endYear && !isYearSelected(year);
+    }
+
+    if (state.startDate.value && state.isSelectingEnd.value && state.hoverDate.value) {
       const startYear = state.startDate.value.getFullYear();
-      return currentDateRef.getFullYear() === startYear && monthIndex === startMonth;
+      const hoverYear = state.hoverDate.value.getFullYear();
+
+      const minYear = Math.min(startYear, hoverYear);
+      const maxYear = Math.max(startYear, hoverYear);
+
+      return year >= minYear && year <= maxYear && !isYearSelected(year);
     }
+
     return false;
-  } else {
-    const selected = parsedValue.value as Date | null;
-    return selected
-      ? selected.getFullYear() === currentDateRef.getFullYear() && selected.getMonth() === monthIndex
-      : false;
-  }
-};
+  };
 
-const isMonthInRange = (monthIndex: number, currentDateRef: Date): boolean => {
-  if (!isRange.value) return false;
+  // ===== TIME HELPERS =====
+  const combineDateTime = (date: Date, time: TimePickerValue): Date => {
+    const result = new Date(date);
 
-  const currentYear = currentDateRef.getFullYear();
-  const currentMonth = new Date(currentYear, monthIndex, 1);
+    if (time && typeof time === 'string') {
+      // Parse time string like "14:30:00" or "2:30:00 PM"
+      const timeMatch = time.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s?(AM|PM)?/i);
+      if (timeMatch) {
+        let hours = parseInt(timeMatch[1]);
+        const minutes = parseInt(timeMatch[2]);
+        const seconds = timeMatch[3] ? parseInt(timeMatch[3]) : 0;
+        const period = timeMatch[4]?.toUpperCase();
 
-  if (state.startDate.value && state.endDate.value) {
-    const start = new Date(state.startDate.value.getFullYear(), state.startDate.value.getMonth(), 1);
-    const end = new Date(state.endDate.value.getFullYear(), state.endDate.value.getMonth(), 1);
+        if (period) {
+          if (period === 'PM' && hours !== 12) hours += 12;
+          if (period === 'AM' && hours === 12) hours = 0;
+        }
 
-    return currentMonth >= start && currentMonth <= end && !isMonthSelected(monthIndex, currentDateRef);
-  }
-
-  if (state.startDate.value && state.isSelectingEnd.value && state.hoverDate.value) {
-    const start = new Date(state.startDate.value.getFullYear(), state.startDate.value.getMonth(), 1);
-    const hover = new Date(state.hoverDate.value.getFullYear(), state.hoverDate.value.getMonth(), 1);
-
-    const minDate = start <= hover ? start : hover;
-    const maxDate = start <= hover ? hover : start;
-
-    return currentMonth >= minDate && currentMonth <= maxDate && !isMonthSelected(monthIndex, currentDateRef);
-  }
-
-  return false;
-};
-
-const isYearSelected = (year: number): boolean => {
-  if (isRange.value) {
-    if (state.startDate.value && state.endDate.value) {
-      return year === state.startDate.value.getFullYear() || year === state.endDate.value.getFullYear();
-    } else if (state.startDate.value) {
-      return state.startDate.value.getFullYear() === year;
-    }
-    return false;
-  } else {
-    const selected = parsedValue.value as Date | null;
-    return selected ? selected.getFullYear() === year : false;
-  }
-};
-
-const isYearInRange = (year: number): boolean => {
-  if (!isRange.value) return false;
-
-  if (state.startDate.value && state.endDate.value) {
-    const startYear = state.startDate.value.getFullYear();
-    const endYear = state.endDate.value.getFullYear();
-
-    return year >= startYear && year <= endYear && !isYearSelected(year);
-  }
-
-  if (state.startDate.value && state.isSelectingEnd.value && state.hoverDate.value) {
-    const startYear = state.startDate.value.getFullYear();
-    const hoverYear = state.hoverDate.value.getFullYear();
-
-    const minYear = Math.min(startYear, hoverYear);
-    const maxYear = Math.max(startYear, hoverYear);
-
-    return year >= minYear && year <= maxYear && !isYearSelected(year);
-  }
-
-  return false;
-};
-
-// ===== TIME HELPERS =====
-const combineDateTime = (date: Date, time: TimePickerValue): Date => {
-  const result = new Date(date);
-
-  if (time && typeof time === 'string') {
-    // Parse time string like "14:30:00" or "2:30:00 PM"
-    const timeMatch = time.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s?(AM|PM)?/i);
-    if (timeMatch) {
-      let hours = parseInt(timeMatch[1]);
-      const minutes = parseInt(timeMatch[2]);
-      const seconds = timeMatch[3] ? parseInt(timeMatch[3]) : 0;
-      const period = timeMatch[4]?.toUpperCase();
-
-      if (period) {
-        if (period === 'PM' && hours !== 12) hours += 12;
-        if (period === 'AM' && hours === 12) hours = 0;
+        result.setHours(hours, minutes, seconds, 0);
       }
-
-      result.setHours(hours, minutes, seconds, 0);
     }
-  }
 
-  return result;
-};
+    return result;
+  };
 
-const extractTime = (date: Date): string => {
-  if (!date) return '';
+  const extractTime = (date: Date): string => {
+    if (!date) return '';
 
-  if (props.use12Hours) {
-    return date.toLocaleTimeString('en-US', {
-      hour12: true,
-      hour: '2-digit',
-      minute: '2-digit',
-      ...(props.showSeconds && { second: '2-digit' }),
-    });
-  } else {
-    return date.toLocaleTimeString('en-GB', {
-      hour12: false,
-      hour: '2-digit',
-      minute: '2-digit',
-      ...(props.showSeconds && { second: '2-digit' }),
-    });
-  }
-};
+    if (props.use12Hours) {
+      return date.toLocaleTimeString('en-US', {
+        hour12: true,
+        hour: '2-digit',
+        minute: '2-digit',
+        ...(props.showSeconds && { second: '2-digit' }),
+      });
+    } else {
+      return date.toLocaleTimeString('en-GB', {
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        ...(props.showSeconds && { second: '2-digit' }),
+      });
+    }
+  };
 
-// ===== EVENT HANDLERS =====
-const handleClickOutside = (event: MouseEvent) => {
-  if (!isDropdownVisible.value) return;
+  const getMonthLocaleKey = (monthIndex: number, short = false) => {
+    const months = [
+      short ? LOCALE_KEYS.MONTH_SHORT_JANUARY : LOCALE_KEYS.MONTH_JANUARY,
+      short ? LOCALE_KEYS.MONTH_SHORT_FEBRUARY : LOCALE_KEYS.MONTH_FEBRUARY,
+      short ? LOCALE_KEYS.MONTH_SHORT_MARCH : LOCALE_KEYS.MONTH_MARCH,
+      short ? LOCALE_KEYS.MONTH_SHORT_APRIL : LOCALE_KEYS.MONTH_APRIL,
+      short ? LOCALE_KEYS.MONTH_SHORT_MAY : LOCALE_KEYS.MONTH_MAY,
+      short ? LOCALE_KEYS.MONTH_SHORT_JUNE : LOCALE_KEYS.MONTH_JUNE,
+      short ? LOCALE_KEYS.MONTH_SHORT_JULY : LOCALE_KEYS.MONTH_JULY,
+      short ? LOCALE_KEYS.MONTH_SHORT_AUGUST : LOCALE_KEYS.MONTH_AUGUST,
+      short ? LOCALE_KEYS.MONTH_SHORT_SEPTEMBER : LOCALE_KEYS.MONTH_SEPTEMBER,
+      short ? LOCALE_KEYS.MONTH_SHORT_OCTOBER : LOCALE_KEYS.MONTH_OCTOBER,
+      short ? LOCALE_KEYS.MONTH_SHORT_NOVEMBER : LOCALE_KEYS.MONTH_SHORT_NOVEMBER,
+      short ? LOCALE_KEYS.MONTH_SHORT_DECEMBER : LOCALE_KEYS.MONTH_DECEMBER,
+    ];
 
-  const target = event.target as Node;
-  if (datePickerRef.value?.contains(target) || dropdownRef.value?.contains(target)) {
-    return;
-  }
+    return months[monthIndex];
+  };
 
-  hideDropdown();
-};
+  const headerLabel = (date: Date) => {
+    const monthKey = getMonthLocaleKey(date.getMonth());
+    return `${t(monthKey)} ${date.getFullYear()}`;
+  };
 
-const handleTriggerClick = () => {
-  if (props.disabled) return;
-  toggleDropdown();
-};
+  // ===== EVENT HANDLERS =====
+  const handleClickOutside = (event: MouseEvent) => {
+    if (!isDropdownVisible.value) return;
 
-const handleFocus = () => {
-  state.isFocused.value = true;
-  emit('focus', datePickerRef.value);
-};
+    const target = event.target as Node;
+    if (datePickerRef.value?.contains(target) || dropdownRef.value?.contains(target)) {
+      return;
+    }
 
-const handleBlur = () => {
-  state.isFocused.value = false;
+    hideDropdown();
+  };
 
-  // Перевірка required при втраті фокусу
-  if (props.required && !hasDisplayValue.value) {
-    // Можна емітити помилку або встановити внутрішній стан
-    emit('blur', datePickerRef.value);
-  } else {
-    emit('blur', datePickerRef.value);
-  }
-};
+  const handleTriggerClick = () => {
+    if (props.disabled) return;
+    toggleDropdown();
+  };
 
-const handleClear = () => {
-  const newValue = null;
-  emit('update:modelValue', newValue);
-  emit('change', newValue);
+  const handleFocus = () => {
+    state.isFocused.value = true;
+    emit('focus', datePickerRef.value);
+  };
 
-  // Reset state
-  state.startDate.value = null;
-  state.endDate.value = null;
-  state.isSelectingEnd.value = false;
-  state.hoverDate.value = null;
+  const handleBlur = () => {
+    state.isFocused.value = false;
 
-  // Reset time values to defaults
-  state.startTime.value = getInitialStartTime();
-  state.endTime.value = getInitialEndTime();
-};
+    // Перевірка required при втраті фокусу
+    if (props.required && !hasDisplayValue.value) {
+      // Можна емітити помилку або встановити внутрішній стан
+      emit('blur', datePickerRef.value);
+    } else {
+      emit('blur', datePickerRef.value);
+    }
+  };
 
-const handleDateClick = (date: Date, isLeftCalendar = false, isRightCalendar = false) => {
-  if (props.disabled || !date) return;
+  const handleClear = () => {
+    const newValue = null;
+    emit('update:modelValue', newValue);
+    emit('change', newValue);
 
-  if (!isDateClickable(date, isLeftCalendar, isRightCalendar)) return;
+    // Reset state
+    state.startDate.value = null;
+    state.endDate.value = null;
+    state.isSelectingEnd.value = false;
+    state.hoverDate.value = null;
 
-  if (isRange.value) {
-    if (!state.startDate.value || (state.startDate.value && state.endDate.value)) {
-      state.startDate.value = new Date(date);
-      state.endDate.value = null;
-      state.isSelectingEnd.value = true;
-      state.hoverDate.value = null;
+    // Reset time values to defaults
+    state.startTime.value = getInitialStartTime();
+    state.endTime.value = getInitialEndTime();
+  };
 
-      // For datetime types, reset to default times
+  const handleDateClick = (date: Date, isLeftCalendar = false, isRightCalendar = false) => {
+    if (props.disabled || !date) return;
+
+    if (!isDateClickable(date, isLeftCalendar, isRightCalendar)) return;
+
+    if (isRange.value) {
+      if (!state.startDate.value || (state.startDate.value && state.endDate.value)) {
+        state.startDate.value = new Date(date);
+        state.endDate.value = null;
+        state.isSelectingEnd.value = true;
+        state.hoverDate.value = null;
+
+        // For datetime types, reset to default times
+        if (isDateTimeType.value) {
+          state.startTime.value = '00:00:00';
+          state.endTime.value = null;
+        }
+      } else if (state.startDate.value && !state.endDate.value) {
+        const startDate = new Date(state.startDate.value);
+        const endDate = new Date(date);
+
+        if (endDate >= startDate) {
+          state.endDate.value = endDate;
+        } else {
+          state.endDate.value = startDate;
+          state.startDate.value = endDate;
+        }
+
+        // For datetime types, set end time to 23:59:59
+        if (isDateTimeType.value) {
+          state.endTime.value = '23:59:59';
+        }
+
+        state.isSelectingEnd.value = false;
+        state.hoverDate.value = null;
+
+        // For pure date range, emit immediately
+        if (!isDateTimeType.value) {
+          const rangeValue = [state.startDate.value, state.endDate.value];
+          try {
+            const outputValue = formatOutput(rangeValue);
+            emit('update:modelValue', outputValue);
+            emit('change', outputValue);
+          } catch (error) {
+            console.warn('Error formatting output:', error);
+          }
+          hideDropdown();
+        }
+      }
+    } else {
       if (isDateTimeType.value) {
+        // For datetime, set the date and default time
+        state.startDate.value = new Date(date);
         state.startTime.value = '00:00:00';
-        state.endTime.value = null;
-      }
-    } else if (state.startDate.value && !state.endDate.value) {
-      const startDate = new Date(state.startDate.value);
-      const endDate = new Date(date);
-
-      if (endDate >= startDate) {
-        state.endDate.value = endDate;
       } else {
-        state.endDate.value = startDate;
-        state.startDate.value = endDate;
-      }
-
-      // For datetime types, set end time to 23:59:59
-      if (isDateTimeType.value) {
-        state.endTime.value = '23:59:59';
-      }
-
-      state.isSelectingEnd.value = false;
-      state.hoverDate.value = null;
-
-      // For pure date range, emit immediately
-      if (!isDateTimeType.value) {
-        const rangeValue = [state.startDate.value, state.endDate.value];
+        // For pure date, emit immediately
         try {
-          const outputValue = formatOutput(rangeValue);
+          const outputValue = formatOutput(new Date(date));
           emit('update:modelValue', outputValue);
           emit('change', outputValue);
+          hideDropdown();
         } catch (error) {
-          console.warn('Error formatting output:', error);
+          console.warn('Error formatting single date output:', error);
         }
-        hideDropdown();
       }
     }
-  } else {
-    if (isDateTimeType.value) {
-      // For datetime, set the date and default time
-      state.startDate.value = new Date(date);
-      state.startTime.value = '00:00:00';
+  };
+
+  const handleDateHover = (date: Date, isLeftCalendar = false, isRightCalendar = false) => {
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
+      if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
+        return;
+      }
+      if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
+        return;
+      }
+    }
+
+    if (isRange.value && state.isSelectingEnd.value && state.startDate.value) {
+      state.hoverDate.value = new Date(date);
+    }
+  };
+
+  const handleDateLeave = () => {
+    if (isRange.value && state.isSelectingEnd.value) {
+      state.hoverDate.value = null;
+    }
+  };
+
+  const handleTimeChange = (timeValue: TimePickerValue, isEndTime = false) => {
+    if (isEndTime) {
+      state.endTime.value = timeValue;
     } else {
-      // For pure date, emit immediately
-      try {
-        const outputValue = formatOutput(new Date(date));
-        emit('update:modelValue', outputValue);
-        emit('change', outputValue);
-        hideDropdown();
-      } catch (error) {
-        console.warn('Error formatting single date output:', error);
-      }
+      state.startTime.value = timeValue;
     }
-  }
-};
 
-const handleDateHover = (date: Date, isLeftCalendar = false, isRightCalendar = false) => {
-  if (props.type === 'daterange' || props.type === 'datetimerange') {
-    if (isLeftCalendar && !leftIsDateInCurrentMonth(date)) {
-      return;
-    }
-    if (isRightCalendar && !rightIsDateInCurrentMonth(date)) {
-      return;
-    }
-  }
-
-  if (isRange.value && state.isSelectingEnd.value && state.startDate.value) {
-    state.hoverDate.value = new Date(date);
-  }
-};
-
-const handleDateLeave = () => {
-  if (isRange.value && state.isSelectingEnd.value) {
-    state.hoverDate.value = null;
-  }
-};
-
-const handleTimeChange = (timeValue: TimePickerValue, isEndTime = false) => {
-  if (isEndTime) {
-    state.endTime.value = timeValue;
-  } else {
-    state.startTime.value = timeValue;
-  }
-
-  // Auto-emit for single datetime when both date and time are set
-  if (!isRange.value && state.startDate.value && state.startTime.value) {
-    const dateTime = combineDateTime(state.startDate.value, state.startTime.value);
-    try {
-      const outputValue = formatOutput(dateTime);
-      emit('update:modelValue', outputValue);
-      emit('change', outputValue);
-    } catch (error) {
-      console.warn('Error formatting datetime output:', error);
-    }
-  }
-};
-
-const handleConfirm = () => {
-  if (isDateTimeType.value) {
-    if (isRange.value && state.startDate.value && state.endDate.value) {
-      const startDateTime = combineDateTime(state.startDate.value, state.startTime.value || '00:00:00');
-      const endDateTime = combineDateTime(state.endDate.value, state.endTime.value || '23:59:59');
-
-      const rangeValue = [startDateTime, endDateTime];
-      try {
-        const outputValue = formatOutput(rangeValue);
-        emit('update:modelValue', outputValue);
-        emit('change', outputValue);
-      } catch (error) {
-        console.warn('Error formatting datetime range output:', error);
-      }
-    } else if (!isRange.value && state.startDate.value) {
-      const dateTime = combineDateTime(state.startDate.value, state.startTime.value || '00:00:00');
+    // Auto-emit for single datetime when both date and time are set
+    if (!isRange.value && state.startDate.value && state.startTime.value) {
+      const dateTime = combineDateTime(state.startDate.value, state.startTime.value);
       try {
         const outputValue = formatOutput(dateTime);
         emit('update:modelValue', outputValue);
@@ -806,227 +811,253 @@ const handleConfirm = () => {
         console.warn('Error formatting datetime output:', error);
       }
     }
-  }
+  };
 
-  hideDropdown();
-};
+  const handleConfirm = () => {
+    if (isDateTimeType.value) {
+      if (isRange.value && state.startDate.value && state.endDate.value) {
+        const startDateTime = combineDateTime(state.startDate.value, state.startTime.value || '00:00:00');
+        const endDateTime = combineDateTime(state.endDate.value, state.endTime.value || '23:59:59');
 
-const handleCancel = () => {
-  hideDropdown();
-};
-
-const handleMonthClick = (monthIndex: number, isRight = false) => {
-  const currentDateRef = isRight ? state.rightCurrentDate.value : state.currentDate.value;
-
-  if (props.type === 'month' || props.type === 'monthrange') {
-    const newDate = new Date(currentDateRef.getFullYear(), monthIndex, 1);
-    handleDateClick(newDate);
-  } else {
-    const newDate = new Date(currentDateRef.getFullYear(), monthIndex, 1);
-    if (isRight) {
-      state.rightCurrentDate.value = newDate;
-    } else {
-      state.currentDate.value = newDate;
-    }
-    state.viewMode.value = 'date';
-  }
-};
-
-const handleMonthHover = (monthIndex: number, currentDateRef: Date) => {
-  if (isRange.value && state.isSelectingEnd.value && state.startDate.value) {
-    const currentYear = currentDateRef.getFullYear();
-    state.hoverDate.value = new Date(currentYear, monthIndex, 1);
-  }
-};
-
-const handleMonthLeave = () => {
-  if (isRange.value && state.isSelectingEnd.value) {
-    state.hoverDate.value = null;
-  }
-};
-
-const handleYearClick = (year: number) => {
-  if (props.type === 'year' || props.type === 'yearrange') {
-    const newDate = new Date(year, 0, 1);
-    handleDateClick(newDate);
-  } else {
-    const leftNewDate = new Date(year, state.currentDate.value.getMonth(), 1);
-    const rightNewDate = new Date(year, state.rightCurrentDate.value.getMonth(), 1);
-    state.currentDate.value = leftNewDate;
-    state.rightCurrentDate.value = rightNewDate;
-    state.viewMode.value = props.type === 'month' || props.type === 'monthrange' ? 'month' : 'date';
-  }
-};
-
-const handleYearHover = (year: number) => {
-  if (isRange.value && state.isSelectingEnd.value && state.startDate.value) {
-    state.hoverDate.value = new Date(year, 0, 1);
-  }
-};
-
-const handleYearLeave = () => {
-  if (isRange.value && state.isSelectingEnd.value) {
-    state.hoverDate.value = null;
-  }
-};
-
-const navigatePrev = () => {
-  if (state.viewMode.value === 'year') {
-    leftNavigateDecade('prev');
-    rightNavigateDecade('prev');
-  } else if (state.viewMode.value === 'month') {
-    leftNavigateYear('prev');
-    rightNavigateYear('prev');
-  } else {
-    leftNavigateMonth('prev');
-    state.rightCurrentDate.value = new Date(
-      state.currentDate.value.getFullYear(),
-      state.currentDate.value.getMonth() + 1,
-      1,
-    );
-  }
-};
-
-const navigateNext = () => {
-  if (state.viewMode.value === 'year') {
-    leftNavigateDecade('next');
-    rightNavigateDecade('next');
-  } else if (state.viewMode.value === 'month') {
-    leftNavigateYear('next');
-    rightNavigateYear('next');
-  } else {
-    leftNavigateMonth('next');
-    state.rightCurrentDate.value = new Date(
-      state.currentDate.value.getFullYear(),
-      state.currentDate.value.getMonth() + 1,
-      1,
-    );
-  }
-};
-
-// ===== WATCHERS =====
-watch(
-  () => props.modelValue,
-  newValue => {
-    if (newValue) {
-      if (isRange.value && Array.isArray(newValue) && newValue.length === 2) {
+        const rangeValue = [startDateTime, endDateTime];
         try {
-          state.startDate.value = newValue[0] instanceof Date ? new Date(newValue[0]) : new Date(newValue[0]);
-          state.endDate.value = newValue[1] instanceof Date ? new Date(newValue[1]) : new Date(newValue[1]);
-
-          // Extract time for datetime types
-          if (isDateTimeType.value) {
-            state.startTime.value = extractTime(state.startDate.value);
-            state.endTime.value = extractTime(state.endDate.value);
-          }
+          const outputValue = formatOutput(rangeValue);
+          emit('update:modelValue', outputValue);
+          emit('change', outputValue);
         } catch (error) {
-          console.warn('Invalid date format in modelValue:', newValue);
-          state.startDate.value = null;
-          state.endDate.value = null;
+          console.warn('Error formatting datetime range output:', error);
         }
-      } else if (!isRange.value && newValue !== null) {
+      } else if (!isRange.value && state.startDate.value) {
+        const dateTime = combineDateTime(state.startDate.value, state.startTime.value || '00:00:00');
         try {
-          let date: Date | null = null;
+          const outputValue = formatOutput(dateTime);
+          emit('update:modelValue', outputValue);
+          emit('change', outputValue);
+        } catch (error) {
+          console.warn('Error formatting datetime output:', error);
+        }
+      }
+    }
 
-          if (newValue instanceof Date) {
-            date = newValue;
-          } else if (typeof newValue === 'string' || typeof newValue === 'number') {
-            date = new Date(newValue);
-          }
+    hideDropdown();
+  };
 
-          if (date && !isNaN(date.getTime())) {
-            state.startDate.value = date;
+  const handleCancel = () => {
+    hideDropdown();
+  };
+
+  const handleMonthClick = (monthIndex: number, isRight = false) => {
+    const currentDateRef = isRight ? state.rightCurrentDate.value : state.currentDate.value;
+
+    if (props.type === 'month' || props.type === 'monthrange') {
+      const newDate = new Date(currentDateRef.getFullYear(), monthIndex, 1);
+      handleDateClick(newDate);
+    } else {
+      const newDate = new Date(currentDateRef.getFullYear(), monthIndex, 1);
+      if (isRight) {
+        state.rightCurrentDate.value = newDate;
+      } else {
+        state.currentDate.value = newDate;
+      }
+      state.viewMode.value = 'date';
+    }
+  };
+
+  const handleMonthHover = (monthIndex: number, currentDateRef: Date) => {
+    if (isRange.value && state.isSelectingEnd.value && state.startDate.value) {
+      const currentYear = currentDateRef.getFullYear();
+      state.hoverDate.value = new Date(currentYear, monthIndex, 1);
+    }
+  };
+
+  const handleMonthLeave = () => {
+    if (isRange.value && state.isSelectingEnd.value) {
+      state.hoverDate.value = null;
+    }
+  };
+
+  const handleYearClick = (year: number) => {
+    if (props.type === 'year' || props.type === 'yearrange') {
+      const newDate = new Date(year, 0, 1);
+      handleDateClick(newDate);
+    } else {
+      const leftNewDate = new Date(year, state.currentDate.value.getMonth(), 1);
+      const rightNewDate = new Date(year, state.rightCurrentDate.value.getMonth(), 1);
+      state.currentDate.value = leftNewDate;
+      state.rightCurrentDate.value = rightNewDate;
+      state.viewMode.value = props.type === 'month' || props.type === 'monthrange' ? 'month' : 'date';
+    }
+  };
+
+  const handleYearHover = (year: number) => {
+    if (isRange.value && state.isSelectingEnd.value && state.startDate.value) {
+      state.hoverDate.value = new Date(year, 0, 1);
+    }
+  };
+
+  const handleYearLeave = () => {
+    if (isRange.value && state.isSelectingEnd.value) {
+      state.hoverDate.value = null;
+    }
+  };
+
+  const navigatePrev = () => {
+    if (state.viewMode.value === 'year') {
+      leftNavigateDecade('prev');
+      rightNavigateDecade('prev');
+    } else if (state.viewMode.value === 'month') {
+      leftNavigateYear('prev');
+      rightNavigateYear('prev');
+    } else {
+      leftNavigateMonth('prev');
+      state.rightCurrentDate.value = new Date(
+        state.currentDate.value.getFullYear(),
+        state.currentDate.value.getMonth() + 1,
+        1
+      );
+    }
+  };
+
+  const navigateNext = () => {
+    if (state.viewMode.value === 'year') {
+      leftNavigateDecade('next');
+      rightNavigateDecade('next');
+    } else if (state.viewMode.value === 'month') {
+      leftNavigateYear('next');
+      rightNavigateYear('next');
+    } else {
+      leftNavigateMonth('next');
+      state.rightCurrentDate.value = new Date(
+        state.currentDate.value.getFullYear(),
+        state.currentDate.value.getMonth() + 1,
+        1
+      );
+    }
+  };
+
+  // ===== WATCHERS =====
+  watch(
+    () => props.modelValue,
+    newValue => {
+      if (newValue) {
+        if (isRange.value && Array.isArray(newValue) && newValue.length === 2) {
+          try {
+            state.startDate.value = newValue[0] instanceof Date ? new Date(newValue[0]) : new Date(newValue[0]);
+            state.endDate.value = newValue[1] instanceof Date ? new Date(newValue[1]) : new Date(newValue[1]);
 
             // Extract time for datetime types
             if (isDateTimeType.value) {
-              state.startTime.value = extractTime(date);
+              state.startTime.value = extractTime(state.startDate.value);
+              state.endTime.value = extractTime(state.endDate.value);
             }
-          } else {
+          } catch (error) {
+            console.warn('Invalid date format in modelValue:', newValue);
+            state.startDate.value = null;
+            state.endDate.value = null;
+          }
+        } else if (!isRange.value && newValue !== null) {
+          try {
+            let date: Date | null = null;
+
+            if (newValue instanceof Date) {
+              date = newValue;
+            } else if (typeof newValue === 'string' || typeof newValue === 'number') {
+              date = new Date(newValue);
+            }
+
+            if (date && !isNaN(date.getTime())) {
+              state.startDate.value = date;
+
+              // Extract time for datetime types
+              if (isDateTimeType.value) {
+                state.startTime.value = extractTime(date);
+              }
+            } else {
+              state.startDate.value = null;
+            }
+          } catch (error) {
+            console.warn('Invalid date format in modelValue:', newValue);
             state.startDate.value = null;
           }
-        } catch (error) {
-          console.warn('Invalid date format in modelValue:', newValue);
-          state.startDate.value = null;
         }
+      } else {
+        state.startDate.value = null;
+        state.endDate.value = null;
+        state.isSelectingEnd.value = false;
+        state.hoverDate.value = null;
+        state.startTime.value = getInitialStartTime();
+        state.endTime.value = getInitialEndTime();
       }
-    } else {
-      state.startDate.value = null;
-      state.endDate.value = null;
-      state.isSelectingEnd.value = false;
-      state.hoverDate.value = null;
+    },
+    { immediate: true }
+  );
+
+  watch(
+    () => props.type,
+    newType => {
+      state.viewMode.value = getInitialViewMode(newType);
+      // Reset time values when type changes
       state.startTime.value = getInitialStartTime();
       state.endTime.value = getInitialEndTime();
+    },
+    { immediate: true }
+  );
+
+  // Синхронізація календарів при зміні лівого календаря
+  watch(
+    () => state.currentDate.value,
+    newDate => {
+      if (showDualCalendar.value) {
+        state.rightCurrentDate.value = new Date(newDate.getFullYear(), newDate.getMonth() + 1, 1);
+      }
     }
-  },
-  { immediate: true },
-);
+  );
 
-watch(
-  () => props.type,
-  newType => {
-    state.viewMode.value = getInitialViewMode(newType);
-    // Reset time values when type changes
-    state.startTime.value = getInitialStartTime();
-    state.endTime.value = getInitialEndTime();
-  },
-  { immediate: true },
-);
+  // ===== LIFECYCLE HOOKS =====
+  onMounted(() => {
+    document.addEventListener('click', handleClickOutside);
+    state.viewMode.value = getInitialViewMode(props.type);
 
-// Синхронізація календарів при зміні лівого календаря
-watch(
-  () => state.currentDate.value,
-  newDate => {
-    if (showDualCalendar.value) {
-      state.rightCurrentDate.value = new Date(newDate.getFullYear(), newDate.getMonth() + 1, 1);
+    // Ініціалізація правого календаря
+    if (props.type === 'daterange' || props.type === 'datetimerange') {
+      state.rightCurrentDate.value = new Date(
+        state.currentDate.value.getFullYear(),
+        state.currentDate.value.getMonth() + 1,
+        1
+      );
     }
-  },
-);
+  });
 
-// ===== LIFECYCLE HOOKS =====
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside);
-  state.viewMode.value = getInitialViewMode(props.type);
+  onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside);
+  });
 
-  // Ініціалізація правого календаря
-  if (props.type === 'daterange' || props.type === 'datetimerange') {
-    state.rightCurrentDate.value = new Date(
-      state.currentDate.value.getFullYear(),
-      state.currentDate.value.getMonth() + 1,
-      1,
-    );
-  }
-});
+  // ===== COMPONENT METHODS =====
+  const focus = () => {
+    triggerRef.value?.focus();
+  };
 
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside);
-});
+  const blur = () => {
+    triggerRef.value?.blur();
+  };
 
-// ===== COMPONENT METHODS =====
-const focus = () => {
-  triggerRef.value?.focus();
-};
+  const open = () => {
+    if (!props.disabled) {
+      showDropdown();
+    }
+  };
 
-const blur = () => {
-  triggerRef.value?.blur();
-};
+  const close = () => {
+    hideDropdown();
+  };
 
-const open = () => {
-  if (!props.disabled) {
-    showDropdown();
-  }
-};
-
-const close = () => {
-  hideDropdown();
-};
-
-defineExpose({
-  focus,
-  blur,
-  open,
-  close,
-  validate,
-});
+  defineExpose({
+    focus,
+    blur,
+    open,
+    close,
+    validate,
+  });
 </script>
 
 <template>
@@ -1121,10 +1152,10 @@ defineExpose({
                     :hide-disabled-options="props.hideDisabledOptions"
                     :hour-step="props.hourStep"
                     :minute-step="props.minuteStep"
+                    :placeholder="t(LOCALE_KEYS.TIME_PICKER_START_PLACEHOLDER)"
                     :second-step="props.secondStep"
                     :show-seconds="props.showSeconds"
                     :use12-hours="props.use12Hours"
-                    placeholder="Початковий час"
                     type="time"
                     @change="value => handleTimeChange(value, false)"
                   />
@@ -1136,7 +1167,7 @@ defineExpose({
 
                   <div class="vt-datepicker__header-content">
                     <button class="vt-datepicker__header-btn" @click="state.viewMode.value = 'month'">
-                      {{ state.currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
+                      {{ headerLabel(state.currentDate.value) }}
                     </button>
                   </div>
 
@@ -1146,12 +1177,9 @@ defineExpose({
                 <div class="vt-datepicker__content">
                   <div class="vt-datepicker__calendar">
                     <div class="vt-datepicker__weekdays">
-                      <span
-                        v-for="(day, index) in WEEKDAY_NAMES_SHORT"
-                        :key="`${index}_${day}`"
-                        class="vt-datepicker__weekday"
-                      >{{ day }}</span
-                      >
+                      <span v-for="(day, index) in daysShort" :key="`${index}_${day}`" class="vt-datepicker__weekday">{{
+                        day
+                      }}</span>
                     </div>
 
                     <div class="vt-datepicker__dates">
@@ -1204,10 +1232,10 @@ defineExpose({
                     :hide-disabled-options="props.hideDisabledOptions"
                     :hour-step="props.hourStep"
                     :minute-step="props.minuteStep"
+                    :placeholder="t(LOCALE_KEYS.TIME_PICKER_END_PLACEHOLDER)"
                     :second-step="props.secondStep"
                     :show-seconds="props.showSeconds"
                     :use12-hours="props.use12Hours"
-                    placeholder="Кінцевий час"
                     type="time"
                     @change="value => handleTimeChange(value, true)"
                   />
@@ -1217,7 +1245,7 @@ defineExpose({
 
                   <div class="vt-datepicker__header-content">
                     <button class="vt-datepicker__header-btn" @click="state.viewMode.value = 'month'">
-                      {{ state.rightCurrentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
+                      {{ headerLabel(state.rightCurrentDate.value) }}
                     </button>
                   </div>
 
@@ -1229,12 +1257,9 @@ defineExpose({
                 <div class="vt-datepicker__content">
                   <div class="vt-datepicker__calendar">
                     <div class="vt-datepicker__weekdays">
-                      <span
-                        v-for="(day, index) in WEEKDAY_NAMES_SHORT"
-                        :key="`${index}_${day}`"
-                        class="vt-datepicker__weekday"
-                      >{{ day }}</span
-                      >
+                      <span v-for="(day, index) in daysShort" :key="`${index}_${day}`" class="vt-datepicker__weekday">{{
+                        day
+                      }}</span>
                     </div>
 
                     <div class="vt-datepicker__dates">
@@ -1289,10 +1314,10 @@ defineExpose({
                   :hide-disabled-options="props.hideDisabledOptions"
                   :hour-step="props.hourStep"
                   :minute-step="props.minuteStep"
+                  :placeholder="t(LOCALE_KEYS.TIME_PICKER_PLACEHOLDER)"
                   :second-step="props.secondStep"
                   :show-seconds="props.showSeconds"
                   :use12-hours="props.use12Hours"
-                  placeholder="Час"
                   type="time"
                   @change="value => handleTimeChange(value, false)"
                 />
@@ -1310,7 +1335,7 @@ defineExpose({
                     class="vt-datepicker__header-btn"
                     @click="state.viewMode.value = 'month'"
                   >
-                    {{ state.currentDate.value.toLocaleString('default', { month: 'long', year: 'numeric' }) }}
+                    {{ headerLabel(state.currentDate.value) }}
                   </button>
 
                   <button
@@ -1336,12 +1361,9 @@ defineExpose({
                 <!-- Date View -->
                 <div v-if="state.viewMode.value === 'date'" class="vt-datepicker__calendar">
                   <div class="vt-datepicker__weekdays">
-                    <span
-                      v-for="(day, index) in WEEKDAY_NAMES_SHORT"
-                      :key="`${index}_${day}`"
-                      class="vt-datepicker__weekday"
-                    >{{ day }}</span
-                    >
+                    <span v-for="(day, index) in daysShort" :key="`${index}_${day}`" class="vt-datepicker__weekday">{{
+                      day
+                    }}</span>
                   </div>
 
                   <div class="vt-datepicker__dates">
@@ -1418,7 +1440,7 @@ defineExpose({
 
           <!-- Actions (only for DateTime types) -->
           <div v-if="showTimePicker" class="vt-datepicker__actions">
-            <VButton @click="handleCancel">Скасувати</VButton>
+            <VButton @click="handleCancel">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
             <VButton
               :disabled="!state.startDate.value || (isRange && !state.endDate.value)"
               type="primary"

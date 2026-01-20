@@ -24,6 +24,10 @@
     validateSelectValue,
   } from '@/components/select/helpers';
   import VInput from '@/components/input/VInput.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
+
+  const { t } = useI18n();
 
   // ===== PROPS & DEFAULTS =====
   const props = withDefaults(defineProps<VtSelectProps>(), {
@@ -35,9 +39,9 @@
     filterable: false,
     collapsedTags: false,
     outlined: false,
-    placeholder: 'Оберіть опцію',
-    noDataText: 'Немає даних',
-    loadingText: 'Завантаження...',
+    placeholder: undefined,
+    noDataText: undefined,
+    loadingText: undefined,
     maxHeight: 220,
     validateOnInput: true,
     validateOnBlur: true,
@@ -45,7 +49,7 @@
     trigger: 'click',
     showTimeout: 0,
     hideTimeout: 0,
-    filterPlaceholder: 'Пошук...',
+    filterPlaceholder: undefined,
     allowRemoteFilter: false,
   });
 
@@ -70,6 +74,12 @@
     visibleCount: ref(0),
     filterQuery: ref(''),
   };
+
+  // ===== COMPUTED DEFAULTS З ЛОКАЛІЗАЦІЄЮ =====
+  const placeholderText = computed(() => props.placeholder ?? t(LOCALE_KEYS.SELECT_PLACEHOLDER));
+  const noDataText = computed(() => props.noDataText ?? t(LOCALE_KEYS.SELECT_NO_DATA));
+  const loadingText = computed(() => props.loadingText ?? t(LOCALE_KEYS.SELECT_LOADING));
+  const filterPlaceholderText = computed(() => props.filterPlaceholder ?? t(LOCALE_KEYS.SELECT_FILTER_PLACEHOLDER));
 
   // ===== OPTIONS REGISTRY =====
   const allRegisteredOptions = ref<Map<string, VtSelectOption>>(new Map());
@@ -937,7 +947,7 @@
 
         <!-- Placeholder (тільки для не-outlined) -->
         <span v-else-if="!outlined" class="vt-select__placeholder">
-          {{ placeholder }}
+          {{ placeholderText }}
         </span>
       </div>
 
@@ -1003,7 +1013,7 @@
             <VInput
               ref="filterInputRef"
               v-model="state.filterQuery.value"
-              :placeholder="filterPlaceholder"
+              :placeholder="filterPlaceholderText"
               clearable
               suffix-icon="search"
               type="text"
@@ -1013,7 +1023,9 @@
 
           <!-- No Data -->
           <div v-if="filteredOptions.length === 0" class="vt-select-dropdown__empty">
-            <span v-if="state.filterQuery.value">Немає результатів для "{{ state.filterQuery.value }}"</span>
+            <span v-if="state.filterQuery.value">
+              {{ t(LOCALE_KEYS.SELECT_NO_RESULTS, { query: state.filterQuery.value }) }}
+            </span>
             <span v-else>{{ noDataText }}</span>
           </div>
 
@@ -1055,7 +1067,7 @@
             <!-- Loading more indicator -->
             <div v-if="loading" class="vt-select-dropdown__loading">
               <VLoader class="vt-select-dropdown__loading-icon" />
-              {{ props.loadingText }}
+              {{ loadingText }}
             </div>
           </div>
         </div>

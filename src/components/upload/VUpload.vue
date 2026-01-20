@@ -4,6 +4,8 @@
   import { FileParser, FileValidator } from './types';
   import VButton from '@/components/button/VButton.vue';
   import VIcon from '@/components/icon/VIcon.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
 
   const props = withDefaults(defineProps<VUploadProps>(), {
     modelValue: () => [],
@@ -14,13 +16,15 @@
     multiple: true,
     type: 'button',
     disabled: false,
-    placeholder: 'Drop file here or click to upload',
+    // Видаляємо дефолтні значення для текстових props
+    placeholder: undefined,
     tip: undefined,
     returnData: false,
     parseFiles: false,
   });
 
   const emit = defineEmits<VUploadEmits>();
+  const { t } = useI18n();
 
   const isDragging = ref(false);
   const isProcessing = ref(false);
@@ -37,6 +41,9 @@
     },
   });
 
+  // Computed для локалізованих текстів
+  const placeholderText = computed(() => props.placeholder ?? t(LOCALE_KEYS.UPLOAD_PLACEHOLDER));
+
   const tipText = computed(() => {
     if (props.tip) return props.tip;
 
@@ -51,23 +58,33 @@
     }
 
     if (props.maxSize) {
-      parts.push(`files with a size less than ${FileValidator.formatFileSize(props.maxSize)}`);
+      parts.push(
+        t(LOCALE_KEYS.UPLOAD_TIP_MAX_SIZE, {
+          size: FileValidator.formatFileSize(props.maxSize),
+        })
+      );
     }
 
     if (props.maxRows) {
-      parts.push(`max ${props.maxRows} rows`);
+      parts.push(
+        t(LOCALE_KEYS.UPLOAD_TIP_MAX_ROWS, {
+          rows: props.maxRows.toString(),
+        })
+      );
     }
 
-    return parts.join(' ');
+    return parts.join(', ');
   });
 
   const processingText = computed(() => {
-    const stages = {
-      validating: 'Validating file...',
-      parsing: 'Parsing data...',
-      completing: 'Completing...',
+    const stageKeys = {
+      validating: LOCALE_KEYS.UPLOAD_PROCESSING_VALIDATING,
+      parsing: LOCALE_KEYS.UPLOAD_PROCESSING_PARSING,
+      completing: LOCALE_KEYS.UPLOAD_PROCESSING_COMPLETING,
     };
-    return stages[processingStage.value as keyof typeof stages] || 'Processing files...';
+
+    const key = stageKeys[processingStage.value as keyof typeof stageKeys];
+    return key ? t(key) : t(LOCALE_KEYS.UPLOAD_PROCESSING_DEFAULT);
   });
 
   const canAddMoreFiles = computed(() => {
@@ -112,7 +129,6 @@
     target.value = '';
   };
 
-  // Функція для плавного оновлення прогресу
   const updateProgress = async (targetProgress: number, duration: number = 200) => {
     const startProgress = processingProgress.value;
     const diff = targetProgress - startProgress;
@@ -154,7 +170,6 @@
       const file = filesToProcess[i];
       processingFileName.value = file.name;
 
-      // Етап 1: Валідація (0-20%)
       processingStage.value = 'validating';
       const baseProgress = (i / filesToProcess.length) * 100;
       await updateProgress(baseProgress + 10);
@@ -179,16 +194,13 @@
 
       validFiles.push(uploadFile);
 
-      // Парсинг файлу якщо потрібно
       if (props.parseFiles && FileParser.isDataFile(file)) {
         processingStage.value = 'parsing';
         await updateProgress(baseProgress + 40);
 
         try {
-          // Даємо браузеру "подихати" перед важкою операцією
           await new Promise(resolve => setTimeout(resolve, 50));
 
-          // Симулюємо прогрес під час парсингу
           const progressInterval = setInterval(() => {
             if (processingProgress.value < baseProgress + 75) {
               processingProgress.value += 2;
@@ -208,18 +220,18 @@
         } catch (error) {
           emit('error', {
             type: 'parse',
-            message: `Failed to parse file: ${error instanceof Error ? error.message : 'Unknown error'}`,
+            message: t(LOCALE_KEYS.UPLOAD_ERROR_PARSE, {
+              error: error instanceof Error ? error.message : 'Unknown error',
+            }),
             file,
           });
         }
 
         await updateProgress(baseProgress + 90);
       } else {
-        // Якщо парсинг не потрібен, одразу до 90%
         await updateProgress(baseProgress + 90);
       }
 
-      // Етап 3: Завершення (90-100%)
       processingStage.value = 'completing';
       await updateProgress(((i + 1) / filesToProcess.length) * 100);
     }
@@ -232,7 +244,6 @@
       emit('exceed', files.slice(remainingSlots));
     }
 
-    // Показуємо 100% перед закриттям
     await updateProgress(100, 100);
     await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -246,7 +257,9 @@
     if (props.maxSize && !FileValidator.validateSize(file, props.maxSize)) {
       return {
         type: 'size',
-        message: `File size exceeds ${FileValidator.formatFileSize(props.maxSize)}`,
+        message: t(LOCALE_KEYS.UPLOAD_ERROR_SIZE, {
+          size: FileValidator.formatFileSize(props.maxSize),
+        }),
         file,
       };
     }
@@ -254,7 +267,9 @@
     if (props.accept && !FileValidator.validateType(file, props.accept)) {
       return {
         type: 'type',
-        message: `File type not accepted. Allowed: ${props.accept}`,
+        message: t(LOCALE_KEYS.UPLOAD_ERROR_TYPE, {
+          types: props.accept,
+        }),
         file,
       };
     }
@@ -273,7 +288,6 @@
     fileInputRef.value?.click();
   };
 
-  // Cleanup при знищенні компонента
   onUnmounted(() => {
     FileParser.terminateWorkers();
   });
@@ -339,8 +353,7 @@
 
         <div class="vt-upload__text">
           <span class="vt-upload__placeholder">
-            {{ placeholder.split(' or ')[0] }}
-            <span class="vt-upload__link"> or {{ placeholder.split(' or ')[1] }}</span>
+            {{ placeholderText }}
           </span>
         </div>
 
@@ -357,9 +370,10 @@
         type="primary"
         @click="openFileDialog"
       >
-        Upload Files
+        {{ t(LOCALE_KEYS.UPLOAD_BUTTON_TEXT) }}
       </VButton>
     </template>
+
     <!-- File List -->
     <div v-if="uploadedFiles.length > 0" class="vt-upload__list">
       <div v-for="file in uploadedFiles" :key="file.id" class="vt-upload__list-item">
@@ -378,7 +392,6 @@
       </div>
     </div>
 
-    <!-- Hidden File Input -->
     <input
       ref="fileInputRef"
       :accept="accept"

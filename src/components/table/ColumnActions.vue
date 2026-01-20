@@ -1,10 +1,12 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import VIcon from '@/components/icon/VIcon.vue';
   import VDropdown from '@/components/dropdown/VDropdown.vue';
   import VDropdownItem from '@/components/dropdown/VDropdownItem.vue';
   import type { VTableColumnGroup, VTableColumnProps } from './types';
   import { modalManager } from '@/components/modal/plugin';
   import VTableColumnSelector from './VTableColumnSelector.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
 
   interface ColumnActionsProps {
     column: VTableColumnProps;
@@ -18,6 +20,8 @@
     pin: [column: VTableColumnProps, position: 'left' | 'right' | 'none'];
     'update-columns': [columns: VTableColumnProps[]];
   }>();
+
+  const { t } = useI18n();
 
   // Обчислення стану pin
   const isPinnedAny = (): boolean => !!(props.column.pinnedLeft || props.column.pinnedRight);
@@ -101,12 +105,11 @@
   };
 
   const handleToggleVisibility = (): void => {
-    console.log('handleToggleVisibility called'); // Debug log
     const availableColumns = updateAvailableColumnsForSelector(props.allColumns);
 
     modalManager.open({
       component: VTableColumnSelector,
-      title: 'Управління колонками таблиці',
+      title: t(LOCALE_KEYS.TABLE_COLUMN_ACTION),
       props: {
         columns: props.allColumns,
         columnsSelector: availableColumns,
@@ -121,7 +124,7 @@
 </script>
 
 <template>
-  <VDropdown trigger="click" placement="bottom-start" @command="handleCommand">
+  <VDropdown placement="bottom-start" trigger="click" @command="handleCommand">
     <!-- Trigger -->
     <div class="vt-table-header-actions">
       <VIcon name="listBullet" />
@@ -131,11 +134,11 @@
     <template #dropdown>
       <VDropdownItem command="pin">
         <VIcon :name="isPinnedAny() ? 'unfreeze' : 'freeze'" />
-        <div>{{ isPinnedAny() ? 'Розморозити' : 'Заморозити' }}</div>
+        <div>{{ isPinnedAny() ? t(LOCALE_KEYS.TABLE_UNFREEZE) : t(LOCALE_KEYS.TABLE_FREEZE) }}</div>
       </VDropdownItem>
       <VDropdownItem command="columns">
         <VIcon name="columnInsert" />
-        <div>Колонки</div>
+        <div>{{ t(LOCALE_KEYS.TABLE_COLUMNS) }}</div>
       </VDropdownItem>
     </template>
   </VDropdown>
