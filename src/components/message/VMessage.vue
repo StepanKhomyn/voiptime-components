@@ -74,8 +74,10 @@
           <div class="vt-message-content">
             <div v-if="message.title" class="vt-message-title">{{ message.title }}</div>
 
-            <div v-if="message.dangerouslyUseHTMLString" class="vt-message-text" v-html="message.message" />
-            <div v-else class="vt-message-text">{{ message.message }}</div>
+            <template v-if="message.message">
+              <div v-if="message.dangerouslyUseHTMLString" class="vt-message-text" v-html="message.message" />
+              <div v-else class="vt-message-text">{{ message.message }}</div>
+            </template>
           </div>
           <button v-if="message.showClose" class="vt-message-close" type="button" @click="removeMessage(message.id)">
             <VIcon name="close" />
