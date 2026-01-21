@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.56...v1.14.0) (2026-01-20)
+
+
+### Features
+
+* Додано локалізацію ([f40f0c2](https://github.com/StepanKhomyn/voiptime-components/commit/f40f0c28a36a4883dba999cd051e0760bf61b429))
+
 ## [1.13.56](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.55...v1.13.56) (2026-01-14)
 
 
