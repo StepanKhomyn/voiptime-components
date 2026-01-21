@@ -1,3 +1,10 @@
+## [1.14.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.0...v1.14.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* зменшено розміри месджу ([030994c](https://github.com/StepanKhomyn/voiptime-components/commit/030994c311945cd1c5f823a3c647825610359916))
+
 # [1.14.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.13.56...v1.14.0) (2026-01-20)
 
 
