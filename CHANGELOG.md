@@ -1,3 +1,10 @@
+## [1.14.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.1...v1.14.2) (2026-01-22)
+
+
+### Bug Fixes
+
+* changed i18n without inject ([94276c7](https://github.com/StepanKhomyn/voiptime-components/commit/94276c75f3b95ac3dfe8f2f930bc62084ae7c5a6))
+
 ## [1.14.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.0...v1.14.1) (2026-01-21)
 
 
