@@ -1,31 +1,42 @@
-// locales/useI18n.ts - ТІЛЬКИ для внутрішнього використання в бібліотеці
-import { inject, type InjectionKey } from 'vue';
+// locales/useI18n.ts
+import { getCurrentInstance, inject, type InjectionKey } from 'vue';
 import { i18n, type I18nInstance } from './index';
 
 export const I18nInjectionKey: InjectionKey<I18nInstance> = Symbol('i18n');
 
 /**
- * Composable для роботи з i18n всередині компонентів бібліотеки
- * ⚠️ Не експортується з головного index.ts - тільки для внутрішнього використання
+ * Composable для роботи з i18n
+ * Працює як всередині компонентів (через inject), так і поза ними (глобальний i18n)
  *
- * @internal
  * @example
  * ```vue
  * <script setup lang="ts">
  * import { useI18n } from '@/locales/useI18n';
- * import { LOCALE_KEYS } from '@/locales/types';
  *
  * const { t } = useI18n();
- *
- * const emptyText = computed(() => t(LOCALE_KEYS.TABLE_EMPTY));
+ * const errorMsg = t(LOCALE_KEYS.ERROR);
  * </script>
+ * ```
  *
- * <template>
- *   <div>{{ emptyText }}</div>
- * </template>
+ * @example
+ * ```ts
+ * // У валідаторах або будь-де поза компонентом
+ * export const required: ValidatorFn = v => {
+ *   const { t } = useI18n();
+ *   return v || t(LOCALE_KEYS.VALIDATION_REQUIRED);
+ * };
  * ```
  */
 export function useI18n(): I18nInstance {
-  const injectedI18n = inject(I18nInjectionKey, null);
-  return injectedI18n || i18n;
+  // Перевіряємо чи є активний компонент Vue
+  const instance = getCurrentInstance();
+
+  if (instance) {
+    // Всередині компонента - пробуємо отримати через inject
+    const injectedI18n = inject(I18nInjectionKey, null);
+    return injectedI18n || i18n;
+  }
+
+  // Поза компонентом - повертаємо глобальний інстанс
+  return i18n;
 }

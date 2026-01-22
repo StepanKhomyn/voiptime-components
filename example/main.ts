@@ -4,6 +4,6 @@ import VUIPlugin, { LANGUAGES } from '../src/entry';
 
 const app = createApp(App);
 app.use(VUIPlugin, {
-  locale: LANGUAGES.en,
+  locale: LANGUAGES.uk,
 });
 app.mount('#app');
