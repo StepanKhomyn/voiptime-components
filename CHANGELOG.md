@@ -1,3 +1,10 @@
+## [1.14.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.2...v1.14.3) (2026-01-27)
+
+
+### Bug Fixes
+
+* add veriable icon ([88336f7](https://github.com/StepanKhomyn/voiptime-components/commit/88336f78d4d700274743048b0de73c986a569406))
+
 ## [1.14.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.1...v1.14.2) (2026-01-22)
 
 
