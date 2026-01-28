@@ -1,3 +1,10 @@
+## [1.14.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.3...v1.14.4) (2026-01-28)
+
+
+### Bug Fixes
+
+* fixed timepicker heder styles ([58200d8](https://github.com/StepanKhomyn/voiptime-components/commit/58200d8a399d3767e883b0285b4e79b0cb0758cc))
+
 ## [1.14.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.2...v1.14.3) (2026-01-27)
 
 
