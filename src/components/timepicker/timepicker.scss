@@ -126,7 +126,7 @@
     gap: 8px;
   }
 
-  
+
   &__icon {
     flex-shrink: 0;
     color: var(--color-gray-4);
@@ -192,6 +192,7 @@
     color: var(--color-gray-3);
     text-align: center;
     border-bottom: 1px solid var(--color-gray-5);
+    text-wrap: nowrap;
   }
 
   // Single Panel Layout
