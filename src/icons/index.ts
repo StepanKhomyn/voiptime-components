@@ -42,12 +42,16 @@ import OutboundCallIcon from './call/OutboundCallIcon.vue';
 import OwnCallIcon from './call/OwnCallIcon.vue';
 import PhoneActiveTalkIcon from './call/PhoneActiveTalkIcon.vue';
 import PhoneArrowDownIcon from './call/PhoneArrowDownIcon.vue';
+import PhoneCallingIcon from './call/PhoneCallingIcon.vue';
 import PhoneCancelRecallIcon from './call/PhoneCancelRecallIcon.vue';
 import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
 import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
 import PhoneInactiveTalkIcon from './call/PhoneInactiveTalkIcon.vue';
+import PhoneOfflineIcon from './call/PhoneOfflineIcon.vue';
 import PhoneRecallIcon from './call/PhoneRecallIcon.vue';
+import PhoneTalkingIcon from './call/PhoneTalkingIcon.vue';
 import PhoneTransferIcon from './call/PhoneTransferIcon.vue';
+import PhoneUnavailableIcon from './call/PhoneUnavailableIcon.vue';
 import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
 import TelemarketCallIcon from './call/TelemarketCallIcon.vue';
 import TransferCallIcon from './call/TransferCallIcon.vue';
@@ -230,12 +234,16 @@ export const icons = {
   ownCall: OwnCallIcon,
   phoneActiveTalk: PhoneActiveTalkIcon,
   phoneArrowDown: PhoneArrowDownIcon,
+  phoneCalling: PhoneCallingIcon,
   phoneCancelRecall: PhoneCancelRecallIcon,
   phoneExecuteRecall: PhoneExecuteRecallIcon,
   phoneHangup: PhoneHangupIcon,
   phoneInactiveTalk: PhoneInactiveTalkIcon,
+  phoneOffline: PhoneOfflineIcon,
   phoneRecall: PhoneRecallIcon,
+  phoneTalking: PhoneTalkingIcon,
   phoneTransfer: PhoneTransferIcon,
+  phoneUnavailable: PhoneUnavailableIcon,
   scenarioCall: ScenarioCallIcon,
   telemarketCall: TelemarketCallIcon,
   transferCall: TransferCallIcon,
