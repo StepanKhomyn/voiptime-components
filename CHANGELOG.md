@@ -1,3 +1,10 @@
+## [1.14.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.4...v1.14.5) (2026-02-02)
+
+
+### Bug Fixes
+
+* new icons phone ([fe66691](https://github.com/StepanKhomyn/voiptime-components/commit/fe66691694467dc07e53b9a0f35b8bbdcdb43eef))
+
 ## [1.14.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.3...v1.14.4) (2026-01-28)
 
 
