@@ -1,3 +1,10 @@
+## [1.14.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.6...v1.14.7) (2026-02-11)
+
+
+### Bug Fixes
+
+* Fixed start - end date in datepicker range ([25d2ad0](https://github.com/StepanKhomyn/voiptime-components/commit/25d2ad0005e1bba0f3f36bea56da89709c388c0a))
+
 ## [1.14.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.5...v1.14.6) (2026-02-02)
 
 
