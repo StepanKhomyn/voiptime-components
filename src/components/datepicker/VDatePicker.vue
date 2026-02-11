@@ -742,7 +742,13 @@
 
         // For pure date range, emit immediately
         if (!isDateTimeType.value) {
-          const rangeValue = [state.startDate.value, state.endDate.value];
+          const start = new Date(state.startDate.value!);
+          const end = new Date(state.endDate.value!);
+
+          start.setHours(0, 0, 0, 0);
+          end.setHours(23, 59, 59, 999);
+
+          const rangeValue = [start, end];
           try {
             const outputValue = formatOutput(rangeValue);
             emit('update:modelValue', outputValue);
