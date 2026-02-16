@@ -488,12 +488,33 @@
     return '';
   });
 
-  const dropdownStyle = computed(() => ({
-    ...dropdownPosition.value,
-    position: 'absolute' as const,
-    zIndex: 2000,
-    maxHeight: `${props.maxHeight}px`,
-  }));
+  const dropdownStyle = computed(() => {
+    const triggerWidth = triggerRef.value?.offsetWidth ?? 0;
+
+    return {
+      ...dropdownPosition.value,
+      position: 'absolute' as const,
+      zIndex: 2000,
+      maxHeight: `${props.maxHeight}px`,
+      width: `${triggerWidth}px`,
+    };
+  });
+
+  const getTitle = (option: VtSelectOption) => {
+    if (!option?.label) return '';
+
+    const key = getOptionKey(option.value);
+
+    const el = dropdownRef.value?.querySelector(
+      `[data-key="${CSS.escape(key)}"]`
+    ) as HTMLElement | null;
+
+    if (!el) return '';
+
+    const isOverflowing = el.scrollWidth > el.clientWidth;
+
+    return isOverflowing ? String(option.label) : '';
+  };
 
   const collapsedCount = computed(() => {
     return selectedOptions.value.length - state.visibleCount.value;
@@ -1058,9 +1079,19 @@
               />
 
               <!-- Option content -->
-              <span class="vt-option__text">
-                <component :is="getOptionSlot(option.value)" v-if="getOptionSlot(option.value)" />
-                <span v-else>{{ option.label || option.value }}</span>
+              <span
+                ref="setOptionRef"
+                class="vt-option__text"
+                :data-key="getOptionKey(option.value)"
+                v-tooltip="getTitle(option)"
+              >
+                <component
+                  :is="getOptionSlot(option.value)"
+                  v-if="getOptionSlot(option.value)"
+                />
+                <template v-else>
+                  {{ option.label }}
+                </template>
               </span>
             </div>
 

@@ -58,6 +58,7 @@
     padding: var(--padding-input);
     color: var(--color-gray-2);
     cursor: pointer;
+    min-width: 0;
 
     &::placeholder {
       color: var(--color-gray-4);
@@ -71,6 +72,13 @@
     &--filterable {
       cursor: text;
     }
+  }
+
+  &__display-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__filter-input {
