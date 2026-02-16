@@ -1,3 +1,10 @@
+## [1.14.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.7...v1.14.8) (2026-02-16)
+
+
+### Bug Fixes
+
+* [#3239](https://github.com/StepanKhomyn/voiptime-components/issues/3239) Вибір групи - У випадному списку оператор не бачить повну назву групи ([8070094](https://github.com/StepanKhomyn/voiptime-components/commit/80700942a4046c661ca8f77d94f0be4a9518f71d))
+
 ## [1.14.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.6...v1.14.7) (2026-02-11)
 
 
