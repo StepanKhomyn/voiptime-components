@@ -31,7 +31,7 @@ import { VMessagePlugin } from './components/message/message-plugin';
 import { I18nPlugin, setLocale as internalSetLocale } from './locales/index';
 import { LANGUAGES } from './locales/types';
 
-// ----------------- Експортуємо компоненти -----------------
+// ----------------- Експортуємо компоненти ----------------
 export {
   VButton,
   VIcon,
