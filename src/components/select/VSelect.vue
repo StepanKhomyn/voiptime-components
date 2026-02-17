@@ -578,8 +578,6 @@
     emit('change', emptyValue);
     emit('clear');
 
-    handleFilterClear();
-
     validation.clear();
   };
 
@@ -1041,6 +1039,7 @@
               suffix-icon="search"
               type="text"
               @input="handleFilterInput"
+              @clear="handleClear"
             />
           </div>
 
