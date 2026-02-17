@@ -1,3 +1,17 @@
+# [1.15.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.11...v1.15.0) (2026-02-17)
+
+
+### Bug Fixes
+
+* fix clear in search select ([5e1ba59](https://github.com/StepanKhomyn/voiptime-components/commit/5e1ba59c7f9e2a0951aec9cf868dcc92142d7d34))
+* fix clear in search select ([57c1d9e](https://github.com/StepanKhomyn/voiptime-components/commit/57c1d9ef1c3603b5d94f3b488ff94e22a5e65976))
+* виправлено помилку з компонентом ([1a3c40f](https://github.com/StepanKhomyn/voiptime-components/commit/1a3c40f2925b81dc10d2a84cbf6204770095c52c))
+
+
+### Features
+
+* додано новий компонент VLogin, VLoginLogo, VLocaleSelect ([1f8807d](https://github.com/StepanKhomyn/voiptime-components/commit/1f8807dcd9b8b9ea26b2bddab49e5e1d94feca0b))
+
 ## [1.14.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.10...v1.14.11) (2026-02-17)
 
 
