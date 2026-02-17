@@ -578,6 +578,8 @@
     emit('change', emptyValue);
     emit('clear');
 
+    handleFilterClear();
+
     validation.clear();
   };
 
