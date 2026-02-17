@@ -1,4 +1,6 @@
 import type { InjectionKey } from 'vue';
+import type { IconName } from '@/icons';
+import { LANGUAGES } from '@/locales/types';
 
 // types.ts - оновлені типи для підтримки об'єктів та фільтрації
 export type VtSelectStatus = 'default' | 'success' | 'error' | 'warning';
@@ -72,6 +74,22 @@ export interface VtSelectEmits {
 
 export interface VtOptionEmits {
   click: [option: VtSelectOption];
+}
+
+export interface VLocale {
+  value: LANGUAGES;
+  locale: string;
+  icon: IconName;
+}
+
+export interface VLocaleSelectProps {
+  modelValue?: LANGUAGES,
+  languages?: VLocale[];
+}
+
+export interface VLocaleEmits {
+  (e: 'update:modelValue', value: LANGUAGES): void;
+  (e: 'change', value: LANGUAGES): void;
 }
 
 export interface VtSelectContext {

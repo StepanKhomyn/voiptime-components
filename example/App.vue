@@ -22,8 +22,9 @@
   import DemoUpload from './DemoUpload.vue';
   import DemoUpload2 from './DemoUpload2.vue';
   import DemoSidebar from './DemoSidebar.vue';
+  import DemoLogin from './DemoLogin.vue';
 
-  const activeSlot = ref(null);
+  const activeSlot = ref(25);
 
   const sections = [
     { id: 1, name: 'Кнопки', icon: '🆎' },
@@ -48,6 +49,7 @@
     { id: 22, name: 'Upload', icon: '✅' },
     { id: 23, name: 'Upload2', icon: '✅' },
     { id: 24, name: 'Sidebar', icon: '☰' },
+    { id: 25, name: 'Компонента логіну', icon: '🙊' },
   ];
 </script>
 
@@ -103,6 +105,7 @@
       <DemoUpload v-if="activeSlot === 22" />
       <DemoUpload2 v-if="activeSlot === 23" />
       <DemoSidebar v-if="activeSlot === 24" />
+      <DemoLogin v-if="activeSlot === 25" />
       <!-- і т.д. -->
     </div>
   </div>
