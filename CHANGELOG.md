@@ -1,3 +1,10 @@
+## [1.14.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.10...v1.14.11) (2026-02-17)
+
+
+### Bug Fixes
+
+* fix clear in search select ([93dfc3a](https://github.com/StepanKhomyn/voiptime-components/commit/93dfc3a4e341667a90c91b96c1d5c75543217f9b))
+
 ## [1.14.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.9...v1.14.10) (2026-02-17)
 
 
