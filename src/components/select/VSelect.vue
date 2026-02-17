@@ -1039,7 +1039,7 @@
               suffix-icon="search"
               type="text"
               @input="handleFilterInput"
-              @clear="clearFilter"
+              @clear="handleFilterClear"
             />
           </div>
 
