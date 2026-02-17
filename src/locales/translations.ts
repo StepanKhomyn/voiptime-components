@@ -1,8 +1,17 @@
 // locales/translations.ts
 import { LANGUAGES, LOCALE_KEYS, type Translations } from './types';
 
-export const translations: Translations = {
+export const translations: Translations = <Translations>{
   [LANGUAGES.uk]: {
+    [LOCALE_KEYS.LOGIN_TITLE]: 'Будь ласка, увійдіть до свого облікового запису',
+    [LOCALE_KEYS.LOGIN_USERNAME]: 'Логін',
+    [LOCALE_KEYS.LOGIN_PASSWORD]: 'Пароль',
+    [LOCALE_KEYS.LOGIN_LANGUAGE]: 'Мова інтерфейсу',
+    [LOCALE_KEYS.LOGIN_REMEMBER]: 'Запам\'ятати мене',
+    [LOCALE_KEYS.LOGIN_SUBMIT]: 'Відправити',
+    [LOCALE_KEYS.LOGIN_FORGET_PASSWORD]: 'Забули пароль?',
+    [LOCALE_KEYS.LOGIN_PRIVACY_POLICY]: 'Політика конфіденційності',
+
     [LOCALE_KEYS.TABLE_FREEZE]: 'Заморозити',
     [LOCALE_KEYS.TABLE_UNFREEZE]: 'Розморозити',
     [LOCALE_KEYS.TABLE_COLUMNS]: 'Колонки',
@@ -120,6 +129,15 @@ export const translations: Translations = {
   },
 
   [LANGUAGES.en]: {
+    [LOCALE_KEYS.LOGIN_TITLE]: 'Please log in to your account',
+    [LOCALE_KEYS.LOGIN_USERNAME]: 'Login',
+    [LOCALE_KEYS.LOGIN_PASSWORD]: 'Password',
+    [LOCALE_KEYS.LOGIN_LANGUAGE]: 'Interface language',
+    [LOCALE_KEYS.LOGIN_REMEMBER]: 'Remember me',
+    [LOCALE_KEYS.LOGIN_SUBMIT]: 'Submit',
+    [LOCALE_KEYS.LOGIN_FORGET_PASSWORD]: 'Forgot password?',
+    [LOCALE_KEYS.LOGIN_PRIVACY_POLICY]: 'Privacy Policy',
+
     [LOCALE_KEYS.TABLE_FREEZE]: 'Freeze',
     [LOCALE_KEYS.TABLE_UNFREEZE]: 'Unfreeze',
     [LOCALE_KEYS.TABLE_COLUMNS]: 'Columns',
@@ -238,6 +256,15 @@ export const translations: Translations = {
   },
 
   [LANGUAGES.ru]: {
+    [LOCALE_KEYS.LOGIN_TITLE]: 'Пожалуйста, войдите в свою учетную запись',
+    [LOCALE_KEYS.LOGIN_USERNAME]: 'Логин',
+    [LOCALE_KEYS.LOGIN_PASSWORD]: 'Пароль',
+    [LOCALE_KEYS.LOGIN_LANGUAGE]: 'Язык интерфейса',
+    [LOCALE_KEYS.LOGIN_REMEMBER]: 'Запомнить меня',
+    [LOCALE_KEYS.LOGIN_SUBMIT]: 'Отправить',
+    [LOCALE_KEYS.LOGIN_FORGET_PASSWORD]: 'Забыли пароль?',
+    [LOCALE_KEYS.LOGIN_PRIVACY_POLICY]: 'Политика конфиденциальности',
+
     [LOCALE_KEYS.TABLE_FREEZE]: 'Закрепить',
     [LOCALE_KEYS.TABLE_UNFREEZE]: 'Открепить',
     [LOCALE_KEYS.TABLE_COLUMNS]: 'Колонки',

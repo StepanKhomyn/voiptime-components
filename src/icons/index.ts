@@ -86,6 +86,13 @@ import ClientLocationIcon from './client/ClientLocationIcon.vue';
 import ClientSocialIcon from './client/ClientSocialIcon.vue';
 import ClientTaskIcon from './client/ClientTaskIcon.vue';
 import ClientVoiceChannelIcon from './client/ClientVoiceChannelIcon.vue';
+import AzerbaijanIcon from './country/AzerbaijanIcon.vue';
+import KazakhstanIcon from './country/KazakhstanIcon.vue';
+import PolanIcon from './country/PolanIcon.vue';
+import TerroristIcon from './country/TerroristIcon.vue';
+import ThailandIcon from './country/ThailandIcon.vue';
+import UkraineIcon from './country/UkraineIcon.vue';
+import UnitedKingdomIcon from './country/UnitedKingdomIcon.vue';
 import EmptyImgIcon from './files/EmptyImgIcon.vue';
 import FileChooseIcon from './files/FileChooseIcon.vue';
 import FileDocIcon from './files/FileDocIcon.vue';
@@ -282,6 +289,15 @@ export const icons = {
   clientSocial: ClientSocialIcon,
   clientTask: ClientTaskIcon,
   clientVoiceChannel: ClientVoiceChannelIcon,
+
+  // country icons
+  azerbaijan: AzerbaijanIcon,
+  kazakhstan: KazakhstanIcon,
+  polan: PolanIcon,
+  terrorist: TerroristIcon,
+  thailand: ThailandIcon,
+  ukraine: UkraineIcon,
+  unitedKingdom: UnitedKingdomIcon,
 
   // files icons
   emptyImg: EmptyImgIcon,

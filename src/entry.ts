@@ -13,6 +13,7 @@ import VDropdown from './components/dropdown/VDropdown.vue';
 import VDropdownItem from './components/dropdown/VDropdownItem.vue';
 import VInput from './components/input/VInput.vue';
 import VSelect from './components/select/VSelect.vue';
+import VLocaleSelect from '@/components/select/VLocaleSelect.vue';
 import VOption from './components/select/VOption.vue';
 import VDatePicker from './components/datepicker/VDatePicker.vue';
 import VTimePicker from './components/timepicker/VTimePicker.vue';
@@ -22,6 +23,8 @@ import VTabs from './components/tabs/VTabs.vue';
 import VTabItem from './components/tabs/VTabItem.vue';
 import VUpload from './components/upload/VUpload.vue';
 import VSidebar from './components/sidebar/VSidebar.vue';
+import VLogin from '@/components/login/VLogin.vue';
+import VLoginLogo from '@/components/login/VLoginLogo.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -46,6 +49,7 @@ export {
   VDropdownItem,
   VInput,
   VSelect,
+  VLocaleSelect,
   VOption,
   VDatePicker,
   VTimePicker,
@@ -55,6 +59,8 @@ export {
   VTabItem,
   VUpload,
   VSidebar,
+  VLogin,
+  VLoginLogo
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -136,6 +142,9 @@ export type {
   VtSelectStatus,
   VtSelectContext,
   VtOptionEmits,
+  VLocaleSelectProps,
+  VLocale,
+  VLocaleEmits
 } from './components/select/types';
 
 // VDatePicker
@@ -178,6 +187,14 @@ export type {
 
 // VTabs
 export type { VTabsProps, VTabItemProps, VTabsEmits } from './components/tabs/types';
+
+// ----------------- login ------------------
+export type {
+  VAuthentificationProps,
+  VAuthentificationData,
+  VAuthentificationEmits,
+  VLoginLogoProps
+} from './components/login/types';
 
 // ----------------- Upload -----------------
 export { FileValidator, FileParser } from './components/upload/types';
@@ -257,6 +274,9 @@ const VUIPlugin = {
     app.component(`${prefix}TabItem`, VTabItem);
     app.component(`${prefix}Upload`, VUpload);
     app.component(`${prefix}Sidebar`, VSidebar);
+    app.component(`${prefix}Login`, VLogin);
+    app.component(`${prefix}LoginLogo`, VLoginLogo);
+    app.component(`${prefix}LocaleSelect`, VLocaleSelect);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
