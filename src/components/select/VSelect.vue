@@ -727,7 +727,7 @@
     },
 
     clearFilter() {
-      handleFilterClear();
+      emit('clear');
     },
 
     getFilterQuery(): string {
@@ -1039,7 +1039,7 @@
               suffix-icon="search"
               type="text"
               @input="handleFilterInput"
-              @clear="handleClear"
+              @clear="clearFilter"
             />
           </div>
 
