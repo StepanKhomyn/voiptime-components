@@ -1,11 +1,12 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import type { VLocale } from './types';
-  import { VLocaleEmits, VLocaleSelectProps } from './types';
+  import type { VLocaleEmits, VLocaleSelectProps } from './types';
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
   import VIcon from '@/components/icon/VIcon.vue';
   import { LANGUAGES } from '@/entry';
+  import type {IconName} from '@/entry'
 
   const emit = defineEmits<VLocaleEmits>();
 
@@ -35,7 +36,7 @@
   <VSelect v-model="currentLocale" class="vt-language-select">
     <template #selected>
       <div class="vt-language-select__selected">
-        <VIcon :name="selectedLanguage?.icon" class="vt-language-select__flag"/>
+        <VIcon :name="selectedLanguage?.icon as IconName" class="vt-language-select__flag"/>
         <span class="vt-language-select__label">{{ selectedLanguage?.locale }}</span>
       </div>
     </template>
@@ -47,7 +48,7 @@
       :value="lang.value"
     >
       <div class="vt-language-select__option">
-        <VIcon :name="lang?.icon" class="vt-language-select__flag"/>
+        <VIcon :name="lang?.icon as IconName" class="vt-language-select__flag"/>
         <span class="vt-language-select__label">{{ lang.locale }}</span>
       </div>
     </VOption>

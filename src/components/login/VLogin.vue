@@ -6,7 +6,7 @@
   import { LOCALE_KEYS } from '@/locales/types';
   import { useI18n } from '@/locales/useI18n';
   import VRadiobox from '@/components/radiobox/VRadiobox.vue';
-  import { VAuthentificationData, VAuthentificationEmits, VAuthentificationProps } from '@/components/login/types';
+  import type { VAuthentificationData, VAuthentificationEmits, VAuthentificationProps } from '@/components/login/types';
 
   const { t } = useI18n();
 
@@ -76,7 +76,7 @@
           </div>
           <VInput
             v-model="form.username"
-            :error-message="v$.username.$errors[0]?.$message"
+            :error-message="Array.isArray(v$.username?.$errors) ? v$.username.$errors[0]?.$message : undefined"
             outlined
             @keyup.enter="submit"
           />
@@ -90,7 +90,7 @@
           </div>
           <VInput
             v-model.trim="form.password"
-            :error-message="v$.password.$errors[0]?.$message"
+            :error-message="Array.isArray(v$.password?.$errors) ? v$.password.$errors[0]?.$message : undefined"
             :show-password="true"
             type="password"
             outlined

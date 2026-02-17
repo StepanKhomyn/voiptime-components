@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { VLoginLogoProps } from '@/components/login/types.ts';
+  import type { VLoginLogoProps } from '@/components/login/types.ts';
 
   const props = withDefaults(defineProps<VLoginLogoProps>(), {
     name: 'CONTACT CENTERS',
