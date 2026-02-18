@@ -15,12 +15,6 @@
   }>();
   const slotNodes = computed(() => {
     const raw = slots.default ? slots.default() : [];
-    console.log('slots:', slots);
-    console.log('default:', slots.default?.());
-    console.log('raw length:', raw.length);
-    console.log('raw[0].type:', raw[0]?.type);
-    console.log('raw[0].children:', raw[0]?.children);
-    console.log('typeof children:', typeof raw[0]?.children);
     return flattenVNodes(raw);
   });
 
@@ -47,7 +41,7 @@
           // children — об'єкт зі слотами { default: fn, _: 1 }
           const defaultSlot = (children as any).default;
           if (typeof defaultSlot === 'function') {
-            const slotResult = defaultSlot(); // викликаємо щоб отримати VNode[]
+            const slotResult = defaultSlot();
             if (Array.isArray(slotResult)) {
               result.push(...flattenVNodes(slotResult));
             }
