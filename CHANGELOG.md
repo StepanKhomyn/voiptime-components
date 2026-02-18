@@ -1,3 +1,10 @@
+# [1.16.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.15.0...v1.16.0) (2026-02-18)
+
+
+### Features
+
+* додано новий компонент VDynamicFilter ([334590f](https://github.com/StepanKhomyn/voiptime-components/commit/334590f320e1487dbea9c89aea9bc0541e8e45a2))
+
 # [1.15.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.14.11...v1.15.0) (2026-02-17)
 
 
