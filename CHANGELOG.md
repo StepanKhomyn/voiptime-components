@@ -1,3 +1,11 @@
+## [1.16.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.1...v1.16.2) (2026-02-18)
+
+
+### Bug Fixes
+
+* add logs to  dynamic filter4 ([eec40a1](https://github.com/StepanKhomyn/voiptime-components/commit/eec40a192ce2ed29e2bb09a7b1cdda8ed71b0751))
+* add logs to  dynamic filter4 ([ee27e8f](https://github.com/StepanKhomyn/voiptime-components/commit/ee27e8f3a33aac140b529818f1a1588ffd788ffe))
+
 ## [1.16.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.0...v1.16.1) (2026-02-18)
 
 
