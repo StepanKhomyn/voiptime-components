@@ -13,7 +13,11 @@
     default?: () => any[];
     actions?: () => any[];
   }>();
-  const slotNodes = computed(() => (slots.default ? slots.default() : []));
+  const slotNodes = computed(() => {
+    const raw = slots.default ? slots.default() : [];
+    return flattenVNodes(raw);
+  });
+
   const slotNodesLength = computed(() => slotNodes.value.length);
 
   const { visibleIndexes } = useResponsiveFilters(
@@ -23,6 +27,23 @@
     measurementContainer,
     slotNodesLength
   );
+
+  const flattenVNodes = (vnodes: VNode[]): VNode[] => {
+    const result: VNode[] = [];
+    console.log(vnodes);
+    for (const vnode of vnodes) {
+      console.log(vnode);
+      if (vnode.type === Fragment) {
+        const children = vnode.children as VNode[] | null;
+        if (Array.isArray(children)) {
+          result.push(...flattenVNodes(children));
+        }
+      } else {
+        result.push(vnode);
+      }
+    }
+    return result;
+  };
 </script>
 
 <template>
@@ -37,7 +58,11 @@
     </div>
 
     <!-- Dropdown для прихованих -->
-    <VDropdown v-if="visibleIndexes.length < slotNodes.length" class="manage-form__card-filter__dropdown" trigger="click">
+    <VDropdown
+      v-if="visibleIndexes.length < slotNodes.length"
+      class="manage-form__card-filter__dropdown"
+      trigger="click"
+    >
       <div ref="dropdownTriggerRef">
         <VButton icon="filterAdd" type="default">Більше фільтрів</VButton>
       </div>
@@ -68,6 +93,6 @@
   </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
   @use './dynamic-filter';
 </style>
