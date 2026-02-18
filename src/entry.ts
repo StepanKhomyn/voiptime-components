@@ -25,6 +25,7 @@ import VUpload from './components/upload/VUpload.vue';
 import VSidebar from './components/sidebar/VSidebar.vue';
 import VLogin from '@/components/login/VLogin.vue';
 import VLoginLogo from '@/components/login/VLoginLogo.vue';
+import VDynamicFilter from '@/components/dynamic-filter/VDynamicFilter.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -60,7 +61,8 @@ export {
   VUpload,
   VSidebar,
   VLogin,
-  VLoginLogo
+  VLoginLogo,
+  VDynamicFilter
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -277,6 +279,7 @@ const VUIPlugin = {
     app.component(`${prefix}Login`, VLogin);
     app.component(`${prefix}LoginLogo`, VLoginLogo);
     app.component(`${prefix}LocaleSelect`, VLocaleSelect);
+    app.component(`${prefix}DynamicFilter`, VDynamicFilter);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

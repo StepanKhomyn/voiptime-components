@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import VSidebar from '../src/components/sidebar/VSidebar.vue';
+  import VDynamicFilter from '../src/components/dynamic-filter/VDynamicFilter.vue';
+  import VButton from '../src/components/button/VButton.vue';
+  import VInput from '../src/components/input/VInput.vue';
 
   const collapsed = ref(true);
 
@@ -60,17 +63,44 @@
 <template>
   <div class="demo-container">
     <VSidebar :items="menuItems" v-model:collapsed="collapsed" />
-    <div class="demo-main">
-      <h2>Main Content Area Test</h2>
-      <p>Here is the main view. Use the sidebar to navigate.</p>
-      <button @click="collapsed = !collapsed">
-        {{ collapsed ? 'Expand Sidebar' : 'Collapse Sidebar' }}
-      </button>
+
+    <div class="manage-form__card">
+      <div class="manage-form__card-list">
+        <VDynamicFilter>
+          <VInput />
+          <VInput />
+          <VInput />
+          <VInput />
+          <VInput />
+
+          <template #actions>
+            <VButton icon="filterSave" shape="square" tooltip type="primary">Дія</VButton>
+            <VButton icon="filterSave" shape="square" tooltip type="primary">Дія</VButton>
+          </template>
+        </VDynamicFilter>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+  .manage-form__card {
+    background: #ffffff;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .manage-form__card-list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+  }
   .demo-container {
     display: flex;
     height: 100vh;

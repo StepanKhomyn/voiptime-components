@@ -1,0 +1,60 @@
+.manage-form__card-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
+
+    &__inline {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 10px;
+        flex-shrink: 0;
+    }
+
+    &__dropdown {
+        flex-shrink: 0;
+
+        &-target {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
+
+    &__measure {
+        &-root {
+            position: absolute;
+            left: -9999px;
+            top: -9999px;
+            width: auto;
+            height: auto;
+            visibility: hidden;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+
+        &-element {
+            display: inline-block;
+            white-space: nowrap;
+            margin-right: 10px; /* той же GAP, що і у логіці */
+        }
+    }
+
+    &__control {
+        white-space: nowrap;
+
+        :deep(.vt-select),
+        :deep(.vt-datepicker),
+        :deep(.vt-timepicker) {
+            min-width: 150px;
+        }
+    }
+}
