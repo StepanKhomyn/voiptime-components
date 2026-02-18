@@ -16,7 +16,7 @@
   const slotNodes = computed(() => {
     const raw = slots.default ? slots.default() : [];
     console.log('slots:', slots);
-    console.log('default:', slots.default());
+    console.log('default:', slots.default?.());
     console.log('raw length:', raw.length);
     console.log('raw[0].type:', raw[0]?.type);
     console.log('raw[0].children:', raw[0]?.children);
