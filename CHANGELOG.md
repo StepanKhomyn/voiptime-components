@@ -1,3 +1,10 @@
+## [1.16.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.4...v1.16.5) (2026-02-19)
+
+
+### Bug Fixes
+
+* tab height ([18da800](https://github.com/StepanKhomyn/voiptime-components/commit/18da800e23856c7760f7b129d2dab59acea8ab23))
+
 ## [1.16.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.3...v1.16.4) (2026-02-19)
 
 
