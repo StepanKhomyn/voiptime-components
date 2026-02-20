@@ -1,3 +1,10 @@
+## [1.16.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.6...v1.16.7) (2026-02-20)
+
+
+### Bug Fixes
+
+* change login min length from 6 to 3 ([a97f098](https://github.com/StepanKhomyn/voiptime-components/commit/a97f098a2929fd829c11e8415414ab404af87368))
+
 ## [1.16.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.5...v1.16.6) (2026-02-19)
 
 
