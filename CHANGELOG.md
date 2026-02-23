@@ -1,3 +1,10 @@
+## [1.16.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.7...v1.16.8) (2026-02-23)
+
+
+### Bug Fixes
+
+* add vip icon ([8979c2b](https://github.com/StepanKhomyn/voiptime-components/commit/8979c2b4d583593a9d5f51a2c27bc5a54f5d575e))
+
 ## [1.16.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.6...v1.16.7) (2026-02-20)
 
 
