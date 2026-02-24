@@ -5,7 +5,6 @@ import AddLineIcon from './actions/AddLineIcon.vue';
 import ChannelsChangeIcon from './actions/ChannelsChangeIcon.vue';
 import CircleCheckedIcon from './actions/CircleCheckedIcon.vue';
 import CircleCloseIcon from './actions/CircleCloseIcon.vue';
-import CloseFilledIcon from './actions/CloseFilledIcon.vue';
 import CloseIcon from './actions/CloseIcon.vue';
 import DeleteIcon from './actions/DeleteIcon.vue';
 import DownloadIcon from './actions/DownloadIcon.vue';
@@ -21,6 +20,7 @@ import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
+import SettingsFilledIcon from './actions/SettingsFilledIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
 import StatusChange2Icon from './actions/StatusChange2Icon.vue';
 import StatusChangeIcon from './actions/StatusChangeIcon.vue';
@@ -204,7 +204,6 @@ export const icons = {
   channelsChange: ChannelsChangeIcon,
   circleChecked: CircleCheckedIcon,
   circleClose: CircleCloseIcon,
-  closeFilled: CloseFilledIcon,
   close: CloseIcon,
   delete: DeleteIcon,
   download: DownloadIcon,
@@ -220,6 +219,7 @@ export const icons = {
   prompter: PrompterIcon,
   reply: ReplyIcon,
   save: SaveIcon,
+  settingsFilled: SettingsFilledIcon,
   star: StarIcon,
   statusChange2: StatusChange2Icon,
   statusChange: StatusChangeIcon,
