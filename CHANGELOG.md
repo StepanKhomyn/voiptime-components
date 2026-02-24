@@ -1,3 +1,10 @@
+## [1.16.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.9...v1.16.10) (2026-02-24)
+
+
+### Bug Fixes
+
+* add new icons ([3656c51](https://github.com/StepanKhomyn/voiptime-components/commit/3656c5100ec504a10c6bd2826803d836547c698c))
+
 ## [1.16.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.8...v1.16.9) (2026-02-24)
 
 
