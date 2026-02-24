@@ -55,6 +55,7 @@ import PhoneTransferIcon from './call/PhoneTransferIcon.vue';
 import PhoneUnavailableIcon from './call/PhoneUnavailableIcon.vue';
 import ScenarioCallIcon from './call/ScenarioCallIcon.vue';
 import SpeakerIcon from './call/SpeakerIcon.vue';
+import SpeakerMutedIcon from './call/SpeakerMutedIcon.vue';
 import TelemarketCallIcon from './call/TelemarketCallIcon.vue';
 import TransferCallIcon from './call/TransferCallIcon.vue';
 import VolumeCallIcon from './call/VolumeCallIcon.vue';
@@ -257,6 +258,7 @@ export const icons = {
   phoneUnavailable: PhoneUnavailableIcon,
   scenarioCall: ScenarioCallIcon,
   speaker: SpeakerIcon,
+  speakerMuted: SpeakerMutedIcon,
   telemarketCall: TelemarketCallIcon,
   transferCall: TransferCallIcon,
   volumeCall: VolumeCallIcon,
