@@ -114,8 +114,6 @@
   }
 
   &__icon {
-    width: 20px;
-    height: 20px;
     flex-shrink: 0;
     color: var(--color-gray-4);
     transition: color 0.2s ease-in-out;
@@ -152,6 +150,8 @@
     color: var(--color-gray-4);
     cursor: pointer;
     transition: background-color 0.2s ease;
+    width: 15px;
+    height: 15px;
 
     &:hover {
       background-color: var(--color-gray-7);
