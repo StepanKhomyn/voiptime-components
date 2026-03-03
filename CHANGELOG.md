@@ -1,3 +1,10 @@
+## [1.16.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.16...v1.16.17) (2026-03-03)
+
+
+### Bug Fixes
+
+* add scroll to dropdown ([56cd69c](https://github.com/StepanKhomyn/voiptime-components/commit/56cd69c1465b73e00e5d52309382c1fc76fd7e50))
+
 ## [1.16.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.15...v1.16.16) (2026-02-27)
 
 
