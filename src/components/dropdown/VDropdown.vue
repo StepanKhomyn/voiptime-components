@@ -211,6 +211,7 @@
         ref="menuRef"
         :style="menuStyle"
         class="vt-dropdown-menu"
+        @scroll="handleScroll"
         @mouseenter="handleMenuMouseEnter"
         @mouseleave="handleMenuMouseLeave"
         @click.stop
@@ -218,7 +219,6 @@
         <div
           ref="scrollContainerRef"
           class="vt-dropdown-menu__scroll"
-          @scroll="handleScroll"
         >
           <slot name="dropdown" />
         </div>
