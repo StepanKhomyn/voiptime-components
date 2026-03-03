@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import { computed, onMounted, onUnmounted, provide, ref } from 'vue';
+  import type { CSSProperties } from 'vue';
   import { useDropdown } from './useDropdown';
   import {
     type DropdownContext,
@@ -25,6 +26,7 @@
   const dropdownRef = ref<HTMLElement>();
   const triggerRef = ref<HTMLElement>();
   const menuRef = ref<HTMLElement>();
+  const scrollContainerRef = ref<HTMLElement>();
 
   // Додаткові стани для відстеження hover
   const isHoveringTrigger = ref(false);
@@ -130,12 +132,38 @@
   };
 
   // Computed style for menu з урахуванням maxHeight
-  const menuStyle = computed(() => ({
+  const menuStyle = computed<CSSProperties>(() => ({
     ...dropdownPosition.value,
     position: 'absolute' as const,
     zIndex: 2000,
-    maxHeight: typeof props.maxHeight === 'number' ? `${props.maxHeight}px` : `${props.maxHeight}px`,
+    maxHeight: `${props.maxHeight}px`,
+    overflowY: 'auto',
   }));
+
+  // Scroll
+
+  const lastEmitTime = ref(0);
+  const cooldown = 300;
+
+  const handleScroll = (event: Event) => {
+    const container = event.target as HTMLElement;
+    if (!container) return;
+
+    const scrollTop = container.scrollTop;
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+
+    const scrollThreshold = 50;
+    const nearBottom = scrollTop + clientHeight >= scrollHeight - scrollThreshold;
+
+    const now = Date.now();
+    const canEmit = now - lastEmitTime.value > cooldown;
+
+    if (nearBottom && canEmit) {
+      lastEmitTime.value = now;
+      emit('scrolled');
+    }
+  };
 
   // Expose methods
   defineExpose({
@@ -178,7 +206,13 @@
         @mouseleave="handleMenuMouseLeave"
         @click.stop
       >
-        <slot name="dropdown" />
+        <div
+          ref="scrollContainerRef"
+          class="vt-dropdown-menu__scroll"
+          @scroll="handleScroll"
+        >
+          <slot name="dropdown" />
+        </div>
       </div>
     </Teleport>
   </div>

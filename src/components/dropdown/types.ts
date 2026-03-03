@@ -26,6 +26,7 @@ export interface DropdownEmits {
   'visible-change': [visible: boolean];
   click: [event: MouseEvent];
   command: [command: string | number];
+  scrolled: [];
 }
 
 export interface DropdownItemEmits {
