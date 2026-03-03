@@ -1,3 +1,10 @@
+## [1.16.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.19...v1.16.20) (2026-03-03)
+
+
+### Bug Fixes
+
+* remove logs ([f97b048](https://github.com/StepanKhomyn/voiptime-components/commit/f97b048479ea1f2d0f9ef89fef9cb7271911b0e7))
+
 ## [1.16.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.18...v1.16.19) (2026-03-03)
 
 
