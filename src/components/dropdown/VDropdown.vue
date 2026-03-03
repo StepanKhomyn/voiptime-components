@@ -146,6 +146,7 @@
   const cooldown = 300;
 
   const handleScroll = (event: Event) => {
+    console.log('test event', event);
     const container = event.target as HTMLElement;
     if (!container) return;
 
@@ -156,8 +157,14 @@
     const scrollThreshold = 50;
     const nearBottom = scrollTop + clientHeight >= scrollHeight - scrollThreshold;
 
+    console.log(nearBottom, 'nearBottom');
+    console.log(scrollTop, 'scrollTop');
+    console.log(clientHeight, 'clientHeight');
+
     const now = Date.now();
     const canEmit = now - lastEmitTime.value > cooldown;
+
+    console.log();
 
     if (nearBottom && canEmit) {
       lastEmitTime.value = now;
