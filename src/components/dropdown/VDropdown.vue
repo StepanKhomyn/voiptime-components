@@ -164,7 +164,9 @@
     const now = Date.now();
     const canEmit = now - lastEmitTime.value > cooldown;
 
-    console.log();
+    console.log(canEmit, 'canEmit');
+    console.log(now, 'now');
+    console.log(lastEmitTime.value, 'lastEmitTime.value');
 
     if (nearBottom && canEmit) {
       lastEmitTime.value = now;
