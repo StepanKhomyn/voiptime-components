@@ -1,3 +1,10 @@
+## [1.16.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.18...v1.16.19) (2026-03-03)
+
+
+### Bug Fixes
+
+* fix dropdown scroll ([e365ef1](https://github.com/StepanKhomyn/voiptime-components/commit/e365ef18d87f06f748ed7a9662ebef810a274372))
+
 ## [1.16.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.17...v1.16.18) (2026-03-03)
 
 
