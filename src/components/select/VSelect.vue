@@ -632,7 +632,7 @@
     emit('filter', inputValue);
 
     if (props.allowRemoteFilter) {
-      console.log('Remote filter query:', inputValue);
+      console.log('Remote filter query: ', inputValue);
     }
   }, 500);
 
