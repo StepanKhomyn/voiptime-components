@@ -364,7 +364,7 @@
       <div class="vt-columns-selector__panel">
         <div
           v-for="(col, index) in workingColumns"
-          :key="col.prop"
+          :key="'active-' + col.prop"
           :class="getItemClasses(index)"
           :draggable="canDragColumn(col)"
           @dragend="handleDragEnd"
@@ -391,7 +391,7 @@
 
       <!-- Доступні колонки згруповані (справа) -->
       <div class="vt-columns-selector__panel">
-        <div v-for="(col, index) in inactiveColumns" :key="col.prop" class="vt-columns-selector__panel-item">
+        <div v-for="(col, index) in inactiveColumns" :key="'inactive-' + col.prop" class="vt-columns-selector__panel-item">
           <VCheckbox
             :checked="false"
             :disabled="isPinned(col)"
