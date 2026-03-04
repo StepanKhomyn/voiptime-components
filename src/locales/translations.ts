@@ -20,6 +20,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.TABLE_COLUMN_ACTION]: 'Управління колонками таблиці',
 
     [LOCALE_KEYS.BUTTON_SAVE]: 'Зберегти',
+    [LOCALE_KEYS.BUTTON_RESET]: 'Скинути',
     [LOCALE_KEYS.BUTTON_CANCEL]: 'Скасувати',
 
     [LOCALE_KEYS.PAGINATION_ROWS_PER_PAGE]: 'Рядків на сторінку:',
@@ -146,6 +147,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.TABLE_COLUMN_ACTION]: 'Table column settings',
 
     [LOCALE_KEYS.BUTTON_SAVE]: 'Save',
+    [LOCALE_KEYS.BUTTON_RESET]: 'Reset',
     [LOCALE_KEYS.BUTTON_CANCEL]: 'Cancel',
 
     [LOCALE_KEYS.PAGINATION_ROWS_PER_PAGE]: 'Rows per page:',
@@ -273,6 +275,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.TABLE_COLUMN_ACTION]: 'Управление колонками таблицы',
 
     [LOCALE_KEYS.BUTTON_SAVE]: 'Сохранить',
+    [LOCALE_KEYS.BUTTON_RESET]: 'Скинуть',
     [LOCALE_KEYS.BUTTON_CANCEL]: 'Отмена',
 
     [LOCALE_KEYS.PAGINATION_ROWS_PER_PAGE]: 'Строк на странице:',

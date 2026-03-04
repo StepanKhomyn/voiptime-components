@@ -25,6 +25,7 @@ export enum LOCALE_KEYS {
 
   // Кнопки
   BUTTON_SAVE = 'BUTTON_SAVE',
+  BUTTON_RESET = 'BUTTON_RESET',
   BUTTON_CANCEL = 'BUTTON_CANCEL',
 
   // Пагінація

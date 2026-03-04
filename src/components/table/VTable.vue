@@ -44,7 +44,10 @@
 
   // Reactive state
   const internalColumns = reactive<VTableColumnProps[]>([]);
+  const defaultColumns = ref<VTableColumnProps[]>([]);
   const sortState = ref<SortState | null>(props.defaultSort || null);
+
+  const isDefaultColumnsInitialized = ref(false);
 
   const sortedData = computed(() => {
     return sortTableData(props.data || [], sortState.value, internalColumns);
@@ -90,6 +93,18 @@
       if (newColumns && !hasColumnsModel.value) {
         internalColumns.length = 0;
         internalColumns.push(...newColumns);
+      }
+    },
+    { deep: true }
+  );
+
+  // Якщо не ініціалізовано дефолтні колонки, ініціалізовуємо
+  watch(
+    internalColumns,
+    (cols) => {
+      if (!isDefaultColumnsInitialized.value && cols.length > 0) {
+        defaultColumns.value = cols.map(col => ({ ...col }));
+        isDefaultColumnsInitialized.value = true;
       }
     },
     { deep: true }
@@ -534,6 +549,7 @@
               <ColumnActions
                 v-if="col.actionColumn && !col.manage"
                 :all-columns="sortedColumns"
+                :default-columns="defaultColumns"
                 :column="col"
                 :columnsSelector="props.columnsSelector"
                 @pin="handleColumnPin"

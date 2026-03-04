@@ -11,6 +11,7 @@
   interface ColumnActionsProps {
     column: VTableColumnProps;
     allColumns: VTableColumnProps[];
+    defaultColumns?: VTableColumnProps[];
     columnsSelector?: VTableColumnGroup[] | undefined;
   }
 
@@ -112,12 +113,13 @@
       title: t(LOCALE_KEYS.TABLE_COLUMN_ACTION),
       props: {
         columns: props.allColumns,
+        defaultColumns: props.defaultColumns,
         columnsSelector: availableColumns,
         'onUpdate-columns': (updatedColumns: VTableColumnProps[]) => {
           emit('update-columns', updatedColumns);
         },
       },
-      size: 'large',
+      size: 'medium',
       closeOnBackdropClick: false,
     });
   };
