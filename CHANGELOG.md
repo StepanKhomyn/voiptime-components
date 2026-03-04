@@ -1,3 +1,10 @@
+## [1.16.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.25...v1.16.26) (2026-03-04)
+
+
+### Bug Fixes
+
+* table fixes ([d7b45f3](https://github.com/StepanKhomyn/voiptime-components/commit/d7b45f399831a2737d1ad21c9ec71112270deaff))
+
 ## [1.16.25](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.24...v1.16.25) (2026-03-04)
 
 
