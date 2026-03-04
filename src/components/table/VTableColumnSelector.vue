@@ -246,16 +246,21 @@
 
   // Обробка зміни стану окремої колонки
   const handleColumnToggle = (column: VTableColumnProps, isChecked: boolean) => {
+    const map = new Map<string, VTableColumnProps>();
+
+    workingColumns.value.forEach(col => {
+      map.set(col.prop, col);
+    });
+
     if (isChecked) {
-      if (!workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop)) {
-        workingColumns.value = normalizeColumns([...workingColumns.value, { ...column }]);
-      }
+      map.set(column.prop, { ...column });
     } else {
-      if (isPinned(column)) {
-        return;
+      if (!isPinned(column)) {
+        map.delete(column.prop);
       }
-      workingColumns.value = workingColumns.value.filter((col: VTableColumnProps) => col.prop !== column.prop);
     }
+
+    workingColumns.value = Array.from(map.values());
   };
 
   // Обробка зміни стану групи
@@ -325,7 +330,16 @@
   // Всі неактивні колонки
   const inactiveColumns = computed(() => {
     const activeProps = new Set(workingColumns.value.map(c => c.prop));
-    return props.defaultColumns.filter(c => !activeProps.has(c.prop));
+
+    const map = new Map<string, VTableColumnProps>();
+
+    props.defaultColumns.forEach(col => {
+      if (!activeProps.has(col.prop)) {
+        map.set(col.prop, col);
+      }
+    });
+
+    return Array.from(map.values());
   });
 
   // Скидання до дефолтних
