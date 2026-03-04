@@ -1,3 +1,10 @@
+## [1.16.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.23...v1.16.24) (2026-03-04)
+
+
+### Bug Fixes
+
+* fix handleColumnToggle, inactiveColumns ([61a36aa](https://github.com/StepanKhomyn/voiptime-components/commit/61a36aa96ea663c8dd68fd8c622cc9f26fb29520))
+
 ## [1.16.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.22...v1.16.23) (2026-03-04)
 
 
