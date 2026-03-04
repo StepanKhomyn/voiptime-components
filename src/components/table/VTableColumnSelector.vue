@@ -246,21 +246,27 @@
 
   // Обробка зміни стану окремої колонки
   const handleColumnToggle = (column: VTableColumnProps, isChecked: boolean) => {
-    const map = new Map<string, VTableColumnProps>();
-
-    workingColumns.value.forEach(col => {
-      map.set(col.prop, col);
-    });
-
     if (isChecked) {
-      map.set(column.prop, { ...column });
+      const defaultIndex = props.defaultColumns.findIndex(col => col.prop === column.prop);
+
+      const newColumns = [...workingColumns.value];
+
+      let insertAt = newColumns.length;
+      for (let i = 0; i < newColumns.length; i++) {
+        const existingDefaultIndex = props.defaultColumns.findIndex(col => col.prop === newColumns[i].prop);
+        if (existingDefaultIndex > defaultIndex) {
+          insertAt = i;
+          break;
+        }
+      }
+
+      newColumns.splice(insertAt, 0, { ...column });
+      workingColumns.value = newColumns;
     } else {
       if (!isPinned(column)) {
-        map.delete(column.prop);
+        workingColumns.value = workingColumns.value.filter(col => col.prop !== column.prop);
       }
     }
-
-    workingColumns.value = Array.from(map.values());
   };
 
   // Обробка зміни стану групи
