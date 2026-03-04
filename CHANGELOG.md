@@ -1,3 +1,10 @@
+## [1.16.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.20...v1.16.21) (2026-03-04)
+
+
+### Bug Fixes
+
+* [#2401](https://github.com/StepanKhomyn/voiptime-components/issues/2401) Таблиці | Змінити логіку попапу управління колонками та додати Скинути до дефолтних значень колонки таблиць ([fee5be0](https://github.com/StepanKhomyn/voiptime-components/commit/fee5be0cc684bca3e60ef60e336237f80c77b9ca))
+
 ## [1.16.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.19...v1.16.20) (2026-03-03)
 
 
