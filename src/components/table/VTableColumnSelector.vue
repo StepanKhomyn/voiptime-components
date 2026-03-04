@@ -248,7 +248,7 @@
   const handleColumnToggle = (column: VTableColumnProps, isChecked: boolean) => {
     if (isChecked) {
       if (!workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop)) {
-        workingColumns.value.push({ ...column });
+        workingColumns.value = normalizeColumns([...workingColumns.value, { ...column }]);
       }
     } else {
       if (isPinned(column)) {
@@ -263,7 +263,10 @@
     if (isChecked) {
       group.columns.forEach(column => {
         if (!workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop)) {
-          workingColumns.value.push({ ...column });
+          workingColumns.value = normalizeColumns([
+            ...workingColumns.value,
+            ...group.columns.map((col: VTableColumnProps) => ({ ...col })),
+          ]);
         }
       });
     } else {
@@ -302,6 +305,17 @@
     }
   };
 
+  // Нормалайзер для колонок
+  const normalizeColumns = (columns: VTableColumnProps[]) => {
+    const map = new Map<string, VTableColumnProps>();
+
+    columns.forEach(col => {
+      map.set(col.prop, col);
+    });
+
+    return Array.from(map.values());
+  };
+
   // Обробники подій
   const handleSave = () => {
     emit('update-columns', [...workingColumns.value]);
@@ -316,7 +330,8 @@
 
   // Скидання до дефолтних
   const resetColumnsToDefault = () => {
-    workingColumns.value = props.defaultColumns.map(col => ({ ...col }));  };
+    workingColumns.value = props.defaultColumns.map(col => ({ ...col }));
+  };
 
   const handleCancel = () => {
     modalManager.close();
@@ -362,11 +377,7 @@
 
       <!-- Доступні колонки згруповані (справа) -->
       <div class="vt-columns-selector__panel">
-        <div
-          v-for="(col, index) in inactiveColumns"
-          :key="col.prop"
-          class="vt-columns-selector__panel-item"
-        >
+        <div v-for="(col, index) in inactiveColumns" :key="col.prop" class="vt-columns-selector__panel-item">
           <VCheckbox
             :checked="false"
             :disabled="isPinned(col)"
@@ -377,34 +388,34 @@
           <span v-if="isPinned(col)" class="vt-columns-selector__panel-item-pinned">pinned</span>
         </div>
       </div>
-<!--      <div class="vt-columns-selector__available">-->
-<!--        <div v-for="group in regularGroups" :key="group.name" class="vt-columns-selector__group">-->
-<!--          <div class="vt-columns-selector__group-header" @click="toggleGroup(group.name)">-->
-<!--            <VCheckbox-->
-<!--              :checked="groupStatuses[group.name]?.checked || false"-->
-<!--              :indeterminate="groupStatuses[group.name]?.indeterminate || false"-->
-<!--              :label="group.label"-->
-<!--              @change="checked => handleGroupToggle(group, checked)"-->
-<!--              @click.stop-->
-<!--            />-->
-<!--            <VIcon v-if="group.icon" :name="group.icon" class="vt-columns-selector__group-icon" />-->
-<!--          </div>-->
+      <!--      <div class="vt-columns-selector__available">-->
+      <!--        <div v-for="group in regularGroups" :key="group.name" class="vt-columns-selector__group">-->
+      <!--          <div class="vt-columns-selector__group-header" @click="toggleGroup(group.name)">-->
+      <!--            <VCheckbox-->
+      <!--              :checked="groupStatuses[group.name]?.checked || false"-->
+      <!--              :indeterminate="groupStatuses[group.name]?.indeterminate || false"-->
+      <!--              :label="group.label"-->
+      <!--              @change="checked => handleGroupToggle(group, checked)"-->
+      <!--              @click.stop-->
+      <!--            />-->
+      <!--            <VIcon v-if="group.icon" :name="group.icon" class="vt-columns-selector__group-icon" />-->
+      <!--          </div>-->
 
-<!--          <div v-if="expandedGroups.has(group.name)" class="vt-columns-selector__group-columns">-->
-<!--            <div v-for="col in group.columns" :key="col.prop" class="vt-columns-selector__group-column">-->
-<!--              <VCheckbox-->
-<!--                :checked="isColumnSelected(col)"-->
-<!--                :disabled="!canToggleColumn(col)"-->
-<!--                :label="col.label"-->
-<!--                @change="checked => handleColumnToggle(col, checked)"-->
-<!--              />-->
-<!--              <span v-if="!canToggleColumn(col)" class="vt-columns-selector__pinned-note">-->
-<!--                {{ t(LOCALE_KEYS.TABLE_PINNED) }}-->
-<!--              </span>-->
-<!--            </div>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
+      <!--          <div v-if="expandedGroups.has(group.name)" class="vt-columns-selector__group-columns">-->
+      <!--            <div v-for="col in group.columns" :key="col.prop" class="vt-columns-selector__group-column">-->
+      <!--              <VCheckbox-->
+      <!--                :checked="isColumnSelected(col)"-->
+      <!--                :disabled="!canToggleColumn(col)"-->
+      <!--                :label="col.label"-->
+      <!--                @change="checked => handleColumnToggle(col, checked)"-->
+      <!--              />-->
+      <!--              <span v-if="!canToggleColumn(col)" class="vt-columns-selector__pinned-note">-->
+      <!--                {{ t(LOCALE_KEYS.TABLE_PINNED) }}-->
+      <!--              </span>-->
+      <!--            </div>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
     </div>
 
     <!-- Кнопки -->
@@ -412,7 +423,7 @@
       <VButton @click="handleCancel">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
       <VButton icon="save" type="primary" @click="handleSave">{{ t(LOCALE_KEYS.BUTTON_SAVE) }}</VButton>
       <VButton icon="arrowReload" shape="circle" tooltip tooltipPlacement="right" @click="resetColumnsToDefault"
-      >{{ t(LOCALE_KEYS.BUTTON_RESET) }}
+        >{{ t(LOCALE_KEYS.BUTTON_RESET) }}
       </VButton>
     </div>
   </div>
