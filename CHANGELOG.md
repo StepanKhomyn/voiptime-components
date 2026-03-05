@@ -1,3 +1,10 @@
+## [1.16.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.26...v1.16.27) (2026-03-05)
+
+
+### Bug Fixes
+
+* add type string to t able height ([ebda2ad](https://github.com/StepanKhomyn/voiptime-components/commit/ebda2add0eb6c5fc0fd54a37f48e77ff38fa681e))
+
 ## [1.16.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.25...v1.16.26) (2026-03-04)
 
 
