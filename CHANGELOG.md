@@ -1,3 +1,10 @@
+## [1.16.29](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.28...v1.16.29) (2026-03-09)
+
+
+### Bug Fixes
+
+* add adaptive background to dropdown ([6d191f2](https://github.com/StepanKhomyn/voiptime-components/commit/6d191f2e793897d3594bcf5e744140849e3433a7))
+
 ## [1.16.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.27...v1.16.28) (2026-03-05)
 
 
