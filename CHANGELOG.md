@@ -1,3 +1,10 @@
+## [1.16.33](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.32...v1.16.33) (2026-03-09)
+
+
+### Bug Fixes
+
+* fix icon dimensions ([a4f4de9](https://github.com/StepanKhomyn/voiptime-components/commit/a4f4de9bc05126cbc62ebc7364c8f5fbaca910df))
+
 ## [1.16.32](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.31...v1.16.32) (2026-03-09)
 
 
