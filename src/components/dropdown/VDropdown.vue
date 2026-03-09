@@ -145,7 +145,6 @@
   }));
 
   // Scroll
-
   const lastEmitTime = ref(0);
   const cooldown = 300;
 
