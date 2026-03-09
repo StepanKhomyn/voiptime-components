@@ -1,3 +1,10 @@
+## [1.16.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.29...v1.16.30) (2026-03-09)
+
+
+### Bug Fixes
+
+* add adaptive hover to dropdown item ([470f4ea](https://github.com/StepanKhomyn/voiptime-components/commit/470f4ea152330cc07055f59a119ef4bf65c105d9))
+
 ## [1.16.29](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.28...v1.16.29) (2026-03-09)
 
 
