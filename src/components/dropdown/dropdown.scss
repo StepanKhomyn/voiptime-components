@@ -38,7 +38,7 @@
     color: var(--color-gray-2);
 
     &:hover:not(.is-disabled) {
-      background: var(--color-gray-6);
+      background: var(--vt-dropdown-hover-bg, var(--color-gray-6));
     }
 
     &.is-disabled {

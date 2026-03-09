@@ -13,7 +13,8 @@ export interface DropdownProps {
   hideTimeout?: number;
   tabindex?: number;
   maxHeight?: string | number;
-  background?: string
+  background?: string;
+  hoverBackground?: string
 }
 
 export interface DropdownItemProps {

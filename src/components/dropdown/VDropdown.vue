@@ -18,7 +18,8 @@
     showTimeout: 250,
     hideTimeout: 150,
     maxHeight: '200',
-    background: '#FFFFFF'
+    background: '#FFFFFF',
+    hoverBackground: 'var(--color-gray-6)'
   });
 
   const emit = defineEmits<DropdownEmits>();
@@ -139,7 +140,8 @@
     zIndex: 2000,
     maxHeight: `${props.maxHeight}px`,
     overflowY: 'auto',
-    background: props.background
+    background: props.background,
+    '--vt-dropdown-hover-bg': props.hoverBackground
   }));
 
   // Scroll
