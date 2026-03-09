@@ -146,6 +146,7 @@ import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
 import PrioritySelectIcon from './others/PrioritySelectIcon.vue';
 import ProgressiveIcon from './others/ProgressiveIcon.vue';
+import QrCodeIcon from './others/QrCodeIcon.vue';
 import ScheduleIcon from './others/ScheduleIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
 import StarFilledIcon from './others/StarFilledIcon.vue';
@@ -366,6 +367,7 @@ export const icons = {
   preview: PreviewIcon,
   prioritySelect: PrioritySelectIcon,
   progressive: ProgressiveIcon,
+  qrCode: QrCodeIcon,
   schedule: ScheduleIcon,
   sms: SmsIcon,
   starFilled: StarFilledIcon,
