@@ -1,3 +1,10 @@
+## [1.16.31](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.30...v1.16.31) (2026-03-09)
+
+
+### Bug Fixes
+
+* add logout icon ([29261d4](https://github.com/StepanKhomyn/voiptime-components/commit/29261d42cda413e142f92c48bfec92e712ea395a))
+
 ## [1.16.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.29...v1.16.30) (2026-03-09)
 
 
