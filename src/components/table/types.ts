@@ -87,7 +87,7 @@ export type VTableRowHighlightFunction = (row: any, index: number) => VTableRowH
 
 export interface VTableProps {
   data: Record<string, any>[];
-  maxHeight?: number;
+  maxHeight?: number | string;
   rowKey?: string;
   defaultSort?: SortState;
   showSummary?: boolean;

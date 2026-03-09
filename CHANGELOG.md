@@ -1,3 +1,24 @@
+## [1.16.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.27...v1.16.28) (2026-03-05)
+
+
+### Bug Fixes
+
+* took off uppercase in login component in password ([83c6d77](https://github.com/StepanKhomyn/voiptime-components/commit/83c6d77ddb593837982e9070886832b1da373f1a))
+
+## [1.16.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.26...v1.16.27) (2026-03-05)
+
+
+### Bug Fixes
+
+* add type string to t able height ([ebda2ad](https://github.com/StepanKhomyn/voiptime-components/commit/ebda2add0eb6c5fc0fd54a37f48e77ff38fa681e))
+
+## [1.16.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.25...v1.16.26) (2026-03-04)
+
+
+### Bug Fixes
+
+* table fixes ([d7b45f3](https://github.com/StepanKhomyn/voiptime-components/commit/d7b45f399831a2737d1ad21c9ec71112270deaff))
+
 ## [1.16.25](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.24...v1.16.25) (2026-03-04)
 
 
