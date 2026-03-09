@@ -1,3 +1,10 @@
+## [1.16.34](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.33...v1.16.34) (2026-03-09)
+
+
+### Bug Fixes
+
+* add qr code icon ([a5f0f79](https://github.com/StepanKhomyn/voiptime-components/commit/a5f0f79c50981f0d11cb22609c049264a1c98853))
+
 ## [1.16.33](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.32...v1.16.33) (2026-03-09)
 
 
