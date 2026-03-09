@@ -18,6 +18,7 @@
     showTimeout: 250,
     hideTimeout: 150,
     maxHeight: '200',
+    background: '#FFFFFF'
   });
 
   const emit = defineEmits<DropdownEmits>();
@@ -138,6 +139,7 @@
     zIndex: 2000,
     maxHeight: `${props.maxHeight}px`,
     overflowY: 'auto',
+    background: props.background
   }));
 
   // Scroll

@@ -12,7 +12,6 @@
   &-menu {
     @include vt-scrollbar;
     @include vt-typography('vt-dropdown');
-    background: #FFFFFF;
     border: 1px solid var(--color-gray-5);
     box-shadow: 2px 2px 10px 0px #00000026;
     border-radius: var(--radius-main);
