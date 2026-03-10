@@ -1,3 +1,10 @@
+# [1.17.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.34...v1.17.0) (2026-03-10)
+
+
+### Features
+
+* додано новий компонент Slider ([504237f](https://github.com/StepanKhomyn/voiptime-components/commit/504237fa4b7c10a948a22a64d0ec9916c6dee6d3))
+
 ## [1.16.34](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.33...v1.16.34) (2026-03-09)
 
 
