@@ -1,3 +1,10 @@
+## [1.17.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.1...v1.17.2) (2026-03-10)
+
+
+### Bug Fixes
+
+* add custom dropdown options height to select dropdowns ([7a94c12](https://github.com/StepanKhomyn/voiptime-components/commit/7a94c1246fbff86ff66dd220f26c3bdf38a0d16f))
+
 ## [1.17.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.0...v1.17.1) (2026-03-10)
 
 
