@@ -43,6 +43,7 @@
     noDataText: undefined,
     loadingText: undefined,
     maxHeight: 220,
+    maxOptionsHeight: 170,
     validateOnInput: true,
     validateOnBlur: true,
     placement: 'bottom-start',
@@ -497,6 +498,12 @@
       zIndex: 2000,
       maxHeight: `${props.maxHeight}px`,
       width: `${triggerWidth}px`,
+    };
+  });
+
+  const dropdownOptionsStyle = computed(() => {
+    return {
+      maxHeight: `${props.maxOptionsHeight}px`,
     };
   });
 
@@ -1052,7 +1059,13 @@
           </div>
 
           <!-- Options with scroll handler -->
-          <div v-else ref="scrollContainerRef" class="vt-select-dropdown__options" @scroll="handleScroll">
+          <div
+            v-else
+            ref="scrollContainerRef"
+            class="vt-select-dropdown__options"
+            :style="dropdownOptionsStyle"
+            @scroll="handleScroll"
+          >
             <div
               v-for="option in filteredOptions"
               :key="`option-${typeof option.value === 'object' ? JSON.stringify(option.value) : option.value}`"

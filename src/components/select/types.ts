@@ -25,6 +25,7 @@ export interface VtSelectProps {
   noDataText?: string;
   loadingText?: string;
   maxHeight?: number;
+  maxOptionsHeight?: number;
   collapsedTags?: boolean;
   validateOnInput?: boolean;
   validateOnBlur?: boolean;
