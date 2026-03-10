@@ -26,6 +26,8 @@ import VSidebar from './components/sidebar/VSidebar.vue';
 import VLogin from '@/components/login/VLogin.vue';
 import VLoginLogo from '@/components/login/VLoginLogo.vue';
 import VDynamicFilter from '@/components/dynamic-filter/VDynamicFilter.vue';
+import VSlider from '@/components/slider/VSlider.vue';
+import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -62,7 +64,9 @@ export {
   VSidebar,
   VLogin,
   VLoginLogo,
-  VDynamicFilter
+  VDynamicFilter,
+  VSlider,
+  VSliderMarkRange
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -210,6 +214,13 @@ export type {
   SheetParseResult,
 } from './components/upload/types';
 
+export type {
+  VSliderProps,
+  VSliderEmits,
+  VSingleMarkRangeProps,
+  VSingleMarkRangeEmits
+} from './components/slider/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -280,6 +291,8 @@ const VUIPlugin = {
     app.component(`${prefix}LoginLogo`, VLoginLogo);
     app.component(`${prefix}LocaleSelect`, VLocaleSelect);
     app.component(`${prefix}DynamicFilter`, VDynamicFilter);
+    app.component(`${prefix}Slider`, VSlider);
+    app.component(`${prefix}SliderMarkRange`, VSliderMarkRange);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

@@ -117,7 +117,7 @@
   <li class="hub-item" @mouseenter="openSubmenu" @mouseleave="closeSubmenu" ref="itemEl">
     <!-- MAIN ROW -->
     <div class="hub-item-main" @click="handleClick" :class="{ collapsed, active: hoveringItem || showSub || isParentActive }">
-      <VIcon class="hub-item-icon" :name="(item.icon ?? 'empty') as IconName" />
+      <VIcon class="hub-item-icon" :name="(item.icon ?? 'empty') as IconName" width="24" height="24"/>
       <span v-if="!collapsed" class="hub-item-label">{{ item.i18n }}</span>
       <VIcon v-if="item.children && !collapsed" class="hub-item-arrow" name="arrowRight"></VIcon>
     </div>
