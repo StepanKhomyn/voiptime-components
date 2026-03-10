@@ -1,7 +1,7 @@
 @use '../../assets/fonts' as *;
 
 .v-collapse {
-  overflow: hidden;
+  overflow: visible;
 
   &-item {
     border-bottom: 1px solid var(--color-gray-5);
