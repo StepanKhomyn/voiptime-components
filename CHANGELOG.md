@@ -1,3 +1,10 @@
+## [1.17.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.0...v1.17.1) (2026-03-10)
+
+
+### Bug Fixes
+
+* change overflow visibility in VCollapse ([8ac09ce](https://github.com/StepanKhomyn/voiptime-components/commit/8ac09ce6c80dfca134938c6bf1cbe4883bf6afe0))
+
 # [1.17.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.16.34...v1.17.0) (2026-03-10)
 
 
