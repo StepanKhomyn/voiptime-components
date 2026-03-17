@@ -127,6 +127,9 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.WEEKDAY_SHORT_THU]: 'Чт',
     [LOCALE_KEYS.WEEKDAY_SHORT_FRI]: 'Пт',
     [LOCALE_KEYS.WEEKDAY_SHORT_SAT]: 'Сб',
+
+    // Filter
+    [LOCALE_KEYS.FILTER_MORE]: 'Більше фільтрів',
   },
 
   [LANGUAGES.en]: {
@@ -255,6 +258,9 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.WEEKDAY_SHORT_THU]: 'Thu',
     [LOCALE_KEYS.WEEKDAY_SHORT_FRI]: 'Fri',
     [LOCALE_KEYS.WEEKDAY_SHORT_SAT]: 'Sat',
+
+    // Filter
+    [LOCALE_KEYS.FILTER_MORE]: 'More filters',
   },
 
   [LANGUAGES.ru]: {
@@ -383,5 +389,8 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.WEEKDAY_SHORT_THU]: 'Чт',
     [LOCALE_KEYS.WEEKDAY_SHORT_FRI]: 'Пт',
     [LOCALE_KEYS.WEEKDAY_SHORT_SAT]: 'Сб',
+
+    // Filter
+    [LOCALE_KEYS.FILTER_MORE]: 'Больше фильтров',
   },
 };

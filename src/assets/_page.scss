@@ -1,0 +1,85 @@
+.vt-page {
+  // Стилі сторінки
+  &__card {
+    // Головний стиль картки (врапер без бердкрампу та пагінації)
+    background: #fff;
+    width: 100%;
+    height: 100%;
+    border-radius: var(--radius-main);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    &-header {
+      // Хедер картки (в ньому фільтр + можлива кнопка зправа)
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--vt-padding-base);
+      gap: var(--vt-gap-base);
+    }
+
+    &-filter {
+      // Стилі динамічного фільтру
+      display: flex;
+      align-items: center;
+      gap: var(--vt-gap-base);
+      width: 100%;
+      box-sizing: border-box;
+
+      &__inline {
+        display: flex;
+        gap: var(--vt-gap-base);
+        align-items: center;
+        flex-shrink: 1;
+        min-width: 0;
+      }
+
+      &__actions {
+        display: flex;
+        gap: var(--vt-gap-base);
+        flex-shrink: 0;
+      }
+
+      &__dropdown {
+        flex-shrink: 0;
+
+        &-target {
+          display: flex;
+          flex-direction: column;
+          gap: var(--vt-gap-base);
+        }
+      }
+
+      &__measure {
+        &-root {
+          position: absolute;
+          left: -9999px;
+          top: -9999px;
+          width: auto;
+          height: auto;
+          visibility: hidden;
+          pointer-events: none;
+          white-space: nowrap;
+        }
+
+        &-element {
+          display: inline-block;
+          white-space: nowrap;
+          margin-right: 10px; /* той же GAP, що і у логіці */
+        }
+      }
+
+      &__control {
+        white-space: nowrap;
+
+        :deep(.vt-select),
+        :deep(.vt-datepicker),
+        :deep(.vt-timepicker) {
+          min-width: 150px;
+        }
+      }
+    }
+  }
+}

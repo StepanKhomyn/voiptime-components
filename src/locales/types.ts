@@ -134,6 +134,9 @@ export enum LOCALE_KEYS {
   UPLOAD_ERROR_PARSE = 'UPLOAD_ERROR_PARSE',
   UPLOAD_TIP_MAX_SIZE = 'UPLOAD_TIP_MAX_SIZE',
   UPLOAD_TIP_MAX_ROWS = 'UPLOAD_TIP_MAX_ROWS',
+
+  // Фільтр
+  FILTER_MORE = 'FILTER_MORE',
 }
 
 // Тип для перекладів - гарантує наявність всіх ключів
