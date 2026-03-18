@@ -81,5 +81,55 @@
         }
       }
     }
+
+    &-form {
+      flex-grow: 1;
+      min-height: 0;
+      overflow: hidden;
+      display: flex;
+
+      &-header {
+        height: 56px;
+        border-bottom: 1px solid var(--color-gray-5);
+        padding: var(--vt-padding-base) var(--vt-padding-lg);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+      }
+
+      &-body {
+        padding: var(--vt-padding-base) 0;
+        flex-grow: 1;
+        overflow-y: auto;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        &-item {
+          display: flex;
+          flex-direction: row;
+          align-items: start;
+          padding: 0 var(--vt-padding-lg) var(--vt-padding-base);
+
+          label {
+            width: 250px;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-regular);
+            color: var(--color-gray-2);
+            text-align: left;
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+  }
+
+  &__footer {
+    flex-shrink: 0;
+    position: relative;
+    display: flex;
+    padding-top: var(--vt-padding-base);
+    justify-content: flex-end;
+    gap: var(--vt-gap-base);
+    align-items: center;
   }
 }
