@@ -1,3 +1,10 @@
+## [1.17.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.4...v1.17.5) (2026-03-18)
+
+
+### Bug Fixes
+
+* Додано стилі форми ([1764eb6](https://github.com/StepanKhomyn/voiptime-components/commit/1764eb61b6556e80980742f925477eecac6ab51d))
+
 ## [1.17.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.3...v1.17.4) (2026-03-18)
 
 
