@@ -1,3 +1,13 @@
+## [1.17.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.2...v1.17.3) (2026-03-18)
+
+
+### Bug Fixes
+
+* Зміна нпм токену ([a04b9d7](https://github.com/StepanKhomyn/voiptime-components/commit/a04b9d70bfac8e3b102cc6a02e2cc18f6ac74206))
+* Зміна нпм токену2 ([eef3238](https://github.com/StepanKhomyn/voiptime-components/commit/eef3238eca41451b23425f887c7c1b03c92610df))
+* Зміна нпм токену3 ([c84b865](https://github.com/StepanKhomyn/voiptime-components/commit/c84b865e37df6f60bcb73dc8a0dfb74ba4477478))
+* Стилізація головної сторінки з таблицею ([e5d819f](https://github.com/StepanKhomyn/voiptime-components/commit/e5d819f8330370f8c7a1dc0ca3121093a86593dd))
+
 ## [1.17.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.1...v1.17.2) (2026-03-10)
 
 
