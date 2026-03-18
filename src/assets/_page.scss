@@ -25,7 +25,6 @@
       display: flex;
       align-items: center;
       gap: var(--vt-gap-base);
-      width: 100%;
       box-sizing: border-box;
 
       &__inline {
@@ -74,10 +73,11 @@
       &__control {
         white-space: nowrap;
 
-        :deep(.vt-select),
-        :deep(.vt-datepicker),
-        :deep(.vt-timepicker) {
+        .vt-select,
+        .vt-datepicker,
+        .vt-timepicker {
           min-width: 150px;
+          flex-shrink: 0;
         }
       }
     }
