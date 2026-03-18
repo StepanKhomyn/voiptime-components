@@ -1,3 +1,10 @@
+## [1.17.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.3...v1.17.4) (2026-03-18)
+
+
+### Bug Fixes
+
+* Виправлено стилі головної сторінки ([363e981](https://github.com/StepanKhomyn/voiptime-components/commit/363e9814498c4670fd2e48d2841c30fa82e4b1ff))
+
 ## [1.17.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.2...v1.17.3) (2026-03-18)
 
 
