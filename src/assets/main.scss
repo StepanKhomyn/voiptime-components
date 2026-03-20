@@ -24,6 +24,9 @@
 // 6. Стилі сторінки
 @use './page' as *;
 
+// 7. Стилі ширини
+@use './width' as *;
+
 @use '../components/button/button';
 @use '../components/loader/loader' as loader-component;
 
