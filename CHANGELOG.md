@@ -1,3 +1,11 @@
+## [1.17.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.8...v1.17.9) (2026-03-20)
+
+
+### Bug Fixes
+
+* додано тсилі ширини ([24761d4](https://github.com/StepanKhomyn/voiptime-components/commit/24761d4cc8dbe9a90adf262e97f2a8e2c76bebcf))
+* додано тсилі ширини2 ([393a7b6](https://github.com/StepanKhomyn/voiptime-components/commit/393a7b6907cbe9809a2f930ff574aa6cdc5a0b21))
+
 ## [1.17.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.7...v1.17.8) (2026-03-18)
 
 
