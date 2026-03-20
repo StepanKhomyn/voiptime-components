@@ -1,3 +1,10 @@
+## [1.17.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.7...v1.17.8) (2026-03-18)
+
+
+### Bug Fixes
+
+* Додано стилі форми (form header padding) ([4fb3301](https://github.com/StepanKhomyn/voiptime-components/commit/4fb3301de7ec84006f71a16870ac442a21fb6907))
+
 ## [1.17.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.6...v1.17.7) (2026-03-18)
 
 
