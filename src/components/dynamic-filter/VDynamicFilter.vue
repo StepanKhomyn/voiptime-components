@@ -3,11 +3,14 @@
   import { useResponsiveFilters } from '@/components/dynamic-filter/functions/useResponsiveFilters';
   import VDropdown from '@/components/dropdown/VDropdown.vue';
   import VButton from '@/components/button/VButton.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
 
   const dynamicFilterRef = ref<HTMLElement | null>(null);
   const actionsRef = ref<HTMLElement | null>(null);
   const dropdownTriggerRef = ref<HTMLElement | null>(null);
   const measurementContainer = ref<HTMLElement | null>(null);
+  const { t } = useI18n();
 
   const slots = defineSlots<{
     default?: () => any[];
@@ -57,11 +60,11 @@
 </script>
 
 <template>
-  <div ref="dynamicFilterRef" class="manage-form__card-filter">
+  <div ref="dynamicFilterRef" class="vt-page__card-filter">
     <!-- inline видимі фільтри -->
-    <div class="manage-form__card-filter__inline">
+    <div class="vt-page__card-filter__inline">
       <template v-for="(element, idx) in slotNodes" :key="idx">
-        <div v-show="visibleIndexes.includes(idx)" class="manage-form__card-filter__control">
+        <div v-show="visibleIndexes.includes(idx)" class="vt-page__card-filter__control">
           <component :is="element" />
         </div>
       </template>
@@ -70,16 +73,16 @@
     <!-- Dropdown для прихованих -->
     <VDropdown
       v-if="visibleIndexes.length < slotNodes.length"
-      class="manage-form__card-filter__dropdown"
+      class="vt-page__card-filter__dropdown"
       trigger="click"
     >
       <div ref="dropdownTriggerRef">
-        <VButton icon="filterAdd" type="default">Більше фільтрів</VButton>
+        <VButton icon="filterAdd" type="default">{{ t(LOCALE_KEYS.FILTER_MORE) }}</VButton>
       </div>
       <template #dropdown>
-        <div class="manage-form__card-filter__dropdown-target">
+        <div class="vt-page__card-filter__dropdown-target">
           <template v-for="(element, idx) in slotNodes" :key="'d' + idx">
-            <div v-if="!visibleIndexes.includes(idx)" class="manage-form__card-filter__control">
+            <div v-if="!visibleIndexes.includes(idx)" class="vt-page__card-filter__control">
               <component :is="element" />
             </div>
           </template>
@@ -88,21 +91,17 @@
     </VDropdown>
 
     <!-- Кнопки дій -->
-    <div ref="actionsRef" class="manage-form__card-filter__actions">
+    <div ref="actionsRef" class="vt-page__card-filter__actions">
       <slot name="actions" />
     </div>
 
     <!-- Прихований контейнер для вимірювання ширин (не впливає на layout) -->
-    <div ref="measurementContainer" aria-hidden="true" class="manage-form__card-filter__measure-root">
+    <div ref="measurementContainer" aria-hidden="true" class="vt-page__card-filter__measure-root">
       <template v-for="(element, idx) in slotNodes" :key="'m' + idx">
-        <div class="manage-form__card-filter__measure-element manage-form__card-filter__control">
+        <div class="vt-page__card-filter__measure-element vt-page__card-filter__control">
           <component :is="element" />
         </div>
       </template>
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-  @use './dynamic-filter';
-</style>

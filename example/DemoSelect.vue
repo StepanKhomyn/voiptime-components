@@ -341,6 +341,12 @@
             <td>Максимальна висота випадайки</td>
           </tr>
           <tr>
+            <td><code>maxOptionsHeight</code></td>
+            <td><code>number | string</code></td>
+            <td>170</td>
+            <td>Максимальна висота випадайки options</td>
+          </tr>
+          <tr>
             <td><code>placement</code></td>
             <td><code>string</code></td>
             <td>'bottom-start'</td>

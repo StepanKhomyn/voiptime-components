@@ -1,3 +1,70 @@
+## [1.17.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.9...v1.17.10) (2026-03-20)
+
+
+### Bug Fixes
+
+* додано тсилі ширини ([dba19ff](https://github.com/StepanKhomyn/voiptime-components/commit/dba19ffe6b81559b91a40134e59fd0379d04fdca))
+
+## [1.17.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.8...v1.17.9) (2026-03-20)
+
+
+### Bug Fixes
+
+* додано тсилі ширини ([24761d4](https://github.com/StepanKhomyn/voiptime-components/commit/24761d4cc8dbe9a90adf262e97f2a8e2c76bebcf))
+* додано тсилі ширини2 ([393a7b6](https://github.com/StepanKhomyn/voiptime-components/commit/393a7b6907cbe9809a2f930ff574aa6cdc5a0b21))
+
+## [1.17.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.7...v1.17.8) (2026-03-18)
+
+
+### Bug Fixes
+
+* Додано стилі форми (form header padding) ([4fb3301](https://github.com/StepanKhomyn/voiptime-components/commit/4fb3301de7ec84006f71a16870ac442a21fb6907))
+
+## [1.17.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.6...v1.17.7) (2026-03-18)
+
+
+### Bug Fixes
+
+* Додано стилі форми (form header) ([861ab1e](https://github.com/StepanKhomyn/voiptime-components/commit/861ab1ed3dc2d6393d57a0572d8df393a00c145c))
+
+## [1.17.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.5...v1.17.6) (2026-03-18)
+
+
+### Bug Fixes
+
+* Додано стилі форми (rfhnrb) ([2e7b48b](https://github.com/StepanKhomyn/voiptime-components/commit/2e7b48bf3ca8341e5d5865386210ef54c7fdcb44))
+
+## [1.17.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.4...v1.17.5) (2026-03-18)
+
+
+### Bug Fixes
+
+* Додано стилі форми ([1764eb6](https://github.com/StepanKhomyn/voiptime-components/commit/1764eb61b6556e80980742f925477eecac6ab51d))
+
+## [1.17.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.3...v1.17.4) (2026-03-18)
+
+
+### Bug Fixes
+
+* Виправлено стилі головної сторінки ([363e981](https://github.com/StepanKhomyn/voiptime-components/commit/363e9814498c4670fd2e48d2841c30fa82e4b1ff))
+
+## [1.17.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.2...v1.17.3) (2026-03-18)
+
+
+### Bug Fixes
+
+* Зміна нпм токену ([a04b9d7](https://github.com/StepanKhomyn/voiptime-components/commit/a04b9d70bfac8e3b102cc6a02e2cc18f6ac74206))
+* Зміна нпм токену2 ([eef3238](https://github.com/StepanKhomyn/voiptime-components/commit/eef3238eca41451b23425f887c7c1b03c92610df))
+* Зміна нпм токену3 ([c84b865](https://github.com/StepanKhomyn/voiptime-components/commit/c84b865e37df6f60bcb73dc8a0dfb74ba4477478))
+* Стилізація головної сторінки з таблицею ([e5d819f](https://github.com/StepanKhomyn/voiptime-components/commit/e5d819f8330370f8c7a1dc0ca3121093a86593dd))
+
+## [1.17.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.1...v1.17.2) (2026-03-10)
+
+
+### Bug Fixes
+
+* add custom dropdown options height to select dropdowns ([7a94c12](https://github.com/StepanKhomyn/voiptime-components/commit/7a94c1246fbff86ff66dd220f26c3bdf38a0d16f))
+
 ## [1.17.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.0...v1.17.1) (2026-03-10)
 
 

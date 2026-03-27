@@ -1,0 +1,19 @@
+.vt-main-layout__body {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+  min-height: 0;
+  height: calc(100vh - 60px);
+
+  main {
+    flex-grow: 1;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+    padding: var(--vt-padding-base);
+  }
+
+}
+

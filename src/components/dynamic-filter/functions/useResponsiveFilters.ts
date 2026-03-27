@@ -32,10 +32,10 @@ export function useResponsiveFilters(
     const measureRoot = measurementContainerRef.value;
     if (!el || !measureRoot) return;
 
-    // Знаходимо головний контейнер manage-form__card
-    const manageFormCard = el.closest('.manage-form__card') as HTMLElement;
+    // Знаходимо головний контейнер vt-page__card
+    const manageFormCard = el.closest('.vt-page__card') as HTMLElement;
     if (!manageFormCard) {
-      console.warn('manage-form__card container not found');
+      console.warn('vt-page__card container not found');
       return;
     }
 
@@ -58,8 +58,8 @@ export function useResponsiveFilters(
       rightElementsWidth += triggerRect.width + getHorizontalMargins(dropdownTriggerRef.value);
     }
 
-    // Шукаємо всі елементи праворуч від фільтрів в рамках manage-form__card-list
-    const cardList = el.closest('.manage-form__card-list') as HTMLElement;
+    // Шукаємо всі елементи праворуч від фільтрів в рамках vt-page__card-header
+    const cardList = el.closest('.vt-page__card-header') as HTMLElement;
     if (cardList) {
       const allChildren = Array.from(cardList.children) as HTMLElement[];
       const containerIndex = allChildren.findIndex(child => child.contains(el));
@@ -91,7 +91,7 @@ export function useResponsiveFilters(
     availableWidth = Math.min(availableWidth, el.clientWidth - containerPadding);
 
     // Вимірюємо фільтри
-    const measureItems = measureRoot.querySelectorAll<HTMLElement>(".manage-form__card-filter__measure-element");
+    const measureItems = measureRoot.querySelectorAll<HTMLElement>(".vt-page__card-filter__measure-element");
     const newVisible: number[] = [];
     let used = 0;
     const GAP = 10;
@@ -143,7 +143,7 @@ export function useResponsiveFilters(
         // Стежимо за основними контейнерами
         ro.observe(el);
 
-        const manageFormCard = el.closest('.manage-form__card');
+        const manageFormCard = el.closest('.vt-page__card');
         if (manageFormCard) {
           ro.observe(manageFormCard);
         }

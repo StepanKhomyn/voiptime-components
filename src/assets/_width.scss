@@ -1,0 +1,12 @@
+// Генеруємо дробові ширини
+@function fraction-to-percent($numerator, $denominator) {
+  @return ($numerator / $denominator) * 100%;
+}
+
+@for $denominator from 2 through 6 {
+  @for $numerator from 1 through $denominator - 1 {
+    .w-#{$numerator}\/#{$denominator} {
+      width: fraction-to-percent($numerator, $denominator);
+    }
+  }
+}
