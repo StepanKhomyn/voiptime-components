@@ -2,6 +2,8 @@
 // Для оновлення запустіть: node scripts/generate-icons.js
 
 import AddLineIcon from './actions/AddLineIcon.vue';
+import AddNewRecordIcon from './actions/AddNewRecordIcon.vue';
+import AnalyseRecordIcon from './actions/AnalyseRecordIcon.vue';
 import ChannelsChangeIcon from './actions/ChannelsChangeIcon.vue';
 import CircleCheckedIcon from './actions/CircleCheckedIcon.vue';
 import CircleCloseIcon from './actions/CircleCloseIcon.vue';
@@ -203,6 +205,8 @@ import UnfreezeIcon from './table/UnfreezeIcon.vue';
 export const icons = {
   // actions icons
   addLine: AddLineIcon,
+  addNewRecord: AddNewRecordIcon,
+  analyseRecord: AnalyseRecordIcon,
   channelsChange: ChannelsChangeIcon,
   circleChecked: CircleCheckedIcon,
   circleClose: CircleCloseIcon,
