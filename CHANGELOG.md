@@ -1,3 +1,10 @@
+## [1.17.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.12...v1.17.13) (2026-03-31)
+
+
+### Bug Fixes
+
+* export VChart component ([7c09031](https://github.com/StepanKhomyn/voiptime-components/commit/7c090311f5f303020b7c1ec96c5f20051df6f165))
+
 ## [1.17.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.11...v1.17.12) (2026-03-31)
 
 
