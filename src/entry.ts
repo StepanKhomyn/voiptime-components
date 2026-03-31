@@ -28,6 +28,7 @@ import VLoginLogo from '@/components/login/VLoginLogo.vue';
 import VDynamicFilter from '@/components/dynamic-filter/VDynamicFilter.vue';
 import VSlider from '@/components/slider/VSlider.vue';
 import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
+import VChart from '@/components/charts/VChart.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -66,7 +67,8 @@ export {
   VLoginLogo,
   VDynamicFilter,
   VSlider,
-  VSliderMarkRange
+  VSliderMarkRange,
+  VChart,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -150,7 +152,7 @@ export type {
   VtOptionEmits,
   VLocaleSelectProps,
   VLocale,
-  VLocaleEmits
+  VLocaleEmits,
 } from './components/select/types';
 
 // VDatePicker
@@ -199,7 +201,7 @@ export type {
   VAuthentificationProps,
   VAuthentificationData,
   VAuthentificationEmits,
-  VLoginLogoProps
+  VLoginLogoProps,
 } from './components/login/types';
 
 // ----------------- Upload -----------------
@@ -218,8 +220,10 @@ export type {
   VSliderProps,
   VSliderEmits,
   VSingleMarkRangeProps,
-  VSingleMarkRangeEmits
+  VSingleMarkRangeEmits,
 } from './components/slider/types';
+
+export type { VChartType, VChartProps } from './components/charts/types';
 
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
@@ -293,6 +297,7 @@ const VUIPlugin = {
     app.component(`${prefix}DynamicFilter`, VDynamicFilter);
     app.component(`${prefix}Slider`, VSlider);
     app.component(`${prefix}SliderMarkRange`, VSliderMarkRange);
+    app.component(`${prefix}Chart`, VChart);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

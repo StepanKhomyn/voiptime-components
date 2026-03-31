@@ -1,4 +1,4 @@
-export enum ChartType {
+export enum VChartType {
   donut = 'donut',
   combo = 'combo',
   horizontal = 'horizontal-bar',
@@ -25,7 +25,7 @@ export interface ScaleBarSide {
 
 // ── Donut ─────────────────────────────────────────────────────────────────────
 export interface DonutChartProps {
-  type: ChartType.donut;
+  type: VChartType.donut;
   segments: ChartSegment[];
   size?: number;
   labels?: boolean;
@@ -33,14 +33,14 @@ export interface DonutChartProps {
 
 // ── Horizontal Bar ────────────────────────────────────────────────────────────
 export interface HorizontalBarChartProps {
-  type: ChartType.horizontal;
+  type: VChartType.horizontal;
   segments: ChartSegment[];
   showAxis?: boolean;
 }
 
 // ── Combo ─────────────────────────────────────────────────────────────────────
 export interface ComboChartProps {
-  type: ChartType.combo;
+  type: VChartType.combo;
   data: Record<string, number | string>[];
   seriesConfig: Record<string, ComboSeriesConfig>;
   categoryKey: string;
@@ -51,7 +51,7 @@ export interface ComboChartProps {
 
 // ── Scale Bar ─────────────────────────────────────────────────────────────────
 export interface ScaleBarChartProps {
-  type: ChartType.scale;
+  type: VChartType.scale;
   left: ScaleBarSide;
   right: ScaleBarSide;
   wrapperClass?: string;
