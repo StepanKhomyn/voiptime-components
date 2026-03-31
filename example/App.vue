@@ -24,6 +24,7 @@
   import DemoSidebar from './DemoSidebar.vue';
   import DemoLogin from './DemoLogin.vue';
   import DemoSlider from './DemoSlider.vue';
+  import DemoChart from './DemoChart.vue';
 
   const activeSlot = ref(26);
 
@@ -52,6 +53,7 @@
     { id: 24, name: 'Sidebar', icon: '☰' },
     { id: 25, name: 'Компонента логіну', icon: '🙊' },
     { id: 26, name: 'Slider', icon: '🎚' },
+    { id: 27, name: 'VChart', icon: '🎚' },
   ];
 </script>
 
@@ -109,6 +111,7 @@
       <DemoSidebar v-if="activeSlot === 24" />
       <DemoLogin v-if="activeSlot === 25" />
       <DemoSlider v-if="activeSlot === 26" />
+      <DemoChart v-if="activeSlot === 27" />
       <!-- і т.д. -->
     </div>
   </div>
