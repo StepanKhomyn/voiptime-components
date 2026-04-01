@@ -1,3 +1,10 @@
+## [1.17.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.13...v1.17.14) (2026-04-01)
+
+
+### Bug Fixes
+
+* Додано мапу кешування вибраних опій в селекті ([9f5b8ca](https://github.com/StepanKhomyn/voiptime-components/commit/9f5b8cafa4c69233baa571856d1424148c996560))
+
 ## [1.17.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.12...v1.17.13) (2026-03-31)
 
 
