@@ -1,898 +1,919 @@
 <script lang="ts" setup>
-  import { computed, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue';
-  import VIcon from '@/components/icon/VIcon.vue';
-  import VCheckbox from '@/components/checkbox/VCheckbox.vue';
-  import VLoader from '@/components/loader/VLoader.vue';
-  import { useDropdown } from '@/components/dropdown/useDropdown';
-  import type {
-    VtSelectContext,
-    VtSelectEmits,
-    VtSelectMethods,
-    VtSelectOption,
-    VtSelectProps,
-  } from '@/components/select/types';
-  import { VtSelectContextKey } from '@/components/select/types';
+import { computed, nextTick, onMounted, onUnmounted, provide, ref, watch } from 'vue';
+import VIcon from '@/components/icon/VIcon.vue';
+import VCheckbox from '@/components/checkbox/VCheckbox.vue';
+import VLoader from '@/components/loader/VLoader.vue';
+import { useDropdown } from '@/components/dropdown/useDropdown';
+import type {
+  VtSelectContext,
+  VtSelectEmits,
+  VtSelectMethods,
+  VtSelectOption,
+  VtSelectProps,
+} from '@/components/select/types';
+import { VtSelectContextKey } from '@/components/select/types';
 
-  import {
-    calculateVisibleTagsCount,
-    compareValues,
-    createCollapsedTooltip,
-    getEmptyValue,
-    handleOptionSelection,
-    isOptionSelected,
-    removeTagFromValue,
-    validateSelectValue,
-  } from '@/components/select/helpers';
-  import VInput from '@/components/input/VInput.vue';
-  import { useI18n } from '@/locales/useI18n';
-  import { LOCALE_KEYS } from '@/locales/types';
+import {
+  calculateVisibleTagsCount,
+  compareValues,
+  createCollapsedTooltip,
+  getEmptyValue,
+  handleOptionSelection,
+  isOptionSelected,
+  removeTagFromValue,
+  validateSelectValue,
+} from '@/components/select/helpers';
+import VInput from '@/components/input/VInput.vue';
+import { useI18n } from '@/locales/useI18n';
+import { LOCALE_KEYS } from '@/locales/types';
 
-  const { t } = useI18n();
+const { t } = useI18n();
 
-  // ===== PROPS & DEFAULTS =====
-  const props = withDefaults(defineProps<VtSelectProps>(), {
-    status: 'default',
-    disabled: false,
-    clearable: false,
-    loading: false,
-    multiple: false,
-    filterable: false,
-    collapsedTags: false,
-    outlined: false,
-    placeholder: undefined,
-    noDataText: undefined,
-    loadingText: undefined,
-    maxHeight: 220,
-    maxOptionsHeight: 170,
-    validateOnInput: true,
-    validateOnBlur: true,
-    placement: 'bottom-start',
-    trigger: 'click',
-    showTimeout: 0,
-    hideTimeout: 0,
-    filterPlaceholder: undefined,
-    allowRemoteFilter: false,
-  });
+// ===== PROPS & DEFAULTS =====
+const props = withDefaults(defineProps<VtSelectProps>(), {
+  status: 'default',
+  disabled: false,
+  clearable: false,
+  loading: false,
+  multiple: false,
+  filterable: false,
+  collapsedTags: false,
+  outlined: false,
+  placeholder: undefined,
+  noDataText: undefined,
+  loadingText: undefined,
+  maxHeight: 220,
+  maxOptionsHeight: 170,
+  validateOnInput: true,
+  validateOnBlur: true,
+  placement: 'bottom-start',
+  trigger: 'click',
+  showTimeout: 0,
+  hideTimeout: 0,
+  filterPlaceholder: undefined,
+  allowRemoteFilter: false,
+});
 
-  // ===== EMITS =====
-  const emit = defineEmits<VtSelectEmits>();
+// ===== EMITS =====
+const emit = defineEmits<VtSelectEmits>();
 
-  // ===== TEMPLATE REFS =====
-  const selectRef = ref<HTMLElement>();
-  const triggerRef = ref<HTMLElement>();
-  const dropdownRef = ref<HTMLElement>();
-  const containerRef = ref<HTMLElement>();
-  const tagRefs = ref<HTMLElement[]>([]);
-  const measureTagRefs = ref<HTMLElement[]>([]);
-  const scrollContainerRef = ref<HTMLElement>();
-  const filterInputRef = ref<InstanceType<typeof VInput>>();
+// ===== TEMPLATE REFS =====
+const selectRef = ref<HTMLElement>();
+const triggerRef = ref<HTMLElement>();
+const dropdownRef = ref<HTMLElement>();
+const containerRef = ref<HTMLElement>();
+const tagRefs = ref<HTMLElement[]>([]);
+const measureTagRefs = ref<HTMLElement[]>([]);
+const scrollContainerRef = ref<HTMLElement>();
+const filterInputRef = ref<InstanceType<typeof VInput>>();
 
-  // ===== STATE =====
-  const state = {
-    isFocused: ref(false),
-    validationErrors: ref<string[]>([]),
-    isValid: ref(true),
-    visibleCount: ref(0),
-    filterQuery: ref(''),
-  };
+// ===== STATE =====
+const state = {
+  isFocused: ref(false),
+  validationErrors: ref<string[]>([]),
+  isValid: ref(true),
+  visibleCount: ref(0),
+  filterQuery: ref(''),
+};
 
-  // ===== COMPUTED DEFAULTS З ЛОКАЛІЗАЦІЄЮ =====
-  const placeholderText = computed(() => props.placeholder ?? t(LOCALE_KEYS.SELECT_PLACEHOLDER));
-  const noDataText = computed(() => props.noDataText ?? t(LOCALE_KEYS.SELECT_NO_DATA));
-  const loadingText = computed(() => props.loadingText ?? t(LOCALE_KEYS.SELECT_LOADING));
-  const filterPlaceholderText = computed(() => props.filterPlaceholder ?? t(LOCALE_KEYS.SELECT_FILTER_PLACEHOLDER));
+// ===== COMPUTED DEFAULTS З ЛОКАЛІЗАЦІЄЮ =====
+const placeholderText = computed(() => props.placeholder ?? t(LOCALE_KEYS.SELECT_PLACEHOLDER));
+const noDataText = computed(() => props.noDataText ?? t(LOCALE_KEYS.SELECT_NO_DATA));
+const loadingText = computed(() => props.loadingText ?? t(LOCALE_KEYS.SELECT_LOADING));
+const filterPlaceholderText = computed(() => props.filterPlaceholder ?? t(LOCALE_KEYS.SELECT_FILTER_PLACEHOLDER));
 
-  // ===== OPTIONS REGISTRY =====
-  const allRegisteredOptions = ref<Map<string, VtSelectOption>>(new Map());
-  const activeOptionKeys = ref<Set<string>>(new Set());
-  const optionSlots = ref<Map<any, any>>(new Map());
+// ===== OPTIONS REGISTRY =====
+const allRegisteredOptions = ref<Map<string, VtSelectOption>>(new Map());
+const activeOptionKeys = ref<Set<string>>(new Set());
+const optionSlots = ref<Map<any, any>>(new Map());
+const selectedOptionsCache = ref<Map<string, VtSelectOption>>(new Map());
 
-  const getOptionKey = (value: any): string => {
-    if (value === null || value === undefined) return String(value);
+const getOptionKey = (value: any): string => {
+  if (value === null || value === undefined) return String(value);
 
-    if (props.valueKey && typeof value === 'object') {
-      return String(value[props.valueKey]);
+  if (props.valueKey && typeof value === 'object') {
+    return String(value[props.valueKey]);
+  }
+  return typeof value === 'object' ? JSON.stringify(value) : String(value);
+};
+
+const registerOption = (option: VtSelectOption, slotContent?: any) => {
+  const key = getOptionKey(option.value);
+
+  // Зберігаємо опцію в загальному реєстрі (зберігає порядок)
+  allRegisteredOptions.value.set(key, option);
+
+  // Позначаємо як активну
+  activeOptionKeys.value.add(key);
+
+  // Якщо ця опція вибрана — кешуємо одразу
+  if (isOptionSelectedUtil(option.value)) {
+    selectedOptionsCache.value.set(key, option);
+  }
+
+  if (slotContent) {
+    optionSlots.value.set(option.value, slotContent);
+  }
+};
+
+const unregisterOption = (value: any) => {
+  const key = getOptionKey(value);
+
+  // НЕ видаляємо з allRegisteredOptions, щоб зберегти порядок
+  // Просто видаляємо з активних
+  activeOptionKeys.value.delete(key);
+
+  // Slot можна видалити, він буде перереєстрований при потребі
+  optionSlots.value.delete(value);
+};
+
+const getOptionSlot = (value: any) => {
+  // Для об'єктів шукаємо по ключу порівняння або по JSON
+  for (const [key, slot] of optionSlots.value.entries()) {
+    if (compareValues(key, value, props.valueKey)) {
+      return slot;
     }
-    return typeof value === 'object' ? JSON.stringify(value) : String(value);
-  };
+  }
+  return undefined;
+};
 
-  const registerOption = (option: VtSelectOption, slotContent?: any) => {
-    const key = getOptionKey(option.value);
+// ===== FILTER HELPERS =====
+const normalizeString = (str: string): string => {
+  return str.toLowerCase().trim();
+};
 
-    // Зберігаємо опцію в загальному реєстрі (зберігає порядок)
-    allRegisteredOptions.value.set(key, option);
+const filterOption = (option: VtSelectOption, query: string): boolean => {
+  if (!query) return true;
 
-    // Позначаємо як активну
-    activeOptionKeys.value.add(key);
+  const normalizedQuery = normalizeString(query);
 
-    if (slotContent) {
-      optionSlots.value.set(option.value, slotContent);
+  // Пошук по label
+  if (option.label && typeof option.label === 'string') {
+    if (normalizeString(option.label).includes(normalizedQuery)) {
+      return true;
     }
-  };
+  }
 
-  const unregisterOption = (value: any) => {
-    const key = getOptionKey(value);
-
-    // НЕ видаляємо з allRegisteredOptions, щоб зберегти порядок
-    // Просто видаляємо з активних
-    activeOptionKeys.value.delete(key);
-
-    // Slot можна видалити, він буде перереєстрований при потребі
-    optionSlots.value.delete(value);
-  };
-
-  const getOptionSlot = (value: any) => {
-    // Для об'єктів шукаємо по ключу порівняння або по JSON
-    for (const [key, slot] of optionSlots.value.entries()) {
-      if (compareValues(key, value, props.valueKey)) {
-        return slot;
-      }
+  // Пошук по value (якщо це строка)
+  if (typeof option.value === 'string') {
+    if (normalizeString(option.value).includes(normalizedQuery)) {
+      return true;
     }
-    return undefined;
-  };
+  }
 
-  // ===== FILTER HELPERS =====
-  const normalizeString = (str: string): string => {
-    return str.toLowerCase().trim();
-  };
-
-  const filterOption = (option: VtSelectOption, query: string): boolean => {
-    if (!query) return true;
-
-    const normalizedQuery = normalizeString(query);
-
-    // Пошук по label
-    if (option.label && typeof option.label === 'string') {
-      if (normalizeString(option.label).includes(normalizedQuery)) {
+  // Додатковий пошук по всім string властивостям об'єкта value
+  if (typeof option.value === 'object' && option.value !== null) {
+    const searchableFields = Object.values(option.value).filter(val => typeof val === 'string');
+    for (const field of searchableFields) {
+      if (normalizeString(field as string).includes(normalizedQuery)) {
         return true;
       }
     }
+  }
 
-    // Пошук по value (якщо це строка)
-    if (typeof option.value === 'string') {
-      if (normalizeString(option.value).includes(normalizedQuery)) {
-        return true;
-      }
+  return false;
+};
+
+// Computed для отримання тільки активних опцій у правильному порядку
+const registeredOptions = computed(() => {
+  const result: VtSelectOption[] = [];
+  const addedKeys = new Set<string>();
+
+  // Спочатку додаємо зареєстровані активні опції
+  for (const [key, option] of allRegisteredOptions.value.entries()) {
+    if (activeOptionKeys.value.has(key)) {
+      result.push(option);
+      addedKeys.add(key);
     }
+  }
 
-    // Додатковий пошук по всім string властивостям об'єкта value
-    if (typeof option.value === 'object' && option.value !== null) {
-      const searchableFields = Object.values(option.value).filter(val => typeof val === 'string');
-      for (const field of searchableFields) {
-        if (normalizeString(field as string).includes(normalizedQuery)) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  };
-
-  // Computed для отримання тільки активних опцій у правильному порядку
-  const registeredOptions = computed(() => {
-    const result: VtSelectOption[] = [];
-    const addedKeys = new Set<string>();
-
-    // Спочатку додаємо зареєстровані активні опції
-    for (const [key, option] of allRegisteredOptions.value.entries()) {
-      if (activeOptionKeys.value.has(key)) {
-        result.push(option);
-        addedKeys.add(key);
-      }
-    }
-
-    // Тепер додаємо опції з modelValue, які ще не зареєстровані
-    if (props.modelValue) {
-      let modelArray: any[];
-
-      if (isMultiple.value) {
-        modelArray = Array.isArray(props.modelValue) ? props.modelValue : [];
-      } else {
-        modelArray = [props.modelValue];
-      }
-
-      // Для кожного значення з modelValue
-      for (const modelVal of modelArray) {
-        const key = getOptionKey(modelVal);
-
-        // Якщо опція ще не додана
-        if (!addedKeys.has(key)) {
-          // Створюємо тимчасову опцію
-          const tempOption: VtSelectOption = {
-            value: modelVal,
-            label: getLabelFromValue(modelVal),
-            disabled: false,
-          };
-          result.push(tempOption);
-          addedKeys.add(key);
-        }
-      }
-    }
-
-    return result;
-  });
-
-  // Фільтровані опції
-  const filteredOptions = computed((): VtSelectOption[] => {
-    if (!props.filterable || !state.filterQuery.value.trim()) {
-      return registeredOptions.value;
-    }
-
-    // Якщо використовується remote фільтрація, просто повертаємо всі опції
-    // оскільки фільтрація відбувається на сервері
-    if (props.allowRemoteFilter) {
-      return registeredOptions.value;
-    }
-
-    // Локальна фільтрація
-    return registeredOptions.value.filter(option => filterOption(option, state.filterQuery.value));
-  });
-
-  // ===== ПРОСТИЙ SCROLL HANDLER =====
-  const lastEmitTime = ref(0);
-  const cooldown = 300; // мс
-
-  const handleScroll = (event: Event) => {
-    const container = event.target as HTMLElement;
-    if (!container) return;
-
-    const scrollTop = container.scrollTop;
-    const scrollHeight = container.scrollHeight;
-    const clientHeight = container.clientHeight;
-
-    // Якщо до кінця залишилось менше 50px - тригеримо подію
-    const scrollThreshold = 50;
-    const nearBottom = scrollTop + clientHeight >= scrollHeight - scrollThreshold;
-
-    // Перевіряємо cooldown та умови
-    const now = Date.now();
-    const canEmit = !props.loading && filteredOptions.value.length > 0 && now - lastEmitTime.value > cooldown;
-
-    if (nearBottom && canEmit) {
-      lastEmitTime.value = now;
-      emit('scrolled');
-    }
-  };
-
-  // Функція для перевірки початкового завантаження (якщо контент не скролиться)
-  const checkInitialScroll = () => {
-    nextTick(() => {
-      if (!scrollContainerRef.value) return;
-
-      const container = scrollContainerRef.value;
-
-      const scrollHeight = container.scrollHeight;
-      const clientHeight = container.clientHeight;
-      const scrollTop = container.scrollTop;
-      // Якщо контент поміщається в контейнер АБО вже доскролили до кінця
-      const contentFits = scrollHeight <= clientHeight;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
-
-      if ((contentFits || isAtBottom) && filteredOptions.value.length > 0 && !props.loading) {
-        const now = Date.now();
-        if (now - lastEmitTime.value > cooldown) {
-          lastEmitTime.value = now;
-          emit('scrolled');
-        }
-      }
-    });
-  };
-
-  // ===== DROPDOWN INTEGRATION =====
-  const {
-    visible: isDropdownVisible,
-    parentVisible,
-    dropdownPosition,
-    show: showDropdown,
-    hide: hideDropdown,
-    toggle: toggleDropdown,
-    updatePosition,
-  } = useDropdown(triggerRef, dropdownRef, {
-    trigger: 'click',
-    placement: 'bottom-start',
-    showTimeout: 250,
-    hideTimeout: 150,
-    disabled: props.disabled,
-    hideOnClick: false,
-    onVisibleChange: visible => {
-      if (visible) {
-        nextTick(async () => {
-          await updatePosition();
-
-          // Фокус на input фільтра, якщо доступний
-          if (props.filterable && filterInputRef.value) {
-            filterInputRef.value.focus();
-          }
-
-          // Перевіряємо початковий скрол після невеликої затримки
-          setTimeout(() => {
-            checkInitialScroll();
-          }, 100);
-        });
-      } else {
-        // Очищаємо фільтр при закритті dropdown
-        if (state.filterQuery.value) {
-          handleFilterClear();
-        }
-
-        if (props.validateOnBlur) {
-          validation.validate();
-        }
-      }
-
-      emit('visible-change', visible);
-    },
-  });
-
-  // ===== VALIDATION =====
-  const validation = {
-    validate() {
-      const result = validateSelectValue(
-        props.modelValue,
-        isMultiple.value,
-        props.required || false,
-        props.requiredMessage
-      );
-
-      state.validationErrors.value = result.errors;
-      state.isValid.value = result.isValid;
-
-      emit('validation', { isValid: state.isValid.value, errors: result.errors });
-    },
-
-    clear() {
-      state.validationErrors.value = [];
-      state.isValid.value = true;
-      emit('validation', { isValid: true, errors: [] });
-    },
-  };
-
-  // ===== COMPUTED VALUES =====
-  const isMultiple = computed(() => props.multiple);
-
-  const selectedOptions = computed((): VtSelectOption[] => {
-    if (props.modelValue === null || props.modelValue === undefined) return [];
-
-    // Для мультиселекту modelValue має бути масивом
-    // Для одиночного селекту - одне значення
+  // Тепер додаємо опції з modelValue, які ще не зареєстровані
+  if (props.modelValue) {
     let modelArray: any[];
 
     if (isMultiple.value) {
-      // Для мультиселекту modelValue повинен бути масивом
-      if (!Array.isArray(props.modelValue)) {
-        console.warn('VSelect: modelValue for multiple select should be an array');
-        return [];
-      }
-      modelArray = props.modelValue;
+      modelArray = Array.isArray(props.modelValue) ? props.modelValue : [];
     } else {
-      // Для одиночного селекту загортаємо в масив для уніфікації обробки
       modelArray = [props.modelValue];
     }
 
-    if (modelArray.length === 0) return [];
-
-    const result: VtSelectOption[] = [];
-
-    // Для кожного значення з modelValue шукаємо відповідну опцію
+    // Для кожного значення з modelValue
     for (const modelVal of modelArray) {
       const key = getOptionKey(modelVal);
-      const foundOption = allRegisteredOptions.value.get(key);
 
-      if (foundOption && activeOptionKeys.value.has(key)) {
-        // Знайдена зареєстрована опція
-        result.push(foundOption);
-      } else {
-        // Опція ще не зареєстрована, створюємо тимчасову
+      // Якщо опція ще не додана
+      if (!addedKeys.has(key)) {
+        // Створюємо тимчасову опцію
         const tempOption: VtSelectOption = {
           value: modelVal,
           label: getLabelFromValue(modelVal),
           disabled: false,
         };
         result.push(tempOption);
+        addedKeys.add(key);
       }
     }
-    return result;
-  });
-
-  // Допоміжна функція для отримання label з value
-  const getLabelFromValue = (value: any): string => {
-    if (value === null || value === undefined) return '';
-
-    if (typeof value === 'object') {
-      // Спробуємо знайти label, name або інше текстове поле
-      if (value.label) return String(value.label);
-      if (value.name) return String(value.name);
-      if (props.valueKey && value[props.valueKey]) return String(value[props.valueKey]);
-
-      // В крайньому випадку повертаємо JSON (але це не ідеально)
-      return JSON.stringify(value);
-    }
-
-    return String(value);
-  };
-
-  const visibleTags = computed(() => {
-    if (!props.multiple || selectedOptions.value.length === 0) return [];
-
-    if (!props.collapsedTags) {
-      return selectedOptions.value;
-    }
-
-    // Завжди показуємо мінімум 1 тег, максимум - скільки є
-    const count = Math.max(1, Math.min(state.visibleCount.value || 1, selectedOptions.value.length));
-    return selectedOptions.value.slice(0, count);
-  });
-
-  const displayText = computed(() => {
-    if (isMultiple.value) return '';
-
-    const selected = selectedOptions.value[0];
-    if (selected) return selected.label;
-
-    return '';
-  });
-
-  const showClearButton = computed(() => {
-    if (!props.clearable || props.disabled) return false;
-
-    // Для множинного вибору перевіряємо довжину масиву
-    if (isMultiple.value) {
-      return selectedOptions.value.length > 0;
-    }
-
-    // Для одиночного вибору перевіряємо наявність значення
-    return (
-      props.modelValue !== undefined &&
-      props.modelValue !== null &&
-      props.modelValue !== '' &&
-      (!Array.isArray(props.modelValue) || props.modelValue.length > 0)
-    );
-  });
-
-  const currentStatus = computed(() => {
-    if (props.status !== 'default') return props.status;
-    if (props.errorMessage) return 'error';
-    if (!state.isValid.value) return 'error';
-    return 'default';
-  });
-
-  // Для outlined стилю визначаємо чи label має бути вгорі
-  const isLabelFloating = computed(() => {
-    if (!props.outlined) return false;
-
-    // Label плаває якщо є фокус, dropdown відкритий, або є значення
-    return (
-      state.isFocused.value ||
-      isDropdownVisible.value ||
-      (props.multiple && selectedOptions.value.length > 0) ||
-      (!props.multiple && displayText.value !== '')
-    );
-  });
-
-  const selectClasses = computed(() => [
-    'vt-select',
-    `vt-select--${currentStatus.value}`,
-    {
-      'vt-select--disabled': props.disabled,
-      'vt-select--focused': state.isFocused.value,
-      'vt-select--multiple': isMultiple.value,
-      'vt-select--open': isDropdownVisible.value,
-      'vt-select--outlined': props.outlined,
-      'vt-select--label-floating': isLabelFloating.value,
-    },
-  ]);
-
-  // Повернення помилки
-  const displayErrorMessage = computed(() => {
-    if (props.errorMessage) return props.errorMessage;
-    if (state.validationErrors.value.length > 0) return state.validationErrors.value[0];
-    return '';
-  });
-
-  const dropdownStyle = computed(() => {
-    const triggerWidth = triggerRef.value?.offsetWidth ?? 0;
-
-    return {
-      ...dropdownPosition.value,
-      position: 'absolute' as const,
-      zIndex: 2000,
-      maxHeight: `${props.maxHeight}px`,
-      width: `${triggerWidth}px`,
-    };
-  });
-
-  const dropdownOptionsStyle = computed(() => {
-    return {
-      maxHeight: `${props.maxOptionsHeight}px`,
-    };
-  });
-
-  const getTitle = (option: VtSelectOption) => {
-    if (!option?.label) return '';
-
-    const key = getOptionKey(option.value);
-
-    const el = dropdownRef.value?.querySelector(
-      `[data-key="${CSS.escape(key)}"]`
-    ) as HTMLElement | null;
-
-    if (!el) return '';
-
-    const isOverflowing = el.scrollWidth > el.clientWidth;
-
-    return isOverflowing ? String(option.label) : '';
-  };
-
-  const collapsedCount = computed(() => {
-    return selectedOptions.value.length - state.visibleCount.value;
-  });
-
-  const showCollapsedIndicator = computed(() => {
-    return (
-      props.collapsedTags &&
-      props.multiple &&
-      selectedOptions.value.length > 0 &&
-      state.visibleCount.value < selectedOptions.value.length
-    );
-  });
-
-  const collapsedTooltip = computed(() => {
-    if (!showCollapsedIndicator.value) return '';
-
-    const hiddenOptions = selectedOptions.value.slice(state.visibleCount.value);
-    return createCollapsedTooltip(collapsedCount.value, hiddenOptions);
-  });
-
-  // ===== EVENT HANDLERS =====
-  const handleClickOutside = (event: MouseEvent) => {
-    if (!isDropdownVisible.value) return;
-
-    const target = event.target as Node;
-    if (selectRef.value?.contains(target) || dropdownRef.value?.contains(target)) {
-      return;
-    }
-
-    hideDropdown();
-  };
-
-  const handleOptionClick = (option: VtSelectOption) => {
-    if (!option || option.disabled) return;
-
-    const newValue = handleOptionSelection(option, props.modelValue, isMultiple.value, props.valueKey);
-
-    emit('update:modelValue', newValue);
-    emit('change', newValue);
-
-    if (!isMultiple.value) {
-      hideDropdown();
-    }
-
-    if (props.validateOnInput) {
-      validation.validate();
-    }
-  };
-
-  const handleCheckboxChange = (option: VtSelectOption, isChecked: boolean) => {
-    if (option.disabled) return;
-
-    // Обробляємо вибір опції
-    handleOptionClick(option);
-  };
-
-  const handleClear = () => {
-    const emptyValue = getEmptyValue(isMultiple.value);
-    emit('update:modelValue', emptyValue);
-    emit('change', emptyValue);
-    emit('clear');
-
-    validation.clear();
-  };
-
-  const handleRemoveTag = (value: any) => {
-    if (!isMultiple.value) return;
-
-    const newValue = removeTagFromValue(value, props.modelValue, props.valueKey);
-
-    emit('update:modelValue', newValue);
-    emit('change', newValue);
-    emit('remove-tag', value);
-
-    if (props.validateOnInput) {
-      validation.validate();
-    }
-  };
-
-  const handleTriggerClick = () => {
-    if (props.disabled) return;
-    toggleDropdown();
-  };
-
-  const handleFocus = () => {
-    state.isFocused.value = true;
-    emit('focus');
-  };
-
-  const handleBlur = (event?: FocusEvent) => {
-    state.isFocused.value = false;
-    emit('blur');
-
-    // Затримка для dropdown
-    setTimeout(() => {
-      if (!dropdownRef.value?.contains(document.activeElement)) {
-        hideDropdown();
-      }
-    }, 100);
-  };
-
-  function debounce<F extends (...args: any[]) => any>(func: F, wait = 300) {
-    let timeout: ReturnType<typeof setTimeout> | null;
-    return function (this: any, ...args: Parameters<F>) {
-      if (timeout) clearTimeout(timeout);
-      timeout = setTimeout(() => func.apply(this, args), wait);
-    };
   }
 
-  const handleFilterInput = debounce((event: Event) => {
-    const inputValue = (event.target as HTMLInputElement).value;
+  return result;
+});
 
-    state.filterQuery.value = inputValue;
-    emit('filter', inputValue);
+// Фільтровані опції
+const filteredOptions = computed((): VtSelectOption[] => {
+  if (!props.filterable || !state.filterQuery.value.trim()) {
+    return registeredOptions.value;
+  }
 
-    if (props.allowRemoteFilter) {
-      console.log('Remote filter query: ', inputValue);
-    }
-  }, 500);
+  // Якщо використовується remote фільтрація, просто повертаємо всі опції
+  // оскільки фільтрація відбувається на сервері
+  if (props.allowRemoteFilter) {
+    return registeredOptions.value;
+  }
 
-  const handleFilterClear = () => {
-    state.filterQuery.value = '';
-    emit('filter', '');
-    emit('filter-clear');
-  };
+  // Локальна фільтрація
+  return registeredOptions.value.filter(option => filterOption(option, state.filterQuery.value));
+});
 
-  const handleKeydown = (event: KeyboardEvent) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      handleTriggerClick();
-    } else if (event.key === 'Escape' && isDropdownVisible.value) {
-      event.preventDefault();
-      hideDropdown();
-    }
-  };
+// ===== ПРОСТИЙ SCROLL HANDLER =====
+const lastEmitTime = ref(0);
+const cooldown = 300; // мс
 
-  // ===== UTILITIES =====
-  const isOptionSelectedUtil = (value: any): boolean => {
-    return isOptionSelected(value, props.modelValue, isMultiple.value, props.valueKey);
-  };
+const handleScroll = (event: Event) => {
+  const container = event.target as HTMLElement;
+  if (!container) return;
 
-  const calcVisibleCount = () => {
-    if (!props.collapsedTags) {
-      state.visibleCount.value = selectedOptions.value.length;
-      return;
-    }
+  const scrollTop = container.scrollTop;
+  const scrollHeight = container.scrollHeight;
+  const clientHeight = container.clientHeight;
 
-    nextTick(() => {
-      if (!containerRef.value || measureTagRefs.value.length === 0) return;
+  // Якщо до кінця залишилось менше 50px - тригеримо подію
+  const scrollThreshold = 50;
+  const nearBottom = scrollTop + clientHeight >= scrollHeight - scrollThreshold;
 
-      const count = calculateVisibleTagsCount(containerRef.value, measureTagRefs.value, selectedOptions.value.length);
+  // Перевіряємо cooldown та умови
+  const now = Date.now();
+  const canEmit = !props.loading && filteredOptions.value.length > 0 && now - lastEmitTime.value > cooldown;
 
-      state.visibleCount.value = Math.max(1, count);
-    });
-  };
+  if (nearBottom && canEmit) {
+    lastEmitTime.value = now;
+    emit('scrolled');
+  }
+};
 
-  // ===== CONTEXT PROVIDER =====
-  const selectContext: VtSelectContext = {
-    selectValue: computed(() => props.modelValue || (isMultiple.value ? [] : undefined)).value,
-    multiple: isMultiple.value,
-    valueKey: props.valueKey,
-    handleOptionClick: handleOptionClick,
-    isOptionSelected: isOptionSelectedUtil,
-    registerOption: registerOption,
-    unregisterOption: unregisterOption,
-  };
+// Функція для перевірки початкового завантаження (якщо контент не скролиться)
+const checkInitialScroll = () => {
+  nextTick(() => {
+    if (!scrollContainerRef.value) return;
 
-  provide<VtSelectContext>(VtSelectContextKey, selectContext);
+    const container = scrollContainerRef.value;
 
-  // ===== PUBLIC METHODS =====
-  const publicMethods = {
-    focus() {
-      if (!isDropdownVisible.value) {
-        showDropdown();
+    const scrollHeight = container.scrollHeight;
+    const clientHeight = container.clientHeight;
+    const scrollTop = container.scrollTop;
+    // Якщо контент поміщається в контейнер АБО вже доскролили до кінця
+    const contentFits = scrollHeight <= clientHeight;
+    const isAtBottom = scrollTop + clientHeight >= scrollHeight - 10;
+
+    if ((contentFits || isAtBottom) && filteredOptions.value.length > 0 && !props.loading) {
+      const now = Date.now();
+      if (now - lastEmitTime.value > cooldown) {
+        lastEmitTime.value = now;
+        emit('scrolled');
       }
-    },
-
-    blur() {
-      hideDropdown();
-    },
-
-    clear() {
-      handleClear();
-    },
-
-    validate(): boolean {
-      validation.validate();
-      return state.isValid.value;
-    },
-
-    clearValidation() {
-      validation.clear();
-    },
-
-    getSelectedOptions(): VtSelectOption[] {
-      return selectedOptions.value;
-    },
-
-    getValidationState() {
-      return {
-        isValid: state.isValid.value,
-        errors: [...state.validationErrors.value],
-      };
-    },
-
-    setFilter(query: string) {
-      state.filterQuery.value = query;
-      emit('filter', query);
-    },
-
-    clearFilter() {
-      emit('clear');
-    },
-
-    getFilterQuery(): string {
-      return state.filterQuery.value;
-    },
-
-    // Методи для роботи зі скролом
-    checkInitialScroll() {
-      checkInitialScroll();
-    },
-
-    getScrollInfo() {
-      if (!scrollContainerRef.value) return null;
-
-      const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.value;
-      const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
-      const nearBottom = distanceFromBottom <= 50;
-
-      return {
-        scrollTop,
-        scrollHeight,
-        clientHeight,
-        distanceFromBottom,
-        nearBottom,
-        optionsCount: filteredOptions.value.length,
-        isLoading: props.loading,
-      };
-    },
-  };
-
-  defineExpose<VtSelectMethods>({
-    ...publicMethods,
-    registerOption: registerOption,
-    unregisterOption: unregisterOption,
+    }
   });
+};
 
-  // ===== WATCHERS =====
-  watch(
-    () => props.modelValue,
-    () => {
-      if (props.validateOnInput) {
+// ===== DROPDOWN INTEGRATION =====
+const {
+  visible: isDropdownVisible,
+  parentVisible,
+  dropdownPosition,
+  show: showDropdown,
+  hide: hideDropdown,
+  toggle: toggleDropdown,
+  updatePosition,
+} = useDropdown(triggerRef, dropdownRef, {
+  trigger: 'click',
+  placement: 'bottom-start',
+  showTimeout: 250,
+  hideTimeout: 150,
+  disabled: props.disabled,
+  hideOnClick: false,
+  onVisibleChange: visible => {
+    if (visible) {
+      nextTick(async () => {
+        await updatePosition();
+
+        // Фокус на input фільтра, якщо доступний
+        if (props.filterable && filterInputRef.value) {
+          filterInputRef.value.focus();
+        }
+
+        // Перевіряємо початковий скрол після невеликої затримки
+        setTimeout(() => {
+          checkInitialScroll();
+        }, 100);
+      });
+    } else {
+      // Очищаємо фільтр при закритті dropdown
+      if (state.filterQuery.value) {
+        handleFilterClear();
+      }
+
+      if (props.validateOnBlur) {
         validation.validate();
       }
     }
-  );
 
-  watch(
-    selectedOptions,
-    () => {
-      if (props.collapsedTags) {
-        // Скидаємо refs перед новим рендером - це критично!
-        tagRefs.value = [];
-        nextTick(() => {
-          calcVisibleCount();
-        });
-      }
-    },
-    { deep: true, immediate: true }
-  );
+    emit('visible-change', visible);
+  },
+});
 
-  watch(
-    () => containerRef.value,
-    () => {
-      if (containerRef.value && props.collapsedTags) {
-        nextTick(() => {
-          calcVisibleCount();
-        });
-      }
+// ===== VALIDATION =====
+const validation = {
+  validate() {
+    const result = validateSelectValue(
+      props.modelValue,
+      isMultiple.value,
+      props.required || false,
+      props.requiredMessage,
+    );
+
+    state.validationErrors.value = result.errors;
+    state.isValid.value = result.isValid;
+
+    emit('validation', { isValid: state.isValid.value, errors: result.errors });
+  },
+
+  clear() {
+    state.validationErrors.value = [];
+    state.isValid.value = true;
+    emit('validation', { isValid: true, errors: [] });
+  },
+};
+
+// ===== COMPUTED VALUES =====
+const isMultiple = computed(() => props.multiple);
+
+const selectedOptions = computed((): VtSelectOption[] => {
+  if (props.modelValue === null || props.modelValue === undefined) return [];
+
+  let modelArray: any[];
+
+  if (isMultiple.value) {
+    if (!Array.isArray(props.modelValue)) {
+      console.warn('VSelect: modelValue for multiple select should be an array');
+      return [];
     }
-  );
+    modelArray = props.modelValue;
+  } else {
+    modelArray = [props.modelValue];
+  }
 
-  watch(isDropdownVisible, async newVisible => {
-    if (newVisible) {
-      await nextTick();
-      updatePosition();
+  if (modelArray.length === 0) return [];
+
+  const result: VtSelectOption[] = [];
+
+  for (const modelVal of modelArray) {
+    const key = getOptionKey(modelVal);
+    const foundOption = allRegisteredOptions.value.get(key);
+
+    if (foundOption && activeOptionKeys.value.has(key)) {
+      // Опція є в DOM — беремо її і оновлюємо кеш
+      selectedOptionsCache.value.set(key, foundOption);
+      result.push(foundOption);
+    } else if (selectedOptionsCache.value.has(key)) {
+      //  Опція зникла з DOM, але є в кеші — використовуємо кешовану
+      result.push(selectedOptionsCache.value.get(key)!);
+    } else {
+      // Fallback — опція ніколи не реєструвалась (початкове значення)
+      const tempOption: VtSelectOption = {
+        value: modelVal,
+        label: getLabelFromValue(modelVal),
+        disabled: false,
+      };
+      result.push(tempOption);
     }
+  }
+  return result;
+});
+
+// Допоміжна функція для отримання label з value
+const getLabelFromValue = (value: any): string => {
+  if (value === null || value === undefined) return '';
+
+  if (typeof value === 'object') {
+    // Спробуємо знайти label, name або інше текстове поле
+    if (value.label) return String(value.label);
+    if (value.name) return String(value.name);
+    if (props.valueKey && value[props.valueKey]) return String(value[props.valueKey]);
+
+    // В крайньому випадку повертаємо JSON (але це не ідеально)
+    return JSON.stringify(value);
+  }
+
+  return String(value);
+};
+
+const visibleTags = computed(() => {
+  if (!props.multiple || selectedOptions.value.length === 0) return [];
+
+  if (!props.collapsedTags) {
+    return selectedOptions.value;
+  }
+
+  // Завжди показуємо мінімум 1 тег, максимум - скільки є
+  const count = Math.max(1, Math.min(state.visibleCount.value || 1, selectedOptions.value.length));
+  return selectedOptions.value.slice(0, count);
+});
+
+const displayText = computed(() => {
+  if (isMultiple.value) return '';
+
+  const selected = selectedOptions.value[0];
+  if (selected) return selected.label;
+
+  return '';
+});
+
+const showClearButton = computed(() => {
+  if (!props.clearable || props.disabled) return false;
+
+  // Для множинного вибору перевіряємо довжину масиву
+  if (isMultiple.value) {
+    return selectedOptions.value.length > 0;
+  }
+
+  // Для одиночного вибору перевіряємо наявність значення
+  return (
+    props.modelValue !== undefined &&
+    props.modelValue !== null &&
+    props.modelValue !== '' &&
+    (!Array.isArray(props.modelValue) || props.modelValue.length > 0)
+  );
+});
+
+const currentStatus = computed(() => {
+  if (props.status !== 'default') return props.status;
+  if (props.errorMessage) return 'error';
+  if (!state.isValid.value) return 'error';
+  return 'default';
+});
+
+// Для outlined стилю визначаємо чи label має бути вгорі
+const isLabelFloating = computed(() => {
+  if (!props.outlined) return false;
+
+  // Label плаває якщо є фокус, dropdown відкритий, або є значення
+  return (
+    state.isFocused.value ||
+    isDropdownVisible.value ||
+    (props.multiple && selectedOptions.value.length > 0) ||
+    (!props.multiple && displayText.value !== '')
+  );
+});
+
+const selectClasses = computed(() => [
+  'vt-select',
+  `vt-select--${currentStatus.value}`,
+  {
+    'vt-select--disabled': props.disabled,
+    'vt-select--focused': state.isFocused.value,
+    'vt-select--multiple': isMultiple.value,
+    'vt-select--open': isDropdownVisible.value,
+    'vt-select--outlined': props.outlined,
+    'vt-select--label-floating': isLabelFloating.value,
+  },
+]);
+
+// Повернення помилки
+const displayErrorMessage = computed(() => {
+  if (props.errorMessage) return props.errorMessage;
+  if (state.validationErrors.value.length > 0) return state.validationErrors.value[0];
+  return '';
+});
+
+const dropdownStyle = computed(() => {
+  const triggerWidth = triggerRef.value?.offsetWidth ?? 0;
+
+  return {
+    ...dropdownPosition.value,
+    position: 'absolute' as const,
+    zIndex: 2000,
+    maxHeight: `${props.maxHeight}px`,
+    width: `${triggerWidth}px`,
+  };
+});
+
+const dropdownOptionsStyle = computed(() => {
+  return {
+    maxHeight: `${props.maxOptionsHeight}px`,
+  };
+});
+
+const getTitle = (option: VtSelectOption) => {
+  if (!option?.label) return '';
+
+  const key = getOptionKey(option.value);
+
+  const el = dropdownRef.value?.querySelector(`[data-key="${CSS.escape(key)}"]`) as HTMLElement | null;
+
+  if (!el) return '';
+
+  const isOverflowing = el.scrollWidth > el.clientWidth;
+
+  return isOverflowing ? String(option.label) : '';
+};
+
+const collapsedCount = computed(() => {
+  return selectedOptions.value.length - state.visibleCount.value;
+});
+
+const showCollapsedIndicator = computed(() => {
+  return (
+    props.collapsedTags &&
+    props.multiple &&
+    selectedOptions.value.length > 0 &&
+    state.visibleCount.value < selectedOptions.value.length
+  );
+});
+
+const collapsedTooltip = computed(() => {
+  if (!showCollapsedIndicator.value) return '';
+
+  const hiddenOptions = selectedOptions.value.slice(state.visibleCount.value);
+  return createCollapsedTooltip(collapsedCount.value, hiddenOptions);
+});
+
+// ===== EVENT HANDLERS =====
+const handleClickOutside = (event: MouseEvent) => {
+  if (!isDropdownVisible.value) return;
+
+  const target = event.target as Node;
+  if (selectRef.value?.contains(target) || dropdownRef.value?.contains(target)) {
+    return;
+  }
+
+  hideDropdown();
+};
+
+const handleOptionClick = (option: VtSelectOption) => {
+  if (!option || option.disabled) return;
+
+  const newValue = handleOptionSelection(option, props.modelValue, isMultiple.value, props.valueKey);
+
+  emit('update:modelValue', newValue);
+  emit('change', newValue);
+
+  if (!isMultiple.value) {
+    hideDropdown();
+  }
+
+  if (props.validateOnInput) {
+    validation.validate();
+  }
+};
+
+const handleCheckboxChange = (option: VtSelectOption, isChecked: boolean) => {
+  if (option.disabled) return;
+
+  // Обробляємо вибір опції
+  handleOptionClick(option);
+};
+
+const handleClear = () => {
+  const emptyValue = getEmptyValue(isMultiple.value);
+  emit('update:modelValue', emptyValue);
+  emit('change', emptyValue);
+  emit('clear');
+
+  validation.clear();
+};
+
+const handleRemoveTag = (value: any) => {
+  if (!isMultiple.value) return;
+
+  const newValue = removeTagFromValue(value, props.modelValue, props.valueKey);
+
+  emit('update:modelValue', newValue);
+  emit('change', newValue);
+  emit('remove-tag', value);
+
+  if (props.validateOnInput) {
+    validation.validate();
+  }
+};
+
+const handleTriggerClick = () => {
+  if (props.disabled) return;
+  toggleDropdown();
+};
+
+const handleFocus = () => {
+  state.isFocused.value = true;
+  emit('focus');
+};
+
+const handleBlur = (event?: FocusEvent) => {
+  state.isFocused.value = false;
+  emit('blur');
+
+  // Затримка для dropdown
+  setTimeout(() => {
+    if (!dropdownRef.value?.contains(document.activeElement)) {
+      hideDropdown();
+    }
+  }, 100);
+};
+
+function debounce<F extends (...args: any[]) => any>(func: F, wait = 300) {
+  let timeout: ReturnType<typeof setTimeout> | null;
+  return function(this: any, ...args: Parameters<F>) {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+const handleFilterInput = debounce((event: Event) => {
+  const inputValue = (event.target as HTMLInputElement).value;
+
+  state.filterQuery.value = inputValue;
+  emit('filter', inputValue);
+
+  if (props.allowRemoteFilter) {
+    console.log('Remote filter query: ', inputValue);
+  }
+}, 500);
+
+const handleFilterClear = () => {
+  state.filterQuery.value = '';
+  emit('filter', '');
+  emit('filter-clear');
+};
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault();
+    handleTriggerClick();
+  } else if (event.key === 'Escape' && isDropdownVisible.value) {
+    event.preventDefault();
+    hideDropdown();
+  }
+};
+
+// ===== UTILITIES =====
+const isOptionSelectedUtil = (value: any): boolean => {
+  return isOptionSelected(value, props.modelValue, isMultiple.value, props.valueKey);
+};
+
+const calcVisibleCount = () => {
+  if (!props.collapsedTags) {
+    state.visibleCount.value = selectedOptions.value.length;
+    return;
+  }
+
+  nextTick(() => {
+    if (!containerRef.value || measureTagRefs.value.length === 0) return;
+
+    const count = calculateVisibleTagsCount(containerRef.value, measureTagRefs.value, selectedOptions.value.length);
+
+    state.visibleCount.value = Math.max(1, count);
   });
+};
 
-  // Watcher для реініціалізації скролу після зміни опцій
-  watch(
-    () => filteredOptions.value.length,
-    async (newLength, oldLength) => {
-      if (isDropdownVisible.value) {
-        // Якщо опції додалися і dropdown відкритий
-        if (newLength > oldLength) {
-          await nextTick();
-          // Перевіряємо чи потрібно відразу тригернути scroll для початкового завантаження
-          checkInitialScroll();
-        }
+// ===== CONTEXT PROVIDER =====
+const selectContext: VtSelectContext = {
+  selectValue: computed(() => props.modelValue || (isMultiple.value ? [] : undefined)).value,
+  multiple: isMultiple.value,
+  valueKey: props.valueKey,
+  handleOptionClick: handleOptionClick,
+  isOptionSelected: isOptionSelectedUtil,
+  registerOption: registerOption,
+  unregisterOption: unregisterOption,
+};
+
+provide<VtSelectContext>(VtSelectContextKey, selectContext);
+
+// ===== PUBLIC METHODS =====
+const publicMethods = {
+  focus() {
+    if (!isDropdownVisible.value) {
+      showDropdown();
+    }
+  },
+
+  blur() {
+    hideDropdown();
+  },
+
+  clear() {
+    handleClear();
+  },
+
+  validate(): boolean {
+    validation.validate();
+    return state.isValid.value;
+  },
+
+  clearValidation() {
+    validation.clear();
+  },
+
+  getSelectedOptions(): VtSelectOption[] {
+    return selectedOptions.value;
+  },
+
+  getValidationState() {
+    return {
+      isValid: state.isValid.value,
+      errors: [...state.validationErrors.value],
+    };
+  },
+
+  setFilter(query: string) {
+    state.filterQuery.value = query;
+    emit('filter', query);
+  },
+
+  clearFilter() {
+    emit('clear');
+  },
+
+  getFilterQuery(): string {
+    return state.filterQuery.value;
+  },
+
+  // Методи для роботи зі скролом
+  checkInitialScroll() {
+    checkInitialScroll();
+  },
+
+  getScrollInfo() {
+    if (!scrollContainerRef.value) return null;
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.value;
+    const distanceFromBottom = scrollHeight - (scrollTop + clientHeight);
+    const nearBottom = distanceFromBottom <= 50;
+
+    return {
+      scrollTop,
+      scrollHeight,
+      clientHeight,
+      distanceFromBottom,
+      nearBottom,
+      optionsCount: filteredOptions.value.length,
+      isLoading: props.loading,
+    };
+  },
+};
+
+defineExpose<VtSelectMethods>({
+  ...publicMethods,
+  registerOption: registerOption,
+  unregisterOption: unregisterOption,
+});
+
+// ===== WATCHERS =====
+watch(
+  () => props.modelValue,
+  () => {
+    // Кешуємо поточні вибрані опції
+    const modelArray = isMultiple.value
+      ? Array.isArray(props.modelValue)
+        ? props.modelValue
+        : []
+      : props.modelValue !== null && props.modelValue !== undefined
+        ? [props.modelValue]
+        : [];
+
+    for (const val of modelArray) {
+      const key = getOptionKey(val);
+      // Якщо опція зареєстрована — зберігаємо її в кеш
+      const registered = allRegisteredOptions.value.get(key);
+      if (registered) {
+        selectedOptionsCache.value.set(key, registered);
       }
     }
-  );
 
-  // Watcher для перевірки коли завантаження завершується
-  watch(
-    () => props.loading,
-    (newLoading, oldLoading) => {
-      if (oldLoading && !newLoading && isDropdownVisible.value) {
-        // Коли завантаження завершується, перевіряємо чи потрібно тригернути scroll
-        checkInitialScroll();
-      }
-    }
-  );
-
-  // ===== LIFECYCLE HOOKS =====
-  onMounted(() => {
-    // Initial validation
-    if (
-      props.modelValue !== undefined &&
-      props.modelValue !== '' &&
-      (!Array.isArray(props.modelValue) || props.modelValue.length > 0)
-    ) {
+    if (props.validateOnInput) {
       validation.validate();
     }
+  },
+);
 
-    // Початковий розрахунок для collapsed tags
+watch(
+  selectedOptions,
+  () => {
     if (props.collapsedTags) {
+      // Скидаємо refs перед новим рендером - це критично!
+      tagRefs.value = [];
       nextTick(() => {
         calcVisibleCount();
       });
     }
+  },
+  { deep: true, immediate: true },
+);
 
-    // Використовуємо ResizeObserver замість window.resize
-    const resizeObserver = new ResizeObserver(() => {
-      if (props.collapsedTags && containerRef.value) {
+watch(
+  () => containerRef.value,
+  () => {
+    if (containerRef.value && props.collapsedTags) {
+      nextTick(() => {
         calcVisibleCount();
-      }
-    });
-
-    if (containerRef.value) {
-      resizeObserver.observe(containerRef.value);
+      });
     }
+  },
+);
 
-    // Спостерігаємо за змінами containerRef
-    watch(
-      () => containerRef.value,
-      (newContainer, oldContainer) => {
-        if (oldContainer) {
-          resizeObserver.unobserve(oldContainer);
-        }
-        if (newContainer) {
-          resizeObserver.observe(newContainer);
-        }
+watch(isDropdownVisible, async newVisible => {
+  if (newVisible) {
+    await nextTick();
+    updatePosition();
+  }
+});
+
+// Watcher для реініціалізації скролу після зміни опцій
+watch(
+  () => filteredOptions.value.length,
+  async (newLength, oldLength) => {
+    if (isDropdownVisible.value) {
+      // Якщо опції додалися і dropdown відкритий
+      if (newLength > oldLength) {
+        await nextTick();
+        // Перевіряємо чи потрібно відразу тригернути scroll для початкового завантаження
+        checkInitialScroll();
       }
-    );
+    }
+  },
+);
 
-    document.addEventListener('click', handleClickOutside);
+// Watcher для перевірки коли завантаження завершується
+watch(
+  () => props.loading,
+  (newLoading, oldLoading) => {
+    if (oldLoading && !newLoading && isDropdownVisible.value) {
+      // Коли завантаження завершується, перевіряємо чи потрібно тригернути scroll
+      checkInitialScroll();
+    }
+  },
+);
 
-    // Cleanup в onUnmounted
-    onUnmounted(() => {
-      resizeObserver.disconnect();
+// ===== LIFECYCLE HOOKS =====
+onMounted(() => {
+  // Initial validation
+  if (
+    props.modelValue !== undefined &&
+    props.modelValue !== '' &&
+    (!Array.isArray(props.modelValue) || props.modelValue.length > 0)
+  ) {
+    validation.validate();
+  }
+
+  // Початковий розрахунок для collapsed tags
+  if (props.collapsedTags) {
+    nextTick(() => {
+      calcVisibleCount();
     });
+  }
+
+  // Використовуємо ResizeObserver замість window.resize
+  const resizeObserver = new ResizeObserver(() => {
+    if (props.collapsedTags && containerRef.value) {
+      calcVisibleCount();
+    }
   });
 
+  if (containerRef.value) {
+    resizeObserver.observe(containerRef.value);
+  }
+
+  // Спостерігаємо за змінами containerRef
+  watch(
+    () => containerRef.value,
+    (newContainer, oldContainer) => {
+      if (oldContainer) {
+        resizeObserver.unobserve(oldContainer);
+      }
+      if (newContainer) {
+        resizeObserver.observe(newContainer);
+      }
+    },
+  );
+
+  document.addEventListener('click', handleClickOutside);
+
+  // Cleanup в onUnmounted
   onUnmounted(() => {
-    document.removeEventListener('click', handleClickOutside);
-    window.removeEventListener('resize', calcVisibleCount);
+    resizeObserver.disconnect();
   });
+});
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside);
+  window.removeEventListener('resize', calcVisibleCount);
+});
 </script>
 
 <template>
@@ -1045,8 +1066,8 @@
               clearable
               suffix-icon="search"
               type="text"
-              @input="handleFilterInput"
               @clear="handleFilterClear"
+              @input="handleFilterInput"
             />
           </div>
 
@@ -1062,8 +1083,8 @@
           <div
             v-else
             ref="scrollContainerRef"
-            class="vt-select-dropdown__options"
             :style="dropdownOptionsStyle"
+            class="vt-select-dropdown__options"
             @scroll="handleScroll"
           >
             <div
@@ -1095,14 +1116,11 @@
               <!-- Option content -->
               <span
                 ref="setOptionRef"
-                class="vt-option__text"
-                :data-key="getOptionKey(option.value)"
                 v-tooltip="getTitle(option)"
+                :data-key="getOptionKey(option.value)"
+                class="vt-option__text"
               >
-                <component
-                  :is="getOptionSlot(option.value)"
-                  v-if="getOptionSlot(option.value)"
-                />
+                <component :is="getOptionSlot(option.value)" v-if="getOptionSlot(option.value)" />
                 <template v-else>
                   {{ option.label }}
                 </template>
