@@ -62,6 +62,20 @@
     padding-bottom: 12px;
   }
 
+  &--textarea {
+    .vt-input__container {
+      align-items: flex-start;
+    }
+
+    .vt-input__prefix {
+      padding-top: 12px;
+    }
+
+    .vt-input__suffix {
+      padding-top: 12px;
+    }
+  }
+
   &__prefix,
   &__suffix {
     display: flex;
