@@ -1,3 +1,10 @@
+## [1.17.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.15...v1.17.16) (2026-04-06)
+
+
+### Bug Fixes
+
+* change icon position in the textarea ([8a71218](https://github.com/StepanKhomyn/voiptime-components/commit/8a712181d77b3c1f0723ca03ece0ec81d4d9ef9c))
+
 ## [1.17.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.14...v1.17.15) (2026-04-06)
 
 
