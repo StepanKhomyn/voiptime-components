@@ -21,14 +21,29 @@
   const closeTimeout: any = ref(null);
   const itemEl = ref<HTMLElement | null>(null);
 
+  const isItemActive = computed(() => {
+    if (props.item.matchRoutes) {
+      return props.item.matchRoutes.includes(props.activeRoute ?? '');
+    }
+    return props.item.route === props.activeRoute;
+  });
+
   const isParentActive = computed(() => {
     if (!props.item.children) return false;
-    return props.item.children.some(ch => ch.route === props.activeRoute);
+    return props.item.children.some(ch => {
+      if (ch.matchRoutes) return ch.matchRoutes.includes(props.activeRoute ?? '');
+      return ch.route === props.activeRoute;
+    });
   });
 
   const isChildActive = (child: SidebarItemRaw) => {
+    if (child.matchRoutes) return child.matchRoutes.includes(props.activeRoute ?? '');
     return child.route === props.activeRoute;
   };
+
+  const isActive = computed(() =>
+    hoveringItem.value || showSub.value || isParentActive.value || isItemActive.value
+  );
 
   const submenuStyle = ref({
     top: '0px',
@@ -116,7 +131,7 @@
 <template>
   <li class="hub-item" @mouseenter="openSubmenu" @mouseleave="closeSubmenu" ref="itemEl">
     <!-- MAIN ROW -->
-    <div class="hub-item-main" @click="handleClick" :class="{ collapsed, active: hoveringItem || showSub || isParentActive }">
+    <div class="hub-item-main" @click="handleClick" :class="{ collapsed, active: isActive }">
       <VIcon class="hub-item-icon" :name="(item.icon ?? 'empty') as IconName" width="24" height="24"/>
       <span v-if="!collapsed" class="hub-item-label">{{ item.i18n }}</span>
       <VIcon v-if="item.children && !collapsed" class="hub-item-arrow" name="arrowRight"></VIcon>
