@@ -1,3 +1,10 @@
+## [1.17.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.18...v1.17.19) (2026-04-06)
+
+
+### Bug Fixes
+
+* add dist to gitignore ([565c701](https://github.com/StepanKhomyn/voiptime-components/commit/565c701ad88b4c244e83609b8a1b26014eb5d277))
+
 ## [1.17.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.17...v1.17.18) (2026-04-06)
 
 
