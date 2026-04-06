@@ -1,3 +1,10 @@
+## [1.17.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.14...v1.17.15) (2026-04-06)
+
+
+### Bug Fixes
+
+* align select suffixes in a column with icons ([c7f0752](https://github.com/StepanKhomyn/voiptime-components/commit/c7f0752392128a086cd980b39c7dbfd576e3a221))
+
 ## [1.17.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.13...v1.17.14) (2026-04-01)
 
 
