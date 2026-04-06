@@ -1,3 +1,10 @@
+## [1.17.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.19...v1.17.20) (2026-04-06)
+
+
+### Bug Fixes
+
+* new active tab logic for sidebar ([22fe03f](https://github.com/StepanKhomyn/voiptime-components/commit/22fe03fd6c34c8ebad5cdfdc11b8911481be4853))
+
 ## [1.17.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.18...v1.17.19) (2026-04-06)
 
 
