@@ -153,6 +153,7 @@ import ScheduleIcon from './others/ScheduleIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
 import StarFilledIcon from './others/StarFilledIcon.vue';
 import StatisticDetailIcon from './others/StatisticDetailIcon.vue';
+import StatisticMonitoringIcon from './others/StatisticMonitoringIcon.vue';
 import StatisticSummaryIcon from './others/StatisticSummaryIcon.vue';
 import StatusSelectIcon from './others/StatusSelectIcon.vue';
 import TaskSelectIcon from './others/TaskSelectIcon.vue';
@@ -376,6 +377,7 @@ export const icons = {
   sms: SmsIcon,
   starFilled: StarFilledIcon,
   statisticDetail: StatisticDetailIcon,
+  statisticMonitoring: StatisticMonitoringIcon,
   statisticSummary: StatisticSummaryIcon,
   statusSelect: StatusSelectIcon,
   taskSelect: TaskSelectIcon,
