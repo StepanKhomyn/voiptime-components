@@ -1,3 +1,10 @@
+## [1.17.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.17...v1.17.18) (2026-04-06)
+
+
+### Bug Fixes
+
+* remove label 'rows per page' in pagination ([54851ee](https://github.com/StepanKhomyn/voiptime-components/commit/54851ee3491cb4abb7af3ba4140239a949100586))
+
 ## [1.17.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.16...v1.17.17) (2026-04-06)
 
 
