@@ -1,3 +1,24 @@
+## [1.17.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.13...v1.17.14) (2026-04-01)
+
+
+### Bug Fixes
+
+* Додано мапу кешування вибраних опій в селекті ([9f5b8ca](https://github.com/StepanKhomyn/voiptime-components/commit/9f5b8cafa4c69233baa571856d1424148c996560))
+
+## [1.17.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.12...v1.17.13) (2026-03-31)
+
+
+### Bug Fixes
+
+* export VChart component ([7c09031](https://github.com/StepanKhomyn/voiptime-components/commit/7c090311f5f303020b7c1ec96c5f20051df6f165))
+
+## [1.17.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.11...v1.17.12) (2026-03-31)
+
+
+### Bug Fixes
+
+* Create VChart component ([cd10112](https://github.com/StepanKhomyn/voiptime-components/commit/cd10112a96fa4acf55dd7b02260068a2bd4d8eee))
+
 ## [1.17.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.10...v1.17.11) (2026-03-27)
 
 

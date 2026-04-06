@@ -1,0 +1,22 @@
+import type { CollapseProps } from './types';
+declare var __VLS_1: {};
+type __VLS_Slots = {} & {
+    default?: (props: typeof __VLS_1) => any;
+};
+declare const __VLS_component: import("vue").DefineComponent<CollapseProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
+    change: any;
+    "update:modelValue": any;
+}, string, import("vue").PublicProps, Readonly<CollapseProps> & Readonly<{
+    onChange?: ((...args: any) => any) | undefined;
+    "onUpdate:modelValue"?: ((...args: any) => any) | undefined;
+}>, {
+    accordion: boolean;
+}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
+declare const _default: __VLS_WithSlots<typeof __VLS_component, __VLS_Slots>;
+export default _default;
+type __VLS_WithSlots<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+//# sourceMappingURL=VCollapse.vue.d.ts.map

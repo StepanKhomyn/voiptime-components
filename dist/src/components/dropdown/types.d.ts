@@ -1,0 +1,42 @@
+import type { InjectionKey, Ref } from 'vue';
+export type DropdownPlacement = 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
+export type DropdownTriggerType = 'click' | 'hover';
+export interface DropdownProps {
+    trigger?: DropdownTriggerType;
+    placement?: DropdownPlacement;
+    disabled?: boolean;
+    splitButton?: boolean;
+    hideOnClick?: boolean;
+    showTimeout?: number;
+    hideTimeout?: number;
+    tabindex?: number;
+    maxHeight?: string | number;
+    background?: string;
+    hoverBackground?: string;
+}
+export interface DropdownItemProps {
+    command?: string | number;
+    disabled?: boolean;
+    divided?: boolean;
+    icon?: string;
+}
+export interface DropdownEmits {
+    'visible-change': [visible: boolean];
+    click: [event: MouseEvent];
+    command: [command: string | number];
+    scrolled: [];
+}
+export interface DropdownItemEmits {
+    click: [event: MouseEvent];
+}
+export interface DropdownExpose {
+    show: () => void;
+    hide: () => void;
+    visible: Ref<boolean>;
+}
+export interface DropdownContext {
+    handleCommand: (command: string | number) => void;
+    hideOnClick: boolean;
+}
+export declare const DropdownContextKey: InjectionKey<DropdownContext>;
+//# sourceMappingURL=types.d.ts.map
