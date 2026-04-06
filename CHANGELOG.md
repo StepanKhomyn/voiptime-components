@@ -1,3 +1,10 @@
+## [1.17.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.16...v1.17.17) (2026-04-06)
+
+
+### Bug Fixes
+
+* add statMonitoring icon ([0dc3f53](https://github.com/StepanKhomyn/voiptime-components/commit/0dc3f534c118fadc6c7635ccea79894dbdd7a18b))
+
 ## [1.17.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.15...v1.17.16) (2026-04-06)
 
 
