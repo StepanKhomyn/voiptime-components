@@ -1,3 +1,10 @@
+## [1.17.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.20...v1.17.21) (2026-04-07)
+
+
+### Bug Fixes
+
+* add possibility to use router in modalManager ([bc329e2](https://github.com/StepanKhomyn/voiptime-components/commit/bc329e2044641625ca9d1ec4d7c0a8db7d9d2ea9))
+
 ## [1.17.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.19...v1.17.20) (2026-04-06)
 
 
