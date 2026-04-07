@@ -1,3 +1,10 @@
+## [1.17.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.21...v1.17.22) (2026-04-07)
+
+
+### Bug Fixes
+
+* change select clear btn padding to 0 ([88ea491](https://github.com/StepanKhomyn/voiptime-components/commit/88ea491823b4a66f8eeb448263c9e21170d5a62b))
+
 ## [1.17.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.20...v1.17.21) (2026-04-07)
 
 
