@@ -171,6 +171,10 @@ class VModalManager implements VModalInstance {
       Object.keys(parentProvides).forEach(key => {
         childApp.provide(key, parentProvides[key]);
       });
+
+      Object.getOwnPropertySymbols(parentProvides).forEach(sym => {
+        childApp.provide(sym as unknown as string, parentProvides[sym]);
+      });
     }
   }
 
