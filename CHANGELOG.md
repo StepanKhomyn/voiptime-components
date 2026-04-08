@@ -1,3 +1,10 @@
+## [1.18.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.0...v1.18.1) (2026-04-08)
+
+
+### Bug Fixes
+
+* додано відображення поточної версії проекту ([cb35dd1](https://github.com/StepanKhomyn/voiptime-components/commit/cb35dd16d429b9cbb578f81fc12d6981e0b60531))
+
 # [1.18.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.22...v1.18.0) (2026-04-08)
 
 
