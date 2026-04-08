@@ -124,7 +124,6 @@
     <div class="vt-pagination__info">
       <!-- Селект для кількості рядків на сторінку -->
       <div class="vt-pagination__rows-per-page">
-        <label class="vt-pagination__label" for="rowsSelect">{{ t(LOCALE_KEYS.PAGINATION_ROWS_PER_PAGE) }}</label>
         <VSelect id="rowsSelect" v-model="currentPageSize" class="vt-pagination__select" @change="handlePageSizeChange">
           <VOption v-for="option in pageSizeOptions" :key="option" :label="option" :value="option">
             {{ option }}

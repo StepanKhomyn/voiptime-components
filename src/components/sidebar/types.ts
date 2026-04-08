@@ -5,4 +5,5 @@ export interface SidebarItemRaw {
   extension?: string;
   implemented?: boolean;
   children?: SidebarItemRaw[];
+  matchRoutes?: string[];
 }

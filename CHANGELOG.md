@@ -1,3 +1,59 @@
+## [1.17.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.21...v1.17.22) (2026-04-07)
+
+
+### Bug Fixes
+
+* change select clear btn padding to 0 ([88ea491](https://github.com/StepanKhomyn/voiptime-components/commit/88ea491823b4a66f8eeb448263c9e21170d5a62b))
+
+## [1.17.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.20...v1.17.21) (2026-04-07)
+
+
+### Bug Fixes
+
+* add possibility to use router in modalManager ([bc329e2](https://github.com/StepanKhomyn/voiptime-components/commit/bc329e2044641625ca9d1ec4d7c0a8db7d9d2ea9))
+
+## [1.17.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.19...v1.17.20) (2026-04-06)
+
+
+### Bug Fixes
+
+* new active tab logic for sidebar ([22fe03f](https://github.com/StepanKhomyn/voiptime-components/commit/22fe03fd6c34c8ebad5cdfdc11b8911481be4853))
+
+## [1.17.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.18...v1.17.19) (2026-04-06)
+
+
+### Bug Fixes
+
+* add dist to gitignore ([565c701](https://github.com/StepanKhomyn/voiptime-components/commit/565c701ad88b4c244e83609b8a1b26014eb5d277))
+
+## [1.17.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.17...v1.17.18) (2026-04-06)
+
+
+### Bug Fixes
+
+* remove label 'rows per page' in pagination ([54851ee](https://github.com/StepanKhomyn/voiptime-components/commit/54851ee3491cb4abb7af3ba4140239a949100586))
+
+## [1.17.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.16...v1.17.17) (2026-04-06)
+
+
+### Bug Fixes
+
+* add statMonitoring icon ([0dc3f53](https://github.com/StepanKhomyn/voiptime-components/commit/0dc3f534c118fadc6c7635ccea79894dbdd7a18b))
+
+## [1.17.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.15...v1.17.16) (2026-04-06)
+
+
+### Bug Fixes
+
+* change icon position in the textarea ([8a71218](https://github.com/StepanKhomyn/voiptime-components/commit/8a712181d77b3c1f0723ca03ece0ec81d4d9ef9c))
+
+## [1.17.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.14...v1.17.15) (2026-04-06)
+
+
+### Bug Fixes
+
+* align select suffixes in a column with icons ([c7f0752](https://github.com/StepanKhomyn/voiptime-components/commit/c7f0752392128a086cd980b39c7dbfd576e3a221))
+
 ## [1.17.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.13...v1.17.14) (2026-04-01)
 
 
