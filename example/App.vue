@@ -1,5 +1,6 @@
 <script setup>
   import { computed, ref } from 'vue';
+  import pkg from '../package.json';
   import DemoButton from './DemoButton.vue';
   import DemoIcons from './DemoIcons.vue';
   import DemoModal from './DemoModal.vue';
@@ -138,7 +139,7 @@
         </div>
         <div>
           <div class="docs-sidebar__brand-name">VoIPTime UI</div>
-          <div class="docs-sidebar__brand-version">v1.0.0 · Vue 3.5+</div>
+          <div class="docs-sidebar__brand-version"> v{{ pkg.version }}</div>
         </div>
       </div>
 
