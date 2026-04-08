@@ -2,221 +2,114 @@
   import { ref } from 'vue';
   import VTabs from '@/components/tabs/VTabs.vue';
   import VTabItem from '@/components/tabs/VTabItem.vue';
+  import DocSection from './helper/DocSection.vue';
+  import DocPreview from './helper/DocPreview.vue';
+  import DocPropsTable, { TableSection } from './helper/DocPropsTable.vue';
+  import DocFeature from './helper/DocFeature.vue';
 
   const activeTab = ref('1');
+  const activeCustom = ref('custom');
 
-  // Хендлери івентів
-  const onTabChange = (name: string) => {
-    console.log('tab-change:', name);
-  };
-  const onTabRemove = (name: string) => {
-    console.log('tab-remove:', name);
-  };
-  const onTabAdd = () => {
-    console.log('tab-add');
-  };
+  const propsSections: TableSection[] = [
+    {
+      title: 'Props (VTabs)',
+      rows: [
+        { name: 'modelValue', type: 'string', default: '-', description: 'Активний таб (v-model)', required: true },
+      ],
+    },
+    {
+      title: 'Props (VTabItem)',
+      rows: [
+        { name: 'name', type: 'string', default: '-', description: 'Унікальний ідентифікатор вкладки', required: true },
+        { name: 'label', type: 'string', default: "''", description: 'Заголовок вкладки' },
+        { name: 'icon', type: 'IconName', default: '-', description: 'Іконка перед заголовком' },
+        { name: 'disabled', type: 'boolean', default: 'false', description: 'Заблокована вкладка' },
+        { name: 'closable', type: 'boolean', default: 'false', description: 'Показувати кнопку закриття ✕' },
+      ],
+    },
+    {
+      title: 'Events (VTabs)',
+      rows: [
+        { name: 'update:modelValue', type: 'string', description: 'Зміна активної вкладки (v-model)' },
+        { name: 'tab-change', type: 'string', description: 'Вкладка змінилась' },
+        { name: 'tab-remove', type: 'string', description: 'Вкладку закрито (closable)' },
+        { name: 'tab-add', type: '-', description: 'Натиснута кнопка додавання вкладок' },
+      ],
+    },
+    {
+      title: 'Slots (VTabItem)',
+      rows: [
+        { name: 'default', description: 'Контент вкладки' },
+        { name: 'title', description: 'Кастомний заголовок — отримує { isActive, title }' },
+      ],
+    },
+  ];
 </script>
 
 <template>
-  <div>
-    <!-- Основне використання -->
-    <div class="example-section">
-      <h3>Основне використання</h3>
-      <p>Активний таб: {{ activeTab }}</p>
+  <div class="tabs-showcase">
+    <!-- ─── Базове використання ─── -->
+    <DocSection title="Базове використання">
+      <DocPreview :script="`const activeTab = ref('1')`">
+        <VTabs v-model="activeTab" @tab-change="n => console.log('tab-change:', n)">
+          <VTabItem name="1" label="Таб 1" icon="paperClip"> Контент першого табу</VTabItem>
+          <VTabItem name="2" label="Таб 2" closable> Контент другого табу</VTabItem>
+          <VTabItem name="3" label="Таб 3 (disabled)" disabled> Контент третього табу</VTabItem>
+        </VTabs>
+      </DocPreview>
+    </DocSection>
 
-      <VTabs v-model="activeTab" @tab-change="onTabChange" @tab-remove="onTabRemove" @tab-add="onTabAdd">
-        <VTabItem icon="paperClip" label="Таб 1" name="1"> Контент табу 1</VTabItem>
+    <!-- ─── Кастомний заголовок ─── -->
+    <DocSection
+      title="Кастомний заголовок через слот #title"
+      description="Слот #title отримує { isActive } — можна змінювати стиль залежно від стану"
+    >
+      <DocPreview>
+        <VTabs v-model="activeCustom">
+          <VTabItem name="custom">
+            <template #title="{ isActive }">
+              <span :style="{ color: isActive ? '#e74c3c' : 'inherit', fontWeight: isActive ? 600 : 400 }">
+                ⭐ Кастомний заголовок
+              </span>
+            </template>
+            Контент кастомного табу з HTML-заголовком
+          </VTabItem>
+          <VTabItem name="normal" label="Звичайний таб"> Звичайний контент</VTabItem>
+        </VTabs>
+      </DocPreview>
+    </DocSection>
 
-        <VTabItem closable label="Таб 2" name="2"> Контент табу 2</VTabItem>
+    <!-- ─── API ─── -->
+    <DocSection title="API">
+      <DocPropsTable :sections="propsSections" />
+    </DocSection>
 
-        <VTabItem disabled label="Таб 3 (disabled)" name="3"> Контент табу 3</VTabItem>
-      </VTabs>
-
-      <pre class="code-simple">
-        <code>
-&lt;script setup lang="ts"&gt;
-import { ref } from 'vue'
-
-const activeTab = ref('1')
-&lt;/script&gt;
-
-&lt;template&gt;
-  &lt;VTabs v-model="activeTab"&gt;
-    &lt;VTabItem label="Таб 1" name="1"&gt;Контент табу 1&lt;/VTabItem&gt;
-    &lt;VTabItem label="Таб 2" name="2" closable&gt;Контент табу 2&lt;/VTabItem&gt;
-    &lt;VTabItem label="Таб 3 (disabled)" name="3" disabled&gt;Контент табу 3&lt;/VTabItem&gt;
-  &lt;/VTabs&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- Використання слотів -->
-    <div class="example-section">
-      <h3>Кастомний заголовок</h3>
-
-      <VTabs v-model="activeTab">
-        <VTabItem name="custom">
-          <template #title="{ isActive }">
-            <span :style="{ color: isActive ? 'red' : 'inherit' }"> ⭐ Кастомний заголовок </span>
-          </template>
-          Контент кастомного табу
-        </VTabItem>
-      </VTabs>
-
-      <pre class="code-simple">
-        <code>
-&lt;VTabItem name="custom"&gt;
-  &lt;template #title="{ isActive }"&gt;
-    &lt;span :style="{ color: isActive ? 'red' : 'inherit' }"&gt;
-      ⭐ Кастомний заголовок
-    &lt;/span&gt;
-  &lt;/template&gt;
-  Контент кастомного табу
-&lt;/VTabItem&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- API Документація -->
-    <div class="example-section">
-      <h3>API Документація</h3>
-
-      <h4>Props (VTabItem)</h4>
-      <table class="api-table">
-        <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Тип</th>
-            <th>За замовчуванням</th>
-            <th>Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>label</code></td>
-            <td><code>string</code></td>
-            <td><code>''</code></td>
-            <td>Заголовок вкладки</td>
-          </tr>
-          <tr>
-            <td><code>name</code></td>
-            <td><code>string</code></td>
-            <td><code>—</code></td>
-            <td>Унікальний ідентифікатор вкладки</td>
-          </tr>
-          <tr>
-            <td><code>disabled</code></td>
-            <td><code>boolean</code></td>
-            <td><code>false</code></td>
-            <td>Вимикає можливість вибору</td>
-          </tr>
-          <tr>
-            <td><code>closable</code></td>
-            <td><code>boolean</code></td>
-            <td><code>false</code></td>
-            <td>Дозволяє закривати вкладку</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h4>Events (VTabs)</h4>
-      <table class="api-table">
-        <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Параметри</th>
-            <th>Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>update:modelValue</code></td>
-            <td><code>(value: string)</code></td>
-            <td>Випромінюється при зміні активної вкладки</td>
-          </tr>
-          <tr>
-            <td><code>tab-change</code></td>
-            <td><code>(name: string)</code></td>
-            <td>Коли змінився активний таб</td>
-          </tr>
-          <tr>
-            <td><code>tab-remove</code></td>
-            <td><code>(name: string)</code></td>
-            <td>Коли таб видалений</td>
-          </tr>
-          <tr>
-            <td><code>tab-add</code></td>
-            <td><code>()</code></td>
-            <td>Коли натиснута кнопка додавання табів</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h4>Slots</h4>
-      <table class="api-table">
-        <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>default</code></td>
-            <td>Контент вкладки</td>
-          </tr>
-          <tr>
-            <td><code>title</code></td>
-            <td>Кастомний заголовок табу (отримує <code>{ isActive, title }</code>)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- ─── Особливості ─── -->
+    <DocSection title="Особливості">
+      <DocFeature title="name як ключ" icon="🔑">
+        <code>name</code> у <code>VTabItem</code> — це те що зберігається в <code>v-model</code>. Має бути унікальним
+        серед всіх вкладок в одному <code>VTabs</code>.
+      </DocFeature>
+      <DocFeature title="closable + @tab-remove" icon="✕">
+        <code>closable</code> показує кнопку закриття. При кліку емітується <code>@tab-remove</code> з
+        <code>name</code> вкладки — видалення з масиву робиш сам у батьківському компоненті.
+      </DocFeature>
+      <DocFeature title="Слот #title з isActive" icon="🎨">
+        <code>{ isActive }</code> дозволяє змінювати стиль заголовку залежно від того чи вкладка активна — для іконок зі
+        станом, кольорових індикаторів тощо.
+      </DocFeature>
+    </DocSection>
   </div>
 </template>
 
-<style scoped>
-  .example-section {
-    margin-bottom: 2rem;
-    padding: 1rem;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-  }
-
-  .example-section h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-
-  .code-simple {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 1rem;
-    overflow-x: auto;
-    font-family: 'Courier New', Consolas, monospace;
-    font-size: 14px;
-    line-height: 1.4;
-    margin-top: 1rem;
-  }
-
-  .api-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1.5rem;
-    font-size: 14px;
-  }
-
-  .api-table th,
-  .api-table td {
-    border: 1px solid #ddd;
-    padding: 8px 12px;
-    text-align: left;
-  }
-
-  .api-table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
+<style scoped lang="scss">
+  .tabs-showcase {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 </style>

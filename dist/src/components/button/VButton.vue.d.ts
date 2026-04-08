@@ -8,10 +8,10 @@ declare const __VLS_component: import("vue").DefineComponent<VButtonProps, {}, {
 }, string, import("vue").PublicProps, Readonly<VButtonProps> & Readonly<{
     onClick?: ((event: MouseEvent) => any) | undefined;
 }>, {
+    color: string;
+    type: import("./types").VButtonType;
     disabled: boolean;
     loading: boolean;
-    type: import("./types").VButtonType;
-    color: string;
     tooltip: boolean;
     tooltipPlacement: import("../../entry").TooltipPlacement;
     htmlType: "button" | "submit" | "reset";

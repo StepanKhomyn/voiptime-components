@@ -4,15 +4,15 @@ type __VLS_Slots = {} & {
     default?: (props: typeof __VLS_17) => any;
 };
 declare const __VLS_component: import("vue").DefineComponent<VTabsProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    "update:modelValue": any;
-    "tab-change": any;
-    "tab-remove": any;
-    "tab-add": any;
+    "update:modelValue": (value: string) => any;
+    "tab-change": (value: string) => any;
+    "tab-remove": (name: string) => any;
+    "tab-add": () => any;
 }, string, import("vue").PublicProps, Readonly<VTabsProps> & Readonly<{
-    "onUpdate:modelValue"?: ((...args: any) => any) | undefined;
-    "onTab-change"?: ((...args: any) => any) | undefined;
-    "onTab-remove"?: ((...args: any) => any) | undefined;
-    "onTab-add"?: ((...args: any) => any) | undefined;
+    "onUpdate:modelValue"?: ((value: string) => any) | undefined;
+    "onTab-change"?: ((value: string) => any) | undefined;
+    "onTab-remove"?: ((name: string) => any) | undefined;
+    "onTab-add"?: (() => any) | undefined;
 }>, {
     modelValue: string | number;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;

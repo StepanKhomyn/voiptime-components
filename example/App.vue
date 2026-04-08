@@ -1,8 +1,8 @@
 <script setup>
-  import { ref } from 'vue';
+  import { computed, ref } from 'vue';
+  import pkg from '../package.json';
   import DemoButton from './DemoButton.vue';
   import DemoIcons from './DemoIcons.vue';
-  import DemoCheckbox from './DemoCheckbox.vue';
   import DemoModal from './DemoModal.vue';
   import DemoTooltip from './DemoTooltip.vue';
   import DemoPagination from './DemoPagination.vue';
@@ -12,7 +12,6 @@
   import DemoInput from './DemoInput.vue';
   import DemoSelect from './DemoSelect.vue';
   import DemoRadioBox from './DemoRadioBox.vue';
-  import DemoForms from './DemoForms.vue';
   import DemoTimePicker from './DemoTimePicker.vue';
   import DemoCollapse from './DemoCollapse.vue';
   import DemoMessage from './DemoMessage.vue';
@@ -20,177 +19,421 @@
   import DemoLoader from './DemoLoader.vue';
   import DemoValidationForm from './DemoValidationForm.vue';
   import DemoUpload from './DemoUpload.vue';
-  import DemoUpload2 from './DemoUpload2.vue';
   import DemoSidebar from './DemoSidebar.vue';
   import DemoLogin from './DemoLogin.vue';
   import DemoSlider from './DemoSlider.vue';
   import DemoChart from './DemoChart.vue';
+  import DemoCheckbox from './DemoCheckbox.vue';
+  import DemoInstallation from './DemoInstallation.vue';
+  import DemoDesignTokens from './DemoDesignTokens.vue';
 
-  const activeSlot = ref(26);
+  const searchQuery = ref('');
 
   const sections = [
-    { id: 1, name: 'Кнопки', icon: '🆎' },
-    { id: 2, name: 'Таблиці', icon: '📊' },
-    { id: 3, name: 'Чекбокси', icon: '☑️' },
-    { id: 13, name: 'Радіобокс', icon: '🔘' },
-    { id: 4, name: 'Іконки', icon: '🎨' },
-    { id: 5, name: 'Модальні вікна', icon: '🪟' },
-    { id: 6, name: 'Пагінація', icon: '📄' },
-    { id: 7, name: 'Тултіпи', icon: '💬' },
-    { id: 8, name: 'Дропдавн', icon: '☰' },
-    { id: 9, name: 'Дата пікер', icon: '📅' },
-    { id: 15, name: 'Тайм пікер', icon: '🕐' },
-    { id: 10, name: 'Інпут', icon: '📝' },
-    { id: 11, name: 'Селект', icon: '⬇️' },
-    { id: 14, name: 'Форми', icon: '📋' },
-    { id: 16, name: 'Коллапс', icon: '⬇️' },
-    { id: 17, name: 'Message', icon: '⬇📋' },
-    { id: 18, name: 'Tabs', icon: '⬇📋2' },
-    { id: 20, name: 'Лоадер', icon: '🔘' },
-    { id: 21, name: 'Валідація', icon: '✅' },
-    { id: 22, name: 'Upload', icon: '✅' },
-    { id: 23, name: 'Upload2', icon: '✅' },
-    { id: 24, name: 'Sidebar', icon: '☰' },
-    { id: 25, name: 'Компонента логіну', icon: '🙊' },
-    { id: 26, name: 'Slider', icon: '🎚' },
-    { id: 27, name: 'VChart', icon: '🎚' },
+    {
+      group: 'Початок роботи',
+      items: [
+        {
+          name: 'Встановлення',
+          icon: '📦',
+          tag: 'new',
+          component: DemoInstallation,
+        },
+        {
+          name: 'Дизайн токени',
+          icon: '🎨',
+          tag: 'new',
+          component: DemoDesignTokens,
+        },
+      ],
+    },
+
+    {
+      group: 'Форми та введення',
+      items: [
+        { name: 'Кнопки', icon: '🆎', component: DemoButton },
+        { name: 'Інпут', icon: '📝', component: DemoInput },
+        { name: 'Селект', icon: '⬇️', component: DemoSelect },
+        { name: 'Чекбокси', icon: '☑️', component: DemoCheckbox },
+        { name: 'Радіобокс', icon: '🔘', component: DemoRadioBox },
+        { name: 'Валідація', icon: '✅', component: DemoValidationForm },
+        { name: 'Slider', icon: '🎚', component: DemoSlider },
+      ],
+    },
+
+    {
+      group: 'Дата та час',
+      items: [
+        { name: 'Дата пікер', icon: '📅', component: DemoDatePicker },
+        { name: 'Тайм пікер', icon: '🕐', component: DemoTimePicker },
+      ],
+    },
+
+    {
+      group: 'Дані та відображення',
+      items: [
+        { name: 'Таблиці', icon: '📊', component: DemoTable },
+        { name: 'VChart', icon: '📈', component: DemoChart },
+        { name: 'Пагінація', icon: '📄', component: DemoPagination },
+      ],
+    },
+
+    {
+      group: 'Навігація та оверлеї',
+      items: [
+        { name: 'Модальні вікна', icon: '🪟', component: DemoModal },
+        { name: 'Дропдавн', icon: '☰', component: DemoDropDown },
+        { name: 'Тултіпи', icon: '💬', component: DemoTooltip },
+        { name: 'Tabs', icon: '📑', component: DemoTabs },
+        { name: 'Sidebar', icon: '◀', component: DemoSidebar },
+      ],
+    },
+
+    {
+      group: "Зворотній зв'язок",
+      items: [
+        { name: 'Message', icon: '💌', component: DemoMessage },
+        { name: 'Лоадер', icon: '⏳', component: DemoLoader },
+        { name: 'Коллапс', icon: '🔽', component: DemoCollapse },
+      ],
+    },
+
+    {
+      group: 'Медіа та UI',
+      items: [
+        { name: 'Іконки', icon: '🎨', component: DemoIcons },
+        { name: 'Upload', icon: '📤', component: DemoUpload },
+        { name: 'Логін', icon: '🔐', component: DemoLogin },
+      ],
+    },
   ];
+
+  const filteredSections = computed(() => {
+    if (!searchQuery.value.trim()) return sections;
+
+    const q = searchQuery.value.toLowerCase();
+
+    return sections
+      .map(group => ({
+        ...group,
+        items: group.items.filter(item => item.name.toLowerCase().includes(q)),
+      }))
+      .filter(group => group.items.length > 0);
+  });
+
+  const activeItem = ref(sections[0].items[0]);
+
+  function selectSection(item) {
+    activeItem.value = item;
+    searchQuery.value = '';
+  }
 </script>
 
 <template>
-  <div class="container">
-    <header class="header">
-      <h1 class="title">VoIPTime Components Documentation</h1>
-      <p class="subtitle">Документація кастомних компонентів Vue 3.5!</p>
-      <h3> Встановлення через NPM: <code>npm install voiptime-components</code></h3>
-      <h3>Встановлення через CDN:</h3>
-      <pre><code>&lt;script src="https://unpkg.com/voiptime-components/dist/index.umd.js"&gt;&lt;/script&gt;</code></pre>
-      <h3>Для роботи потрібно також імпортувати Vue з мінімальною версією 3.5</h3>
-    </header>
-
-    <div class="section-list">
-      <div
-        v-for="section in sections"
-        :key="section.id"
-        :class="['section-item', activeSlot === section.id ? 'active' : '']"
-        @click="() => (activeSlot = section.id)"
-      >
-        <div class="section-icon">{{ section.icon }}</div>
-        <div class="section-name">{{ section.name }}</div>
-      </div>
-    </div>
-    <button v-if="activeSlot" class="back-button" @click="activeSlot = null"> ← Повернутися до розділів</button>
-
-    <div style="margin-top: 20px">
-      <div v-if="!activeSlot" class="empty-state">
-        <p>Оберіть розділ для перегляду документації</p>
+  <div class="docs-layout">
+    <!-- Sidebar -->
+    <aside class="docs-sidebar">
+      <div class="docs-sidebar__brand">
+        <div class="docs-sidebar__logo">
+          <span class="docs-sidebar__logo-mark">VT</span>
+        </div>
+        <div>
+          <div class="docs-sidebar__brand-name">VoIPTime UI</div>
+          <div class="docs-sidebar__brand-version"> v{{ pkg.version }}</div>
+        </div>
       </div>
 
-      <!-- Компоненти -->
-      <DemoButton v-if="activeSlot === 1" />
-      <DemoTable v-if="activeSlot === 2" />
-      <DemoCheckbox v-if="activeSlot === 3" />
-      <DemoIcons v-if="activeSlot === 4" />
-      <DemoModal v-if="activeSlot === 5" />
-      <DemoPagination v-if="activeSlot === 6" />
-      <DemoTooltip v-if="activeSlot === 7" />
-      <DemoDropDown v-if="activeSlot === 8" />
-      <DemoDatePicker v-if="activeSlot === 9" />
-      <DemoTimePicker v-if="activeSlot === 15" />
-      <DemoInput v-if="activeSlot === 10" />
-      <DemoSelect v-if="activeSlot === 11" />
-      <DemoRadioBox v-if="activeSlot === 13" />
-      <DemoForms v-if="activeSlot === 14" />
-      <DemoCollapse v-if="activeSlot === 16" />
-      <DemoMessage v-if="activeSlot === 17" />
-      <DemoTabs v-if="activeSlot === 18" />
-      <DemoLoader v-if="activeSlot === 20" />
-      <DemoValidationForm v-if="activeSlot === 21" />
-      <DemoUpload v-if="activeSlot === 22" />
-      <DemoUpload2 v-if="activeSlot === 23" />
-      <DemoSidebar v-if="activeSlot === 24" />
-      <DemoLogin v-if="activeSlot === 25" />
-      <DemoSlider v-if="activeSlot === 26" />
-      <DemoChart v-if="activeSlot === 27" />
-      <!-- і т.д. -->
+      <div class="docs-sidebar__search">
+        <span class="docs-sidebar__search-icon">🔍</span>
+        <input
+          v-model="searchQuery"
+          class="docs-sidebar__search-input"
+          placeholder="Пошук компонентів..."
+          type="text"
+        />
+      </div>
+
+      <nav class="docs-sidebar__nav">
+        <template v-for="section in filteredSections" :key="section.group">
+          <div class="docs-sidebar__group-label">{{ section.group }}</div>
+          <button
+            v-for="item in section.items"
+            :key="item.name"
+            :class="['docs-sidebar__nav-item', activeItem === item ? 'is-active' : '']"
+            @click="selectSection(item)"
+          >
+            <span class="docs-sidebar__nav-icon">{{ item.icon }}</span>
+            <span class="docs-sidebar__nav-label">{{ item.name }}</span>
+            <span v-if="item.tag" class="docs-sidebar__nav-badge">{{ item.tag }}</span>
+          </button>
+        </template>
+
+        <div v-if="filteredSections.length === 0" class="docs-sidebar__empty"> Нічого не знайдено</div>
+      </nav>
+    </aside>
+
+    <!-- Main content -->
+    <div class="docs-main">
+      <header class="docs-topbar">
+        <div class="docs-topbar__breadcrumb">
+          <span class="docs-topbar__breadcrumb-root">Документація</span>
+          <span class="docs-topbar__breadcrumb-sep">›</span>
+          <span class="docs-topbar__breadcrumb-current">{{ activeItem?.name ?? 'Головна' }}</span>
+        </div>
+        <div class="docs-topbar__actions">
+          <a class="docs-topbar__link" href="https://npmjs.com/package/voiptime-components" target="_blank">NPM ↗</a>
+        </div>
+      </header>
+
+      <main class="docs-content">
+        <component :is="activeItem.component" />
+      </main>
     </div>
   </div>
 </template>
 
 <style scoped>
-  .header {
-    background-color: white;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid #e5e7eb;
-    padding: 1.5rem 1rem;
+  /* ── Layout ───────────────────────────────────── */
+  .docs-layout {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #f6f8fa;
+    font-family: var(--font-secondary, 'Roboto', sans-serif);
   }
 
-  .title {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #111827;
+  /* ── Sidebar ──────────────────────────────────── */
+  .docs-sidebar {
+    width: 260px;
+    flex-shrink: 0;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
   }
 
-  .subtitle {
-    color: #6b7280;
-    margin-top: 0.5rem;
+  .docs-sidebar__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px 16px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
   }
 
-  .section-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 2rem;
+  .docs-sidebar__logo {
+    width: 36px;
+    height: 36px;
+    background: var(--color-primary-main, #00475a);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
-  .section-item {
-    padding: 1rem;
-    background: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    border: 2px solid #e5e7eb;
-    transition: all 0.2s ease;
+  .docs-sidebar__logo-mark {
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
   }
 
-  .section-item:hover {
-    border-color: #d1d5db;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  .docs-sidebar__brand-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #111;
   }
 
-  .section-item.active {
-    border-color: #3b82f6;
-    background-color: #eff6ff;
+  .docs-sidebar__brand-version {
+    font-size: 11px;
+    color: #999;
+    margin-top: 1px;
   }
 
-  .section-icon {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
+  .docs-sidebar__search {
+    position: relative;
+    padding: 12px 12px 8px;
+    flex-shrink: 0;
   }
 
-  .section-name {
-    font-weight: 500;
-    color: #111827;
+  .docs-sidebar__search-icon {
+    position: absolute;
+    left: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    pointer-events: none;
   }
 
-  .back-button {
-    margin-top: 1rem;
-    padding: 0.5rem 1rem;
-    background-color: #e5e7eb;
-    color: #374151;
+  .docs-sidebar__search-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 7px 10px 7px 30px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #333;
+    background: #f9fafb;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .docs-sidebar__search-input:focus {
+    border-color: var(--color-primary-main, #00475a);
+    background: #fff;
+  }
+
+  .docs-sidebar__nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: 4px 8px 16px;
+  }
+
+  .docs-sidebar__group-label {
+    padding: 12px 8px 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: #aab;
+  }
+
+  .docs-sidebar__nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 7px 10px;
     border: none;
-    border-radius: 0.5rem;
+    background: none;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    text-align: left;
+    font-size: 13.5px;
+    color: #444;
+    transition:
+      background 0.12s,
+      color 0.12s;
+    margin-bottom: 1px;
   }
 
-  .back-button:hover {
-    background-color: #d1d5db;
+  .docs-sidebar__nav-item:hover {
+    background: #f3f4f6;
+    color: #111;
   }
 
-  .empty-state {
+  .docs-sidebar__nav-item.is-active {
+    background: var(--color-primary-light, #e6eef1);
+    color: var(--color-primary-main, #00475a);
+    font-weight: 500;
+  }
+
+  .docs-sidebar__nav-icon {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .docs-sidebar__nav-label {
+    flex: 1;
+  }
+
+  .docs-sidebar__nav-badge {
+    font-size: 10px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    background: var(--color-primary-main, #00475a);
+    color: #fff;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  .docs-sidebar__empty {
+    padding: 16px 10px;
+    font-size: 13px;
+    color: #aaa;
     text-align: center;
-    padding: 2rem;
-    color: #6b7280;
+  }
+
+  /* ── Main ─────────────────────────────────────── */
+  .docs-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .docs-topbar {
+    height: 52px;
+    flex-shrink: 0;
+    background: #fff;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+
+  .docs-topbar__breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+  }
+
+  .docs-topbar__breadcrumb-root {
+    color: #aaa;
+  }
+
+  .docs-topbar__breadcrumb-sep {
+    color: #ddd;
+  }
+
+  .docs-topbar__breadcrumb-current {
+    color: #333;
+    font-weight: 500;
+  }
+
+  .docs-topbar__actions {
+    display: flex;
+    gap: 16px;
+  }
+
+  .docs-topbar__link {
+    font-size: 13px;
+    color: var(--color-primary-main, #00475a);
+    text-decoration: none;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: opacity 0.15s;
+  }
+
+  .docs-topbar__link:hover {
+    opacity: 1;
+  }
+
+  .docs-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px 40px;
+  }
+
+  /* ── Scrollbar ────────────────────────────────── */
+  .docs-sidebar__nav::-webkit-scrollbar,
+  .docs-content::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .docs-sidebar__nav::-webkit-scrollbar-track,
+  .docs-content::-webkit-scrollbar-track {
+    background: var(--color-scrollbar-track, #e6eef1);
+  }
+
+  .docs-sidebar__nav::-webkit-scrollbar-thumb,
+  .docs-content::-webkit-scrollbar-thumb {
+    background: var(--color-scrollbar-thumb, #cfdfe4);
+    border-radius: 4px;
   }
 </style>

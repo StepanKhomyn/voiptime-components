@@ -1,29 +1,34 @@
-<script setup lang="ts">
-  import { reactive, ref } from 'vue';
+<script lang="ts" setup>
+  import { reactive } from 'vue';
   import {
-    useValidate,
-    required,
-    minLength,
-    maxLength,
     email,
-    sameAs,
+    maxLength,
+    minLength,
     numeric,
+    required,
+    sameAs,
+    useValidate,
     withMessage,
     withName,
-  } from '../src/validation';
+  } from '@/validation';
   import VInput from '@/components/input/VInput.vue';
-  import VSelect from '../src/components/select/VSelect.vue';
-  import VOption from '../src/components/select/VOption.vue';
-  import VDatePicker from '../src/components/datepicker/VDatePicker.vue';
-  import VTimePicker from '../src/components/timepicker/VTimePicker.vue';
+  import VSelect from '@/components/select/VSelect.vue';
+  import VOption from '@/components/select/VOption.vue';
+  import VDatePicker from '@/components/datepicker/VDatePicker.vue';
+  import VTimePicker from '@/components/timepicker/VTimePicker.vue';
+  import DocSection from './helper/DocSection.vue';
+  import DocPreview from './helper/DocPreview.vue';
+  import DocPropsTable, { TableSection } from './helper/DocPropsTable.vue';
+  import DocFeature from './helper/DocFeature.vue';
+  import DocCodeBlock from './helper/DocCodeBlock.vue';
 
-  // кастомні валідатори
+  // ── Кастомний валідатор ──────────────────────────────────────────────────────
   const startsWithABC = withMessage(
     "Має починатися з 'ABC'",
-    withName('startsWithABC', v => v?.startsWith('ABC') || false)
+    withName('startsWithABC', (v: any) => v?.startsWith('ABC') || false)
   );
 
-  // state
+  // ── Стан форми ───────────────────────────────────────────────────────────────
   const form = reactive({
     nameRequired: '',
     passwordMin: '',
@@ -33,354 +38,358 @@
     confirm: '',
     age: '',
     nameCustom: '',
-    nameAsync: '',
-    selectRequired: '',
-    basicDate: Date,
-    selectedTime: '14:30:00'
+    selectField: [] as string[],
+    dateField: null as Date | null,
+    timeField: '14:30:00',
   });
 
-  // rules
-  const rules = {
-    nameRequired: [required],
-    passwordMin: [minLength(6)],
-    passwordMax: [maxLength(10)],
-    email: [email],
-    password: [minLength(6)],
-    confirm: [minLength(6), sameAs(() => form.password, 'Паролі не співпадають')],
-    age: [numeric],
-    nameCustom: [startsWithABC],
-    selectRequired: [required],
-    basicDate: [required],
-    selectedTime: [required],
-  };
-
-  // validation tree
-  const v$ = useValidate(rules, form);
-
-  // toggle code
-  const codeCollapsed = ref({
-    required: true,
-    minLength: true,
-    maxLength: true,
-    email: true,
-    sameAs: true,
-    numeric: true,
-    custom: true,
-    async: true,
-  });
-
-  const toggleCode = (key: string) => {
-    codeCollapsed.value[key] = !codeCollapsed.value[key];
-  };
+  // ── Правила валідації ────────────────────────────────────────────────────────
+  const v$ = useValidate(
+    {
+      nameRequired: [required],
+      passwordMin: [minLength(6)],
+      passwordMax: [maxLength(10)],
+      email: [email],
+      password: [minLength(6)],
+      confirm: [minLength(6), sameAs(() => form.password, 'Паролі не співпадають')],
+      age: [numeric],
+      nameCustom: [startsWithABC],
+      selectField: [required],
+      dateField: [required],
+      timeField: [required],
+    },
+    form
+  );
 
   const technologies = [
     { label: 'Vue.js', value: 'vue' },
     { label: 'React', value: 'react' },
     { label: 'Angular', value: 'angular' },
     { label: 'Svelte', value: 'svelte' },
-    { label: 'Svelte3', value: 'svelte23' },
-    { label: 'Svelte33', value: 'svelte233' },
-    { label: 'Svelte3вці3', value: 'svelte2313' },
+    { label: 'Nuxt', value: 'nuxt' },
   ];
 
-  // приклади коду для кожної секції
-  const examplesValidators = {
-    required: `
-const rules = {
-  nameRequired: [required]
-};`,
-
-    minLength: `
-const rules = {
-  passwordMin: [minLength(6)]
-};`,
-
-    maxLength: `
-const rules = {
-  passwordMax: [maxLength(10)]
-};`,
-
-    email: `
-const rules = {
-  email: [email]
-};`,
-
-    sameAs: `
-const rules = {
-  password: [minLength(6)],
-  confirm: [minLength(6), sameAs(() => form.password, 'Паролі не співпадають')]
-};`,
-
-    numeric: `
-const rules = {
-  age: [numeric]
-};`,
-
-    custom: `
-const startsWithABC = withMessage(
-  "Має починатися з 'ABC'",
-  withName('startsWithABC', v => v?.startsWith('ABC') || false)
-);
-
-const rules = {
-  nameCustom: [startsWithABC]
-};`,
-
-    async: `
-const uniqueName = withMessage(
-  'Це імʼя вже зайняте',
-  withAsync(async val => {
-    if (!val) return true;
-    const res = await fetch(\`/api/check-name?name=\${val}\`).then(r => r.json());
-    return res.ok;
-  })
-);
-
-const rules = {
-  nameAsync: [uniqueName]
-};`,
-    select: `
-          <VSelect
-            v-model="form.selectRequired"
-            collapsed-tags
-            multiple
-            placeholder="Оберіть технології..."
-            :error-message="v$.selectRequired.$errors[0]?.$message"
-          >
-            <VOption v-for="item in technologies" :key="item.value" :label="item.label" :value="item.value" />
-          </VSelect>`,
-
-    datePicker: `
-          <VDatePicker
-            v-model="form.basicDate"
-            placeholder="Select date"
-            type="date"
-            previous-date-disabled
-            :error-message="v$.basicDate.$errors[0]?.$message"
-          />`,
-    timePicker:
-      `<VTimePicker v-model="form.selectedTime" :error-message="v$.selectedTime.$errors[0]?.$message" placeholder="Оберіть час" />`,
-  };
+  // ── Документація ─────────────────────────────────────────────────────────────
+  const validatorsSections: TableSection[] = [
+    {
+      title: 'Вбудовані валідатори',
+      rows: [
+        {
+          name: 'required',
+          type: 'ValidatorFn',
+          description: "Обов'язкове поле (не пусте, не null, масив не порожній)",
+        },
+        { name: 'minLength(n)', type: '(n: number) => ValidatorFn', description: 'Мінімальна довжина рядка' },
+        { name: 'maxLength(n)', type: '(n: number) => ValidatorFn', description: 'Максимальна довжина рядка' },
+        { name: 'email', type: 'ValidatorFn', description: 'Перевірка формату email' },
+        { name: 'url', type: 'ValidatorFn', description: 'Перевірка формату URL' },
+        { name: 'numeric', type: 'ValidatorFn', description: 'Значення є числом' },
+        { name: 'minNumber(n)', type: '(n: number) => ValidatorFn', description: 'Числове значення ≥ n' },
+        { name: 'maxNumber(n)', type: '(n: number) => ValidatorFn', description: 'Числове значення ≤ n' },
+        {
+          name: 'sameAs(fn, msg?)',
+          type: '(fn: () => any, msg?: string) => ValidatorFn',
+          description: 'Значення дорівнює результату fn() — для підтвердження паролю',
+        },
+        { name: 'phoneNumber', type: 'ValidatorFn', description: 'Перевірка формату телефону (+380...)' },
+        { name: 'containUpperCaseLetter', type: 'ValidatorFn', description: 'Є хоча б одна велика літера' },
+        { name: 'noSpaces', type: 'ValidatorFn', description: 'Немає пробілів' },
+        {
+          name: 'pattern(regex, msg?)',
+          type: '(regex: RegExp, msg?: string) => ValidatorFn',
+          description: 'Кастомний regex',
+        },
+        {
+          name: 'uniqueAsync(fn, msg?)',
+          type: '(fn: (v) => Promise<boolean>) => ValidatorFn',
+          description: 'Асинхронна перевірка унікальності',
+        },
+      ],
+    },
+    {
+      title: 'Хелпери',
+      rows: [
+        {
+          name: 'withMessage(msg, fn)',
+          type: '(msg: string | fn, validator) => WrappedValidator',
+          description: 'Додати кастомне повідомлення помилки',
+        },
+        {
+          name: 'withName(name, fn)',
+          type: '(name: string, validator) => WrappedValidator',
+          description: "Задати ім'я валідатора для дебагу ($validatorName)",
+        },
+        {
+          name: 'withAsync(fn)',
+          type: '(validator) => WrappedValidator',
+          description: 'Позначити валідатор як асинхронний ($async = true)',
+        },
+        {
+          name: 'withParams(params, fn)',
+          type: '(params: object, validator) => WrappedValidator',
+          description: 'Прикріпити додаткові параметри ($params)',
+        },
+        {
+          name: 'mk(opts, fn)',
+          type: '(opts: { name?, message?, params?, async? }, validator) => WrappedValidator',
+          description: 'Універсальний хелпер — замінює всі попередні разом',
+        },
+      ],
+    },
+    {
+      title: 'Методи v$ (useValidate)',
+      rows: [
+        {
+          name: '$validate()',
+          type: '() => Promise<boolean>',
+          description: 'Запустити валідацію всіх полів. Повертає true якщо форма валідна',
+        },
+        {
+          name: '$touch()',
+          type: '() => void',
+          description: 'Позначити всі поля як торкнуті — помилки починають відображатись',
+        },
+        {
+          name: '$reset()',
+          type: '() => void',
+          description: 'Скинути стан всіх полів ($dirty, $touched, $errors, $pending)',
+        },
+      ],
+    },
+    {
+      title: 'FieldValidation (v$.field)',
+      rows: [
+        { name: '$model', type: 'any', description: 'Реактивне значення поля (get/set)' },
+        { name: '$dirty', type: 'boolean', description: 'Поле було змінено' },
+        { name: '$touched', type: 'boolean', description: 'Поле отримало фокус' },
+        { name: '$invalid', type: 'boolean', description: 'Є помилки валідації' },
+        { name: '$error', type: 'boolean', description: '$dirty && $invalid' },
+        { name: '$errors', type: 'Array<{ $message, $validator, $params? }>', description: 'Масив помилок' },
+        { name: '$pending', type: 'boolean', description: 'Асинхронна валідація в процесі' },
+        { name: '$validate()', type: 'Promise<boolean>', description: 'Валідувати конкретне поле' },
+        { name: '$touch()', type: 'void', description: 'Позначити поле як торкнуте' },
+        { name: '$reset()', type: 'void', description: 'Скинути стан поля' },
+      ],
+    },
+  ];
 </script>
 
 <template>
-  <div class="container">
-    <!-- validators -->
-    <div class="container-item">
-      <div class="container-item-example">
-        <h3 :class="{ collapsed: codeCollapsed.required }" @click="toggleCode('required')"> Валідатори </h3>
-        <div :class="{ collapsed: codeCollapsed.required }" class="container-item-code">
-          <pre class="code"><h4>{{ 'required' }}</h4><code>{{ examplesValidators.required }}</code></pre>
-          <pre class="code"><h4>{{ 'minLength' }}</h4><code>{{ examplesValidators.minLength }}</code></pre>
-          <pre class="code"><h4>{{ 'maxLength' }}</h4><code>{{ examplesValidators.maxLength }}</code></pre>
-          <pre class="code"><h4>{{ 'email' }}</h4><code>{{ examplesValidators.email }}</code></pre>
-          <pre class="code"><h4>{{ 'sameAs' }}</h4><code>{{ examplesValidators.sameAs }}</code></pre>
-          <pre class="code"><h4>{{ 'numeric' }}</h4><code>{{ examplesValidators.numeric }}</code></pre>
-          <pre class="code"><h4>{{ 'custom' }}</h4><code>{{ examplesValidators.custom }}</code></pre>
-          <pre class="code"><h4>{{ 'async' }}</h4><code>{{ examplesValidators.async }}</code></pre>
-          <pre class="code"><h4>{{ 'required select' }}</h4><code>{{ examplesValidators.select }}</code></pre>
-          <pre class="code"><h4>{{ 'required datePicker' }}</h4><code>{{ examplesValidators.datePicker }}</code></pre>
-          <pre class="code"><h4>{{ 'required timePicker' }}</h4><code>{{ examplesValidators.timePicker }}</code></pre>
-        </div>
-      </div>
-      <div class="container-item-table">
-        <h3>Базові типи полів</h3>
-        <div>
-          <h4>{{ 'required' }}</h4>
-          <VInput v-model="form.nameRequired" placeholder="Обов'язкове поле"
-                  :error-message="v$.nameRequired.$errors[0]?.$message" />
-        </div>
-        <div>
-          <h4>{{ 'minLength' }}</h4>
-          <VInput v-model="form.passwordMin" type="password" placeholder="Пароль (>=6)"
-                  :error-message="v$.passwordMin.$errors[0]?.$message" />
-        </div>
-        <div>
-          <h4>{{ 'maxLength' }}</h4>
-          <VInput v-model="form.passwordMax" type="text" placeholder="Не більше 10 символів"
-                  :error-message="v$.passwordMax.$errors[0]?.$message" />
-        </div>
-        <div>
-          <h4>{{ 'email' }}</h4>
-          <VInput v-model="form.email" type="email" placeholder="Email"
-                  :error-message="v$.email.$errors[0]?.$message" />
-        </div>
-        <div>
-          <h4>{{ 'sameAs' }}</h4>
-          <VInput v-model="form.password" :show-password="true" style="margin-bottom: 10px" type="password" placeholder="Пароль"
-                  :error-message="v$.password.$errors[0]?.$message" />
-          <VInput v-model="form.confirm" :show-password="true" type="password" placeholder="Підтвердження паролю"
-                  :error-message="v$.confirm.$errors[0]?.$message" />
-        </div>
-        <div>
-          <h4>{{ 'numeric' }}</h4>
-          <VInput v-model="form.age" type="text" placeholder="Вік"
-                  :error-message="v$.age.$errors[0]?.$message" />
-        </div>
-        <div>
-          <h4>{{ 'custom' }}</h4>
-          <VInput v-model="form.nameCustom" type="text" placeholder="Починається з ABC"
-                  :error-message="v$.nameCustom.$errors[0]?.$message" />
-        </div>
-        <div>
-          <h4>{{ 'async' }}</h4>
-          <VInput :disabled="true" type="text" placeholder="Унікальне ім'я" />
-        </div>
-        <div>
-          <h4>{{ 'Select' }}</h4>
-          <VSelect
-            v-model="form.selectRequired"
-            collapsed-tags
-            multiple
-            placeholder="Оберіть технології..."
-            :error-message="v$.selectRequired.$errors[0]?.$message"
-          >
-            <VOption v-for="item in technologies" :key="item.value" :label="item.label" :value="item.value" />
-          </VSelect>
-        </div>
-        <div>
-          <h4>{{ 'DatePicker' }}</h4>
-          <VDatePicker
-            v-model="form.basicDate"
-            placeholder="Select date"
-            type="date"
-            previous-date-disabled
-            :error-message="v$.basicDate.$errors[0]?.$message"
-          />
-        </div>
-        <div>
-          <h4>{{ 'TimePicker' }}</h4>
-          <VTimePicker v-model="form.selectedTime" :error-message="v$.selectedTime.$errors[0]?.$message" placeholder="Оберіть час" />
-        </div>
-      </div>
-    </div>
-    <!-- Валідатори та хелпери опис -->
-    <section class="section">
-      <h2>Доступні валідатори та хелпери</h2>
-      <div class="table-wrapper">
-        <table class="table">
-          <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Призначення</th>
-            <th>Приклад використання</th>
-          </tr>
-          </thead>
-          <tbody>
-          <!-- Стандартні валідатори -->
-          <tr>
-            <td><code>required</code></td>
-            <td>Обовʼязкове поле</td>
-            <td><code>nameRequired: [required]</code></td>
-          </tr>
-          <tr>
-            <td><code>minLength(n)</code></td>
-            <td>Мінімальна довжина рядка</td>
-            <td><code>passwordMin: [minLength(6)]</code></td>
-          </tr>
-          <tr>
-            <td><code>maxLength(n)</code></td>
-            <td>Максимальна довжина рядка</td>
-            <td><code>passwordMax: [maxLength(10)]</code></td>
-          </tr>
-          <tr>
-            <td><code>email</code></td>
-            <td>Перевірка email</td>
-            <td><code>email: [email]</code></td>
-          </tr>
-          <tr>
-            <td><code>sameAs(() =&gt; field, msg)</code></td>
-            <td>Збіг значень (наприклад, пароль і підтвердження)</td>
-            <td><code>confirm: [sameAs(() =&gt; form.password, 'Паролі не співпадають')]</code></td>
-          </tr>
-          <tr>
-            <td><code>numeric</code></td>
-            <td>Перевірка числового значення</td>
-            <td><code>age: [numeric]</code></td>
-          </tr>
+  <div class="validation-showcase">
+    <!-- ─── Базові валідатори ─── -->
+    <DocSection
+      description="Помилка з'являється при введенні — завдяки автоматичному watch на поле"
+      title="Базові валідатори"
+    >
+      <DocPreview title="required">
+        <VInput
+          v-model="form.nameRequired"
+          :error-message="v$.nameRequired.$errors[0]?.$message"
+          placeholder="Обов'язкове поле"
+        />
+      </DocPreview>
 
-          <!-- Кастомні валідатори через хелпери -->
-          <tr>
-            <td><code>withMessage(msg, validator)</code></td>
-            <td>Додає кастомне повідомлення помилки до валідатора</td>
-            <td><code>nameCustom: [withMessage("Має починатися з 'ABC'", startsWithABC)]</code></td>
-          </tr>
-          <tr>
-            <td><code>withName(name, validator)</code></td>
-            <td>Задає імʼя валідатору для дебагу</td>
-            <td><code>startsWithABC: withName('startsWithABC', v =&gt; v.startsWith('ABC'))</code></td>
-          </tr>
-          <tr>
-            <td><code>withAsync(fn)</code></td>
-            <td>Позначає валідатор як асинхронний (наприклад, запит на сервер)</td>
-            <td><code>nameAsync: [withAsync(uniqueCheck)]</code></td>
-          </tr>
-          <tr>
-            <td><code>withParams(params, validator)</code></td>
-            <td>Прикріплює додаткові параметри до валідатора ($params)</td>
-            <td><code>minLength6: [withParams({min: 6}, minLength(6))]</code></td>
-          </tr>
-          <tr>
-            <td><code>mk({name?, message?, params?, async?}, validator)</code></td>
-            <td>Універсальний хелпер, можна одночасно задати імʼя, параметри, повідомлення і async</td>
-            <td>
-              <code>
-                myValidator: [mk({name:'abc', message:'Тільки ABC', async:true}, startsWithABC)]
-              </code>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-    <!-- Робота з формою опис -->
+      <DocPreview title="minLength(6)">
+        <VInput
+          v-model="form.passwordMin"
+          :error-message="v$.passwordMin.$errors[0]?.$message"
+          placeholder="Мінімум 6 символів"
+          type="password"
+        />
+      </DocPreview>
 
-    <section class="section">
-      <h2>Методи для роботи з формою</h2>
-      <div class="table-wrapper">
-        <table class="table">
-          <thead>
-          <tr>
-            <th>Метод</th>
-            <th>Призначення</th>
-            <th>Приклад використання</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td><code>$validate()</code></td>
-            <td>Запускає валідацію для всіх полів форми або групи. Повертає <code>Promise&lt;boolean&gt;</code> — true, якщо всі поля валідні.</td>
-            <td>
-            <pre><code>
-const ok = await v$.$validate();
-if (!ok) {
-  alert('Форма містить помилки');
+      <DocPreview title="maxLength(10)">
+        <VInput
+          v-model="form.passwordMax"
+          :error-message="v$.passwordMax.$errors[0]?.$message"
+          placeholder="Не більше 10 символів"
+        />
+      </DocPreview>
+
+      <DocPreview title="email">
+        <VInput
+          v-model="form.email"
+          :error-message="v$.email.$errors[0]?.$message"
+          placeholder="example@mail.com"
+          type="email"
+        />
+      </DocPreview>
+
+      <DocPreview title="numeric">
+        <VInput v-model="form.age" :error-message="v$.age.$errors[0]?.$message" placeholder="Тільки числа" />
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── sameAs ─── -->
+    <DocSection title="sameAs — підтвердження пароля">
+      <DocPreview
+        :script="`
+const form = reactive({ password: '', confirm: '' })
+
+const v$ = useValidate({
+  password: [minLength(6)],
+  confirm:  [minLength(6), sameAs(() => form.password, 'Паролі не співпадають')],
+}, form)
+        `"
+      >
+        <VInput
+          v-model="form.password"
+          :error-message="v$.password.$errors[0]?.$message"
+          :show-password="true"
+          placeholder="Пароль"
+          type="password"
+        />
+        <VInput
+          v-model="form.confirm"
+          :error-message="v$.confirm.$errors[0]?.$message"
+          :show-password="true"
+          placeholder="Підтвердження паролю"
+          type="password"
+        />
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── Кастомний валідатор ─── -->
+    <DocSection title="Кастомний валідатор через withMessage + withName">
+      <DocPreview
+        :script="`
+const startsWithABC = withMessage(
+  Має починатися з 'ABC'\,
+      withName('startsWithABC', (v) => v?.startsWith('ABC') || false)
+      )
+
+      const v$ = useValidate({
+      nameCustom: [startsWithABC],
+      }, form)
+      `"
+      >
+        <VInput
+          v-model="form.nameCustom"
+          :error-message="v$.nameCustom.$errors[0]?.$message"
+          placeholder="Введіть рядок що починається з ABC"
+        />
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── Асинхронний ─── -->
+    <DocSection title="Асинхронний валідатор (withAsync)">
+      <DocCodeBlock
+        :code="`import { withMessage, withAsync } from '../src/validation'
+
+const uniqueName = withMessage(
+  'Це ім\\'я вже зайняте',
+  withAsync(async (val) => {
+    if (!val) return true
+    const res = await fetch(\`/api/check-name?name=\${val}\`).then(r => r.json())
+    return res.ok
+  })
+)
+
+const v$ = useValidate({
+  nameAsync: [uniqueName],
+}, form)`"
+        language="ts"
+      />
+    </DocSection>
+
+    <!-- ─── Select / DatePicker / TimePicker ─── -->
+    <DocSection title="Валідація Select, DatePicker, TimePicker">
+      <DocPreview title="VSelect + required">
+        <VSelect
+          v-model="form.selectField"
+          :error-message="v$.selectField.$errors[0]?.$message"
+          collapsed-tags
+          multiple
+          placeholder="Оберіть технології..."
+        >
+          <VOption v-for="item in technologies" :key="item.value" :label="item.label" :value="item.value" />
+        </VSelect>
+      </DocPreview>
+
+      <DocPreview title="VDatePicker + required">
+        <VDatePicker
+          v-model="form.dateField"
+          :error-message="v$.dateField.$errors[0]?.$message"
+          placeholder="Оберіть дату"
+          previous-date-disabled
+          type="date"
+        />
+      </DocPreview>
+
+      <DocPreview title="VTimePicker + required">
+        <VTimePicker
+          v-model="form.timeField"
+          :error-message="v$.timeField.$errors[0]?.$message"
+          placeholder="Оберіть час"
+        />
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── Патерн: сабміт форми ─── -->
+    <DocSection title="Патерн: валідація при сабміті">
+      <DocCodeBlock
+        :code="`const form = reactive({ name: '', email: '', password: '' })
+
+const v$ = useValidate({
+  name:     [required, minLength(2)],
+  email:    [required, email],
+  password: [required, minLength(8)],
+}, form)
+
+async function handleSubmit() {
+  // Запускаємо валідацію всіх полів і показуємо помилки
+  const isValid = await v$.$validate()
+  if (!isValid) return
+
+  // Форма валідна — відправляємо
+  await api.submit(form)
 }
-            </code></pre>
-            </td>
-          </tr>
-          <tr>
-            <td><code>$touch()</code></td>
-            <td>Позначає всі поля форми як "торкнуті" (<code>$touched = true</code>) та "брудні" (<code>$dirty = true</code>), щоб почали відображатися повідомлення про помилки.</td>
-            <td>
-            <pre><code>
-v$.$touch();
-            </code></pre>
-            </td>
-          </tr>
-          <tr>
-            <td><code>$reset()</code></td>
-            <td>Скидає всі поля форми: <code>$dirty = false</code>, <code>$touched = false</code>, <code>$errors = []</code>, <code>$pending = false</code>.</td>
-            <td>
-            <pre><code>
-v$.$reset();
-            </code></pre>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
 
+// Скидання стану після закриття модалки
+function resetForm() {
+  Object.assign(form, { name: '', email: '', password: '' })
+  v$.$reset()
+}`"
+        language="ts"
+      />
+    </DocSection>
+
+    <!-- ─── API ─── -->
+    <DocSection title="API">
+      <DocPropsTable :sections="validatorsSections" />
+    </DocSection>
+
+    <!-- ─── Особливості ─── -->
+    <DocSection title="Особливості">
+      <DocFeature icon="⚡" title="Автоматична реактивність">
+        <code>useValidate</code> ставить <code>watch</code> на кожне поле форми — валідація запускається автоматично при
+        зміні значення. Не потрібно викликати нічого вручну під час введення.
+      </DocFeature>
+      <DocFeature icon="🚀" title="$validate() перед сабмітом">
+        <code>await v$.$validate()</code> запускає всі валідатори і встановлює <code>$dirty = true</code> — після цього
+        помилки відображаються навіть на незачеплених полях. Повертає <code>boolean</code>.
+      </DocFeature>
+      <DocFeature icon="🔧" title="mk() — один хелпер замість чотирьох">
+        <code>mk({ name: 'abc', message: 'Тільки ABC', async: true }, validator)</code>
+        — замінює <code>withName + withMessage + withAsync</code> в один виклик.
+      </DocFeature>
+      <DocFeature icon="🔴" title="$errors[0]?.$message для компонентів">
+        Всі компоненти (VInput, VSelect, VDatePicker, VTimePicker) приймають
+        <code>:error-message</code> — передай <code>v$.field.$errors[0]?.$message</code>
+        і помилка з'явиться автоматично.
+      </DocFeature>
+    </DocSection>
   </div>
 </template>
+
+<style lang="scss" scoped>
+  .validation-showcase {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
+  }
+</style>

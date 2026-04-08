@@ -6,24 +6,24 @@ declare const _default: import("vue").DefineComponent<VTimePickerProps, {
     close: () => void;
     validate: (value: TimePickerValue, required?: boolean) => import("@/components/timepicker/types").TimeValidationResult;
 }, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    blur: any;
-    change: any;
-    focus: any;
-    "update:modelValue": any;
-    "open-change": any;
+    blur: (instance: any) => any;
+    change: (value: TimePickerValue) => any;
+    focus: (instance: any) => any;
+    "update:modelValue": (value: TimePickerValue) => any;
+    "open-change": (open: boolean) => any;
 }, string, import("vue").PublicProps, Readonly<VTimePickerProps> & Readonly<{
-    onBlur?: ((...args: any) => any) | undefined;
-    onChange?: ((...args: any) => any) | undefined;
-    onFocus?: ((...args: any) => any) | undefined;
-    "onUpdate:modelValue"?: ((...args: any) => any) | undefined;
-    "onOpen-change"?: ((...args: any) => any) | undefined;
+    onBlur?: ((instance: any) => any) | undefined;
+    onChange?: ((value: TimePickerValue) => any) | undefined;
+    onFocus?: ((instance: any) => any) | undefined;
+    "onUpdate:modelValue"?: ((value: TimePickerValue) => any) | undefined;
+    "onOpen-change"?: ((open: boolean) => any) | undefined;
 }>, {
-    disabled: boolean;
-    clearable: boolean;
-    placeholder: string;
-    outlined: boolean;
     type: import("@/components/timepicker/types").TimePickerType;
+    placeholder: string;
+    disabled: boolean;
     size: import("@/components/timepicker/types").TimePickerSize;
+    clearable: boolean;
+    outlined: boolean;
     startPlaceholder: string;
     endPlaceholder: string;
     rangeSeparator: string;

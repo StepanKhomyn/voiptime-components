@@ -1,10 +1,10 @@
 import type { VSingleMarkRangeProps } from './types';
 declare const _default: import("vue").DefineComponent<VSingleMarkRangeProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    change: any;
-    "update:modelValue": any;
+    change: (value: number) => any;
+    "update:modelValue": (value: number) => any;
 }, string, import("vue").PublicProps, Readonly<VSingleMarkRangeProps> & Readonly<{
-    onChange?: ((...args: any) => any) | undefined;
-    "onUpdate:modelValue"?: ((...args: any) => any) | undefined;
+    onChange?: ((value: number) => any) | undefined;
+    "onUpdate:modelValue"?: ((value: number) => any) | undefined;
 }>, {
     disabled: boolean;
     modelValue: number;

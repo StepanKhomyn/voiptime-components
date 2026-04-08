@@ -1,3 +1,24 @@
+## [1.18.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.0...v1.18.1) (2026-04-08)
+
+
+### Bug Fixes
+
+* додано відображення поточної версії проекту ([cb35dd1](https://github.com/StepanKhomyn/voiptime-components/commit/cb35dd16d429b9cbb578f81fc12d6981e0b60531))
+
+# [1.18.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.22...v1.18.0) (2026-04-08)
+
+
+### Features
+
+* Реалізовано новий юай для докуиментації компонентів ([7092431](https://github.com/StepanKhomyn/voiptime-components/commit/7092431bf4c2729075b364a7b87ad6899f7014b8))
+
+## [1.17.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.21...v1.17.22) (2026-04-07)
+
+
+### Bug Fixes
+
+* change select clear btn padding to 0 ([88ea491](https://github.com/StepanKhomyn/voiptime-components/commit/88ea491823b4a66f8eeb448263c9e21170d5a62b))
+
 ## [1.17.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.20...v1.17.21) (2026-04-07)
 
 

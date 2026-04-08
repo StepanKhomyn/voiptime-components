@@ -4,11 +4,11 @@ type __VLS_Slots = {} & {
     default?: (props: typeof __VLS_1) => any;
 };
 declare const __VLS_component: import("vue").DefineComponent<CollapseProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    change: any;
-    "update:modelValue": any;
+    change: (value: string[]) => any;
+    "update:modelValue": (value: string[]) => any;
 }, string, import("vue").PublicProps, Readonly<CollapseProps> & Readonly<{
-    onChange?: ((...args: any) => any) | undefined;
-    "onUpdate:modelValue"?: ((...args: any) => any) | undefined;
+    onChange?: ((value: string[]) => any) | undefined;
+    "onUpdate:modelValue"?: ((value: string[]) => any) | undefined;
 }>, {
     accordion: boolean;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;

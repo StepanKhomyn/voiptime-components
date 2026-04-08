@@ -34,17 +34,17 @@ declare const _default: import("vue").DefineComponent<VtInputProps, {
     onValidation?: ((result: import("./types").VtInputValidationResult) => any) | undefined;
 }>, {
     resize: import("./types").VtInputResize;
-    disabled: boolean;
-    clearable: boolean;
-    validateOnInput: boolean;
-    validateOnBlur: boolean;
-    status: import("./types").VtInputStatus;
-    outlined: boolean;
     type: import("./types").VtInputType;
+    disabled: boolean;
     size: import("./types").VtInputSize;
+    status: import("./types").VtInputStatus;
+    clearable: boolean;
     showPassword: boolean;
+    outlined: boolean;
     rows: number;
     autosize: boolean | import("./types").VtInputAutosizeConfig;
+    validateOnInput: boolean;
+    validateOnBlur: boolean;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 export default _default;
 //# sourceMappingURL=VInput.vue.d.ts.map
