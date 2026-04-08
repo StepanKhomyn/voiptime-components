@@ -1,3 +1,10 @@
+## [1.18.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.1...v1.18.2) (2026-04-08)
+
+
+### Bug Fixes
+
+* change table cell padding ([a72ecf8](https://github.com/StepanKhomyn/voiptime-components/commit/a72ecf8dc48a242bd819dde608787ff195d9d3b7))
+
 ## [1.18.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.0...v1.18.1) (2026-04-08)
 
 
