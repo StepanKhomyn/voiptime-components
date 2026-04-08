@@ -16,12 +16,12 @@ declare const __VLS_component: import("vue").DefineComponent<VCheckboxProps, {},
     onFocus?: ((event: FocusEvent) => any) | undefined;
     "onUpdate:modelValue"?: ((value: boolean) => any) | undefined;
 }>, {
+    required: boolean;
     disabled: boolean;
     modelValue: boolean;
-    required: boolean;
+    size: "small" | "medium" | "large";
     checked: boolean;
     indeterminate: boolean;
-    size: "small" | "medium" | "large";
     variant: "primary" | "success" | "warning" | "danger" | "info";
     isDouble: boolean;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;

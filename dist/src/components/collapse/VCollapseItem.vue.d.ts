@@ -9,9 +9,9 @@ type __VLS_Slots = {} & {
     default?: (props: typeof __VLS_17) => any;
 };
 declare const __VLS_component: import("vue").DefineComponent<CollapseItemProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    toggle: any;
+    toggle: (name: string) => any;
 }, string, import("vue").PublicProps, Readonly<CollapseItemProps> & Readonly<{
-    onToggle?: ((...args: any) => any) | undefined;
+    onToggle?: ((name: string) => any) | undefined;
 }>, {
     disabled: boolean;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;

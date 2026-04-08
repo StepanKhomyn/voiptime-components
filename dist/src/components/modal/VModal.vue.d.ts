@@ -4,16 +4,16 @@ type __VLS_Slots = {} & {
     default?: (props: typeof __VLS_12) => any;
 };
 declare const __VLS_component: import("vue").DefineComponent<VModalProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    close: any;
-    "update:modelValue": any;
+    close: () => any;
+    "update:modelValue": (value: boolean) => any;
 }, string, import("vue").PublicProps, Readonly<VModalProps> & Readonly<{
-    onClose?: ((...args: any) => any) | undefined;
-    "onUpdate:modelValue"?: ((...args: any) => any) | undefined;
+    onClose?: (() => any) | undefined;
+    "onUpdate:modelValue"?: ((value: boolean) => any) | undefined;
 }>, {
     size: import("./types").VModalSize;
-    zIndex: number;
-    closeOnBackdropClick: boolean;
     showCloseButton: boolean;
+    closeOnBackdropClick: boolean;
+    zIndex: number;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithSlots<typeof __VLS_component, __VLS_Slots>;
 export default _default;

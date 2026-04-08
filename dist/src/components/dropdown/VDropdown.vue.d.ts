@@ -21,12 +21,12 @@ declare const __VLS_component: import("vue").DefineComponent<DropdownProps, {
     onCommand?: ((command: string | number) => any) | undefined;
 }>, {
     disabled: boolean;
-    maxHeight: string | number;
-    placement: import("./types").DropdownPlacement;
     trigger: DropdownTriggerType;
+    placement: import("./types").DropdownPlacement;
     showTimeout: number;
     hideTimeout: number;
     hideOnClick: boolean;
+    maxHeight: string | number;
     background: string;
     hoverBackground: string;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;

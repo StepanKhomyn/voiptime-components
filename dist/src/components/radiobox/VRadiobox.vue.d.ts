@@ -16,11 +16,11 @@ declare const __VLS_component: import("vue").DefineComponent<VRadioboxProps, {},
     onFocus?: ((event: FocusEvent) => any) | undefined;
     "onUpdate:modelValue"?: ((value: any) => any) | undefined;
 }>, {
+    required: boolean;
     disabled: boolean;
     modelValue: any;
-    required: boolean;
-    checked: boolean;
     size: "small" | "medium" | "large";
+    checked: boolean;
     variant: "primary" | "success" | "warning" | "danger" | "info";
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithSlots<typeof __VLS_component, __VLS_Slots>;

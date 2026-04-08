@@ -1,30 +1,44 @@
-import type { UploadFile, VUploadProps } from './types';
+import type { UploadError, UploadFile, VUploadProps } from './types';
 declare const _default: import("vue").DefineComponent<VUploadProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    change: any;
-    error: any;
-    "update:modelValue": any;
-    remove: any;
-    exceed: any;
-    parse: any;
-    rowsExceed: any;
+    change: (files: UploadFile[]) => any;
+    error: (error: UploadError) => any;
+    "update:modelValue": (files: UploadFile[]) => any;
+    remove: (file: UploadFile) => any;
+    exceed: (files: File[]) => any;
+    parse: (result: {
+        file: UploadFile;
+        result: import("./types").ParseResult;
+    }) => any;
+    rowsExceed: (data: {
+        file: UploadFile;
+        rows: number;
+        maxRows: number;
+    }) => any;
 }, string, import("vue").PublicProps, Readonly<VUploadProps> & Readonly<{
-    onChange?: ((...args: any) => any) | undefined;
-    onError?: ((...args: any) => any) | undefined;
-    "onUpdate:modelValue"?: ((...args: any) => any) | undefined;
-    onRemove?: ((...args: any) => any) | undefined;
-    onExceed?: ((...args: any) => any) | undefined;
-    onParse?: ((...args: any) => any) | undefined;
-    onRowsExceed?: ((...args: any) => any) | undefined;
+    onChange?: ((files: UploadFile[]) => any) | undefined;
+    onError?: ((error: UploadError) => any) | undefined;
+    "onUpdate:modelValue"?: ((files: UploadFile[]) => any) | undefined;
+    onRemove?: ((file: UploadFile) => any) | undefined;
+    onExceed?: ((files: File[]) => any) | undefined;
+    onParse?: ((result: {
+        file: UploadFile;
+        result: import("./types").ParseResult;
+    }) => any) | undefined;
+    onRowsExceed?: ((data: {
+        file: UploadFile;
+        rows: number;
+        maxRows: number;
+    }) => any) | undefined;
 }>, {
+    type: "drag" | "button";
+    placeholder: string;
     disabled: boolean;
     modelValue: UploadFile[];
+    maxRows: number;
     multiple: boolean;
-    placeholder: string;
-    type: "drag" | "button";
     accept: string;
     maxSize: number;
     maxFiles: number;
-    maxRows: number;
     tip: string;
     parseFiles: boolean;
     returnData: boolean;

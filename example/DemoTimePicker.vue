@@ -1,585 +1,217 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import VTimePicker from '@/components/timepicker/VTimePicker.vue';
+  import DocSection from './helper/DocSection.vue';
+  import DocPreview from './helper/DocPreview.vue';
+  import DocPropsTable, { TableSection } from './helper/DocPropsTable.vue';
+  import DocFeature from './helper/DocFeature.vue';
 
-  const selectedTime = ref('14:30:00');
-  const selectedTime2 = ref('14:30:00');
-  const selectedTimeRange = ref(['09:00:00', '17:00:00']);
-  const selectedTime12h = ref('02:30:00 PM');
-  const selectedTimeNoSeconds = ref('14:30');
-  const disabledTime = ref('10:15:30');
-  const customFormatTime = ref('14:30:00');
+  const basic = ref('14:30:00');
+  const outlined = ref('14:30:00');
+  const range = ref(['09:00:00', '17:00:00']);
+  const time12h = ref('02:30:00 PM');
+  const noSeconds = ref('14:30');
+  const withSteps = ref('10:15:30');
+
+  const propsSections: TableSection[] = [
+    {
+      title: 'Props',
+      rows: [
+        {
+          name: 'modelValue',
+          type: 'string | Date | [string, string] | null',
+          default: 'undefined',
+          description: 'Значення (v-model)',
+        },
+        { name: 'type', type: "'time' | 'timerange'", default: "'time'", description: 'Тип пікера' },
+        { name: 'placeholder', type: 'string', default: "'Оберіть час'", description: 'Плейсхолдер' },
+        { name: 'label', type: 'string', default: '-', description: 'Текст лейблу' },
+        { name: 'outlined', type: 'boolean', default: 'false', description: 'Лейбл і помилки на бордері' },
+        {
+          name: 'startPlaceholder',
+          type: 'string',
+          default: "'Початковий час'",
+          description: 'Плейсхолдер початку для range',
+        },
+        {
+          name: 'endPlaceholder',
+          type: 'string',
+          default: "'Кінцевий час'",
+          description: 'Плейсхолдер кінця для range',
+        },
+        { name: 'rangeSeparator', type: 'string', default: "' - '", description: 'Роздільник діапазону' },
+        { name: 'format', type: 'string', default: "'HH:mm:ss'", description: 'Формат відображення часу' },
+        { name: 'disabled', type: 'boolean', default: 'false', description: 'Заблокований стан' },
+        { name: 'clearable', type: 'boolean', default: 'true', description: 'Кнопка очищення' },
+        { name: 'size', type: "'small' | 'default' | 'large'", default: "'default'", description: 'Розмір компонента' },
+        { name: 'showSeconds', type: 'boolean', default: 'true', description: 'Показувати секунди' },
+        { name: 'use12Hours', type: 'boolean', default: 'false', description: '12-годинний формат (AM/PM)' },
+        { name: 'hourStep', type: 'number', default: '1', description: 'Крок для годин' },
+        { name: 'minuteStep', type: 'number', default: '1', description: 'Крок для хвилин' },
+        { name: 'secondStep', type: 'number', default: '1', description: 'Крок для секунд' },
+        {
+          name: 'disabledHours',
+          type: '() => number[]',
+          default: 'undefined',
+          description: 'Функція що повертає список заблокованих годин',
+        },
+        {
+          name: 'disabledMinutes',
+          type: '(hour: number) => number[]',
+          default: 'undefined',
+          description: 'Заблоковані хвилини залежно від години',
+        },
+        {
+          name: 'disabledSeconds',
+          type: '(hour: number, minute: number) => number[]',
+          default: 'undefined',
+          description: 'Заблоковані секунди залежно від год. і хв.',
+        },
+        {
+          name: 'hideDisabledOptions',
+          type: 'boolean',
+          default: 'false',
+          description: 'Приховувати заблоковані значення замість сірення',
+        },
+      ],
+    },
+    {
+      title: 'Events',
+      rows: [
+        { name: 'update:modelValue', type: 'TimePickerValue', description: 'Зміна значення (v-model)' },
+        { name: 'change', type: 'TimePickerValue', description: 'Підтвердження вибору часу' },
+        { name: 'focus', type: 'any', description: 'Отримання фокусу' },
+        { name: 'blur', type: 'any', description: 'Втрата фокусу' },
+        { name: 'open-change', type: 'boolean', description: 'Відкриття / закриття dropdown' },
+      ],
+    },
+    {
+      title: 'Методи (ref)',
+      rows: [
+        { name: 'focus()', type: 'void', description: 'Встановити фокус' },
+        { name: 'blur()', type: 'void', description: 'Зняти фокус' },
+        { name: 'open()', type: 'void', description: 'Відкрити dropdown' },
+        { name: 'close()', type: 'void', description: 'Закрити dropdown' },
+      ],
+    },
+    {
+      title: 'TypeScript типи',
+      rows: [
+        { name: 'TimeValue', type: 'string | Date', description: 'Одиночне значення часу' },
+        { name: 'TimeRangeValue', type: '[TimeValue, TimeValue]', description: 'Діапазон часу' },
+        {
+          name: 'TimePickerValue',
+          type: 'TimeValue | TimeRangeValue | null | undefined',
+          description: 'Будь-яке значення пікера',
+        },
+      ],
+    },
+  ];
 </script>
 
 <template>
-  <div>
-    <!-- Основне використання -->
-    <div class="example-section">
-      <h3>Основне використання</h3>
-      <p>Вибраний час: {{ selectedTime }}</p>
+  <div class="timepicker-showcase">
+    <!-- ─── Базові типи ─── -->
+    <DocSection title="Базові типи">
+      <DocPreview title="Одиночний час">
+        <VTimePicker v-model="basic" placeholder="Оберіть час" />
+      </DocPreview>
 
-      <VTimePicker v-model="selectedTime" placeholder="Оберіть час" />
+      <DocPreview title="Outlined з лейблом">
+        <VTimePicker v-model="outlined" label="Час роботи" outlined />
+      </DocPreview>
 
-      <pre class="code-simple">
-        <code>
-&lt;script setup lang="ts"&gt;
-import { ref } from 'vue';
+      <DocPreview title="Діапазон часу (timerange)">
+        <VTimePicker
+          v-model="range"
+          end-placeholder="Кінець"
+          range-separator=" до "
+          start-placeholder="Початок"
+          type="timerange"
+        />
+      </DocPreview>
+    </DocSection>
 
-const selectedTime = ref('14:30:00');
-&lt;/script&gt;
+    <!-- ─── Формати ─── -->
+    <DocSection title="Формати часу">
+      <DocPreview title="12-годинний формат (use12Hours)">
+        <VTimePicker v-model="time12h" format="hh:mm:ss A" placeholder="Оберіть час" use12-hours />
+      </DocPreview>
 
-&lt;template&gt;
-  &lt;VTimePicker v-model="selectedTime" placeholder="Оберіть час" /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
+      <DocPreview title='Без секунд (:show-seconds="false")'>
+        <VTimePicker v-model="noSeconds" :show-seconds="false" format="HH:mm" placeholder="Оберіть час" />
+      </DocPreview>
+    </DocSection>
 
-    <div class="example-section">
-      <h3>Outlined</h3>
-      <p>Вибраний час: {{ selectedTime2 }}</p>
+    <!-- ─── Кроки та обмеження ─── -->
+    <DocSection
+      description="hourStep / minuteStep / secondStep — крок прокрутки. disabledHours / disabledMinutes — які значення недоступні"
+      title="Кроки та заблоковані значення"
+    >
+      <DocPreview
+        :script="`
+const withSteps = ref('10:15:30')
 
-      <VTimePicker v-model="selectedTime2" label="Outlined" outlined />
+const disabledHours   = () => [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]
+const disabledMinutes = (hour) => hour === 10 ? [0, 15, 30, 45] : []
+        `"
+      >
+        <VTimePicker
+          v-model="withSteps"
+          :disabled-hours="() => [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]"
+          :disabled-minutes="hour => (hour === 10 ? [0, 15, 30, 45] : [])"
+          :hour-step="2"
+          :minute-step="15"
+          :second-step="30"
+          placeholder="Час з кроками та обмеженнями"
+        />
+      </DocPreview>
+    </DocSection>
 
-      <pre class="code-simple">
-        <code>
-&lt;script setup lang="ts"&gt;
-import { ref } from 'vue';
+    <!-- ─── Стани ─── -->
+    <DocSection title="Стани">
+      <DocPreview>
+        <VTimePicker v-model="basic" placeholder="Звичайний" />
+        <VTimePicker v-model="basic" disabled placeholder="Заблокований" />
+        <VTimePicker v-model="basic" :clearable="false" placeholder="Без кнопки очищення" />
+      </DocPreview>
+    </DocSection>
 
-const selectedTime = ref('14:30:00');
-&lt;/script&gt;
+    <!-- ─── API ─── -->
+    <DocSection title="API">
+      <DocPropsTable :sections="propsSections" />
+    </DocSection>
 
-&lt;template&gt;
-  &lt;VTimePicker v-model="selectedTime" label="Outlined" outlined /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- Діапазон часу -->
-    <div class="example-section">
-      <h3>Діапазон часу</h3>
-      <p>Вибраний діапазон: {{ selectedTimeRange }}</p>
-
-      <VTimePicker
-        v-model="selectedTimeRange"
-        end-placeholder="Кінцевий час"
-        range-separator=" до "
-        start-placeholder="Початковий час"
-        type="timerange"
-      />
-
-      <pre class="code-simple">
-        <code>
-&lt;script setup lang="ts"&gt;
-import { ref } from 'vue';
-
-const selectedTimeRange = ref(['09:00:00', '17:00:00']);
-&lt;/script&gt;
-
-&lt;template&gt;
-  &lt;VTimePicker
-    v-model="selectedTimeRange"
-    type="timerange"
-    start-placeholder="Початковий час"
-    end-placeholder="Кінцевий час"
-    range-separator=" до "
-  /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- 12-годинний формат -->
-    <div class="example-section">
-      <h3>12-годинний формат</h3>
-      <p>Вибраний час: {{ selectedTime12h }}</p>
-
-      <VTimePicker v-model="selectedTime12h" format="hh:mm:ss A" placeholder="Оберіть час" use12-hours />
-
-      <pre class="code-simple">
-        <code>
-&lt;script setup lang="ts"&gt;
-import { ref } from 'vue';
-
-const selectedTime12h = ref('02:30:00 PM');
-&lt;/script&gt;
-
-&lt;template&gt;
-  &lt;VTimePicker
-    v-model="selectedTime12h"
-    use12-hours
-    format="hh:mm:ss A"
-    placeholder="Оберіть час"
-  /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- Без секунд -->
-    <div class="example-section">
-      <h3>Без секунд</h3>
-      <p>Вибраний час: {{ selectedTimeNoSeconds }}</p>
-
-      <VTimePicker v-model="selectedTimeNoSeconds" :show-seconds="false" format="HH:mm" placeholder="Оберіть час" />
-
-      <pre class="code-simple">
-        <code>
-&lt;script setup lang="ts"&gt;
-import { ref } from 'vue';
-
-const selectedTimeNoSeconds = ref('14:30');
-&lt;/script&gt;
-
-&lt;template&gt;
-  &lt;VTimePicker
-    v-model="selectedTimeNoSeconds"
-    :show-seconds="false"
-    format="HH:mm"
-    placeholder="Оберіть час"
-  /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- Різні розміри -->
-    <div class="example-section">
-      <h3>Розміри</h3>
-
-      <div style="margin-bottom: 1rem">
-        <label>Маленький:</label>
-        <VTimePicker v-model="selectedTime" placeholder="Маленький" size="small" />
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <label>Стандартний:</label>
-        <VTimePicker v-model="selectedTime" placeholder="Стандартний" size="default" />
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <label>Великий:</label>
-        <VTimePicker v-model="selectedTime" placeholder="Великий" size="large" />
-      </div>
-
-      <pre class="code-simple">
-        <code>
-&lt;template&gt;
-  &lt;VTimePicker v-model="selectedTime" size="small" placeholder="Маленький" /&gt;
-  &lt;VTimePicker v-model="selectedTime" size="default" placeholder="Стандартний" /&gt;
-  &lt;VTimePicker v-model="selectedTime" size="large" placeholder="Великий" /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- З кроками та обмеженнями -->
-    <div class="example-section">
-      <h3>Кроки та обмеження</h3>
-      <p>Час з обмеженнями: {{ disabledTime }}</p>
-
-      <VTimePicker
-        v-model="disabledTime"
-        :disabled-hours="() => [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]"
-        :disabled-minutes="hour => (hour === 10 ? [0, 15, 30, 45] : [])"
-        :hour-step="2"
-        :minute-step="15"
-        :second-step="30"
-        placeholder="Час з обмеженнями"
-      />
-
-      <pre class="code-simple">
-        <code>
-&lt;script setup lang="ts"&gt;
-import { ref } from 'vue';
-
-const disabledTime = ref('10:15:30');
-&lt;/script&gt;
-
-&lt;template&gt;
-  &lt;VTimePicker
-    v-model="disabledTime"
-    :hour-step="2"
-    :minute-step="15"
-    :second-step="30"
-    :disabled-hours="() =&gt; [1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23]"
-    :disabled-minutes="(hour) =&gt; hour === 10 ? [0, 15, 30, 45] : []"
-    placeholder="Час з обмеженнями"
-  /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- Відключений стан -->
-    <div class="example-section">
-      <h3>Стани</h3>
-
-      <div style="margin-bottom: 1rem">
-        <label>Звичайний:</label>
-        <VTimePicker v-model="selectedTime" placeholder="Звичайний стан" />
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <label>Відключений:</label>
-        <VTimePicker v-model="selectedTime" disabled placeholder="Відключений" />
-      </div>
-
-      <div style="margin-bottom: 1rem">
-        <label>Без очищення:</label>
-        <VTimePicker v-model="selectedTime" :clearable="false" placeholder="Без кнопки очищення" />
-      </div>
-
-      <pre class="code-simple">
-        <code>
-&lt;template&gt;
-  &lt;VTimePicker v-model="selectedTime" placeholder="Звичайний стан" /&gt;
-  &lt;VTimePicker v-model="selectedTime" disabled placeholder="Відключений" /&gt;
-  &lt;VTimePicker v-model="selectedTime" :clearable="false" placeholder="Без кнопки очищення" /&gt;
-&lt;/template&gt;
-        </code>
-      </pre>
-    </div>
-
-    <!-- API Документація -->
-    <div class="example-section">
-      <h3>API Документація</h3>
-
-      <h4>Props</h4>
-      <table class="api-table">
-        <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Тип</th>
-            <th>За замовчуванням</th>
-            <th>Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>modelValue</code></td>
-            <td><code>TimePickerValue</code></td>
-            <td><code>undefined</code></td>
-            <td>v-model значення - вибраний час або діапазон часу</td>
-          </tr>
-          <tr>
-            <td><code>type</code></td>
-            <td><code>'time' | 'timerange'</code></td>
-            <td><code>'time'</code></td>
-            <td>Тип picker'а - одиночний час або діапазон</td>
-          </tr>
-          <tr>
-            <td><code>placeholder</code></td>
-            <td><code>string</code></td>
-            <td><code>'Оберіть час'</code></td>
-            <td>Placeholder текст для одиночного вибору</td>
-          </tr>
-          <tr>
-            <td><code>label</code></td>
-            <td><code>string</code></td>
-            <td>-</td>
-            <td>Текст лейбла</td>
-          </tr>
-          <tr>
-            <td><code>outlined</code></td>
-            <td><code>boolean</code></td>
-            <td>false</td>
-            <td>Виводити помилки та лейбл на бордері</td>
-          </tr>
-          <tr>
-            <td><code>startPlaceholder</code></td>
-            <td><code>string</code></td>
-            <td><code>'Початковий час'</code></td>
-            <td>Placeholder для початкового часу в діапазоні</td>
-          </tr>
-          <tr>
-            <td><code>endPlaceholder</code></td>
-            <td><code>string</code></td>
-            <td><code>'Кінцевий час'</code></td>
-            <td>Placeholder для кінцевого часу в діапазоні</td>
-          </tr>
-          <tr>
-            <td><code>rangeSeparator</code></td>
-            <td><code>string</code></td>
-            <td><code>' - '</code></td>
-            <td>Розділювач між початковим та кінцевим часом</td>
-          </tr>
-          <tr>
-            <td><code>format</code></td>
-            <td><code>string</code></td>
-            <td><code>'HH:mm:ss'</code></td>
-            <td>Формат відображення часу</td>
-          </tr>
-          <tr>
-            <td><code>disabled</code></td>
-            <td><code>boolean</code></td>
-            <td><code>false</code></td>
-            <td>Відключений стан</td>
-          </tr>
-          <tr>
-            <td><code>clearable</code></td>
-            <td><code>boolean</code></td>
-            <td><code>true</code></td>
-            <td>Показувати кнопку очищення</td>
-          </tr>
-          <tr>
-            <td><code>size</code></td>
-            <td><code>'small' | 'default' | 'large'</code></td>
-            <td><code>'default'</code></td>
-            <td>Розмір компонента</td>
-          </tr>
-          <tr>
-            <td><code>hourStep</code></td>
-            <td><code>number</code></td>
-            <td><code>1</code></td>
-            <td>Крок для годин</td>
-          </tr>
-          <tr>
-            <td><code>minuteStep</code></td>
-            <td><code>number</code></td>
-            <td><code>1</code></td>
-            <td>Крок для хвилин</td>
-          </tr>
-          <tr>
-            <td><code>secondStep</code></td>
-            <td><code>number</code></td>
-            <td><code>1</code></td>
-            <td>Крок для секунд</td>
-          </tr>
-          <tr>
-            <td><code>showSeconds</code></td>
-            <td><code>boolean</code></td>
-            <td><code>true</code></td>
-            <td>Показувати секунди</td>
-          </tr>
-          <tr>
-            <td><code>use12Hours</code></td>
-            <td><code>boolean</code></td>
-            <td><code>false</code></td>
-            <td>Використовувати 12-годинний формат</td>
-          </tr>
-          <tr>
-            <td><code>disabledHours</code></td>
-            <td><code>() => number[]</code></td>
-            <td><code>undefined</code></td>
-            <td>Функція для відключення годин</td>
-          </tr>
-          <tr>
-            <td><code>disabledMinutes</code></td>
-            <td><code>(hour: number) => number[]</code></td>
-            <td><code>undefined</code></td>
-            <td>Функція для відключення хвилин залежно від години</td>
-          </tr>
-          <tr>
-            <td><code>disabledSeconds</code></td>
-            <td><code>(hour: number, minute: number) => number[]</code></td>
-            <td><code>undefined</code></td>
-            <td>Функція для відключення секунд залежно від години та хвилини</td>
-          </tr>
-          <tr>
-            <td><code>hideDisabledOptions</code></td>
-            <td><code>boolean</code></td>
-            <td><code>false</code></td>
-            <td>Приховувати відключені опції замість їх відключення</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h4>Events</h4>
-      <table class="api-table">
-        <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Параметри</th>
-            <th>Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>update:modelValue</code></td>
-            <td><code>(value: TimePickerValue)</code></td>
-            <td>Випромінюється при зміні v-model значення</td>
-          </tr>
-          <tr>
-            <td><code>change</code></td>
-            <td><code>(value: TimePickerValue)</code></td>
-            <td>Випромінюється при зміні вибраного часу</td>
-          </tr>
-          <tr>
-            <td><code>focus</code></td>
-            <td><code>(instance: any)</code></td>
-            <td>Випромінюється при отриманні фокусу</td>
-          </tr>
-          <tr>
-            <td><code>blur</code></td>
-            <td><code>(instance: any)</code></td>
-            <td>Випромінюється при втраті фокусу</td>
-          </tr>
-          <tr>
-            <td><code>open-change</code></td>
-            <td><code>(open: boolean)</code></td>
-            <td>Випромінюється при відкритті/закритті dropdown</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h4>Methods</h4>
-      <table class="api-table">
-        <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Параметри</th>
-            <th>Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>focus()</code></td>
-            <td>-</td>
-            <td>Встановлює фокус на компонент</td>
-          </tr>
-          <tr>
-            <td><code>blur()</code></td>
-            <td>-</td>
-            <td>Забирає фокус з компонента</td>
-          </tr>
-          <tr>
-            <td><code>open()</code></td>
-            <td>-</td>
-            <td>Відкриває dropdown</td>
-          </tr>
-          <tr>
-            <td><code>close()</code></td>
-            <td>-</td>
-            <td>Закриває dropdown</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <h4>Типи</h4>
-      <table class="api-table">
-        <thead>
-          <tr>
-            <th>Назва</th>
-            <th>Опис</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><code>TimeValue</code></td>
-            <td><code>string | Date</code> - одиночне значення часу</td>
-          </tr>
-          <tr>
-            <td><code>TimeRangeValue</code></td>
-            <td><code>[TimeValue, TimeValue]</code> - діапазон часу</td>
-          </tr>
-          <tr>
-            <td><code>TimePickerValue</code></td>
-            <td><code>TimeValue | TimeRangeValue | null | undefined</code> - будь-яке значення TimePicker</td>
-          </tr>
-          <tr>
-            <td><code>TimeObject</code></td>
-            <td>Об'єкт з полями hour, minute, second, period</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <!-- ─── Особливості ─── -->
+    <DocSection title="Особливості">
+      <DocFeature icon="🔒" title="disabledMinutes залежить від години">
+        <code>:disabled-minutes="(hour) => hour === 22 ? [30, 45] : []"</code> — функція отримує поточну вибрану годину
+        і повертає список заблокованих хвилин. Аналогічно <code>disabledSeconds</code> отримує і годину і хвилину.
+      </DocFeature>
+      <DocFeature icon="🕐" title="use12Hours + format">
+        При <code>use12-hours</code> використовуй <code>format="hh:mm:ss A"</code> (велика A — AM/PM) або
+        <code>format="hh:mm:ss a"</code> (мала a — am/pm).
+      </DocFeature>
+      <DocFeature icon="👁️" title="hideDisabledOptions">
+        За замовчуванням заблоковані значення показуються сірим.
+        <code>:hide-disabled-options="true"</code> — повністю приховує їх зі списку.
+      </DocFeature>
+      <DocFeature icon="🏷️" title="outlined режим">
+        Аналогічно до VInput і VDatePicker — <code>outlined</code> переводить лейбл у floating-стиль на бордері
+        компонента.
+      </DocFeature>
+    </DocSection>
   </div>
 </template>
 
-<style scoped>
-  .example-section {
-    margin-bottom: 2rem;
-    padding: 1rem;
-    border: 1px solid #e5e5e5;
-    border-radius: 8px;
-  }
-
-  .example-section h3 {
-    margin-top: 0;
-    margin-bottom: 1rem;
-  }
-
-  .example-section h4 {
-    margin-top: 1.5rem;
-    margin-bottom: 0.75rem;
-    color: #333;
-    font-size: 1.1rem;
-  }
-
-  .vt-timepicker {
-    margin-right: 1rem;
-    margin-bottom: 0.5rem;
-  }
-
-  label {
-    display: inline-block;
-    width: 120px;
-    font-weight: 500;
-    margin-right: 8px;
-  }
-
-  .code-simple {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 6px;
-    padding: 1rem;
-    overflow-x: auto;
-    font-family: 'Courier New', Consolas, monospace;
-    font-size: 14px;
-    line-height: 1.4;
-    margin-top: 1rem;
-  }
-
-  .code-simple code {
-    color: #333;
-    background: none;
-    padding: 0;
-    border-radius: 0;
-    font-family: inherit;
-    font-size: inherit;
-  }
-
-  .api-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 1.5rem;
-    font-size: 14px;
-  }
-
-  .api-table th,
-  .api-table td {
-    border: 1px solid #ddd;
-    padding: 8px 12px;
-    text-align: left;
-    vertical-align: top;
-  }
-
-  .api-table th {
-    background-color: #f8f9fa;
-    font-weight: 600;
-    color: #333;
-  }
-
-  .api-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-
-  .api-table tbody tr:hover {
-    background-color: #f0f0f0;
-  }
-
-  .api-table code {
-    background-color: #f1f3f4;
-    padding: 2px 4px;
-    border-radius: 3px;
-    font-family: 'Courier New', Consolas, monospace;
-    font-size: 12px;
-    color: #d73a49;
-  }
-
-  .api-table th code {
-    color: #333;
+<style lang="scss" scoped>
+  .timepicker-showcase {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    font-family:
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
 </style>

@@ -5,11 +5,11 @@ type __VLS_Props = {
     currentRoute?: string | null;
 };
 declare const _default: import("vue").DefineComponent<__VLS_Props, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {} & {
-    navigate: any;
-    "update:collapsed": any;
+    navigate: (to: string) => any;
+    "update:collapsed": (value: boolean) => any;
 }, string, import("vue").PublicProps, Readonly<__VLS_Props> & Readonly<{
-    onNavigate?: ((...args: any) => any) | undefined;
-    "onUpdate:collapsed"?: ((...args: any) => any) | undefined;
+    onNavigate?: ((to: string) => any) | undefined;
+    "onUpdate:collapsed"?: ((value: boolean) => any) | undefined;
 }>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 export default _default;
 //# sourceMappingURL=VSidebar.vue.d.ts.map

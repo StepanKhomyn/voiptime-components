@@ -30,25 +30,25 @@ declare const __VLS_component: import("vue").DefineComponent<VtSelectProps, {
 }, string, import("vue").PublicProps, Readonly<VtSelectProps> & Readonly<{
     [x: `on${Capitalize<any>}`]: ((...args: any) => any) | undefined;
 }>, {
-    disabled: boolean;
-    multiple: boolean;
-    clearable: boolean;
-    filterable: boolean;
-    loading: boolean;
     placeholder: string;
+    disabled: boolean;
+    loading: boolean;
+    trigger: string;
+    placement: string;
+    showTimeout: number;
+    hideTimeout: number;
+    status: "default" | "success" | "warning" | "error";
+    clearable: boolean;
+    outlined: boolean;
+    validateOnInput: boolean;
+    validateOnBlur: boolean;
+    multiple: boolean;
+    filterable: boolean;
     noDataText: string;
     loadingText: string;
     maxHeight: number;
     maxOptionsHeight: number;
     collapsedTags: boolean;
-    validateOnInput: boolean;
-    validateOnBlur: boolean;
-    placement: string;
-    trigger: string;
-    showTimeout: number;
-    hideTimeout: number;
-    status: "default" | "success" | "warning" | "error";
-    outlined: boolean;
     filterPlaceholder: string;
     allowRemoteFilter: boolean;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;

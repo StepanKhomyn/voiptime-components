@@ -1,4 +1,4 @@
-export declare enum ChartType {
+export declare enum VChartType {
     donut = "donut",
     combo = "combo",
     horizontal = "horizontal-bar",
@@ -20,18 +20,18 @@ export interface ScaleBarSide {
     value: number;
 }
 export interface DonutChartProps {
-    type: ChartType.donut;
+    type: VChartType.donut;
     segments: ChartSegment[];
     size?: number;
     labels?: boolean;
 }
 export interface HorizontalBarChartProps {
-    type: ChartType.horizontal;
+    type: VChartType.horizontal;
     segments: ChartSegment[];
     showAxis?: boolean;
 }
 export interface ComboChartProps {
-    type: ChartType.combo;
+    type: VChartType.combo;
     data: Record<string, number | string>[];
     seriesConfig: Record<string, ComboSeriesConfig>;
     categoryKey: string;
@@ -45,7 +45,7 @@ export interface ComboChartProps {
     };
 }
 export interface ScaleBarChartProps {
-    type: ChartType.scale;
+    type: VChartType.scale;
     left: ScaleBarSide;
     right: ScaleBarSide;
     wrapperClass?: string;
