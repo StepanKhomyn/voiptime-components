@@ -1,3 +1,10 @@
+## [1.18.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.2...v1.18.3) (2026-04-08)
+
+
+### Bug Fixes
+
+* change modal body padding ([9f64829](https://github.com/StepanKhomyn/voiptime-components/commit/9f6482948ea11f593390ce3f512fa89227cfeb3d))
+
 ## [1.18.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.1...v1.18.2) (2026-04-08)
 
 
