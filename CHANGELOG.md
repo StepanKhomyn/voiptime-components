@@ -1,3 +1,10 @@
+# [1.18.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.22...v1.18.0) (2026-04-08)
+
+
+### Features
+
+* Реалізовано новий юай для докуиментації компонентів ([7092431](https://github.com/StepanKhomyn/voiptime-components/commit/7092431bf4c2729075b364a7b87ad6899f7014b8))
+
 ## [1.17.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.17.21...v1.17.22) (2026-04-07)
 
 
