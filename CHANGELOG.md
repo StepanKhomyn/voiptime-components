@@ -1,3 +1,10 @@
+## [1.18.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.3...v1.18.4) (2026-04-15)
+
+
+### Bug Fixes
+
+* add border radius to tabs ([b109d6c](https://github.com/StepanKhomyn/voiptime-components/commit/b109d6ce2fde7de81bb953b2c7a03970f64a0943))
+
 ## [1.18.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.2...v1.18.3) (2026-04-08)
 
 
