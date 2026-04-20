@@ -94,7 +94,7 @@
       group: "Зворотній зв'язок",
       items: [
         { name: 'Message', icon: '💌', component: DemoMessage },
-        { name: 'DemoInfoBox', icon: '💌', component: DemoInfoBox },
+        { name: 'InfoBox', icon: '💌', component: DemoInfoBox },
         { name: 'Лоадер', icon: '⏳', component: DemoLoader },
         { name: 'Коллапс', icon: '🔽', component: DemoCollapse },
       ],
