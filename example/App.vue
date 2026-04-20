@@ -26,6 +26,7 @@
   import DemoCheckbox from './DemoCheckbox.vue';
   import DemoInstallation from './DemoInstallation.vue';
   import DemoDesignTokens from './DemoDesignTokens.vue';
+  import DemoInfoBox from './DemoInfoBox.vue';
 
   const searchQuery = ref('');
 
@@ -93,6 +94,7 @@
       group: "Зворотній зв'язок",
       items: [
         { name: 'Message', icon: '💌', component: DemoMessage },
+        { name: 'DemoInfoBox', icon: '💌', component: DemoInfoBox },
         { name: 'Лоадер', icon: '⏳', component: DemoLoader },
         { name: 'Коллапс', icon: '🔽', component: DemoCollapse },
       ],

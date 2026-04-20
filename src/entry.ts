@@ -29,6 +29,7 @@ import VDynamicFilter from '@/components/dynamic-filter/VDynamicFilter.vue';
 import VSlider from '@/components/slider/VSlider.vue';
 import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 import VChart from '@/components/charts/VChart.vue';
+import VInfoBox from '@/components/info-box/VInfoBox.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -69,6 +70,7 @@ export {
   VSlider,
   VSliderMarkRange,
   VChart,
+  VInfoBox,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -225,6 +227,9 @@ export type {
 
 export type { VChartType, VChartProps } from './components/charts/types';
 
+//InfoBox
+export type { VInfoBoxProps, VInfoBoxType } from './components/info-box/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -298,6 +303,7 @@ const VUIPlugin = {
     app.component(`${prefix}Slider`, VSlider);
     app.component(`${prefix}SliderMarkRange`, VSliderMarkRange);
     app.component(`${prefix}Chart`, VChart);
+    app.component(`${prefix}InfoBox`, VInfoBox);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

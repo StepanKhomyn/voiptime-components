@@ -8,13 +8,13 @@ declare const __VLS_component: import("vue").DefineComponent<VButtonProps, {}, {
 }, string, import("vue").PublicProps, Readonly<VButtonProps> & Readonly<{
     onClick?: ((event: MouseEvent) => any) | undefined;
 }>, {
-    color: string;
     type: import("./types").VButtonType;
     disabled: boolean;
     loading: boolean;
     tooltip: boolean;
     tooltipPlacement: import("../../entry").TooltipPlacement;
     htmlType: "button" | "submit" | "reset";
+    color: string;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 declare const _default: __VLS_WithSlots<typeof __VLS_component, __VLS_Slots>;
 export default _default;

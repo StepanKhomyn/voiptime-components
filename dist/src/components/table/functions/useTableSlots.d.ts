@@ -17,9 +17,9 @@ export declare function createTableSlot(renderFn: VTableRenderSlot): import("vue
     };
 }>, () => string | VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
-}> | import("vue").Component | VNode<import("vue").RendererNode, import("vue").RendererElement, {
+}> | VNode<import("vue").RendererNode, import("vue").RendererElement, {
     [key: string]: any;
-}>[], {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
+}>[] | import("vue").Component, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {}, string, import("vue").PublicProps, Readonly<import("vue").ExtractPropTypes<{
     row: {
         type: ObjectConstructor;
         required: true;

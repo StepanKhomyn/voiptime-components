@@ -7,10 +7,10 @@ interface ColumnActionsProps {
 }
 declare const _default: import("vue").DefineComponent<ColumnActionsProps, {}, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
     "update-columns": (columns: VTableColumnProps[]) => any;
-    pin: (column: VTableColumnProps, position: "left" | "right" | "none") => any;
+    pin: (column: VTableColumnProps, position: "none" | "left" | "right") => any;
 }, string, import("vue").PublicProps, Readonly<ColumnActionsProps> & Readonly<{
     "onUpdate-columns"?: ((columns: VTableColumnProps[]) => any) | undefined;
-    onPin?: ((column: VTableColumnProps, position: "left" | "right" | "none") => any) | undefined;
+    onPin?: ((column: VTableColumnProps, position: "none" | "left" | "right") => any) | undefined;
 }>, {}, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 export default _default;
 //# sourceMappingURL=ColumnActions.vue.d.ts.map

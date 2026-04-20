@@ -9,8 +9,8 @@ declare const _default: import("vue").DefineComponent<Props, {}, {}, {}, {}, imp
 }, string, import("vue").PublicProps, Readonly<Props> & Readonly<{
     "onUpdate-columns"?: ((columns: VTableColumnProps[]) => any) | undefined;
 }>, {
-    defaultColumns: VTableColumnProps[];
     columnsSelector: VTableColumnGroup[];
+    defaultColumns: VTableColumnProps[];
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 export default _default;
 //# sourceMappingURL=VTableColumnSelector.vue.d.ts.map

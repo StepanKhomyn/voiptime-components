@@ -19,11 +19,11 @@ declare const _default: import("vue").DefineComponent<VTimePickerProps, {
     "onOpen-change"?: ((open: boolean) => any) | undefined;
 }>, {
     type: import("@/components/timepicker/types").TimePickerType;
-    placeholder: string;
     disabled: boolean;
-    size: import("@/components/timepicker/types").TimePickerSize;
     clearable: boolean;
+    placeholder: string;
     outlined: boolean;
+    size: import("@/components/timepicker/types").TimePickerSize;
     startPlaceholder: string;
     endPlaceholder: string;
     rangeSeparator: string;

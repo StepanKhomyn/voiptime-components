@@ -1,0 +1,40 @@
+@mixin info-box-type($type-name) {
+  &--#{$type-name} {
+    background-color: var(--color-#{$type-name}-bg);;
+    border-color: var(--color-#{$type-name}-main);;
+    color: var(--color-#{$type-name}-main);
+  }
+}
+
+.vt-info-box {
+  display: flex;
+  align-items: center;
+  gap: var(--vt-gap-base);
+  padding: var(--vt-padding-base);
+  border-radius: var(--radius-main);
+  font-size: var(--font-size-base);
+  border-left: 5px solid;
+
+  @include info-box-type('primary');
+  @include info-box-type('success');
+  @include info-box-type('warning');
+  @include info-box-type('danger');
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 5px;
+  }
+
+  &__message {
+    opacity: 0.85;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    font-size: var(--font-size-base);
+  }
+}

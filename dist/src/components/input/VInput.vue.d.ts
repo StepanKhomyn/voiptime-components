@@ -36,15 +36,15 @@ declare const _default: import("vue").DefineComponent<VtInputProps, {
     resize: import("./types").VtInputResize;
     type: import("./types").VtInputType;
     disabled: boolean;
-    size: import("./types").VtInputSize;
-    status: import("./types").VtInputStatus;
     clearable: boolean;
-    showPassword: boolean;
-    outlined: boolean;
-    rows: number;
-    autosize: boolean | import("./types").VtInputAutosizeConfig;
     validateOnInput: boolean;
     validateOnBlur: boolean;
+    status: import("./types").VtInputStatus;
+    outlined: boolean;
+    size: import("./types").VtInputSize;
+    showPassword: boolean;
+    rows: number;
+    autosize: boolean | import("./types").VtInputAutosizeConfig;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 export default _default;
 //# sourceMappingURL=VInput.vue.d.ts.map

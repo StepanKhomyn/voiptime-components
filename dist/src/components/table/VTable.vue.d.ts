@@ -15,14 +15,13 @@ declare const __VLS_component: import("vue").DefineComponent<__VLS_PublicProps, 
     getSelectionRows: () => Record<string, any>[];
     setSelectionRows: (rows: Record<string, any>[]) => void;
 }, {}, {}, {}, import("vue").ComponentOptionsMixin, import("vue").ComponentOptionsMixin, {
+    "update:columns": (...args: unknown[]) => any;
+    "sort-change": (payload: import("./types").SortChangeEventData) => any;
+    "selection-change": (payload: import("./types").SelectionChangeEventData) => any;
     "current-change": (payload: {
         currentRow: Record<string, any> | null;
         oldCurrentRow: Record<string, any> | null;
     }) => any;
-    "selection-change": (payload: import("./types").SelectionChangeEventData) => any;
-    "row-reorder": (payload: import("./types").RowReorderEventData) => any;
-    "update:data": (data: Record<string, any>[]) => any;
-    "sort-change": (payload: import("./types").SortChangeEventData) => any;
     "row-click": (payload: {
         row: Record<string, any>;
         column: VTableColumnProps;
@@ -33,7 +32,6 @@ declare const __VLS_component: import("vue").DefineComponent<__VLS_PublicProps, 
         column: VTableColumnProps;
         event: Event;
     }) => any;
-    "update:columns": (...args: unknown[]) => any;
     "column-pin": (payload: {
         column: VTableColumnProps;
         position: "left" | "right" | "none";
@@ -52,15 +50,16 @@ declare const __VLS_component: import("vue").DefineComponent<__VLS_PublicProps, 
     }) => any;
     "columns-change": (columns: VTableColumnProps[]) => any;
     "infinity-scroll": () => any;
+    "row-reorder": (payload: import("./types").RowReorderEventData) => any;
+    "update:data": (data: Record<string, any>[]) => any;
 }, string, import("vue").PublicProps, Readonly<__VLS_PublicProps> & Readonly<{
+    "onUpdate:columns"?: ((...args: unknown[]) => any) | undefined;
+    "onSort-change"?: ((payload: import("./types").SortChangeEventData) => any) | undefined;
+    "onSelection-change"?: ((payload: import("./types").SelectionChangeEventData) => any) | undefined;
     "onCurrent-change"?: ((payload: {
         currentRow: Record<string, any> | null;
         oldCurrentRow: Record<string, any> | null;
     }) => any) | undefined;
-    "onSelection-change"?: ((payload: import("./types").SelectionChangeEventData) => any) | undefined;
-    "onRow-reorder"?: ((payload: import("./types").RowReorderEventData) => any) | undefined;
-    "onUpdate:data"?: ((data: Record<string, any>[]) => any) | undefined;
-    "onSort-change"?: ((payload: import("./types").SortChangeEventData) => any) | undefined;
     "onRow-click"?: ((payload: {
         row: Record<string, any>;
         column: VTableColumnProps;
@@ -71,7 +70,6 @@ declare const __VLS_component: import("vue").DefineComponent<__VLS_PublicProps, 
         column: VTableColumnProps;
         event: Event;
     }) => any) | undefined;
-    "onUpdate:columns"?: ((...args: unknown[]) => any) | undefined;
     "onColumn-pin"?: ((payload: {
         column: VTableColumnProps;
         position: "left" | "right" | "none";
@@ -90,19 +88,21 @@ declare const __VLS_component: import("vue").DefineComponent<__VLS_PublicProps, 
     }) => any) | undefined;
     "onColumns-change"?: ((columns: VTableColumnProps[]) => any) | undefined;
     "onInfinity-scroll"?: (() => any) | undefined;
+    "onRow-reorder"?: ((payload: import("./types").RowReorderEventData) => any) | undefined;
+    "onUpdate:data"?: ((data: Record<string, any>[]) => any) | undefined;
 }>, {
     maxHeight: number | string;
-    selectable: boolean;
-    columns: VTableColumnProps[];
-    columnsSelector: import("./types").VTableColumnGroup[];
     rowKey: string;
     showSummary: boolean;
+    columnsSelector: import("./types").VTableColumnGroup[];
+    selectable: boolean;
     isAllSelect: boolean;
     selectionKey: string;
     defaultSelection: any[];
     selectOnClickRow: boolean;
     highlightCurrentRow: boolean;
     allData: Record<string, any>[];
+    columns: VTableColumnProps[];
     hideHeader: boolean;
     rowDraggable: boolean;
     showDragHandle: boolean;

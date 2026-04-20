@@ -31,14 +31,14 @@ declare const _default: import("vue").DefineComponent<VUploadProps, {}, {}, {}, 
     }) => any) | undefined;
 }>, {
     type: "drag" | "button";
-    placeholder: string;
     disabled: boolean;
     modelValue: UploadFile[];
-    maxRows: number;
     multiple: boolean;
+    placeholder: string;
     accept: string;
     maxSize: number;
     maxFiles: number;
+    maxRows: number;
     tip: string;
     parseFiles: boolean;
     returnData: boolean;

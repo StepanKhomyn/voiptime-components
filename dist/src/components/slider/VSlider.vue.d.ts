@@ -12,7 +12,6 @@ declare const _default: import("vue").DefineComponent<VSliderProps, {}, {}, {}, 
     height: string;
     disabled: boolean;
     modelValue: SliderValue;
-    range: boolean;
     vertical: boolean;
     min: number;
     max: number;
@@ -22,6 +21,7 @@ declare const _default: import("vue").DefineComponent<VSliderProps, {}, {}, {}, 
     inputSize: import("./types").SliderInputSize;
     showStops: boolean;
     showTooltip: boolean;
+    range: boolean;
     debounce: number;
 }, {}, {}, {}, string, import("vue").ComponentProvideOptions, false, {}, any>;
 export default _default;
