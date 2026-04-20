@@ -1,3 +1,15 @@
+# [1.19.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.4...v1.19.0) (2026-04-20)
+
+
+### Bug Fixes
+
+* змінено токен гітхау ([6b31c88](https://github.com/StepanKhomyn/voiptime-components/commit/6b31c8803a0be9cc0b16cd6a7c038b5bde274ebe))
+
+
+### Features
+
+* Додано компоненту VInfoBox ([b5e27b6](https://github.com/StepanKhomyn/voiptime-components/commit/b5e27b61c184e5257d7d8b0284c16a6e38e4f14d))
+
 ## [1.18.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.3...v1.18.4) (2026-04-15)
 
 
