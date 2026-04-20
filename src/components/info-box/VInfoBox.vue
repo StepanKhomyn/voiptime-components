@@ -34,9 +34,7 @@
 
 <template>
   <div :class="classes">
-    <div v-if="props.showIcon" class="vt-info-box__icon">
-      <VIcon :name="computedIcon" />
-    </div>
+    <VIcon v-if="props.showIcon" :name="computedIcon" />
     <div class="vt-info-box__content">
       <div v-if="title" class="vt-info-box__title">{{ title }}</div>
       <div class="vt-info-box__message">
