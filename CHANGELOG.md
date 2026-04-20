@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.0...v1.19.1) (2026-04-20)
+
+
+### Bug Fixes
+
+* виправлено вирівнювання блоків в компоенеті VInfoBox ([13999ec](https://github.com/StepanKhomyn/voiptime-components/commit/13999ec63711e19b85164bfc6dd39164b39507ae))
+
 # [1.19.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.18.4...v1.19.0) (2026-04-20)
 
 
