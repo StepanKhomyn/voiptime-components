@@ -1,3 +1,10 @@
+## [1.19.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.5...v1.19.6) (2026-04-28)
+
+
+### Bug Fixes
+
+* далі коллапс2 ([3ceabfc](https://github.com/StepanKhomyn/voiptime-components/commit/3ceabfc21e0374ed1be51348a45810995e2bf142))
+
 ## [1.19.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.4...v1.19.5) (2026-04-28)
 
 
