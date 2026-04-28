@@ -1,5 +1,12 @@
 <template>
-  <div :class="{ 'is-active': isActive, 'is-disabled': disabled }" class="vt-collapse-item">
+  <div
+    :class="{
+      'is-active': isActive,
+      'is-disabled': disabled,
+      'vt-collapse-item--flex': flex,
+    }"
+    class="vt-collapse-item"
+  >
     <div :class="{ 'is-active': isActive }" class="vt-collapse-item__header" @click="handleHeaderClick">
       <div class="vt-collapse-item__title">
         <slot :is-active="isActive" :title="title" name="title">
@@ -10,19 +17,12 @@
         <VIcon name="arrowRight" />
       </div>
     </div>
-    <transition
-      name="collapse"
-      @enter="onEnter"
-      @leave="onLeave"
-      @after-enter="onAfterEnter"
-      @after-leave="onAfterLeave"
-    >
-      <div v-show="isActive" class="vt-collapse-item__wrap">
-        <div class="vt-collapse-item__content">
-          <slot />
-        </div>
+
+    <div v-show="isActive" :class="{ 'vt-collapse-item__wrap--flex': flex }" class="vt-collapse-item__wrap">
+      <div class="vt-collapse-item__content">
+        <slot />
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 
@@ -47,39 +47,7 @@
 
   const handleHeaderClick = () => {
     if (props.disabled) return;
-
     collapseContext.toggle(props.name);
     emit('toggle', props.name);
-  };
-
-  // Анімація для розкривання/згортання
-  const onEnter = (el: Element) => {
-    const element = el as HTMLElement;
-    element.style.height = '0';
-    element.style.overflow = 'hidden';
-    // Примусово викликаємо reflow
-    void element.offsetHeight;
-    element.style.height = element.scrollHeight + 'px';
-  };
-
-  const onLeave = (el: Element) => {
-    const element = el as HTMLElement;
-    element.style.height = element.scrollHeight + 'px';
-    element.style.overflow = 'hidden';
-    // Примусово викликаємо reflow
-    void element.offsetHeight;
-    element.style.height = '0';
-  };
-
-  const onAfterEnter = (el: Element) => {
-    const element = el as HTMLElement;
-    element.style.height = 'auto';
-    element.style.overflow = 'visible';
-  };
-
-  const onAfterLeave = (el: Element) => {
-    const element = el as HTMLElement;
-    element.style.height = '0';
-    element.style.overflow = 'hidden';
   };
 </script>

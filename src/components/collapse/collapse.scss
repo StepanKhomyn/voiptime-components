@@ -3,28 +3,43 @@
 
 .vt-collapse {
   overflow: visible;
-  display: flex;
-  flex-direction: column;
-  height: 100%; // займає весь доступний простір батька
-  min-height: 0;
+
+  // Коли collapse має займати весь простір батька
+  &--flex {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
 
   &-item {
     border-bottom: 1px solid var(--color-gray-5);
-    display: flex;
-    flex-direction: column;
-    min-height: 0; // критично для flex дітей
 
     &:last-child {
       border-bottom: none;
     }
 
-    &.is-active {
-      flex: 1; // активний елемент займає весь залишок
+    // Коли item має розтягнутись і скролити контент
+    &--flex {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
       min-height: 0;
+
+      .vt-collapse-item__wrap {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+      }
+
+      .vt-collapse-item__content {
+        height: 100%;
+        overflow-y: auto;
+      }
     }
 
     &.is-disabled {
-      .v-collapse-item__header {
+      .vt-collapse-item__header {
         cursor: not-allowed;
         color: var(--color-gray-4);
         background-color: var(--color-gray-6);
@@ -40,8 +55,8 @@
       background-color: var(--color-gray-7);
       color: var(--color-gray-1);
       cursor: pointer;
-      transition: border-bottom-color 0.3s;
       outline: none;
+      flex-shrink: 0; // заголовок ніколи не стискається
 
       &:hover {
         background-color: #f5f7fa;
@@ -62,25 +77,27 @@
       &.is-active {
         transform: rotate(90deg);
       }
-
     }
-
 
     &__wrap {
       background-color: #fff;
       box-sizing: border-box;
-      flex: 1;
-      min-height: 0; // критично!
-      overflow: hidden;
+
+      &--flex {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+
+        .vt-collapse-item__content {
+          height: 100%;
+          overflow-y: auto;
+        }
+      }
     }
 
     &__content {
       @include vt-scrollbar;
       padding: var(--vt-padding-lg);
-      height: 100%;
-      overflow-y: auto;
-      box-sizing: border-box;
-      display: flex;
     }
   }
 }
