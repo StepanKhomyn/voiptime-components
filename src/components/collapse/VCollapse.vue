@@ -21,12 +21,10 @@
     const index = current.indexOf(name);
 
     if (accordion.value) {
-      // В режиме аккордеона только один элемент может быть открыт
       const newValue = index > -1 ? [] : [name];
       emit('update:modelValue', newValue);
       emit('change', newValue);
     } else {
-      // В обычном режиме можно открывать несколько элементов
       if (index > -1) {
         current.splice(index, 1);
       } else {
@@ -37,7 +35,6 @@
     }
   };
 
-  // Створюємо реактивний контекст
   const collapseContext = reactive<CollapseContext>({
     get activeNames() {
       return modelValue.value;

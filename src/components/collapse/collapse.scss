@@ -23,7 +23,48 @@
       min-height: 0;
     }
 
-    // ... решта стилів без змін
+    &.is-disabled {
+      .v-collapse-item__header {
+        cursor: not-allowed;
+        color: var(--color-gray-4);
+        background-color: var(--color-gray-6);
+      }
+    }
+
+    &__header {
+      @include vt-typography('vt-collapse');
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--vt-padding-base) var(--vt-padding-lg);
+      background-color: var(--color-gray-7);
+      color: var(--color-gray-1);
+      cursor: pointer;
+      transition: border-bottom-color 0.3s;
+      outline: none;
+
+      &:hover {
+        background-color: #f5f7fa;
+      }
+
+      &.is-active {
+        border-bottom-color: transparent;
+      }
+    }
+
+    &__title {
+      flex: 1;
+    }
+
+    &__arrow {
+      transition: transform 0.3s;
+
+      &.is-active {
+        transform: rotate(90deg);
+      }
+
+    }
+
 
     &__wrap {
       background-color: #fff;
@@ -39,6 +80,7 @@
       height: 100%;
       overflow-y: auto;
       box-sizing: border-box;
+      display: flex;
     }
   }
 }
