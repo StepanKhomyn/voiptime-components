@@ -18,7 +18,7 @@
       @after-leave="onAfterLeave"
     >
       <div v-show="isActive" class="vt-collapse-item__wrap">
-        <div class="vt-collapse-item__content">
+        <div :style="maxHeight ? { maxHeight, overflowY: 'auto' } : {}" class="vt-collapse-item__content">
           <slot />
         </div>
       </div>
@@ -74,7 +74,7 @@
   const onAfterEnter = (el: Element) => {
     const element = el as HTMLElement;
     element.style.height = 'auto';
-    element.style.overflow = 'visible';
+    element.style.overflow = props.maxHeight ? 'auto' : 'visible';
   };
 
   const onAfterLeave = (el: Element) => {

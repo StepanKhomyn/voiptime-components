@@ -2,6 +2,7 @@ export interface CollapseItemProps {
   title?: string;
   name: string;
   disabled?: boolean;
+  maxHeight?: string;
 }
 
 export interface CollapseProps {
