@@ -123,3 +123,30 @@
     element.style.maxHeight = 'none';
   };
 </script>
+<template>
+  <div :class="{ 'is-active': isActive, 'is-disabled': disabled }" class="vt-collapse-item">
+    <div :class="{ 'is-active': isActive }" class="vt-collapse-item__header" @click="handleHeaderClick">
+      <div class="vt-collapse-item__title">
+        <slot :is-active="isActive" :title="title" name="title">
+          {{ title }}
+        </slot>
+      </div>
+      <div :class="{ 'is-active': isActive }" class="vt-collapse-item__arrow">
+        <VIcon name="arrowRight" />
+      </div>
+    </div>
+    <transition
+      name="collapse"
+      @enter="onEnter"
+      @leave="onLeave"
+      @after-enter="onAfterEnter"
+      @after-leave="onAfterLeave"
+    >
+      <div v-show="isActive" class="vt-collapse-item__wrap">
+        <div :style="maxHeight ? { maxHeight, overflowY: 'auto' } : {}" class="vt-collapse-item__content">
+          <slot />
+        </div>
+      </div>
+    </transition>
+  </div>
+</template>
