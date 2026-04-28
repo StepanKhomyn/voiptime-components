@@ -1,3 +1,10 @@
+## [1.19.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.3...v1.19.4) (2026-04-28)
+
+
+### Bug Fixes
+
+* виправлено максимальну висоту колапсу2 ([53c9fdf](https://github.com/StepanKhomyn/voiptime-components/commit/53c9fdf546b29360552b681aacd22f70b5cc2222))
+
 ## [1.19.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.2...v1.19.3) (2026-04-28)
 
 
