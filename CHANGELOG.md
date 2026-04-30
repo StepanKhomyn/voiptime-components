@@ -1,3 +1,10 @@
+## [1.19.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.8...v1.19.9) (2026-04-30)
+
+
+### Bug Fixes
+
+* Додано стилі на обовязковий лейбл ([bdc220a](https://github.com/StepanKhomyn/voiptime-components/commit/bdc220af9bc1b915400cf78344fdd476afbbb398))
+
 ## [1.19.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.7...v1.19.8) (2026-04-28)
 
 
