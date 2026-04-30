@@ -1,3 +1,10 @@
+## [1.19.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.9...v1.19.10) (2026-04-30)
+
+
+### Bug Fixes
+
+* Додано стилі на обовязковий лейбл (змінив колір danger-main) ([2dd62d0](https://github.com/StepanKhomyn/voiptime-components/commit/2dd62d021483ea90a1ed00b7a99071e3ab7c61d6))
+
 ## [1.19.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.19.8...v1.19.9) (2026-04-30)
 
 
