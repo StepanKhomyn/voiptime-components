@@ -97,7 +97,7 @@
       &-header {
         height: 56px;
         border-bottom: 1px solid var(--color-gray-5);
-        padding: 0 var(--vt-padding-lg) ;
+        padding: 0 var(--vt-padding-lg);
         flex-shrink: 0;
         display: flex;
         align-items: center;
@@ -131,6 +131,18 @@
             color: var(--color-gray-2);
             text-align: left;
             flex-shrink: 0;
+            transition: color 0.2s ease;
+
+            &.vt-label-required::after {
+              content: " *";
+              color: var(--color-danger-main);
+              margin-left: 4px;
+              font-weight: bold;
+            }
+
+            &.vt-label-error {
+              color: var(--color-danger);
+            }
           }
         }
       }
