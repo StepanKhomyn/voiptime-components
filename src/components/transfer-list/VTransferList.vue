@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-  import { computed, ref } from 'vue';
+  import { computed, shallowRef } from 'vue';
   import VButton from '@/components/button/VButton.vue';
   import type { VTransferListProps, VTransferListEmits } from './types';
 
@@ -23,14 +23,19 @@
 
   // ─── State ────────────────────────────────────────────────────────────────────
 
-  const activeLeft = ref<T | null>(null);
-  const activeRight = ref<T | null>(null);
+  const activeLeft = shallowRef<T | null>(null);
+  const activeRight = shallowRef<T | null>(null);
 
   // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-  const getId = (item: T): unknown => item[props.optionValue];
+  const getId = (item: T): unknown => item[props.optionValue as keyof T];
   const hasItem = (item: T, list: T[]): boolean => list.some(i => getId(i) === getId(item));
   const withoutItem = (item: T, list: T[]): T[] => list.filter(i => getId(i) !== getId(item));
+
+  // ─── Label accessor ───────────────────────────────────────────────────────────
+
+  const getLabel = (item: T): string =>
+    String(item[props.optionLabel as keyof T] ?? '');
 
   // ─── Move ─────────────────────────────────────────────────────────────────────
 
@@ -92,7 +97,7 @@
   const onDrop = (event: DragEvent, target: 'left' | 'right'): void => {
     event.preventDefault();
     try {
-      const item: T = JSON.parse(event.dataTransfer!.getData('application/json'));
+      const item = JSON.parse(event.dataTransfer!.getData('application/json')) as T;
       target === 'right' ? moveToRight(item) : moveToLeft(item);
     } catch (e) {
       console.error('[VTransferList] drop parse error:', e);
@@ -132,12 +137,12 @@
           @dragstart="onDragStart($event, item)"
           @click="selectLeft(item)"
         >
-          <slot name="item" :item="item">{{ item[optionLabel] ?? '' }}</slot>
+          <slot name="item" :item="item">{{ getLabel(item) }}</slot>
         </div>
       </div>
     </div>
 
-    <!-- ── Controls — окремий flex-column по центру між списками ────────── -->
+    <!-- ── Controls ───────────────────────────────────────────────────────── -->
     <div class="vt-transfer-list__controls">
       <VButton
         shape="square"
@@ -210,7 +215,7 @@
           @dragstart="onDragStart($event, item)"
           @click="selectRight(item)"
         >
-          <slot name="item" :item="item">{{ item[optionLabel] ?? '' }}</slot>
+          <slot name="item" :item="item">{{ getLabel(item) }}</slot>
         </div>
       </div>
     </div>
