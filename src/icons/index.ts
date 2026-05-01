@@ -30,6 +30,8 @@ import StatusChangeIcon from './actions/StatusChangeIcon.vue';
 import UnlockIcon from './actions/UnlockIcon.vue';
 import UploadCloudIcon from './actions/UploadCloudIcon.vue';
 import UsersGroupIcon from './actions/UsersGroupIcon.vue';
+import ArrowDoubleLeftIcon from './arrow/ArrowDoubleLeftIcon.vue';
+import ArrowDoubleRightIcon from './arrow/ArrowDoubleRightIcon.vue';
 import ArrowDownIcon from './arrow/ArrowDownIcon.vue';
 import ArrowLeftIcon from './arrow/ArrowLeftIcon.vue';
 import ArrowReloadIcon from './arrow/ArrowReloadIcon.vue';
@@ -236,6 +238,8 @@ export const icons = {
   usersGroup: UsersGroupIcon,
 
   // arrow icons
+  arrowDoubleLeft: ArrowDoubleLeftIcon,
+  arrowDoubleRight: ArrowDoubleRightIcon,
   arrowDown: ArrowDownIcon,
   arrowLeft: ArrowLeftIcon,
   arrowReload: ArrowReloadIcon,

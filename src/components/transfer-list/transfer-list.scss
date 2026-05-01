@@ -1,0 +1,100 @@
+@use '../../assets/fonts' as *;
+
+.vt-transfer-list {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  height: 200px;
+  width: 100%;
+
+  // ── Column (optional label + scrollable box) ───────────────────────────────
+  &__column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 4px;
+    min-width: 0;
+    min-height: 160px;
+  }
+
+  &__label {
+    @include vt-typography('vt-label');
+    color: var(--color-gray-3);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  // ── Scrollable list box ────────────────────────────────────────────────────
+  &__box {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid var(--color-gray-4);
+    border-radius: var(--radius-main);
+    background-color: white;
+    padding: 4px;
+    transition: border-color 0.3s ease;
+
+    &--invalid {
+      border-color: var(--color-danger-main);
+    }
+  }
+
+  // ── Single item row ────────────────────────────────────────────────────────
+  &__item {
+    @include vt-typography('vt-body');
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--color-gray-5);
+    border-radius: 0;
+    color: var(--color-gray-1);
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: var(--color-gray-5);
+      color: var(--color-gray-2);
+    }
+
+    &--active {
+      background-color: var(--color-primary-main);
+      color: white;
+
+      &:hover {
+        background-color: var(--color-primary-hover);
+        color: var(--color-primary-border);
+      }
+    }
+  }
+
+  // ── Empty state ────────────────────────────────────────────────────────────
+  &__placeholder {
+    @include vt-typography('vt-body');
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 140px;
+    color: var(--color-gray-3);
+    text-align: center;
+  }
+
+  // ── Arrow buttons column ───────────────────────────────────────────────────
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+    align-self: center;
+    padding-top: 0;
+  }
+}

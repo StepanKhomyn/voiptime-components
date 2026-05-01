@@ -27,6 +27,7 @@
   import DemoInstallation from './DemoInstallation.vue';
   import DemoDesignTokens from './DemoDesignTokens.vue';
   import DemoInfoBox from './DemoInfoBox.vue';
+  import DemoTransferList from './DemoTransferList.vue';
 
   const searchQuery = ref('');
 
@@ -59,6 +60,7 @@
         { name: 'Радіобокс', icon: '🔘', component: DemoRadioBox },
         { name: 'Валідація', icon: '✅', component: DemoValidationForm },
         { name: 'Slider', icon: '🎚', component: DemoSlider },
+        { name: 'Transfer List', icon: '↔️', component: DemoTransferList },
       ],
     },
 
