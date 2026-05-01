@@ -30,6 +30,7 @@ import VSlider from '@/components/slider/VSlider.vue';
 import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 import VChart from '@/components/charts/VChart.vue';
 import VInfoBox from '@/components/info-box/VInfoBox.vue';
+import VTransferList from '@/components/transfer-list/VTransferList.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -71,6 +72,7 @@ export {
   VSliderMarkRange,
   VChart,
   VInfoBox,
+  VTransferList
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -230,6 +232,9 @@ export type { VChartType, VChartProps } from './components/charts/types';
 //InfoBox
 export type { VInfoBoxProps, VInfoBoxType } from './components/info-box/types';
 
+//TransferList
+export type { VTransferListProps, VTransferListEmits } from './components/transfer-list/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -304,6 +309,7 @@ const VUIPlugin = {
     app.component(`${prefix}SliderMarkRange`, VSliderMarkRange);
     app.component(`${prefix}Chart`, VChart);
     app.component(`${prefix}InfoBox`, VInfoBox);
+    app.component(`${prefix}TransferList`, VTransferList);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
