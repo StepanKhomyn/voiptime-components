@@ -18,6 +18,7 @@ export interface VTransferListProps<T extends Record<string, any>> {
   fetchRight?: (params: VTransferListFetchParams) => Promise<void>;
   rightTotal?: number;
   rightLoading?: boolean;
+  fetchLimit?: number;
 }
 
 export interface VTransferListEmits<T extends Record<string, any>> {

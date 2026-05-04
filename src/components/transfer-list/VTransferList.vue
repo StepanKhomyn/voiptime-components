@@ -3,7 +3,7 @@
   import VButton from '@/components/button/VButton.vue';
   import type { VTransferListProps, VTransferListEmits } from './types';
 
-  const ASYNC_LIMIT = 20;
+  const asyncLimit = computed(() => props.fetchLimit ?? 20);
   const SCROLL_THRESHOLD = 50;
 
   const props = withDefaults(defineProps<VTransferListProps<T>>(), {
@@ -19,6 +19,7 @@
     rightTotal: 0,
     leftLoading: false,
     rightLoading: false,
+    fetchLimit: 20,
   });
 
   const emit = defineEmits<VTransferListEmits<T>>();
@@ -60,14 +61,14 @@
     offset: Ref<number>,
   ): Promise<void> => {
     if (!fetch || loading || !hasMore) return;
-    offset.value += ASYNC_LIMIT;
-    await fetch({ limit: ASYNC_LIMIT, offset: offset.value });
+    offset.value += asyncLimit.value;
+    await fetch({ limit: asyncLimit.value, offset: offset.value });
   };
 
   onMounted(async () => {
     await Promise.all([
-      props.fetchLeft?.({ limit: ASYNC_LIMIT, offset: 0 }),
-      props.fetchRight?.({ limit: ASYNC_LIMIT, offset: 0 }),
+      props.fetchLeft?.({ limit: asyncLimit.value, offset: 0 }),
+      props.fetchRight?.({ limit: asyncLimit.value, offset: 0 }),
     ]);
     // Знімаємо snapshot після завантаження правої колонки
     listTwo.value.forEach(item => initialRightIds.add(getId(item)));
