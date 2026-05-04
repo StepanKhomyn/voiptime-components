@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, inject } from 'vue';
+  import { computed, inject, onMounted, ref } from 'vue';
   import type { VBreadcrumbItemEmits, VBreadcrumbItemProps } from './types';
 
   const props = withDefaults(defineProps<VBreadcrumbItemProps>(), {
@@ -10,11 +10,23 @@
   const emit = defineEmits<VBreadcrumbItemEmits>();
 
   const separator = inject<string>('vt-breadcrumb-separator', '/');
-
   const hasRouter = !!inject<unknown>('router', null);
 
+  const itemRef = ref<HTMLElement | null>(null);
+  const isLastChild = ref(false);
+
+  onMounted(() => {
+    const el = itemRef.value;
+    if (!el) return;
+    const parent = el.parentElement;
+    if (!parent) return;
+    isLastChild.value = parent.lastElementChild === el;
+  });
+
+  const isActive = computed(() => props.active || isLastChild.value);
+
   const tag = computed(() => {
-    if (props.active || props.disabled || !props.to) return 'span';
+    if (isActive.value || props.disabled || !props.to) return 'span';
     if (!hasRouter) return 'a';
     return 'RouterLink';
   });
@@ -33,8 +45,9 @@
 
 <template>
   <li
+    ref="itemRef"
     :class="{
-      'vt-breadcrumb__item--active': active,
+      'vt-breadcrumb__item--active': isActive,
       'vt-breadcrumb__item--disabled': disabled,
     }"
     class="vt-breadcrumb__item"
@@ -45,10 +58,10 @@
 
     <component
       :is="tag"
-      :aria-current="active ? 'page' : undefined"
+      :aria-current="isActive ? 'page' : undefined"
       :aria-disabled="disabled ? 'true' : undefined"
       :class="{
-        'vt-breadcrumb__link--active': active,
+        'vt-breadcrumb__link--active': isActive,
         'vt-breadcrumb__link--disabled': disabled,
       }"
       class="vt-breadcrumb__link"
