@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-  import { computed, ref, shallowRef, onMounted, type Ref } from 'vue';
+  import { computed, nextTick, ref, shallowRef, onMounted, type Ref } from 'vue';
   import VButton from '@/components/button/VButton.vue';
   import type { VTransferListProps, VTransferListEmits } from './types';
 
