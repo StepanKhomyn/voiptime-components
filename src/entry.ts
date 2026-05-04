@@ -31,6 +31,8 @@ import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 import VChart from '@/components/charts/VChart.vue';
 import VInfoBox from '@/components/info-box/VInfoBox.vue';
 import VTransferList from '@/components/transfer-list/VTransferList.vue';
+import VBreadcrumb from '@/components/breadcrumb/VBreadcrumb.vue';
+import VBreadcrumbItem from '@/components/breadcrumb/VBreadcrumbItem.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -72,7 +74,9 @@ export {
   VSliderMarkRange,
   VChart,
   VInfoBox,
-  VTransferList
+  VTransferList,
+  VBreadcrumb,
+  VBreadcrumbItem,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -235,6 +239,9 @@ export type { VInfoBoxProps, VInfoBoxType } from './components/info-box/types';
 //TransferList
 export type { VTransferListProps, VTransferListEmits } from './components/transfer-list/types';
 
+//Breadcrumb
+export type { VBreadcrumbProps, VBreadcrumbItemProps, VBreadcrumbItemEmits } from './components/breadcrumb/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -310,6 +317,8 @@ const VUIPlugin = {
     app.component(`${prefix}Chart`, VChart);
     app.component(`${prefix}InfoBox`, VInfoBox);
     app.component(`${prefix}TransferList`, VTransferList);
+    app.component(`${prefix}Breadcrumb`, VBreadcrumb);
+    app.component(`${prefix}BreadcrumbItem`, VBreadcrumbItem);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
