@@ -20,14 +20,14 @@
     leftLoading: false,
     rightLoading: false,
     fetchLimit: 20,
+    added: () => [],
+    removed: () => [],
   });
 
   const emit = defineEmits<VTransferListEmits<T>>();
 
   const listOne = defineModel<T[]>('listOne', { required: true, default: () => [] });
   const listTwo = defineModel<T[]>('listTwo', { required: true, default: () => [] });
-  const added   = defineModel<T[]>('added',   { default: () => [] });
-  const removed = defineModel<T[]>('removed', { default: () => [] });
 
   const activeLeft  = shallowRef<T | null>(null);
   const activeRight = shallowRef<T | null>(null);
@@ -54,15 +54,33 @@
   const isNearBottom = (el: HTMLElement): boolean =>
     el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD;
 
+  const leftFetching  = ref(false);
+  const rightFetching = ref(false);
+
   const fetchNextPage = async (
     fetch: ((p: { limit: number; offset: number }) => Promise<void>) | undefined,
-    loading: boolean,
+    isFetching: Ref<boolean>,
     hasMore: boolean,
     offset: Ref<number>,
   ): Promise<void> => {
-    if (!fetch || loading || !hasMore) return;
+    if (!fetch || isFetching.value || !hasMore) return;
+    isFetching.value = true;
     offset.value += asyncLimit.value;
-    await fetch({ limit: asyncLimit.value, offset: offset.value });
+    try {
+      await fetch({ limit: asyncLimit.value, offset: offset.value });
+    } finally {
+      isFetching.value = false;
+    }
+  };
+
+  const onLeftScroll = async (e: Event): Promise<void> => {
+    if (!isNearBottom(e.target as HTMLElement)) return;
+    await fetchNextPage(props.fetchLeft, leftFetching, hasMoreLeft.value, leftOffset);
+  };
+
+  const onRightScroll = async (e: Event): Promise<void> => {
+    if (!isNearBottom(e.target as HTMLElement)) return;
+    await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightOffset);
   };
 
   onMounted(async () => {
@@ -70,19 +88,10 @@
       props.fetchLeft?.({ limit: asyncLimit.value, offset: 0 }),
       props.fetchRight?.({ limit: asyncLimit.value, offset: 0 }),
     ]);
-    // Знімаємо snapshot після завантаження правої колонки
+
+    await nextTick();
     listTwo.value.forEach(item => initialRightIds.add(getId(item)));
   });
-
-  const onLeftScroll = async (e: Event): Promise<void> => {
-    if (!isNearBottom(e.target as HTMLElement)) return;
-    await fetchNextPage(props.fetchLeft, props.leftLoading, hasMoreLeft.value, leftOffset);
-  };
-
-  const onRightScroll = async (e: Event): Promise<void> => {
-    if (!isNearBottom(e.target as HTMLElement)) return;
-    await fetchNextPage(props.fetchRight, props.rightLoading, hasMoreRight.value, rightOffset);
-  };
 
   // ─── Track added/removed ──────────────────────────────────────────────────
 
@@ -92,24 +101,19 @@
 
     if (direction === 'right') {
       if (wasInitiallyRight) {
-        // Повернули назад — прибираємо з removed
-        removed.value = removed.value.filter(i => getId(i) !== id);
+        emit('update:removed', props.removed.filter(i => getId(i) !== id));
       } else {
-        // Новий — додаємо в added (якщо ще немає)
-        if (!added.value.some(i => getId(i) === id)) {
-          added.value = [...added.value, item];
+        if (!props.added.some(i => getId(i) === id)) {
+          emit('update:added', [...props.added, item]);
         }
       }
     } else {
-      // direction === 'left'
       if (wasInitiallyRight) {
-        // Прибрали початковий — додаємо в removed
-        if (!removed.value.some(i => getId(i) === id)) {
-          removed.value = [...removed.value, item];
+        if (!props.removed.some(i => getId(i) === id)) {
+          emit('update:removed', [...props.removed, item]);
         }
       } else {
-        // Передумали додавати — прибираємо з added
-        added.value = added.value.filter(i => getId(i) !== id);
+        emit('update:added', props.added.filter(i => getId(i) !== id));
       }
     }
   };
