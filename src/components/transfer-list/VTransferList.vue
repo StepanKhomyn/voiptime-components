@@ -181,13 +181,12 @@
 </script>
 
 <<template>
-  <div class="vt-transfer-list">
+  <div class="vt-transfer-list" :style="listStyle">
 
     <div class="vt-transfer-list__column">
       <span v-if="leftLabel" class="vt-transfer-list__label">{{ leftLabel }}</span>
       <div
         class="vt-transfer-list__box"
-        :style="listStyle"
         @dragover.prevent
         @drop="onDrop($event, 'left')"
         @scroll="fetchLeft && onLeftScroll($event)"
