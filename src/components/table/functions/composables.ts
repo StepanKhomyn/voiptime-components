@@ -6,6 +6,8 @@ import type { ResizeState, StickyPosition, VTableColumnProps, VTableProps, VTabl
  * Композабл для роботи з колонками таблиці
  */
 export function useTableColumns(columns: VTableColumnProps[]) {
+  const DEFAULT_COLUMN_WIDTH = 150;
+
   const sortedColumns = computed(() => {
     const left = columns.filter(c => c.pinnedLeft);
     const right = columns.filter(c => c.pinnedRight);
@@ -28,27 +30,30 @@ export function useTableColumns(columns: VTableColumnProps[]) {
     return Math.max(Math.floor(availableWidth / flexibleColumns), 120);
   };
 
-  const getStickyOffset = (side: StickyPosition, index: number, hasSelectable: boolean = false): number => {
+  const getStickyOffset = (
+    side: StickyPosition,
+    index: number,
+    hasSelectable: boolean = false,
+    hasDragHandle: boolean = false
+  ): number => {
     const cols = sortedColumns.value;
     let offset = 0;
 
     if (side === 'left') {
-      // Додаємо ширину колонки з чекбоксами для лівих pinned колонок
-      if (hasSelectable) {
-        offset += 50; // Ширина селекційної колонки
-      }
+      if (hasSelectable) offset += 40;
+      if (hasDragHandle) offset += 40;
 
       for (let i = 0; i < index; i++) {
         const c = cols[i];
         if (c.pinnedLeft) {
-          offset += c.width || c.minWidth || getDefaultColumnWidth();
+          offset += Number(c.width) || Number(c.minWidth) || DEFAULT_COLUMN_WIDTH;
         }
       }
     } else {
       for (let i = cols.length - 1; i > index; i--) {
         const c = cols[i];
         if (c.pinnedRight) {
-          offset += c.width || c.minWidth || getDefaultColumnWidth();
+          offset += Number(c.width) || Number(c.minWidth) || DEFAULT_COLUMN_WIDTH;
         }
       }
     }
@@ -86,12 +91,14 @@ export function useTableStyles(props: VTableProps) {
 
     // Ширина колонки
     if (col.width) {
-      style.width = `${col.width}px`;
-      style.minWidth = `${col.width}px`;
-      style.maxWidth = `${col.width}px`;
+      const w = Number(col.width);
+      style.width = `${w}px`;
+      style.minWidth = `${w}px`;
+      style.maxWidth = `${w}px`;
     } else if (col.minWidth) {
-      style.minWidth = `${col.minWidth}px`;
-      style.width = `${col.minWidth}px`;
+      const m_w = Number(col.minWidth);
+      style.minWidth = `${m_w}px`;
+      style.width = `${m_w}px`;
       style.maxWidth = 'none';
     } else {
       const defaultWidth = getDefaultColumnWidth();
