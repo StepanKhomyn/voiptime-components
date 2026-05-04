@@ -1,3 +1,17 @@
+## [1.20.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.20.2...v1.20.3) (2026-05-04)
+
+
+### Bug Fixes
+
+* add pagination to VTransferList ([5fe7067](https://github.com/StepanKhomyn/voiptime-components/commit/5fe706761928c76bdc30485cdae165b7a166e03a))
+
+## [1.20.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.20.1...v1.20.2) (2026-05-04)
+
+
+### Bug Fixes
+
+* fixed table column pin bug with ID ([0e95a0e](https://github.com/StepanKhomyn/voiptime-components/commit/0e95a0ec796da0cd36f6037f51ccafbc7c10faa1))
+
 ## [1.20.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.20.0...v1.20.1) (2026-05-01)
 
 

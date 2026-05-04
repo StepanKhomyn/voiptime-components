@@ -1,7 +1,14 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-  import { computed, shallowRef } from 'vue';
+  import { computed, ref, shallowRef, onMounted, type Ref } from 'vue';
   import VButton from '@/components/button/VButton.vue';
   import type { VTransferListProps, VTransferListEmits } from './types';
+
+  // ─── Constants ────────────────────────────────────────────────────────────────
+
+  const ASYNC_LIMIT = 20;
+  const SCROLL_THRESHOLD = 50;
+
+  // ─── Props / Emits ────────────────────────────────────────────────────────────
 
   const props = withDefaults(defineProps<VTransferListProps<T>>(), {
     optionLabel: 'name' as any,
@@ -12,6 +19,10 @@
     rightPlaceholder: '',
     leftLabel: '',
     rightLabel: '',
+    leftTotal: 0,
+    rightTotal: 0,
+    leftLoading: false,
+    rightLoading: false,
   });
 
   const emit = defineEmits<VTransferListEmits<T>>();
@@ -25,34 +36,75 @@
 
   const activeLeft = shallowRef<T | null>(null);
   const activeRight = shallowRef<T | null>(null);
+  const leftOffset = ref(0);
+  const rightOffset = ref(0);
 
-  // ─── Helpers ─────────────────────────────────────────────────────────────────
+  // ─── Item helpers ─────────────────────────────────────────────────────────────
 
   const getId = (item: T): unknown => item[props.optionValue as keyof T];
-  const hasItem = (item: T, list: T[]): boolean => list.some(i => getId(i) === getId(item));
-  const withoutItem = (item: T, list: T[]): T[] => list.filter(i => getId(i) !== getId(item));
+  const getLabel = (item: T): string => String(item[props.optionLabel as keyof T] ?? '');
+  const isSameId = (a: T, b: T): boolean => getId(a) === getId(b);
+  const hasItem = (item: T, list: T[]): boolean => list.some(i => isSameId(i, item));
+  const withoutItem = (item: T, list: T[]): T[] => list.filter(i => !isSameId(i, item));
 
-  // ─── Label accessor ───────────────────────────────────────────────────────────
+  // ─── Async ────────────────────────────────────────────────────────────────────
 
-  const getLabel = (item: T): string =>
-    String(item[props.optionLabel as keyof T] ?? '');
+  const hasMoreLeft = computed(() => listOne.value.length < props.leftTotal);
+  const hasMoreRight = computed(() => listTwo.value.length < props.rightTotal);
 
-  // ─── Move ─────────────────────────────────────────────────────────────────────
+  const isNearBottom = (el: HTMLElement): boolean =>
+    el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD;
+
+  const fetchNextPage = async (
+    fetch: ((p: { limit: number; offset: number }) => Promise<void>) | undefined,
+    loading: boolean,
+    hasMore: boolean,
+    offset: Ref<number>,
+  ): Promise<void> => {
+    if (!fetch || loading || !hasMore) return;
+    offset.value += ASYNC_LIMIT;
+    await fetch({ limit: ASYNC_LIMIT, offset: offset.value });
+  };
+
+  onMounted(async () => {
+    await Promise.all([
+      props.fetchLeft?.({ limit: ASYNC_LIMIT, offset: 0 }),
+      props.fetchRight?.({ limit: ASYNC_LIMIT, offset: 0 }),
+    ]);
+  });
+
+  const onLeftScroll = async (e: Event): Promise<void> => {
+    if (!isNearBottom(e.target as HTMLElement)) return;
+    await fetchNextPage(props.fetchLeft, props.leftLoading, hasMoreLeft.value, leftOffset);
+  };
+
+  const onRightScroll = async (e: Event): Promise<void> => {
+    if (!isNearBottom(e.target as HTMLElement)) return;
+    await fetchNextPage(props.fetchRight, props.rightLoading, hasMoreRight.value, rightOffset);
+  };
+
+  // ─── Transfer ─────────────────────────────────────────────────────────────────
+
+  const transfer = (
+    item: T,
+    from: Ref<T[]>,
+    to: Ref<T[]>,
+    direction: 'left' | 'right',
+  ): void => {
+    if (hasItem(item, to.value)) return;
+    to.value = [...to.value, item];
+    from.value = withoutItem(item, from.value);
+    emit('transfer', item, direction);
+  };
 
   const moveToRight = (item: T): void => {
-    if (hasItem(item, listTwo.value)) return;
-    listTwo.value = [...listTwo.value, item];
-    listOne.value = withoutItem(item, listOne.value);
-    if (activeLeft.value && getId(activeLeft.value) === getId(item)) activeLeft.value = null;
-    emit('transfer', item, 'right');
+    transfer(item, listOne, listTwo, 'right');
+    if (activeLeft.value && isSameId(activeLeft.value, item)) activeLeft.value = null;
   };
 
   const moveToLeft = (item: T): void => {
-    if (hasItem(item, listOne.value)) return;
-    listOne.value = [...listOne.value, item];
-    listTwo.value = withoutItem(item, listTwo.value);
-    if (activeRight.value && getId(activeRight.value) === getId(item)) activeRight.value = null;
-    emit('transfer', item, 'left');
+    transfer(item, listTwo, listOne, 'left');
+    if (activeRight.value && isSameId(activeRight.value, item)) activeRight.value = null;
   };
 
   const moveAllToRight = (): void => {
@@ -74,18 +126,11 @@
 
   // ─── Selection ───────────────────────────────────────────────────────────────
 
-  const selectLeft = (item: T): void => {
-    activeLeft.value = item;
-    emit('selectLeft', item);
-  };
-
-  const selectRight = (item: T): void => {
-    activeRight.value = item;
-    emit('selectRight', item);
-  };
-
   const isActive = (item: T, active: T | null): boolean =>
-    !!active && getId(item) === getId(active);
+    !!active && isSameId(item, active);
+
+  const selectLeft = (item: T): void => { activeLeft.value = item; emit('selectLeft', item); };
+  const selectRight = (item: T): void => { activeRight.value = item; emit('selectRight', item); };
 
   // ─── Drag & Drop ─────────────────────────────────────────────────────────────
 
@@ -120,11 +165,10 @@
         class="vt-transfer-list__box"
         @dragover.prevent
         @drop="onDrop($event, 'left')"
+        @scroll="fetchLeft && onLeftScroll($event)"
       >
-        <slot v-if="!listOne.length" name="left-empty">
-          <span v-if="leftPlaceholder" class="vt-transfer-list__placeholder">
-            {{ leftPlaceholder }}
-          </span>
+        <slot v-if="!listOne.length && !leftLoading" name="left-empty">
+          <span v-if="leftPlaceholder" class="vt-transfer-list__placeholder">{{ leftPlaceholder }}</span>
         </slot>
 
         <div
@@ -138,21 +182,24 @@
         >
           <slot name="item" :item="item">{{ getLabel(item) }}</slot>
         </div>
+
+        <div v-if="leftLoading" class="vt-transfer-list__loader">
+          <slot name="left-loader"><span class="vt-transfer-list__loader-text">Loading...</span></slot>
+        </div>
       </div>
     </div>
 
     <!-- ── Controls ───────────────────────────────────────────────────────── -->
     <div class="vt-transfer-list__controls">
       <VButton
+        v-if="!fetchLeft"
         shape="square"
         type="default"
         icon="arrowDoubleRight"
         tooltip
         :disabled="!listOne.length"
         @click="moveAllToRight"
-      >
-        Move all right
-      </VButton>
+      >Move all right</VButton>
 
       <VButton
         shape="square"
@@ -161,9 +208,7 @@
         tooltip
         :disabled="!activeLeft"
         @click="moveSingleToRight"
-      >
-        Move right
-      </VButton>
+      >Move right</VButton>
 
       <VButton
         shape="square"
@@ -172,20 +217,17 @@
         tooltip
         :disabled="!activeRight"
         @click="moveSingleToLeft"
-      >
-        Move left
-      </VButton>
+      >Move left</VButton>
 
       <VButton
+        v-if="!fetchRight"
         shape="square"
         type="default"
         icon="arrowDoubleLeft"
         tooltip
         :disabled="!listTwo.length"
         @click="moveAllToLeft"
-      >
-        Move all left
-      </VButton>
+      >Move all left</VButton>
     </div>
 
     <!-- ── Right column ───────────────────────────────────────────────────── -->
@@ -198,11 +240,10 @@
         :style="listStyle"
         @dragover.prevent
         @drop="onDrop($event, 'right')"
+        @scroll="fetchRight && onRightScroll($event)"
       >
-        <slot v-if="!listTwo.length" name="right-empty">
-          <span v-if="rightPlaceholder" class="vt-transfer-list__placeholder">
-            {{ rightPlaceholder }}
-          </span>
+        <slot v-if="!listTwo.length && !rightLoading" name="right-empty">
+          <span v-if="rightPlaceholder" class="vt-transfer-list__placeholder">{{ rightPlaceholder }}</span>
         </slot>
 
         <div
@@ -215,6 +256,10 @@
           @click="selectRight(item)"
         >
           <slot name="item" :item="item">{{ getLabel(item) }}</slot>
+        </div>
+
+        <div v-if="rightLoading" class="vt-transfer-list__loader">
+          <slot name="right-loader"><span class="vt-transfer-list__loader-text">Loading...</span></slot>
         </div>
       </div>
     </div>
