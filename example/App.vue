@@ -28,6 +28,7 @@
   import DemoDesignTokens from './DemoDesignTokens.vue';
   import DemoInfoBox from './DemoInfoBox.vue';
   import DemoTransferList from './DemoTransferList.vue';
+  import DemoBreadcrumb from './DemoBreadcrumb.vue';
 
   const searchQuery = ref('');
 
@@ -89,6 +90,7 @@
         { name: 'Тултіпи', icon: '💬', component: DemoTooltip },
         { name: 'Tabs', icon: '📑', component: DemoTabs },
         { name: 'Sidebar', icon: '◀', component: DemoSidebar },
+        { name: 'Breadcrumb', icon: '◀', component: DemoBreadcrumb },
       ],
     },
 

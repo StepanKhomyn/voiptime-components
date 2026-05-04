@@ -101,7 +101,7 @@
   // Якщо не ініціалізовано дефолтні колонки, ініціалізовуємо
   watch(
     internalColumns,
-    (cols) => {
+    cols => {
       if (!isDefaultColumnsInitialized.value && cols.length > 0) {
         defaultColumns.value = cols.map(col => ({ ...col }));
         isDefaultColumnsInitialized.value = true;
@@ -260,9 +260,13 @@
   };
 
   const handleColumnPin = (column: VTableColumnProps, position: 'left' | 'right' | 'none') => {
+    const domWidth = columnRefs.value[column.prop]?.getBoundingClientRect().width;
+    const currentWidth = Number(column.width) || (domWidth ? Math.round(domWidth) : undefined);
+
     const updates: Partial<VTableColumnProps> = {
       pinnedLeft: position === 'left',
       pinnedRight: position === 'right',
+      width: currentWidth,
     };
 
     updateColumn(column.prop, updates);
@@ -348,15 +352,33 @@
   };
 
   const getColumnStyleWithContext = (col: VTableColumnProps, index: number) => {
-    return getColumnStyle(col, index, getStickyOffset, getDefaultColumnWidth);
+    return getColumnStyle(
+      col,
+      index,
+      (side, idx, hasSelectable) =>
+        getStickyOffset(side, idx, hasSelectable, props.rowDraggable && props.showDragHandle),
+      getDefaultColumnWidth
+    );
   };
 
   const getHeaderStyleWithContext = (col: VTableColumnProps, index: number) => {
-    return getHeaderStyle(col, index, getStickyOffset, getDefaultColumnWidth);
+    return getHeaderStyle(
+      col,
+      index,
+      (side, idx, hasSelectable) =>
+        getStickyOffset(side, idx, hasSelectable, props.rowDraggable && props.showDragHandle),
+      getDefaultColumnWidth
+    );
   };
 
   const getFooterStyleWithContext = (col: VTableColumnProps, index: number) => {
-    return getFooterStyle(col, index, getStickyOffset, getDefaultColumnWidth);
+    return getFooterStyle(
+      col,
+      index,
+      (side, idx, hasSelectable) =>
+        getStickyOffset(side, idx, hasSelectable, props.rowDraggable && props.showDragHandle),
+      getDefaultColumnWidth
+    );
   };
 
   const stripHtml = (html: string): string => {
@@ -549,9 +571,9 @@
               <ColumnActions
                 v-if="col.actionColumn && !col.manage"
                 :all-columns="sortedColumns"
-                :default-columns="defaultColumns"
                 :column="col"
                 :columnsSelector="props.columnsSelector"
+                :default-columns="defaultColumns"
                 @pin="handleColumnPin"
                 @update-columns="handleColumnsUpdate"
               />
