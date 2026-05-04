@@ -1,3 +1,10 @@
+## [1.21.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.5...v1.21.6) (2026-05-04)
+
+
+### Bug Fixes
+
+* add limit as a prop in VTransferList ([ccfaa32](https://github.com/StepanKhomyn/voiptime-components/commit/ccfaa32bacb8af3d6a23a5da68a313de42525c4c))
+
 ## [1.21.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.4...v1.21.5) (2026-05-04)
 
 
