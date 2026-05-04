@@ -1,3 +1,10 @@
+## [1.21.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.1...v1.21.2) (2026-05-04)
+
+
+### Bug Fixes
+
+* Реалізовано активацію останнього айтему бредкрампу по дефолту ([a1fbecf](https://github.com/StepanKhomyn/voiptime-components/commit/a1fbecf887d6a9ae1904ceb67403b2c5e0117da5))
+
 ## [1.21.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.0...v1.21.1) (2026-05-04)
 
 
