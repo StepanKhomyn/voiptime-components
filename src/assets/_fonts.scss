@@ -88,6 +88,13 @@
   --vt-tabs-font-size: var(--font-size-base);
   --vt-tabs-line-height: 100%;
   --vt-tabs-letter-spacing: 0%;
+
+  // Breadcrumb
+  --vt-breadcrumb-font-family: var(--font-secondary);
+  --vt-breadcrumb-font-weight: var(--font-weight-regular);
+  --vt-breadcrumb-font-size: var(--font-size-base);
+  --vt-breadcrumb-line-height: 20px;
+  --vt-breadcrumb-letter-spacing: 0%;
 }
 
 @font-face {

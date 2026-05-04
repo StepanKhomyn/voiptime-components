@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, inject, resolveComponent } from 'vue';
+  import { computed, inject } from 'vue';
   import type { VBreadcrumbItemEmits, VBreadcrumbItemProps } from './types';
 
   const props = withDefaults(defineProps<VBreadcrumbItemProps>(), {
@@ -9,20 +9,21 @@
 
   const emit = defineEmits<VBreadcrumbItemEmits>();
 
-  // ─── Inject separator від батьківського VBreadcrumb ───────────────────────
-
   const separator = inject<string>('vt-breadcrumb-separator', '/');
 
-  // ─── Динамічний тег ───────────────────────────────────────────────────────
-
-  const RouterLink = resolveComponent('RouterLink');
+  const hasRouter = !!inject<unknown>('router', null);
 
   const tag = computed(() => {
     if (props.active || props.disabled || !props.to) return 'span';
-    return RouterLink;
+    if (!hasRouter) return 'a';
+    return 'RouterLink';
   });
 
-  // ─── Click handler ────────────────────────────────────────────────────────
+  const linkProps = computed(() => {
+    if (tag.value === 'a') return { href: String(props.to) };
+    if (tag.value === 'RouterLink') return { to: props.to };
+    return {};
+  });
 
   const handleClick = (event: MouseEvent): void => {
     if (props.disabled) return;
@@ -50,8 +51,8 @@
         'vt-breadcrumb__link--active': active,
         'vt-breadcrumb__link--disabled': disabled,
       }"
-      :to="to"
       class="vt-breadcrumb__link"
+      v-bind="linkProps"
       @click="handleClick"
     >
       <slot />

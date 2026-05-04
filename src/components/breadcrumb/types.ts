@@ -1,8 +1,7 @@
 export interface VBreadcrumbProps {
-  /** Роздільник між елементами */
   separator?: string;
-  /** aria-label для nav елемента */
   ariaLabel?: string;
+  goBack?: boolean;
 }
 
 export interface VBreadcrumbItemProps {
