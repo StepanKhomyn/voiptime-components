@@ -43,6 +43,11 @@ export interface VTransferListProps<T extends Record<string, any>> {
   rightTotal?: number;
   /** Індикатор завантаження правої колонки */
   rightLoading?: boolean;
+  /**
+   * Початковий стан правої колонки при завантаженні (тільки edit режим).
+   * Використовується щоб відрізнити "вже були призначені" від "щойно додали".
+   */
+  initialRight?: T[];
 }
 
 export interface VTransferListEmits<T extends Record<string, any>> {
@@ -50,4 +55,6 @@ export interface VTransferListEmits<T extends Record<string, any>> {
   selectRight: [item: T];
   /** Емітується при кожному переносі елемента, з напрямком */
   transfer: [item: T, direction: 'left' | 'right'];
+  'update:added': [items: T[]];
+  'update:removed': [items: T[]];
 }

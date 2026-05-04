@@ -85,6 +85,42 @@
 
   // ─── Transfer ─────────────────────────────────────────────────────────────────
 
+  const added = defineModel<T[]>('added', { default: () => [] });
+  const removed = defineModel<T[]>('removed', { default: () => [] });
+
+  const initialRightIds = new Set(
+    (props.initialRight ?? []).map(item => getId(item))
+  );
+
+  const trackTransfer = (item: T, direction: 'left' | 'right'): void => {
+    const id = getId(item);
+    const isInitiallyRight = initialRightIds.has(id);
+
+    if (direction === 'right') {
+      // Додали в праву
+      // Якщо був в початковому стані — прибираємо з removed (передумали видаляти)
+      if (isInitiallyRight) {
+        removed.value = removed.value.filter(i => getId(i) !== id);
+      } else {
+        // Новий — додаємо в added (якщо ще немає)
+        if (!added.value.some(i => getId(i) === id)) {
+          added.value = [...added.value, item];
+        }
+      }
+    } else {
+      // Видалили з правої
+      // Якщо був в початковому стані — додаємо в removed
+      if (isInitiallyRight) {
+        if (!removed.value.some(i => getId(i) === id)) {
+          removed.value = [...removed.value, item];
+        }
+      } else {
+        // Не був початковим — просто прибираємо з added (передумали додавати)
+        added.value = added.value.filter(i => getId(i) !== id);
+      }
+    }
+  };
+
   const transfer = (
     item: T,
     from: Ref<T[]>,
@@ -100,11 +136,13 @@
   const moveToRight = (item: T): void => {
     transfer(item, listOne, listTwo, 'right');
     if (activeLeft.value && isSameId(activeLeft.value, item)) activeLeft.value = null;
+    trackTransfer(item, 'right');
   };
 
   const moveToLeft = (item: T): void => {
     transfer(item, listTwo, listOne, 'left');
     if (activeRight.value && isSameId(activeRight.value, item)) activeRight.value = null;
+    trackTransfer(item, 'left');
   };
 
   const moveAllToRight = (): void => {
