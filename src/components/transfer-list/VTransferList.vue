@@ -81,6 +81,7 @@
     isFetching: Ref<boolean>,
     hasMore: boolean,
     loaded: Ref<number>,
+    onAfterFetch?: () => void, // ← додали колбек
   ): Promise<void> => {
     if (!fetchFn || isFetching.value || !hasMore) return;
 
@@ -89,6 +90,8 @@
 
     try {
       await fetchFn({ limit: limit.value, offset });
+      await nextTick();
+      onAfterFetch?.();
       loaded.value += limit.value;
     } finally {
       isFetching.value = false;
@@ -102,7 +105,8 @@
 
   const onRightScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
-    await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightLoaded);
+    // ← для правої колонки — snapshot нових елементів після кожної сторінки
+    await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightLoaded, snapshotInitialRight);
   };
 
   // ─── Initial Load ─────────────────────────────────────────────────────────────
