@@ -1,10 +1,13 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
   import { computed, nextTick, ref, shallowRef, onMounted, type Ref } from 'vue';
   import VButton from '@/components/button/VButton.vue';
-  import type { VTransferListProps, VTransferListEmits } from './types';
+  import type { VTransferListProps, VTransferListEmits, VTransferListFetchParams } from './types';
 
-  const asyncLimit = computed(() => props.fetchLimit ?? 20);
+  // ─── Constants ────────────────────────────────────────────────────────────────
+
   const SCROLL_THRESHOLD = 50;
+
+  // ─── Props & Emits ────────────────────────────────────────────────────────────
 
   const props = withDefaults(defineProps<VTransferListProps<T>>(), {
     optionLabel: 'name' as any,
@@ -26,19 +29,43 @@
 
   const emit = defineEmits<VTransferListEmits<T>>();
 
+  // ─── Models ───────────────────────────────────────────────────────────────────
+
   const listOne = defineModel<T[]>('listOne', { required: true, default: () => [] });
   const listTwo = defineModel<T[]>('listTwo', { required: true, default: () => [] });
+
+  // ─── State ────────────────────────────────────────────────────────────────────
 
   const activeLeft  = shallowRef<T | null>(null);
   const activeRight = shallowRef<T | null>(null);
   const leftOffset  = ref(0);
   const rightOffset = ref(0);
+  const leftFetching  = ref(false);
+  const rightFetching = ref(false);
 
-  // Snapshot правої колонки після першого завантаження
-  // Потрібен щоб відрізнити "вже були" від "щойно додали"
+  /**
+   * IDs елементів що були в правій колонці при першому завантаженні.
+   * Використовується для розрізнення "вже були призначені" від "щойно додали".
+   */
   const initialRightIds = new Set<unknown>();
 
-  // ─── Helpers ──────────────────────────────────────────────────────────────
+  // ─── Computed ─────────────────────────────────────────────────────────────────
+
+  const limit = computed(() => props.fetchLimit ?? 20);
+
+  const hasMoreLeft = computed(() =>
+    props.fetchLeft ? listOne.value.length < props.leftTotal : false,
+  );
+
+  const hasMoreRight = computed(() =>
+    props.fetchRight ? listTwo.value.length < props.rightTotal : false,
+  );
+
+  const listStyle = computed(() =>
+    props.heightStyle ? { height: props.heightStyle } : {},
+  );
+
+  // ─── Item Helpers ─────────────────────────────────────────────────────────────
 
   const getId    = (item: T): unknown => item[props.optionValue as keyof T];
   const getLabel = (item: T): string  => String(item[props.optionLabel as keyof T] ?? '');
@@ -46,28 +73,29 @@
   const hasItem  = (item: T, list: T[]): boolean => list.some(i => isSameId(i, item));
   const without  = (item: T, list: T[]): T[] => list.filter(i => !isSameId(i, item));
 
-  // ─── Async / infinite scroll ──────────────────────────────────────────────
-
-  const hasMoreLeft  = computed(() => listOne.value.length < props.leftTotal);
-  const hasMoreRight = computed(() => listTwo.value.length < props.rightTotal);
+  // ─── Pagination ───────────────────────────────────────────────────────────────
 
   const isNearBottom = (el: HTMLElement): boolean =>
     el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD;
 
-  const leftFetching  = ref(false);
-  const rightFetching = ref(false);
-
+  /**
+   * Завантажує наступну сторінку.
+   * Offset інкрементується лише після успішного fetch щоб уникнути збою при помилці.
+   */
   const fetchNextPage = async (
-    fetch: ((p: { limit: number; offset: number }) => Promise<void>) | undefined,
+    fetch: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
     isFetching: Ref<boolean>,
     hasMore: boolean,
     offset: Ref<number>,
   ): Promise<void> => {
     if (!fetch || isFetching.value || !hasMore) return;
+
     isFetching.value = true;
-    offset.value += asyncLimit.value;
+    const nextOffset = offset.value + limit.value;
+
     try {
-      await fetch({ limit: asyncLimit.value, offset: offset.value });
+      await fetch({ limit: limit.value, offset: nextOffset });
+      offset.value = nextOffset; // ✅ інкремент тільки після успіху
     } finally {
       isFetching.value = false;
     }
@@ -83,18 +111,45 @@
     await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightOffset);
   };
 
-  onMounted(async () => {
-    await Promise.all([
-      props.fetchLeft?.({ limit: asyncLimit.value, offset: 0 }),
-      props.fetchRight?.({ limit: asyncLimit.value, offset: 0 }),
-    ]);
+  // ─── Initial Load ─────────────────────────────────────────────────────────────
 
-    await nextTick();
+  /**
+   * Знімає snapshot правої колонки після завантаження.
+   * Всі ID що є в правій після першого fetch — "вже були призначені".
+   */
+  const snapshotInitialRight = (): void => {
     listTwo.value.forEach(item => initialRightIds.add(getId(item)));
+  };
+
+  onMounted(async () => {
+    const fetches = [
+      props.fetchLeft?.({ limit: limit.value, offset: 0 }),
+      props.fetchRight?.({ limit: limit.value, offset: 0 }),
+    ].filter(Boolean);
+
+    await Promise.all(fetches);
+    await nextTick();
+
+    snapshotInitialRight();
+
+    // Offset = реальна кількість завантажених елементів, а не просто limit
+    leftOffset.value  = listOne.value.length;
+    rightOffset.value = listTwo.value.length;
   });
 
-  // ─── Track added/removed ──────────────────────────────────────────────────
+  // ─── Transfer Tracking ────────────────────────────────────────────────────────
 
+  /**
+   * Трекає переміщення елемента для added/removed списків.
+   *
+   * Логіка:
+   * - direction='right' (додаємо до правої):
+   *   - якщо був початково → прибираємо з removed
+   *   - якщо не був → додаємо до added
+   * - direction='left' (прибираємо з правої):
+   *   - якщо був початково → додаємо до removed
+   *   - якщо не був → прибираємо з added
+   */
   const trackTransfer = (item: T, direction: 'left' | 'right'): void => {
     const id = getId(item);
     const wasInitiallyRight = initialRightIds.has(id);
@@ -103,22 +158,20 @@
       if (wasInitiallyRight) {
         emit('update:removed', props.removed.filter(i => getId(i) !== id));
       } else {
-        if (!props.added.some(i => getId(i) === id)) {
-          emit('update:added', [...props.added, item]);
-        }
+        const alreadyAdded = props.added.some(i => getId(i) === id);
+        if (!alreadyAdded) emit('update:added', [...props.added, item]);
       }
     } else {
       if (wasInitiallyRight) {
-        if (!props.removed.some(i => getId(i) === id)) {
-          emit('update:removed', [...props.removed, item]);
-        }
+        const alreadyRemoved = props.removed.some(i => getId(i) === id);
+        if (!alreadyRemoved) emit('update:removed', [...props.removed, item]);
       } else {
         emit('update:added', props.added.filter(i => getId(i) !== id));
       }
     }
   };
 
-  // ─── Transfer ─────────────────────────────────────────────────────────────
+  // ─── Transfer Actions ─────────────────────────────────────────────────────────
 
   const transfer = (item: T, from: Ref<T[]>, to: Ref<T[]>, direction: 'left' | 'right'): void => {
     if (hasItem(item, to.value)) return;
@@ -140,30 +193,32 @@
 
   const moveAllToRight = (): void => {
     if (!listOne.value.length) return;
-    listOne.value.forEach(item => trackTransfer(item, 'right'));
-    listTwo.value  = [...listTwo.value, ...listOne.value];
-    listOne.value  = [];
+    const items = [...listOne.value];
+    items.forEach(item => trackTransfer(item, 'right'));
+    listTwo.value    = [...listTwo.value, ...items];
+    listOne.value    = [];
     activeLeft.value = null;
   };
 
   const moveAllToLeft = (): void => {
     if (!listTwo.value.length) return;
-    listTwo.value.forEach(item => trackTransfer(item, 'left'));
-    listOne.value  = [...listOne.value, ...listTwo.value];
-    listTwo.value  = [];
+    const items = [...listTwo.value];
+    items.forEach(item => trackTransfer(item, 'left'));
+    listOne.value     = [...listOne.value, ...items];
+    listTwo.value     = [];
     activeRight.value = null;
   };
 
   const moveSingleToRight = (): void => { if (activeLeft.value)  moveToRight(activeLeft.value); };
   const moveSingleToLeft  = (): void => { if (activeRight.value) moveToLeft(activeRight.value); };
 
-  // ─── Selection ────────────────────────────────────────────────────────────
+  // ─── Selection ────────────────────────────────────────────────────────────────
 
-  const isActive   = (item: T, active: T | null): boolean => !!active && isSameId(item, active);
+  const isActive    = (item: T, active: T | null): boolean => !!active && isSameId(item, active);
   const selectLeft  = (item: T): void => { activeLeft.value  = item; emit('selectLeft',  item); };
   const selectRight = (item: T): void => { activeRight.value = item; emit('selectRight', item); };
 
-  // ─── Drag & Drop ──────────────────────────────────────────────────────────
+  // ─── Drag & Drop ──────────────────────────────────────────────────────────────
 
   const onDragStart = (event: DragEvent, item: T): void => {
     event.dataTransfer?.setData('application/json', JSON.stringify(item));
@@ -179,10 +234,6 @@
       console.error('[VTransferList] drop parse error:', e);
     }
   };
-
-  // ─── Styles ───────────────────────────────────────────────────────────────
-
-  const listStyle = computed(() => props.heightStyle ? { height: props.heightStyle } : {});
 </script>
 
 <<template>
@@ -194,7 +245,7 @@
         class="vt-transfer-list__box"
         @dragover.prevent
         @drop="onDrop($event, 'left')"
-        @scroll="fetchLeft && onLeftScroll($event)"
+        @scroll="onLeftScroll($event)"
       >
         <slot v-if="!listOne.length && !leftLoading" name="left-empty">
           <span v-if="leftPlaceholder" class="vt-transfer-list__placeholder">{{ leftPlaceholder }}</span>
@@ -252,7 +303,7 @@
         :style="listStyle"
         @dragover.prevent
         @drop="onDrop($event, 'right')"
-        @scroll="fetchRight && onRightScroll($event)"
+        @scroll="onRightScroll($event)"
       >
         <slot v-if="!listTwo.length && !rightLoading" name="right-empty">
           <span v-if="rightPlaceholder" class="vt-transfer-list__placeholder">{{ rightPlaceholder }}</span>
