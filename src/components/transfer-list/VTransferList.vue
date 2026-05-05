@@ -182,6 +182,14 @@
     }
   };
 
+  // ─── Auto-fill ────────────────────────────────────────────────────────────────
+
+  const fillLeftIfNeeded = (): Promise<void> =>
+    fillIfNoScroll(leftBoxRef.value, props.fetchLeft, leftFetching, hasMoreLeft, leftLoaded);
+
+  const fillRightIfNeeded = (): Promise<void> =>
+    fillIfNoScroll(rightBoxRef.value, props.fetchRight, rightFetching, hasMoreRight, rightLoaded, snapshotInitialRight);
+
   // ─── Transfer Actions ─────────────────────────────────────────────────────────
 
   const transfer = (item: T, from: Ref<T[]>, to: Ref<T[]>, direction: 'left' | 'right'): void => {
@@ -192,32 +200,40 @@
     emit('transfer', item, direction);
   };
 
-  const moveToRight = (item: T): void => {
+  const moveToRight = async (item: T): Promise<void> => {
     transfer(item, listOne, listTwo, 'right');
     if (activeLeft.value && isSameId(activeLeft.value, item)) activeLeft.value = null;
+    await nextTick();
+    await fillLeftIfNeeded();
   };
 
-  const moveToLeft = (item: T): void => {
+  const moveToLeft = async (item: T): Promise<void> => {
     transfer(item, listTwo, listOne, 'left');
     if (activeRight.value && isSameId(activeRight.value, item)) activeRight.value = null;
+    await nextTick();
+    await fillRightIfNeeded();
   };
 
-  const moveAllToRight = (): void => {
+  const moveAllToRight = async (): Promise<void> => {
     if (!listOne.value.length) return;
     const items = [...listOne.value];
     items.forEach(item => trackTransfer(item, 'right'));
     listTwo.value    = [...listTwo.value, ...items];
     listOne.value    = [];
     activeLeft.value = null;
+    await nextTick();
+    await fillLeftIfNeeded();
   };
 
-  const moveAllToLeft = (): void => {
+  const moveAllToLeft = async (): Promise<void> => {
     if (!listTwo.value.length) return;
     const items = [...listTwo.value];
     items.forEach(item => trackTransfer(item, 'left'));
     listOne.value     = [...listOne.value, ...items];
     listTwo.value     = [];
     activeRight.value = null;
+    await nextTick();
+    await fillRightIfNeeded();
   };
 
   const moveSingleToRight = (): void => { if (activeLeft.value)  moveToRight(activeLeft.value); };
