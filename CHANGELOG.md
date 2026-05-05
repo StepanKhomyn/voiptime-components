@@ -1,3 +1,10 @@
+## [1.21.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.10...v1.21.11) (2026-05-05)
+
+
+### Bug Fixes
+
+* Змінено колір іконки транскррипції на currentColor ([70afc99](https://github.com/StepanKhomyn/voiptime-components/commit/70afc99bc4f40cc34bcb59d3e4653c30f222122c))
+
 ## [1.21.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.9...v1.21.10) (2026-05-05)
 
 
