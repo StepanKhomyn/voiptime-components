@@ -1,3 +1,10 @@
+## [1.21.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.7...v1.21.8) (2026-05-05)
+
+
+### Bug Fixes
+
+* fixes in VTransferList ([c9909fa](https://github.com/StepanKhomyn/voiptime-components/commit/c9909fa5e682efedff40c20b7a9d023cc0626115))
+
 ## [1.21.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.6...v1.21.7) (2026-05-04)
 
 
