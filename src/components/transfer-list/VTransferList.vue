@@ -34,38 +34,8 @@
   const listOne = defineModel<T[]>('listOne', { required: true, default: () => [] });
   const listTwo = defineModel<T[]>('listTwo', { required: true, default: () => [] });
 
-  // ─── State ────────────────────────────────────────────────────────────────────
-
-  const activeLeft  = shallowRef<T | null>(null);
-  const activeRight = shallowRef<T | null>(null);
-  const leftOffset  = ref(0);
-  const rightOffset = ref(0);
-  const leftFetching  = ref(false);
-  const rightFetching = ref(false);
-
-  /**
-   * IDs елементів що були в правій колонці при першому завантаженні.
-   * Використовується для розрізнення "вже були призначені" від "щойно додали".
-   */
-  const initialRightIds = new Set<unknown>();
-
-  // ─── Computed ─────────────────────────────────────────────────────────────────
-
-  const limit = computed(() => props.fetchLimit ?? 20);
-
-  const hasMoreLeft = computed(() =>
-    props.fetchLeft ? listOne.value.length < props.leftTotal : false,
-  );
-
-  const hasMoreRight = computed(() =>
-    props.fetchRight ? listTwo.value.length < props.rightTotal : false,
-  );
-
-  const listStyle = computed(() =>
-    props.heightStyle ? { height: props.heightStyle } : {},
-  );
-
   // ─── Item Helpers ─────────────────────────────────────────────────────────────
+  // ⚠️ Мають бути ПЕРШИМИ — використовуються скрізь нижче
 
   const getId    = (item: T): unknown => item[props.optionValue as keyof T];
   const getLabel = (item: T): string  => String(item[props.optionLabel as keyof T] ?? '');
@@ -73,29 +43,53 @@
   const hasItem  = (item: T, list: T[]): boolean => list.some(i => isSameId(i, item));
   const without  = (item: T, list: T[]): T[] => list.filter(i => !isSameId(i, item));
 
+  // ─── State ────────────────────────────────────────────────────────────────────
+
+  const activeLeft    = shallowRef<T | null>(null);
+  const activeRight   = shallowRef<T | null>(null);
+  const leftFetching  = ref(false);
+  const rightFetching = ref(false);
+
+  const leftLoaded  = ref(0);
+  const rightLoaded = ref(0);
+
+  const initialRightIds = new Set<unknown>();
+
+  // ─── Computed ─────────────────────────────────────────────────────────────────
+
+  const limit = computed(() => props.fetchLimit ?? 20);
+
+  const hasMoreLeft = computed(() =>
+    !!props.fetchLeft && leftLoaded.value < props.leftTotal,
+  );
+
+  const hasMoreRight = computed(() =>
+    !!props.fetchRight && rightLoaded.value < props.rightTotal,
+  );
+
+  const listStyle = computed(() =>
+    props.heightStyle ? { height: props.heightStyle } : {},
+  );
+
   // ─── Pagination ───────────────────────────────────────────────────────────────
 
   const isNearBottom = (el: HTMLElement): boolean =>
     el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD;
 
-  /**
-   * Завантажує наступну сторінку.
-   * Offset інкрементується лише після успішного fetch щоб уникнути збою при помилці.
-   */
   const fetchNextPage = async (
-    fetch: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
+    fetchFn: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
     isFetching: Ref<boolean>,
     hasMore: boolean,
-    offset: Ref<number>,
+    loaded: Ref<number>,
   ): Promise<void> => {
-    if (!fetch || isFetching.value || !hasMore) return;
+    if (!fetchFn || isFetching.value || !hasMore) return;
 
     isFetching.value = true;
-    const nextOffset = offset.value + limit.value;
+    const offset = loaded.value;
 
     try {
-      await fetch({ limit: limit.value, offset: nextOffset });
-      offset.value = nextOffset; // ✅ інкремент тільки після успіху
+      await fetchFn({ limit: limit.value, offset });
+      loaded.value += limit.value;
     } finally {
       isFetching.value = false;
     }
@@ -103,20 +97,16 @@
 
   const onLeftScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
-    await fetchNextPage(props.fetchLeft, leftFetching, hasMoreLeft.value, leftOffset);
+    await fetchNextPage(props.fetchLeft, leftFetching, hasMoreLeft.value, leftLoaded);
   };
 
   const onRightScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
-    await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightOffset);
+    await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightLoaded);
   };
 
   // ─── Initial Load ─────────────────────────────────────────────────────────────
 
-  /**
-   * Знімає snapshot правої колонки після завантаження.
-   * Всі ID що є в правій після першого fetch — "вже були призначені".
-   */
   const snapshotInitialRight = (): void => {
     listTwo.value.forEach(item => initialRightIds.add(getId(item)));
   };
@@ -132,24 +122,12 @@
 
     snapshotInitialRight();
 
-    // Offset = реальна кількість завантажених елементів, а не просто limit
-    leftOffset.value  = listOne.value.length;
-    rightOffset.value = listTwo.value.length;
+    leftLoaded.value  = limit.value;
+    rightLoaded.value = limit.value;
   });
 
   // ─── Transfer Tracking ────────────────────────────────────────────────────────
 
-  /**
-   * Трекає переміщення елемента для added/removed списків.
-   *
-   * Логіка:
-   * - direction='right' (додаємо до правої):
-   *   - якщо був початково → прибираємо з removed
-   *   - якщо не був → додаємо до added
-   * - direction='left' (прибираємо з правої):
-   *   - якщо був початково → додаємо до removed
-   *   - якщо не був → прибираємо з added
-   */
   const trackTransfer = (item: T, direction: 'left' | 'right'): void => {
     const id = getId(item);
     const wasInitiallyRight = initialRightIds.has(id);
