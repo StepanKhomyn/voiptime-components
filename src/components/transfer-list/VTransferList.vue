@@ -76,12 +76,15 @@
   const isNearBottom = (el: HTMLElement): boolean =>
     el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD;
 
+  const hasScroll = (el: HTMLElement): boolean =>
+    el.scrollHeight > el.clientHeight;
+
   const fetchNextPage = async (
     fetchFn: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
     isFetching: Ref<boolean>,
     hasMore: boolean,
     loaded: Ref<number>,
-    onAfterFetch?: () => void, // ← додали колбек
+    onAfterFetch?: () => void,
   ): Promise<void> => {
     if (!fetchFn || isFetching.value || !hasMore) return;
 
@@ -98,6 +101,27 @@
     }
   };
 
+  // Підвантажує сторінки доки контейнер не заповниться (немає скрола) або більше нема даних
+  const fillIfNoScroll = async (
+    boxEl: HTMLElement | null,
+    fetchFn: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
+    isFetching: Ref<boolean>,
+    hasMoreRef: Ref<boolean>,
+    loaded: Ref<number>,
+    onAfterFetch?: () => void,
+  ): Promise<void> => {
+    if (!boxEl || !fetchFn) return;
+
+    while (!hasScroll(boxEl) && hasMoreRef.value) {
+      await fetchNextPage(fetchFn, isFetching, hasMoreRef.value, loaded, onAfterFetch);
+    }
+  };
+
+  // ─── Template Refs ────────────────────────────────────────────────────────────
+
+  const leftBoxRef  = ref<HTMLElement | null>(null);
+  const rightBoxRef = ref<HTMLElement | null>(null);
+
   const onLeftScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
     await fetchNextPage(props.fetchLeft, leftFetching, hasMoreLeft.value, leftLoaded);
@@ -105,7 +129,6 @@
 
   const onRightScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
-    // ← для правої колонки — snapshot нових елементів після кожної сторінки
     await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightLoaded, snapshotInitialRight);
   };
 
@@ -128,6 +151,12 @@
 
     leftLoaded.value  = limit.value;
     rightLoaded.value = limit.value;
+
+    // Після першого завантаження — заповнюємо контейнери якщо скрола немає
+    await Promise.all([
+      fillIfNoScroll(leftBoxRef.value, props.fetchLeft, leftFetching, hasMoreLeft, leftLoaded),
+      fillIfNoScroll(rightBoxRef.value, props.fetchRight, rightFetching, hasMoreRight, rightLoaded, snapshotInitialRight),
+    ]);
   });
 
   // ─── Transfer Tracking ────────────────────────────────────────────────────────
@@ -224,6 +253,7 @@
     <div class="vt-transfer-list__column">
       <span v-if="leftLabel" class="vt-transfer-list__label">{{ leftLabel }}</span>
       <div
+        ref="leftBoxRef"
         class="vt-transfer-list__box"
         @dragover.prevent
         @drop="onDrop($event, 'left')"
@@ -280,6 +310,7 @@
     <div class="vt-transfer-list__column">
       <span v-if="rightLabel" class="vt-transfer-list__label">{{ rightLabel }}</span>
       <div
+        ref="rightBoxRef"
         class="vt-transfer-list__box"
         :class="{ 'vt-transfer-list__box--invalid': !isValidRightContainer }"
         :style="listStyle"
