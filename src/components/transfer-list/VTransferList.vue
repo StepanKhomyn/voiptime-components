@@ -1,10 +1,13 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
-  import { computed, ref, shallowRef, onMounted, type Ref } from 'vue';
+  import { computed, nextTick, ref, shallowRef, onMounted, type Ref } from 'vue';
   import VButton from '@/components/button/VButton.vue';
-  import type { VTransferListProps, VTransferListEmits } from './types';
+  import type { VTransferListProps, VTransferListEmits, VTransferListFetchParams } from './types';
 
-  const asyncLimit = computed(() => props.fetchLimit ?? 20);
+  // ─── Constants ────────────────────────────────────────────────────────────────
+
   const SCROLL_THRESHOLD = 50;
+
+  // ─── Props & Emits ────────────────────────────────────────────────────────────
 
   const props = withDefaults(defineProps<VTransferListProps<T>>(), {
     optionLabel: 'name' as any,
@@ -20,25 +23,19 @@
     leftLoading: false,
     rightLoading: false,
     fetchLimit: 20,
+    added: () => [],
+    removed: () => [],
   });
 
   const emit = defineEmits<VTransferListEmits<T>>();
 
+  // ─── Models ───────────────────────────────────────────────────────────────────
+
   const listOne = defineModel<T[]>('listOne', { required: true, default: () => [] });
   const listTwo = defineModel<T[]>('listTwo', { required: true, default: () => [] });
-  const added   = defineModel<T[]>('added',   { default: () => [] });
-  const removed = defineModel<T[]>('removed', { default: () => [] });
 
-  const activeLeft  = shallowRef<T | null>(null);
-  const activeRight = shallowRef<T | null>(null);
-  const leftOffset  = ref(0);
-  const rightOffset = ref(0);
-
-  // Snapshot правої колонки після першого завантаження
-  // Потрібен щоб відрізнити "вже були" від "щойно додали"
-  const initialRightIds = new Set<unknown>();
-
-  // ─── Helpers ──────────────────────────────────────────────────────────────
+  // ─── Item Helpers ─────────────────────────────────────────────────────────────
+  // ⚠️ Мають бути ПЕРШИМИ — використовуються скрізь нижче
 
   const getId    = (item: T): unknown => item[props.optionValue as keyof T];
   const getLabel = (item: T): string  => String(item[props.optionLabel as keyof T] ?? '');
@@ -46,45 +43,94 @@
   const hasItem  = (item: T, list: T[]): boolean => list.some(i => isSameId(i, item));
   const without  = (item: T, list: T[]): T[] => list.filter(i => !isSameId(i, item));
 
-  // ─── Async / infinite scroll ──────────────────────────────────────────────
+  // ─── State ────────────────────────────────────────────────────────────────────
 
-  const hasMoreLeft  = computed(() => listOne.value.length < props.leftTotal);
-  const hasMoreRight = computed(() => listTwo.value.length < props.rightTotal);
+  const activeLeft    = shallowRef<T | null>(null);
+  const activeRight   = shallowRef<T | null>(null);
+  const leftFetching  = ref(false);
+  const rightFetching = ref(false);
+
+  const leftLoaded  = ref(0);
+  const rightLoaded = ref(0);
+
+  const initialRightIds = new Set<unknown>();
+
+  // ─── Computed ─────────────────────────────────────────────────────────────────
+
+  const limit = computed(() => props.fetchLimit ?? 20);
+
+  const hasMoreLeft = computed(() =>
+    !!props.fetchLeft && leftLoaded.value < props.leftTotal,
+  );
+
+  const hasMoreRight = computed(() =>
+    !!props.fetchRight && rightLoaded.value < props.rightTotal,
+  );
+
+  const listStyle = computed(() =>
+    props.heightStyle ? { height: props.heightStyle } : {},
+  );
+
+  // ─── Pagination ───────────────────────────────────────────────────────────────
 
   const isNearBottom = (el: HTMLElement): boolean =>
     el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD;
 
   const fetchNextPage = async (
-    fetch: ((p: { limit: number; offset: number }) => Promise<void>) | undefined,
-    loading: boolean,
+    fetchFn: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
+    isFetching: Ref<boolean>,
     hasMore: boolean,
-    offset: Ref<number>,
+    loaded: Ref<number>,
+    onAfterFetch?: () => void, // ← додали колбек
   ): Promise<void> => {
-    if (!fetch || loading || !hasMore) return;
-    offset.value += asyncLimit.value;
-    await fetch({ limit: asyncLimit.value, offset: offset.value });
-  };
+    if (!fetchFn || isFetching.value || !hasMore) return;
 
-  onMounted(async () => {
-    await Promise.all([
-      props.fetchLeft?.({ limit: asyncLimit.value, offset: 0 }),
-      props.fetchRight?.({ limit: asyncLimit.value, offset: 0 }),
-    ]);
-    // Знімаємо snapshot після завантаження правої колонки
-    listTwo.value.forEach(item => initialRightIds.add(getId(item)));
-  });
+    isFetching.value = true;
+    const offset = loaded.value;
+
+    try {
+      await fetchFn({ limit: limit.value, offset });
+      await nextTick();
+      onAfterFetch?.();
+      loaded.value += limit.value;
+    } finally {
+      isFetching.value = false;
+    }
+  };
 
   const onLeftScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
-    await fetchNextPage(props.fetchLeft, props.leftLoading, hasMoreLeft.value, leftOffset);
+    await fetchNextPage(props.fetchLeft, leftFetching, hasMoreLeft.value, leftLoaded);
   };
 
   const onRightScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
-    await fetchNextPage(props.fetchRight, props.rightLoading, hasMoreRight.value, rightOffset);
+    // ← для правої колонки — snapshot нових елементів після кожної сторінки
+    await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightLoaded, snapshotInitialRight);
   };
 
-  // ─── Track added/removed ──────────────────────────────────────────────────
+  // ─── Initial Load ─────────────────────────────────────────────────────────────
+
+  const snapshotInitialRight = (): void => {
+    listTwo.value.forEach(item => initialRightIds.add(getId(item)));
+  };
+
+  onMounted(async () => {
+    const fetches = [
+      props.fetchLeft?.({ limit: limit.value, offset: 0 }),
+      props.fetchRight?.({ limit: limit.value, offset: 0 }),
+    ].filter(Boolean);
+
+    await Promise.all(fetches);
+    await nextTick();
+
+    snapshotInitialRight();
+
+    leftLoaded.value  = limit.value;
+    rightLoaded.value = limit.value;
+  });
+
+  // ─── Transfer Tracking ────────────────────────────────────────────────────────
 
   const trackTransfer = (item: T, direction: 'left' | 'right'): void => {
     const id = getId(item);
@@ -92,29 +138,22 @@
 
     if (direction === 'right') {
       if (wasInitiallyRight) {
-        // Повернули назад — прибираємо з removed
-        removed.value = removed.value.filter(i => getId(i) !== id);
+        emit('update:removed', props.removed.filter(i => getId(i) !== id));
       } else {
-        // Новий — додаємо в added (якщо ще немає)
-        if (!added.value.some(i => getId(i) === id)) {
-          added.value = [...added.value, item];
-        }
+        const alreadyAdded = props.added.some(i => getId(i) === id);
+        if (!alreadyAdded) emit('update:added', [...props.added, item]);
       }
     } else {
-      // direction === 'left'
       if (wasInitiallyRight) {
-        // Прибрали початковий — додаємо в removed
-        if (!removed.value.some(i => getId(i) === id)) {
-          removed.value = [...removed.value, item];
-        }
+        const alreadyRemoved = props.removed.some(i => getId(i) === id);
+        if (!alreadyRemoved) emit('update:removed', [...props.removed, item]);
       } else {
-        // Передумали додавати — прибираємо з added
-        added.value = added.value.filter(i => getId(i) !== id);
+        emit('update:added', props.added.filter(i => getId(i) !== id));
       }
     }
   };
 
-  // ─── Transfer ─────────────────────────────────────────────────────────────
+  // ─── Transfer Actions ─────────────────────────────────────────────────────────
 
   const transfer = (item: T, from: Ref<T[]>, to: Ref<T[]>, direction: 'left' | 'right'): void => {
     if (hasItem(item, to.value)) return;
@@ -136,30 +175,32 @@
 
   const moveAllToRight = (): void => {
     if (!listOne.value.length) return;
-    listOne.value.forEach(item => trackTransfer(item, 'right'));
-    listTwo.value  = [...listTwo.value, ...listOne.value];
-    listOne.value  = [];
+    const items = [...listOne.value];
+    items.forEach(item => trackTransfer(item, 'right'));
+    listTwo.value    = [...listTwo.value, ...items];
+    listOne.value    = [];
     activeLeft.value = null;
   };
 
   const moveAllToLeft = (): void => {
     if (!listTwo.value.length) return;
-    listTwo.value.forEach(item => trackTransfer(item, 'left'));
-    listOne.value  = [...listOne.value, ...listTwo.value];
-    listTwo.value  = [];
+    const items = [...listTwo.value];
+    items.forEach(item => trackTransfer(item, 'left'));
+    listOne.value     = [...listOne.value, ...items];
+    listTwo.value     = [];
     activeRight.value = null;
   };
 
   const moveSingleToRight = (): void => { if (activeLeft.value)  moveToRight(activeLeft.value); };
   const moveSingleToLeft  = (): void => { if (activeRight.value) moveToLeft(activeRight.value); };
 
-  // ─── Selection ────────────────────────────────────────────────────────────
+  // ─── Selection ────────────────────────────────────────────────────────────────
 
-  const isActive   = (item: T, active: T | null): boolean => !!active && isSameId(item, active);
+  const isActive    = (item: T, active: T | null): boolean => !!active && isSameId(item, active);
   const selectLeft  = (item: T): void => { activeLeft.value  = item; emit('selectLeft',  item); };
   const selectRight = (item: T): void => { activeRight.value = item; emit('selectRight', item); };
 
-  // ─── Drag & Drop ──────────────────────────────────────────────────────────
+  // ─── Drag & Drop ──────────────────────────────────────────────────────────────
 
   const onDragStart = (event: DragEvent, item: T): void => {
     event.dataTransfer?.setData('application/json', JSON.stringify(item));
@@ -175,10 +216,6 @@
       console.error('[VTransferList] drop parse error:', e);
     }
   };
-
-  // ─── Styles ───────────────────────────────────────────────────────────────
-
-  const listStyle = computed(() => props.heightStyle ? { height: props.heightStyle } : {});
 </script>
 
 <<template>
@@ -190,7 +227,7 @@
         class="vt-transfer-list__box"
         @dragover.prevent
         @drop="onDrop($event, 'left')"
-        @scroll="fetchLeft && onLeftScroll($event)"
+        @scroll="onLeftScroll($event)"
       >
         <slot v-if="!listOne.length && !leftLoading" name="left-empty">
           <span v-if="leftPlaceholder" class="vt-transfer-list__placeholder">{{ leftPlaceholder }}</span>
@@ -248,7 +285,7 @@
         :style="listStyle"
         @dragover.prevent
         @drop="onDrop($event, 'right')"
-        @scroll="fetchRight && onRightScroll($event)"
+        @scroll="onRightScroll($event)"
       >
         <slot v-if="!listTwo.length && !rightLoading" name="right-empty">
           <span v-if="rightPlaceholder" class="vt-transfer-list__placeholder">{{ rightPlaceholder }}</span>

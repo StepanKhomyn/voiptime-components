@@ -19,6 +19,8 @@ export interface VTransferListProps<T extends Record<string, any>> {
   rightTotal?: number;
   rightLoading?: boolean;
   fetchLimit?: number;
+  added?: T[];
+  removed?: T[];
 }
 
 export interface VTransferListEmits<T extends Record<string, any>> {
