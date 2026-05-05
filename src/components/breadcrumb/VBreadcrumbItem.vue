@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, inject, onMounted, ref } from 'vue';
+  import { computed, inject, nextTick, onMounted, ref } from 'vue';
   import type { VBreadcrumbItemEmits, VBreadcrumbItemProps } from './types';
 
   const props = withDefaults(defineProps<VBreadcrumbItemProps>(), {
@@ -15,12 +15,16 @@
   const itemRef = ref<HTMLElement | null>(null);
   const isLastChild = ref(false);
 
-  onMounted(() => {
+  onMounted(async () => {
+    await nextTick();
+
     const el = itemRef.value;
     if (!el) return;
     const parent = el.parentElement;
     if (!parent) return;
-    isLastChild.value = parent.lastElementChild === el;
+
+    const items = Array.from(parent.querySelectorAll(':scope > .vt-breadcrumb__item'));
+    isLastChild.value = items[items.length - 1] === el;
   });
 
   const isActive = computed(() => props.active || isLastChild.value);
