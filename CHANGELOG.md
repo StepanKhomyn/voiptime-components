@@ -1,3 +1,10 @@
+## [1.21.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.14...v1.21.15) (2026-05-06)
+
+
+### Bug Fixes
+
+* Fixed export of audio player ([b69827f](https://github.com/StepanKhomyn/voiptime-components/commit/b69827f6f09cf6ca9d00e816fb3e6dc086ef99fb))
+
 ## [1.21.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.13...v1.21.14) (2026-05-06)
 
 
