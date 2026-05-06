@@ -1,3 +1,24 @@
+## [1.21.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.12...v1.21.13) (2026-05-05)
+
+
+### Bug Fixes
+
+* fixes in VTransferList ([2621acd](https://github.com/StepanKhomyn/voiptime-components/commit/2621acd2010bba82e20164bc17c568ad12741367))
+
+## [1.21.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.11...v1.21.12) (2026-05-05)
+
+
+### Bug Fixes
+
+* fixes in VTransferList ([a91590d](https://github.com/StepanKhomyn/voiptime-components/commit/a91590dbdf57fe01db6a9331ef9dcb3a3d786052))
+
+## [1.21.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.10...v1.21.11) (2026-05-05)
+
+
+### Bug Fixes
+
+* Змінено колір іконки транскррипції на currentColor ([70afc99](https://github.com/StepanKhomyn/voiptime-components/commit/70afc99bc4f40cc34bcb59d3e4653c30f222122c))
+
 ## [1.21.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.9...v1.21.10) (2026-05-05)
 
 

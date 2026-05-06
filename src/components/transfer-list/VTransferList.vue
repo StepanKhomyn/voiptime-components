@@ -76,12 +76,15 @@
   const isNearBottom = (el: HTMLElement): boolean =>
     el.scrollTop + el.clientHeight >= el.scrollHeight - SCROLL_THRESHOLD;
 
+  const hasScroll = (el: HTMLElement): boolean =>
+    el.scrollHeight > el.clientHeight;
+
   const fetchNextPage = async (
     fetchFn: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
     isFetching: Ref<boolean>,
     hasMore: boolean,
     loaded: Ref<number>,
-    onAfterFetch?: () => void, // ← додали колбек
+    onAfterFetch?: () => void,
   ): Promise<void> => {
     if (!fetchFn || isFetching.value || !hasMore) return;
 
@@ -98,6 +101,27 @@
     }
   };
 
+  // Підвантажує сторінки доки контейнер не заповниться (немає скрола) або більше нема даних
+  const fillIfNoScroll = async (
+    boxEl: HTMLElement | null,
+    fetchFn: ((params: VTransferListFetchParams) => Promise<void>) | undefined,
+    isFetching: Ref<boolean>,
+    hasMoreRef: Ref<boolean>,
+    loaded: Ref<number>,
+    onAfterFetch?: () => void,
+  ): Promise<void> => {
+    if (!boxEl || !fetchFn) return;
+
+    while (!hasScroll(boxEl) && hasMoreRef.value) {
+      await fetchNextPage(fetchFn, isFetching, hasMoreRef.value, loaded, onAfterFetch);
+    }
+  };
+
+  // ─── Template Refs ────────────────────────────────────────────────────────────
+
+  const leftBoxRef  = ref<HTMLElement | null>(null);
+  const rightBoxRef = ref<HTMLElement | null>(null);
+
   const onLeftScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
     await fetchNextPage(props.fetchLeft, leftFetching, hasMoreLeft.value, leftLoaded);
@@ -105,7 +129,6 @@
 
   const onRightScroll = async (e: Event): Promise<void> => {
     if (!isNearBottom(e.target as HTMLElement)) return;
-    // ← для правої колонки — snapshot нових елементів після кожної сторінки
     await fetchNextPage(props.fetchRight, rightFetching, hasMoreRight.value, rightLoaded, snapshotInitialRight);
   };
 
@@ -128,6 +151,12 @@
 
     leftLoaded.value  = limit.value;
     rightLoaded.value = limit.value;
+
+    // Після першого завантаження — заповнюємо контейнери якщо скрола немає
+    await Promise.all([
+      fillIfNoScroll(leftBoxRef.value, props.fetchLeft, leftFetching, hasMoreLeft, leftLoaded),
+      fillIfNoScroll(rightBoxRef.value, props.fetchRight, rightFetching, hasMoreRight, rightLoaded, snapshotInitialRight),
+    ]);
   });
 
   // ─── Transfer Tracking ────────────────────────────────────────────────────────
@@ -153,6 +182,14 @@
     }
   };
 
+  // ─── Auto-fill ────────────────────────────────────────────────────────────────
+
+  const fillLeftIfNeeded = (): Promise<void> =>
+    fillIfNoScroll(leftBoxRef.value, props.fetchLeft, leftFetching, hasMoreLeft, leftLoaded);
+
+  const fillRightIfNeeded = (): Promise<void> =>
+    fillIfNoScroll(rightBoxRef.value, props.fetchRight, rightFetching, hasMoreRight, rightLoaded, snapshotInitialRight);
+
   // ─── Transfer Actions ─────────────────────────────────────────────────────────
 
   const transfer = (item: T, from: Ref<T[]>, to: Ref<T[]>, direction: 'left' | 'right'): void => {
@@ -163,32 +200,40 @@
     emit('transfer', item, direction);
   };
 
-  const moveToRight = (item: T): void => {
+  const moveToRight = async (item: T): Promise<void> => {
     transfer(item, listOne, listTwo, 'right');
     if (activeLeft.value && isSameId(activeLeft.value, item)) activeLeft.value = null;
+    await nextTick();
+    await fillLeftIfNeeded();
   };
 
-  const moveToLeft = (item: T): void => {
+  const moveToLeft = async (item: T): Promise<void> => {
     transfer(item, listTwo, listOne, 'left');
     if (activeRight.value && isSameId(activeRight.value, item)) activeRight.value = null;
+    await nextTick();
+    await fillRightIfNeeded();
   };
 
-  const moveAllToRight = (): void => {
+  const moveAllToRight = async (): Promise<void> => {
     if (!listOne.value.length) return;
     const items = [...listOne.value];
     items.forEach(item => trackTransfer(item, 'right'));
     listTwo.value    = [...listTwo.value, ...items];
     listOne.value    = [];
     activeLeft.value = null;
+    await nextTick();
+    await fillLeftIfNeeded();
   };
 
-  const moveAllToLeft = (): void => {
+  const moveAllToLeft = async (): Promise<void> => {
     if (!listTwo.value.length) return;
     const items = [...listTwo.value];
     items.forEach(item => trackTransfer(item, 'left'));
     listOne.value     = [...listOne.value, ...items];
     listTwo.value     = [];
     activeRight.value = null;
+    await nextTick();
+    await fillRightIfNeeded();
   };
 
   const moveSingleToRight = (): void => { if (activeLeft.value)  moveToRight(activeLeft.value); };
@@ -224,6 +269,7 @@
     <div class="vt-transfer-list__column">
       <span v-if="leftLabel" class="vt-transfer-list__label">{{ leftLabel }}</span>
       <div
+        ref="leftBoxRef"
         class="vt-transfer-list__box"
         @dragover.prevent
         @drop="onDrop($event, 'left')"
@@ -280,6 +326,7 @@
     <div class="vt-transfer-list__column">
       <span v-if="rightLabel" class="vt-transfer-list__label">{{ rightLabel }}</span>
       <div
+        ref="rightBoxRef"
         class="vt-transfer-list__box"
         :class="{ 'vt-transfer-list__box--invalid': !isValidRightContainer }"
         :style="listStyle"
