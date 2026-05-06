@@ -1,3 +1,10 @@
+## [1.21.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.13...v1.21.14) (2026-05-06)
+
+
+### Bug Fixes
+
+* Add audio player component ([ae9efcc](https://github.com/StepanKhomyn/voiptime-components/commit/ae9efcc0c015fa787a3a02572ea6f60551cc4351))
+
 ## [1.21.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.12...v1.21.13) (2026-05-05)
 
 
