@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "vue": "^3.5.17",
+    "wavesurfer.js": "^7.12.6",
     "xlsx": "^0.18.5"
   },
   "peerDependencies": {
