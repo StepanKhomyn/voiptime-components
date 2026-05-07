@@ -1,3 +1,10 @@
+## [1.21.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.15...v1.21.16) (2026-05-07)
+
+
+### Bug Fixes
+
+* Виправлено всі варнінги по scss ([139fe8d](https://github.com/StepanKhomyn/voiptime-components/commit/139fe8db8d6a3ff7b9502cf28e29f960c8fe599e))
+
 ## [1.21.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.14...v1.21.15) (2026-05-06)
 
 
