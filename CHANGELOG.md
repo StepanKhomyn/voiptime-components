@@ -1,3 +1,10 @@
+## [1.21.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.18...v1.21.19) (2026-05-07)
+
+
+### Bug Fixes
+
+* add scss scrollbar import ([d6d9ede](https://github.com/StepanKhomyn/voiptime-components/commit/d6d9edec10f4f94d4ccdb7de31b22d81fb1cba63))
+
 ## [1.21.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.17...v1.21.18) (2026-05-07)
 
 
