@@ -1,6 +1,8 @@
+@use "sass:math";
+
 // Генеруємо дробові ширини
 @function fraction-to-percent($numerator, $denominator) {
-  @return ($numerator / $denominator) * 100%;
+  @return math.div($numerator, $denominator) * 100%;
 }
 
 @for $denominator from 2 through 6 {

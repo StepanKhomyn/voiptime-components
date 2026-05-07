@@ -15,8 +15,8 @@
 // 5. Padding
 @use './gap' as *;
 
-// 6. mixins
-@use './mixins' as *;
+// 6. Scrollbar
+@use './scrollbar' as *;
 
 // 6. Стилі лейаутів
 @use './layouts' as *;
@@ -48,8 +48,10 @@
 @use '../components/tabs/tabs';
 @use '../components/upload/upload';
 @use '../components/slider/slider';
+@use '../components/sidebar/sidebar';
 @use '../components/info-box/info-box';
 @use '../components/breadcrumb/breadcrumb';
+@use '../components/audio/audio';
 @use '../directives/tooltip/tooltip';
 @use '../directives/loader/loader' as loader-directive;
 

@@ -33,6 +33,7 @@ import VInfoBox from '@/components/info-box/VInfoBox.vue';
 import VTransferList from '@/components/transfer-list/VTransferList.vue';
 import VBreadcrumb from '@/components/breadcrumb/VBreadcrumb.vue';
 import VBreadcrumbItem from '@/components/breadcrumb/VBreadcrumbItem.vue';
+import VAudio from '@/components/audio/VAudio.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -77,6 +78,7 @@ export {
   VTransferList,
   VBreadcrumb,
   VBreadcrumbItem,
+  VAudio,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -242,6 +244,9 @@ export type { VTransferListProps, VTransferListEmits } from './components/transf
 //Breadcrumb
 export type { VBreadcrumbProps, VBreadcrumbItemProps, VBreadcrumbItemEmits } from './components/breadcrumb/types';
 
+//AudioProps
+export type { VAudioProps, VAudioEmits } from './components/audio/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -319,6 +324,7 @@ const VUIPlugin = {
     app.component(`${prefix}TransferList`, VTransferList);
     app.component(`${prefix}Breadcrumb`, VBreadcrumb);
     app.component(`${prefix}BreadcrumbItem`, VBreadcrumbItem);
+    app.component(`${prefix}Audio`, VAudio);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

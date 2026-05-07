@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, watch, onMounted, defineProps, defineEmits } from 'vue';
+  import { onMounted, ref, watch } from 'vue';
   import type { SidebarItemRaw } from './types';
   import SidebarItem from './SidebarItem.vue';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -40,7 +40,7 @@
 
   watch(
     () => props.currentRoute,
-    v => activeRoute.value = v ?? null
+    v => (activeRoute.value = v ?? null)
   );
 
   watch(
@@ -67,12 +67,8 @@
     </nav>
     <div @click="toggleCollapse" class="hub-sidebar-footer" :class="{ collapsed }">
       <VIcon v-if="collapsed" name="arrowRight"></VIcon>
-<!--      <span v-if="!collapsed" class="hub-sidebar-footer__label">Згорнути меню</span>-->
+      <!--      <span v-if="!collapsed" class="hub-sidebar-footer__label">Згорнути меню</span>-->
       <VIcon v-if="!collapsed" name="arrowLeft"></VIcon>
     </div>
   </aside>
 </template>
-
-<style scoped lang="scss">
-  @import 'sidebar';
-</style>

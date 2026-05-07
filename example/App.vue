@@ -29,6 +29,7 @@
   import DemoInfoBox from './DemoInfoBox.vue';
   import DemoTransferList from './DemoTransferList.vue';
   import DemoBreadcrumb from './DemoBreadcrumb.vue';
+  import DemoAudio from './DemoAudio.vue';
 
   const searchQuery = ref('');
 
@@ -79,6 +80,7 @@
         { name: 'Таблиці', icon: '📊', component: DemoTable },
         { name: 'VChart', icon: '📈', component: DemoChart },
         { name: 'Пагінація', icon: '📄', component: DemoPagination },
+        { name: 'Аудіо Плеєр', icon: '📄', component: DemoAudio },
       ],
     },
 
