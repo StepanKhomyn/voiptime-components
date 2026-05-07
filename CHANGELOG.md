@@ -1,3 +1,10 @@
+## [1.21.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.17...v1.21.18) (2026-05-07)
+
+
+### Bug Fixes
+
+* remove scss import ([ab2f085](https://github.com/StepanKhomyn/voiptime-components/commit/ab2f085e0f3b87cdd0a49727bb5ab7568f6e7785))
+
 ## [1.21.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.16...v1.21.17) (2026-05-07)
 
 
