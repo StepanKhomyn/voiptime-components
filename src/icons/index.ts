@@ -25,7 +25,6 @@ import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import SettingsFilledIcon from './actions/SettingsFilledIcon.vue';
 import StarIcon from './actions/StarIcon.vue';
-import StatusChange2Icon from './actions/StatusChange2Icon.vue';
 import StatusChangeIcon from './actions/StatusChangeIcon.vue';
 import UnlockIcon from './actions/UnlockIcon.vue';
 import UploadCloudIcon from './actions/UploadCloudIcon.vue';
@@ -184,7 +183,6 @@ import GroupIcon from './sidebar/GroupIcon.vue';
 import HomeIcon from './sidebar/HomeIcon.vue';
 import IntegrationIcon from './sidebar/IntegrationIcon.vue';
 import ITRIcon from './sidebar/ITRIcon.vue';
-import Ivr2Icon from './sidebar/Ivr2Icon.vue';
 import PbxIcon from './sidebar/PbxIcon.vue';
 import ScenarioIcon from './sidebar/ScenarioIcon.vue';
 import ScenariosIcon from './sidebar/ScenariosIcon.vue';
@@ -231,7 +229,6 @@ export const icons = {
   save: SaveIcon,
   settingsFilled: SettingsFilledIcon,
   star: StarIcon,
-  statusChange2: StatusChange2Icon,
   statusChange: StatusChangeIcon,
   unlock: UnlockIcon,
   uploadCloud: UploadCloudIcon,
@@ -418,7 +415,6 @@ export const icons = {
   home: HomeIcon,
   integration: IntegrationIcon,
   iTR: ITRIcon,
-  ivr2: Ivr2Icon,
   pbx: PbxIcon,
   scenario: ScenarioIcon,
   scenarios: ScenariosIcon,
