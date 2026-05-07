@@ -1,3 +1,10 @@
+## [1.21.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.16...v1.21.17) (2026-05-07)
+
+
+### Bug Fixes
+
+* fixes with disabled reactivity in VSelect ([dfe94b8](https://github.com/StepanKhomyn/voiptime-components/commit/dfe94b88214fa89a85ab40c7ce9aedb18e134d82))
+
 ## [1.21.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.15...v1.21.16) (2026-05-07)
 
 
