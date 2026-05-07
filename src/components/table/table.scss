@@ -293,6 +293,8 @@
     opacity: 0.4 !important;
     background-color: var(--color-primary-light) !important;
     pointer-events: none;
+    box-shadow: none !important;
+    transform: none !important;
 
     * {
       cursor: grabbing !important;
@@ -307,9 +309,6 @@
     .vt-table__td--pinned-right {
       background-color: transparent !important;
     }
-
-    box-shadow: none !important;
-    transform: none !important;
   }
 
   &__row--insert-before {

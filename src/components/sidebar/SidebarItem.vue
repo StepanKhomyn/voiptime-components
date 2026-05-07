@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, defineProps, defineEmits, onBeforeUnmount, computed } from 'vue';
+  import { computed, onBeforeUnmount, ref } from 'vue';
   import type { SidebarItemRaw } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
   import type { IconName } from '@/icons';
@@ -41,9 +41,7 @@
     return child.route === props.activeRoute;
   };
 
-  const isActive = computed(() =>
-    hoveringItem.value || showSub.value || isParentActive.value || isItemActive.value
-  );
+  const isActive = computed(() => hoveringItem.value || showSub.value || isParentActive.value || isItemActive.value);
 
   const submenuStyle = ref({
     top: '0px',
@@ -132,7 +130,7 @@
   <li class="hub-item" @mouseenter="openSubmenu" @mouseleave="closeSubmenu" ref="itemEl">
     <!-- MAIN ROW -->
     <div class="hub-item-main" @click="handleClick" :class="{ collapsed, active: isActive }">
-      <VIcon class="hub-item-icon" :name="(item.icon ?? 'empty') as IconName" width="24" height="24"/>
+      <VIcon class="hub-item-icon" :name="(item.icon ?? 'empty') as IconName" width="24" height="24" />
       <span v-if="!collapsed" class="hub-item-label">{{ item.i18n }}</span>
       <VIcon v-if="item.children && !collapsed" class="hub-item-arrow" name="arrowRight"></VIcon>
     </div>
@@ -159,7 +157,13 @@
           <li v-if="collapsed"
             ><span class="hub-submenu-parent-label">{{ item.i18n }}</span></li
           >
-          <li v-for="child in item.children" :key="child.i18n" class="hub-submenu-item" :class="{ active: isChildActive(child) }" @click="navigate(child)">
+          <li
+            v-for="child in item.children"
+            :key="child.i18n"
+            class="hub-submenu-item"
+            :class="{ active: isChildActive(child) }"
+            @click="navigate(child)"
+          >
             <span class="hub-submenu-label">{{ child.i18n }}</span>
           </li>
         </ul>
@@ -167,7 +171,3 @@
     </teleport>
   </li>
 </template>
-
-<style scoped lang="scss">
-  @import 'sidebar';
-</style>

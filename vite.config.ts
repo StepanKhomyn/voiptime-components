@@ -31,6 +31,13 @@ export default defineConfig({
       },
     }),
   ],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: 'modern-compiler',
+      },
+    },
+  },
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/entry.ts'),
