@@ -26,7 +26,8 @@
     "./global": {
       "types": "./dist/global.d.ts"
     },
-    "./index.css": "./dist/index.css"
+    "./index.css": "./dist/index.css",
+    "./scss/scrollbar": "./src/assets/_scrollbar.scss"
   },
   "sass": "src/assets/main.scss",
   "scripts": {
