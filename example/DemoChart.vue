@@ -1,6 +1,12 @@
 <script lang="ts" setup>
   import VChart from '@/components/charts/VChart.vue';
-  import type { ChartSegment } from '@/components/charts/types';
+  import type {
+    ChartSegment,
+    RadialProgressChartProps,
+    SparklineChartProps,
+    TreemapChartProps,
+  } from '@/components/charts/types';
+  import { VChartType } from '@/components/charts/types';
   import DocSection from './helper/DocSection.vue';
   import DocPreview from './helper/DocPreview.vue';
   import DocPropsTable, { TableSection } from './helper/DocPropsTable.vue';
@@ -36,14 +42,118 @@
     { label: 'Eve', count: 289, color: '#8b5cf6' },
   ];
 
-  // ── Scale Bar дані ────────────────────────────────────────────────────────────
+  // ── Sparkline дані ────────────────────────────────────────────────────────────
+  const sparklineDailyCost: SparklineChartProps = {
+    type: VChartType.sparkline,
+    area: true,
+    height: 180,
+    points: [
+      { label: 'Apr 28', primary: 0.49, secondary: 4 },
+      { label: 'Apr 29', primary: 0.73, secondary: 5 },
+      { label: 'Apr 30', primary: 0.13, secondary: 6 },
+      { label: 'May 1', primary: 0.21, secondary: 10 },
+      { label: 'May 2', primary: 1.17, secondary: 9 },
+      { label: 'May 3', primary: 0.52, secondary: 11 },
+      { label: 'May 4', primary: 0.45, secondary: 9 },
+      { label: 'May 5', primary: 0.18, secondary: 15 },
+      { label: 'May 6', primary: 3.38, secondary: 9 },
+      { label: 'May 7', primary: 0.34, secondary: 4 },
+    ],
+    series: [
+      { key: 'primary', label: 'Cost (USD)', color: '#6c5ce7', format: v => `$${v.toFixed(2)}` },
+      { key: 'secondary', label: 'Requests', color: '#00b894', format: v => String(Math.round(v)) },
+    ],
+  };
+
+  const sparklineSingleSeries: SparklineChartProps = {
+    type: VChartType.sparkline,
+    area: false,
+    height: 120,
+    points: [
+      { label: 'Mon', primary: 18 },
+      { label: 'Tue', primary: 34 },
+      { label: 'Wed', primary: 27 },
+      { label: 'Thu', primary: 42 },
+      { label: 'Fri', primary: 38 },
+      { label: 'Sat', primary: 12 },
+      { label: 'Sun', primary: 9 },
+    ],
+    series: [{ key: 'primary', label: 'Calls', color: '#3b82f6', format: v => String(Math.round(v)) }],
+  };
+
+  // ── Treemap дані ──────────────────────────────────────────────────────────────
+  const treemapModelCosts: TreemapChartProps = {
+    type: VChartType.treemap,
+    height: 260,
+    format: v => `$${v.toFixed(2)}`,
+    nodes: [
+      { id: 'gemini-2.5-ultra', label: 'gemini-2.5-ultra', value: 3.66, color: '#1a73e8', group: 'GEMINI' },
+      { id: 'o3', label: 'o3', value: 1.52, color: '#10a37f', group: 'OPENAI' },
+      { id: 'claude-opus-4-5', label: 'claude-opus-4-5', value: 1.28, color: '#d97757', group: 'ANTHROPIC' },
+      { id: 'gemini-2.5-pro-preview', label: 'gemini-2.5-pro-preview', value: 0.46, color: '#4285f4', group: 'GEMINI' },
+      { id: 'claude-sonnet-4-5', label: 'claude-sonnet-4-5', value: 0.19, color: '#e8896a', group: 'ANTHROPIC' },
+      { id: 'gpt-4o', label: 'gpt-4o', value: 0.18, color: '#1ab394', group: 'OPENAI' },
+      { id: 'gemini-2.0-pro-exp', label: 'gemini-2.0-pro-exp', value: 0.17, color: '#669df6', group: 'GEMINI' },
+      {
+        id: 'gemini-2.5-flash-preview',
+        label: 'gemini-2.5-flash-preview',
+        value: 0.09,
+        color: '#a8c7fa',
+        group: 'GEMINI',
+      },
+      { id: 'o4-mini', label: 'o4-mini', value: 0.04, color: '#34c5a7', group: 'OPENAI' },
+      { id: 'claude-haiku-4-5', label: 'claude-haiku-4-5', value: 0.01, color: '#f0a080', group: 'ANTHROPIC' },
+    ],
+  };
+
+  const treemapSmall: TreemapChartProps = {
+    type: VChartType.treemap,
+    height: 180,
+    format: v => String(v),
+    nodes: [
+      { id: 'a', label: 'GEMINI', value: 34, color: '#1a73e8' },
+      { id: 'b', label: 'OPENAI', value: 27, color: '#10a37f' },
+      { id: 'c', label: 'ANTHROPIC', value: 21, color: '#d97757' },
+    ],
+  };
+
+  // ── Radial Progress дані ──────────────────────────────────────────────────────
+  const radialSuccess: RadialProgressChartProps = {
+    type: VChartType.radialProgress,
+    value: 84.3,
+    label: 'Success Rate',
+    sublabel: '43 / 51',
+    color: '#00b894',
+    size: 160,
+    strokeWidth: 14,
+  };
+
+  const radialLow: RadialProgressChartProps = {
+    type: VChartType.radialProgress,
+    value: 32,
+    label: 'Cache Hit',
+    color: '#f59e0b',
+    size: 140,
+    strokeWidth: 12,
+  };
+
+  const radialFull: RadialProgressChartProps = {
+    type: VChartType.radialProgress,
+    value: 100,
+    label: 'Completed',
+    color: '#6c5ce7',
+    size: 140,
+    strokeWidth: 12,
+  };
+
+  // ── Props tables ──────────────────────────────────────────────────────────────
   const propsSections: TableSection[] = [
     {
       title: 'Props (VChart — загальні)',
       rows: [
         {
           name: 'type',
-          type: "'donut' | 'horizontal-bar' | 'scale-bar'",
+          type: "'donut' | 'horizontal-bar' | 'scale-bar' | 'sparkline' | 'treemap' | 'radial-progress'",
           default: '-',
           description: 'Тип графіку',
           required: true,
@@ -90,6 +200,58 @@
         },
       ],
     },
+    {
+      title: 'Props — type="sparkline"',
+      rows: [
+        {
+          name: 'points',
+          type: 'SparklineDataPoint[]',
+          default: '-',
+          description: 'Масив точок { label, primary, secondary? }',
+          required: true,
+        },
+        {
+          name: 'series',
+          type: 'SparklineSeries[]',
+          default: '-',
+          description: 'Конфігурація серій { key, label, color, format? }',
+          required: true,
+        },
+        { name: 'height', type: 'number', default: '160', description: 'Висота canvas у пікселях' },
+        { name: 'area', type: 'boolean', default: 'false', description: 'Показувати area-fill під primary лінією' },
+      ],
+    },
+    {
+      title: 'Props — type="treemap"',
+      rows: [
+        {
+          name: 'nodes',
+          type: 'TreemapNode[]',
+          default: '-',
+          description: 'Масив вузлів { id, label, value, color, group? }',
+          required: true,
+        },
+        {
+          name: 'format',
+          type: '(v: number) => string',
+          default: 'String(v)',
+          description: 'Форматувати значення для підписів / tooltip',
+        },
+        { name: 'height', type: 'number', default: '260', description: 'Висота SVG у пікселях' },
+      ],
+    },
+    {
+      title: 'Props — type="radial-progress"',
+      rows: [
+        { name: 'value', type: 'number', default: '-', description: 'Значення 0–100', required: true },
+        { name: 'label', type: 'string', default: 'undefined', description: 'Основний підпис по центру' },
+        { name: 'sublabel', type: 'string', default: 'undefined', description: 'Другорядний підпис (напр. "43 / 51")' },
+        { name: 'color', type: 'string', default: 'var(--color-primary-main)', description: 'Колір дуги заповнення' },
+        { name: 'trackColor', type: 'string', default: "'#eee'", description: 'Колір фонової дуги' },
+        { name: 'size', type: 'number', default: '160', description: 'Розмір SVG у пікселях' },
+        { name: 'strokeWidth', type: 'number', default: '14', description: 'Товщина дуги' },
+      ],
+    },
   ];
 
   const typesSections: TableSection[] = [
@@ -98,12 +260,12 @@
       rows: [
         { name: 'label', type: 'string', default: '-', description: 'Підпис сегмента / смужки', required: true },
         { name: 'count', type: 'number', default: '-', description: 'Числове значення', required: true },
-        { name: 'color', type: 'string', default: '-', description: 'CSS колір (#hex, rgb, тощо)', required: true },
+        { name: 'color', type: 'string', default: '-', description: 'CSS колір (#hex, rgb…)', required: true },
         {
           name: 'icon',
           type: 'Component',
           default: 'undefined',
-          description: 'Vue-компонент іконки (замість кольорового квадрату у bar)',
+          description: 'Vue-компонент іконки (замість кольорового кружка у bar)',
         },
       ],
     },
@@ -112,6 +274,60 @@
       rows: [
         { name: 'value', type: 'number', default: '-', description: 'Числове значення сторони', required: true },
         { name: 'label', type: 'string', default: 'undefined', description: 'Підпис сторони' },
+      ],
+    },
+    {
+      title: 'SparklineDataPoint',
+      rows: [
+        { name: 'label', type: 'string', default: '-', description: 'Підпис по осі X (напр. дата)', required: true },
+        { name: 'primary', type: 'number', default: '-', description: 'Значення основної серії', required: true },
+        {
+          name: 'secondary',
+          type: 'number',
+          default: 'undefined',
+          description: "Значення другої серії (необов'язково)",
+        },
+      ],
+    },
+    {
+      title: 'SparklineSeries',
+      rows: [
+        {
+          name: 'key',
+          type: "'primary' | 'secondary'",
+          default: '-',
+          description: 'Яку серію рендерить цей конфіг',
+          required: true,
+        },
+        { name: 'label', type: 'string', default: '-', description: 'Назва серії для легенди', required: true },
+        { name: 'color', type: 'string', default: '-', description: 'CSS колір лінії та точок', required: true },
+        {
+          name: 'format',
+          type: '(v: number) => string',
+          default: 'String(v)',
+          description: 'Форматувати значення у tooltip',
+        },
+      ],
+    },
+    {
+      title: 'TreemapNode',
+      rows: [
+        { name: 'id', type: 'string', default: '-', description: 'Унікальний ідентифікатор', required: true },
+        { name: 'label', type: 'string', default: '-', description: 'Підпис на тайлі', required: true },
+        {
+          name: 'value',
+          type: 'number',
+          default: '-',
+          description: 'Числове значення (визначає площу)',
+          required: true,
+        },
+        { name: 'color', type: 'string', default: '-', description: 'Колір тайлу', required: true },
+        {
+          name: 'group',
+          type: 'string',
+          default: 'undefined',
+          description: 'Групова мітка (для легенди / логіки фарбування)',
+        },
       ],
     },
   ];
@@ -198,20 +414,64 @@
       </DocPreview>
     </DocSection>
 
+    <!-- ─── Sparkline ─── -->
+    <DocSection title="Sparkline — лінійний часовий ряд">
+      <DocPreview title="Дві серії: витрата + запити (з area-fill)">
+        <div style="width: 100%">
+          <VChart v-bind="sparklineDailyCost" />
+        </div>
+      </DocPreview>
+
+      <DocPreview title="Одна серія без area-fill">
+        <div style="width: 100%">
+          <VChart v-bind="sparklineSingleSeries" />
+        </div>
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── Treemap ─── -->
+    <DocSection title="Treemap — зважена плиткова карта">
+      <DocPreview title="Витрати по моделях AI">
+        <div style="width: 100%">
+          <VChart v-bind="treemapModelCosts" />
+        </div>
+      </DocPreview>
+
+      <DocPreview title="Розподіл запитів по провайдерах">
+        <div style="width: 100%">
+          <VChart v-bind="treemapSmall" />
+        </div>
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── Radial Progress ─── -->
+    <DocSection title="Radial Progress — радіальна шкала 270°">
+      <DocPreview title="Success Rate з підзаголовком">
+        <VChart v-bind="radialSuccess" />
+      </DocPreview>
+
+      <DocPreview title="Різні кольори та значення">
+        <div style="display: flex; gap: 32px; align-items: center; flex-wrap: wrap">
+          <VChart v-bind="radialLow" />
+          <VChart v-bind="radialFull" />
+          <VChart
+            :type="VChartType.radialProgress"
+            :value="0"
+            label="No Data"
+            color="#e0e0e0"
+            :size="140"
+            :stroke-width="12"
+          />
+        </div>
+      </DocPreview>
+    </DocSection>
+
     <!-- ─── Всі разом ─── -->
     <DocSection
-      description="Типовий приклад використання всіх трьох типів на одній сторінці"
+      description="Типовий приклад використання всіх типів на одній сторінці"
       title="Комбінація — дашборд колл-центру"
     >
-      <DocPreview
-        :script="`
-const segments: ChartSegment[] = [
-  { label: 'Voicemail',     count: 456, color: '#f59e0b' },
-  { label: 'Human',         count: 55,  color: '#10b981' },
-  { label: 'Not predicted', count: 644, color: '#ef4444' },
-]
-        `"
-      >
+      <DocPreview>
         <div style="display: flex; gap: 2rem; flex-wrap: wrap; align-items: flex-start; width: 100%">
           <div>
             <div
@@ -250,7 +510,8 @@ const segments: ChartSegment[] = [
                 font-weight: 600;
                 text-transform: uppercase;
               "
-              >Human vs VM
+            >
+              Human vs VM
             </div>
             <VChart
               :left="{ label: 'Human', value: 55 }"
@@ -287,8 +548,20 @@ const segments: ChartSegment[] = [
         5 рівних інтервалів.
       </DocFeature>
       <DocFeature icon="🎨" title="icon в ChartSegment">
-        Замість кольорового квадрату у горизонтальному баркарті можна передати Vue-компонент іконки через
+        Замість кольорового кружка у горизонтальному баркарті можна передати Vue-компонент іконки через
         <code>icon</code> — наприклад SVG-іконку каналу.
+      </DocFeature>
+      <DocFeature icon="📈" title="Sparkline — responsive через ResizeObserver">
+        Canvas автоматично перемальовується при зміні ширини контейнера. Підтримує одну або дві незалежні серії з
+        окремими Y-осями. При hover відображається crosshair та tooltip з усіма значеннями точки.
+      </DocFeature>
+      <DocFeature icon="🗺️" title="Treemap — squarified алгоритм">
+        Використовує squarify без зовнішніх залежностей — тайли максимально наближені до квадратної форми. Підписи та
+        значення приховуються автоматично якщо тайл занадто малий. Hover — <code>filter: brightness</code>.
+      </DocFeature>
+      <DocFeature icon="🎯" title="Radial Progress — 270° дуга з CSS-анімацією">
+        Заповнення анімується через <code>stroke-dasharray</code> transition при зміні <code>value</code>. Коректно
+        обробляє крайні значення: 0% і 100%.
       </DocFeature>
     </DocSection>
   </div>

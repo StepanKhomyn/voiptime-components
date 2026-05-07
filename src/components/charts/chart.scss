@@ -276,3 +276,161 @@
 .vt-chart__legend-text {
   color: #333;
 }
+
+
+// ── Sparkline ─────────────────────────────────────────────────────────────────
+.vt-chart__sparkline-wrapper {
+  position: relative;
+  width: 100%;
+
+  canvas {
+    display: block;
+    width: 100%;
+    cursor: crosshair;
+  }
+}
+
+.vt-chart__sparkline-tooltip {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 12px;
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  z-index: 10;
+  min-width: 130px;
+}
+
+.vt-chart__sparkline-tooltip-date {
+  font-size: 11px;
+  color: #888;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.vt-chart__sparkline-tooltip-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 3px 0;
+}
+
+.vt-chart__sparkline-tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.vt-chart__sparkline-tooltip-label {
+  flex: 1;
+  color: #555;
+}
+
+.vt-chart__sparkline-tooltip-value {
+  font-weight: 600;
+  color: #222;
+}
+
+.vt-chart__sparkline-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  padding-top: 8px;
+}
+
+.vt-chart__sparkline-legend-item {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+}
+
+// ── Treemap ───────────────────────────────────────────────────────────────────
+.vt-chart__treemap-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.vt-chart__treemap-svg {
+  display: block;
+}
+
+.vt-chart__treemap-cell {
+  cursor: pointer;
+  transition: filter 0.15s ease;
+
+  &:hover {
+    filter: brightness(1.12);
+  }
+}
+
+.vt-chart__treemap-label {
+  font-size: 12px;
+  font-weight: 600;
+  fill: rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+  text-overflow: ellipsis;
+}
+
+.vt-chart__treemap-value {
+  font-size: 11px;
+  fill: rgba(255, 255, 255, 0.75);
+  pointer-events: none;
+}
+
+// ── Radial Progress ───────────────────────────────────────────────────────────
+.vt-chart__radial-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vt-chart__radial-svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.vt-chart__radial-fill {
+  transition: stroke-dasharray 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.vt-chart__radial-center {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1;
+  // nudge down slightly so text sits in the visual center of the arc
+  margin-top: 16px;
+}
+
+.vt-chart__radial-pct {
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.vt-chart__radial-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #555;
+  margin-top: 4px;
+  line-height: 1.2;
+  max-width: 90px;
+  text-align: center;
+}
+
+.vt-chart__radial-sublabel {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 2px;
+}
