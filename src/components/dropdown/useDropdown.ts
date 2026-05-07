@@ -1,4 +1,4 @@
-import { nextTick, onUnmounted, ref, type Ref } from 'vue';
+import { nextTick, onUnmounted, ref, isRef, type Ref } from 'vue';
 
 // Types
 interface DropdownPosition {
@@ -13,7 +13,7 @@ interface DropdownOptions {
   placement?: 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
   showTimeout?: number;
   hideTimeout?: number;
-  disabled?: boolean;
+  disabled?: Ref<boolean> | boolean;
   hideOnClick?: boolean;
   onVisibleChange?: (visible: boolean) => void;
   onScroll?: () => void;
@@ -171,7 +171,6 @@ export function useDropdown(
     placement = 'bottom-start',
     showTimeout = 250,
     hideTimeout = 150,
-    disabled = false,
     hideOnClick = true,
     onVisibleChange,
     onScroll,
@@ -256,8 +255,12 @@ export function useDropdown(
   };
 
   // Main methods
+  const isDisabled = (): boolean => {
+    return isRef(options.disabled) ? options.disabled.value : (options.disabled ?? false);
+  };
+
   const show = (): void => {
-    if (disabled || visible.value) return;
+    if (isDisabled() || visible.value) return;
 
     if (!triggerRef.value || !isElementVisible(triggerRef.value)) {
       return;
@@ -291,7 +294,7 @@ export function useDropdown(
   };
 
   const toggle = (): void => {
-    if (disabled) return;
+    if (isDisabled()) return;
     visible.value ? hide() : show();
   };
 
