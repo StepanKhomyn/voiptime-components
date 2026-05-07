@@ -1,3 +1,10 @@
+## [1.21.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.21...v1.21.22) (2026-05-07)
+
+
+### Bug Fixes
+
+* Видалено задвоєні іконки ([43d64ca](https://github.com/StepanKhomyn/voiptime-components/commit/43d64ca5b19d4715a3c2cc45c93e7a3088d3dcec))
+
 ## [1.21.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.20...v1.21.21) (2026-05-07)
 
 
