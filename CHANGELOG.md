@@ -1,3 +1,10 @@
+## [1.21.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.20...v1.21.21) (2026-05-07)
+
+
+### Bug Fixes
+
+* Додано нові компоненти чартів ([6c4ffba](https://github.com/StepanKhomyn/voiptime-components/commit/6c4ffbad9047e383633759b9b2fb5c8dfc0040bf))
+
 ## [1.21.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.19...v1.21.20) (2026-05-07)
 
 
