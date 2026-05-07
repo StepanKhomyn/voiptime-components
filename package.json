@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.21.15",
+  "version": "1.21.20",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",
@@ -27,7 +27,7 @@
       "types": "./dist/global.d.ts"
     },
     "./index.css": "./dist/index.css",
-    "./scss/mixins": "./src/assets/_mixins.scss"
+    "./scss/scrollbar": "./src/assets/_scrollbar.scss"
   },
   "sass": "src/assets/main.scss",
   "scripts": {

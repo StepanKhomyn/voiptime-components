@@ -284,6 +284,8 @@ const checkInitialScroll = () => {
   });
 };
 
+const isDisabled = computed(() => props.disabled);
+
 // ===== DROPDOWN INTEGRATION =====
 const {
   visible: isDropdownVisible,
@@ -298,7 +300,7 @@ const {
   placement: 'bottom-start',
   showTimeout: 250,
   hideTimeout: 150,
-  disabled: props.disabled,
+  disabled: isDisabled,
   hideOnClick: false,
   onVisibleChange: visible => {
     if (visible) {

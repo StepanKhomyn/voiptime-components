@@ -1,3 +1,39 @@
+## [1.21.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.19...v1.21.20) (2026-05-07)
+
+
+### Bug Fixes
+
+* versioning ([00bbfa3](https://github.com/StepanKhomyn/voiptime-components/commit/00bbfa3c6fb62eefeb92e3cc753e5723130fd731))
+* versioning ([11736c9](https://github.com/StepanKhomyn/voiptime-components/commit/11736c98a3add4b3d5550a41eeb7f31aa3557b47))
+
+## [1.21.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.18...v1.21.19) (2026-05-07)
+
+
+### Bug Fixes
+
+* add scss scrollbar import ([d6d9ede](https://github.com/StepanKhomyn/voiptime-components/commit/d6d9edec10f4f94d4ccdb7de31b22d81fb1cba63))
+
+## [1.21.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.17...v1.21.18) (2026-05-07)
+
+
+### Bug Fixes
+
+* remove scss import ([ab2f085](https://github.com/StepanKhomyn/voiptime-components/commit/ab2f085e0f3b87cdd0a49727bb5ab7568f6e7785))
+
+## [1.21.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.16...v1.21.17) (2026-05-07)
+
+
+### Bug Fixes
+
+* fixes with disabled reactivity in VSelect ([dfe94b8](https://github.com/StepanKhomyn/voiptime-components/commit/dfe94b88214fa89a85ab40c7ce9aedb18e134d82))
+
+## [1.21.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.15...v1.21.16) (2026-05-07)
+
+
+### Bug Fixes
+
+* Виправлено всі варнінги по scss ([139fe8d](https://github.com/StepanKhomyn/voiptime-components/commit/139fe8db8d6a3ff7b9502cf28e29f960c8fe599e))
+
 ## [1.21.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.14...v1.21.15) (2026-05-06)
 
 
