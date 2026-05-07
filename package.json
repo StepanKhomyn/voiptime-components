@@ -26,8 +26,7 @@
     "./global": {
       "types": "./dist/global.d.ts"
     },
-    "./index.css": "./dist/index.css",
-    "./scss/mixins": "./src/assets/_mixins.scss"
+    "./index.css": "./dist/index.css"
   },
   "sass": "src/assets/main.scss",
   "scripts": {
