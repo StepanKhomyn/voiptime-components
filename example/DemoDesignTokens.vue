@@ -115,7 +115,7 @@
         {
           token: '--font-primary',
           value: "'Inter', sans-serif",
-          sample: 'Inter — UI, кнопки, заголовки',
+          sample: 'Inter — UI, заголовки',
           family: 'Inter, sans-serif',
         },
         {
