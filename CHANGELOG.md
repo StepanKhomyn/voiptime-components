@@ -1,3 +1,10 @@
+## [1.21.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.22...v1.21.23) (2026-05-08)
+
+
+### Bug Fixes
+
+* Increase padding for nav items in tabs component ([ea038fa](https://github.com/StepanKhomyn/voiptime-components/commit/ea038faafd5084bf0f72a0f7eb0407161fc14015))
+
 ## [1.21.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.21...v1.21.22) (2026-05-07)
 
 
