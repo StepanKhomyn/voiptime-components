@@ -1,3 +1,10 @@
+## [1.21.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.25...v1.21.26) (2026-05-11)
+
+
+### Bug Fixes
+
+* change gap between buttons in transfer list to 10px ([9a8109d](https://github.com/StepanKhomyn/voiptime-components/commit/9a8109d24a7a8eec86607667e9fed7d6c51ea87e))
+
 ## [1.21.25](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.24...v1.21.25) (2026-05-08)
 
 
