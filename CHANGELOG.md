@@ -1,3 +1,10 @@
+## [1.21.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.26...v1.21.27) (2026-05-12)
+
+
+### Bug Fixes
+
+* change default heigt 46 px ([3c31fea](https://github.com/StepanKhomyn/voiptime-components/commit/3c31fea386aa4f8037ebd4cf4165c9b0bd4384a7))
+
 ## [1.21.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.25...v1.21.26) (2026-05-11)
 
 
