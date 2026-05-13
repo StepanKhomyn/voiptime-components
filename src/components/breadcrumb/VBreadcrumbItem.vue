@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, inject, nextTick, onMounted, ref, resolveComponent } from 'vue';
+  import { computed, inject, nextTick, onMounted, ref } from 'vue';
   import type { VBreadcrumbItemEmits, VBreadcrumbItemProps } from './types';
 
   const props = withDefaults(defineProps<VBreadcrumbItemProps>(), {
@@ -10,14 +10,6 @@
   const emit = defineEmits<VBreadcrumbItemEmits>();
 
   const separator = inject<string>('vt-breadcrumb-separator', '/');
-  const hasRouter = computed(() => {
-    try {
-      resolveComponent('RouterLink');
-      return true;
-    } catch {
-      return false;
-    }
-  });
   const itemRef = ref<HTMLElement | null>(null);
   const isLastChild = ref(false);
 
@@ -38,7 +30,7 @@
   const tag = computed(() => {
     if (isActive.value || props.disabled || !props.to) return 'span';
 
-    return hasRouter.value ? 'RouterLink' : 'a';
+    return typeof props.to === 'string' ? 'a' : 'RouterLink';
   });
 
   const linkProps = computed(() => {
