@@ -1,3 +1,10 @@
+## [1.21.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.29...v1.21.30) (2026-05-14)
+
+
+### Bug Fixes
+
+* Виправлено стилі щапки блоку vt-page-header ([f470b61](https://github.com/StepanKhomyn/voiptime-components/commit/f470b61cebc2ad121d2602a108c824641e65b42c))
+
 ## [1.21.29](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.28...v1.21.29) (2026-05-13)
 
 
