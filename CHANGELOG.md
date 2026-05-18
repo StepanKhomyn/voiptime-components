@@ -1,3 +1,10 @@
+## [1.21.35](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.34...v1.21.35) (2026-05-18)
+
+
+### Bug Fixes
+
+* add folder icon ([3d80c03](https://github.com/StepanKhomyn/voiptime-components/commit/3d80c0353ae4fe1e32a1fdebfe2c60d84ced398b))
+
 ## [1.21.34](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.33...v1.21.34) (2026-05-18)
 
 
