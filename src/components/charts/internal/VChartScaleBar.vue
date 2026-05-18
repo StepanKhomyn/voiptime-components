@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <div class="vt-chart__scale-bar-track" :class="{ 'vt-chart__scale-bar-track--empty': total === 0 }">
+    <div class="vt-chart__scale-bar-track">
       <template v-if="total > 0">
         <div :style="{ width: leftPct + '%' }" class="vt-chart__scale-bar-segment vt-chart__scale-bar-segment--left" />
         <div
