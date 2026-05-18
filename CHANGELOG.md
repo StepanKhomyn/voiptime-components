@@ -1,3 +1,10 @@
+## [1.21.34](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.33...v1.21.34) (2026-05-18)
+
+
+### Bug Fixes
+
+* Порожні стани чартів3 ([ecc72c3](https://github.com/StepanKhomyn/voiptime-components/commit/ecc72c3c11a5a5d42220037409021525709b0c9f))
+
 ## [1.21.33](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.32...v1.21.33) (2026-05-18)
 
 
