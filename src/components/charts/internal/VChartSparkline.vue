@@ -26,6 +26,10 @@
   // ── Layout constants ──────────────────────────────────────────────────────────
   const PAD = { top: 16, right: 16, bottom: 32, left: 48 };
 
+  // ── Data state ────────────────────────────────────────────────────────────────
+  const isEmpty = computed(() => !props.points.length);
+  const allZero = computed(() => props.points.length > 0 && props.points.every(p => p.primary === 0));
+
   // ── Data helpers ──────────────────────────────────────────────────────────────
   function valuesFor(key: 'primary' | 'secondary') {
     return props.points.map(p => (key === 'primary' ? p.primary : (p.secondary ?? 0)));
@@ -51,21 +55,14 @@
 
   function yAt(val: number, maxVal: number, h: number) {
     const plotH = h - PAD.top - PAD.bottom;
-    if (maxVal <= 0 || (val === 0 && primaryMax.value === 1)) {
-      return PAD.top + plotH / 2;
-    }
+    if (maxVal <= 0 || allZero.value) return PAD.top + plotH / 2;
     return PAD.top + plotH - (val / maxVal) * plotH;
   }
 
-  // ── Draw ──────────────────────────────────────────────────────────────────────
-  function draw() {
-    const cvs = canvas.value;
-    if (!cvs || !props.points.length) return;
+  // ── Canvas setup helper ───────────────────────────────────────────────────────
+  function setupCanvas(cvs: HTMLCanvasElement, W: number, H: number): CanvasRenderingContext2D | null {
     const ctx = cvs.getContext('2d');
-    if (!ctx) return;
-
-    const W = canvasWidth.value;
-    const H = canvasHeight.value;
+    if (!ctx) return null;
     const dpr = window.devicePixelRatio || 1;
     cvs.width = W * dpr;
     cvs.height = H * dpr;
@@ -73,8 +70,180 @@
     cvs.style.height = H + 'px';
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, W, H);
+    return ctx;
+  }
 
-    // Grid lines
+  // ── Draw grid ─────────────────────────────────────────────────────────────────
+  function drawGrid(
+    ctx: CanvasRenderingContext2D,
+    W: number,
+    H: number,
+    opts: { gridColor: string; labelColor: string; yLabels: string[] }
+  ) {
+    const gridTicks = 4;
+    ctx.strokeStyle = opts.gridColor;
+    ctx.lineWidth = 1;
+
+    for (let i = 0; i <= gridTicks; i++) {
+      const y = PAD.top + ((H - PAD.top - PAD.bottom) / gridTicks) * i;
+      ctx.beginPath();
+      ctx.moveTo(PAD.left, y);
+      ctx.lineTo(W - PAD.right, y);
+      ctx.stroke();
+
+      ctx.fillStyle = opts.labelColor;
+      ctx.font = '10px system-ui, sans-serif';
+      ctx.textAlign = 'right';
+      ctx.fillText(opts.yLabels[i] ?? '', PAD.left - 6, y + 3);
+    }
+  }
+
+  // ── Empty state (points === []) ───────────────────────────────────────────────
+  function drawEmpty(ctx: CanvasRenderingContext2D, W: number, H: number) {
+    const plotBottom = H - PAD.bottom;
+    const plotLeft = PAD.left;
+    const plotRight = W - PAD.right;
+    const plotW = plotRight - plotLeft;
+
+    // Сітка — приглушена
+    drawGrid(ctx, W, H, {
+      gridColor: '#f0f0f0',
+      labelColor: '#d8d8d8',
+      yLabels: ['0', '0', '0', '0', '0'],
+    });
+
+    // X мітки — рівномірні крапки
+    const xCount = 7;
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#d8d8d8';
+    ctx.font = '10px system-ui, sans-serif';
+    for (let i = 0; i < xCount; i++) {
+      const x = plotLeft + (i / (xCount - 1)) * plotW;
+      ctx.fillText('·', x, H - PAD.bottom + 14);
+    }
+
+    // Пласка лінія по низу + точки для кожної серії
+    props.series.forEach(ser => {
+      if (props.area && ser.key === 'primary') {
+        ctx.beginPath();
+        ctx.moveTo(plotLeft, plotBottom);
+        ctx.lineTo(plotRight, plotBottom);
+        ctx.lineTo(plotRight, plotBottom);
+        ctx.lineTo(plotLeft, plotBottom);
+        ctx.closePath();
+        ctx.fillStyle = ser.color + '08';
+        ctx.fill();
+      }
+
+      ctx.beginPath();
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.moveTo(plotLeft, plotBottom);
+      ctx.lineTo(plotRight, plotBottom);
+      ctx.stroke();
+
+      for (let i = 0; i < xCount; i++) {
+        const x = plotLeft + (i / (xCount - 1)) * plotW;
+        ctx.beginPath();
+        ctx.arc(x, plotBottom, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = '#d8d8d8';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    });
+  }
+
+  // ── All-zero state (points є, але всі = 0) ───────────────────────────────────
+  function drawAllZero(ctx: CanvasRenderingContext2D, W: number, H: number) {
+    const plotH = H - PAD.top - PAD.bottom;
+    const plotBottom = H - PAD.bottom;
+    const plotLeft = PAD.left;
+    const plotRight = W - PAD.right;
+
+    // Звичайна сітка — але мітки 0
+    const ser0 = props.series.find(s => s.key === 'primary');
+    const zero = ser0?.format ? ser0.format(0) : '0';
+    drawGrid(ctx, W, H, {
+      gridColor: '#e8e8e8',
+      labelColor: '#aaa',
+      yLabels: [zero, zero, zero, zero, zero],
+    });
+
+    // X мітки — реальні лейбли точок
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#aaa';
+    ctx.font = '10px system-ui, sans-serif';
+    props.points.forEach((p, i) => {
+      ctx.fillText(p.label, xAt(i, W), H - PAD.bottom + 14);
+    });
+
+    // Area fill — дуже прозора
+    props.series.forEach(ser => {
+      const pts = props.points.map((_, i) => ({ x: xAt(i, W), y: plotBottom }));
+
+      if (props.area && ser.key === 'primary') {
+        ctx.beginPath();
+        pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+        ctx.lineTo(pts[pts.length - 1].x, plotBottom);
+        ctx.lineTo(pts[0].x, plotBottom);
+        ctx.closePath();
+        ctx.fillStyle = ser.color + '10';
+        ctx.fill();
+      }
+
+      // Пласка лінія пунктиром у кольорі серії але прозора
+      ctx.beginPath();
+      ctx.strokeStyle = ser.color + '50';
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      ctx.setLineDash([5, 4]);
+      pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Точки — прозорі у кольорі серії
+      pts.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+        ctx.strokeStyle = ser.color + '50';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      });
+    });
+  }
+
+  // ── Main draw ─────────────────────────────────────────────────────────────────
+  function draw() {
+    const cvs = canvas.value;
+    if (!cvs) return;
+
+    const W = canvasWidth.value;
+    const H = canvasHeight.value;
+    const ctx = setupCanvas(cvs, W, H);
+    if (!ctx) return;
+
+    // ── Empty state ──────────────────────────────────────────────────────────────
+    if (isEmpty.value) {
+      drawEmpty(ctx, W, H);
+      return;
+    }
+
+    // ── All-zero state ───────────────────────────────────────────────────────────
+    if (allZero.value) {
+      drawAllZero(ctx, W, H);
+      return;
+    }
+
+    // ── Normal draw ──────────────────────────────────────────────────────────────
+
+    // Grid
     const gridTicks = 4;
     ctx.strokeStyle = '#e8e8e8';
     ctx.lineWidth = 1;
@@ -85,7 +254,6 @@
       ctx.lineTo(W - PAD.right, y);
       ctx.stroke();
 
-      // Y-axis labels (left axis = primary series)
       const val = primaryMax.value * (1 - i / gridTicks);
       const ser = props.series.find(s => s.key === 'primary');
       const label = ser?.format ? ser.format(val) : val.toFixed(2);
@@ -100,17 +268,16 @@
     ctx.fillStyle = '#aaa';
     ctx.font = '10px system-ui, sans-serif';
     props.points.forEach((p, i) => {
-      const x = xAt(i, W);
-      ctx.fillText(p.label, x, H - PAD.bottom + 14);
+      ctx.fillText(p.label, xAt(i, W), H - PAD.bottom + 14);
     });
 
-    // Draw each series
+    // Series
     props.series.forEach(ser => {
       const vals = valuesFor(ser.key);
       const maxVal = ser.key === 'primary' ? primaryMax.value : secondaryMax.value;
       const pts = vals.map((v, i) => ({ x: xAt(i, W), y: yAt(v, maxVal, H) }));
 
-      // Area fill (primary only)
+      // Area fill
       if (props.area && ser.key === 'primary') {
         ctx.beginPath();
         pts.forEach((p, i) => (i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y)));
@@ -149,6 +316,7 @@
     if (tooltip.value.visible && tooltip.value.pointIndex >= 0) {
       const i = tooltip.value.pointIndex;
       const x = xAt(i, W);
+
       ctx.beginPath();
       ctx.strokeStyle = '#ccc';
       ctx.lineWidth = 1;
@@ -158,7 +326,6 @@
       ctx.stroke();
       ctx.setLineDash([]);
 
-      // Highlight dots
       props.series.forEach(ser => {
         const vals = valuesFor(ser.key);
         const maxVal = ser.key === 'primary' ? primaryMax.value : secondaryMax.value;
@@ -171,23 +338,14 @@
         ctx.lineWidth = 2;
         ctx.stroke();
       });
-
-      const allZero = props.points.every(p => p.primary === 0);
-      if (allZero) {
-        ctx.save();
-        ctx.fillStyle = '#bbb';
-        ctx.font = '11px system-ui, sans-serif';
-        ctx.textAlign = 'center';
-        ctx.fillText('немає даних', W / 2, PAD.top + (H - PAD.top - PAD.bottom) / 2 - 14);
-        ctx.restore();
-      }
     }
   }
 
   // ── Mouse handling ────────────────────────────────────────────────────────────
   function onMouseMove(e: MouseEvent) {
     const cvs = canvas.value;
-    if (!cvs) return;
+    if (!cvs || isEmpty.value) return;
+
     const rect = cvs.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
@@ -237,9 +395,9 @@
   <div ref="wrapper" class="vt-chart__sparkline-wrapper" @mouseleave="onMouseLeave" @mousemove="onMouseMove">
     <canvas ref="canvas" />
 
-    <!-- Tooltip -->
+    <!-- Tooltip — тільки при реальних даних -->
     <div
-      v-if="tooltip.visible && tooltip.pointIndex >= 0"
+      v-if="tooltip.visible && tooltip.pointIndex >= 0 && !isEmpty && !allZero"
       :style="{
         left: Math.min(tooltip.x + 12, canvasWidth - 140) + 'px',
         top: tooltip.y - 10 + 'px',
@@ -269,11 +427,13 @@
     </div>
   </div>
 
-  <!-- Legend -->
+  <!-- Legend — приглушена при відсутності даних -->
   <div class="vt-chart__sparkline-legend">
     <div v-for="ser in series" :key="ser.key" class="vt-chart__sparkline-legend-item">
-      <span :style="{ background: ser.color }" class="vt-chart__legend-color" />
-      <span class="vt-chart__legend-text">{{ ser.label }}</span>
+      <span :style="{ background: isEmpty ? '#d8d8d8' : ser.color }" class="vt-chart__legend-color" />
+      <span :style="{ color: isEmpty ? '#d0d0d0' : undefined }" class="vt-chart__legend-text">
+        {{ ser.label }}
+      </span>
     </div>
   </div>
 </template>

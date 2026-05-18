@@ -2,7 +2,6 @@
   import { computed } from 'vue';
   import type { ScaleBarSide } from '../types';
   import { useI18n } from '@/locales/useI18n';
-  import { LOCALE_KEYS } from '@/locales/types';
 
   const props = defineProps<{ left: ScaleBarSide; right: ScaleBarSide }>();
   const { t } = useI18n();
@@ -24,8 +23,7 @@
         <span class="vt-chart__scale-bar-value">{{ right.value }}</span>
       </div>
     </div>
-
-    <div class="vt-chart__scale-bar-track">
+    <div class="vt-chart__scale-bar-track" :class="{ 'vt-chart__scale-bar-track--empty': total === 0 }">
       <template v-if="total > 0">
         <div :style="{ width: leftPct + '%' }" class="vt-chart__scale-bar-segment vt-chart__scale-bar-segment--left" />
         <div
@@ -33,7 +31,6 @@
           class="vt-chart__scale-bar-segment vt-chart__scale-bar-segment--right"
         />
       </template>
-      <span v-else class="vt-chart__empty">{{ t(LOCALE_KEYS.TABLE_EMPTY) }}</span>
     </div>
   </div>
 </template>
