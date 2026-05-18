@@ -1,3 +1,10 @@
+## [1.21.36](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.35...v1.21.36) (2026-05-18)
+
+
+### Bug Fixes
+
+* Правки по бредкрампу (стилі) ([153fce1](https://github.com/StepanKhomyn/voiptime-components/commit/153fce1b6bc75c2891ac0bf4ffd22684a32d4986))
+
 ## [1.21.35](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.34...v1.21.35) (2026-05-18)
 
 
