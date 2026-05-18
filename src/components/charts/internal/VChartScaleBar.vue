@@ -1,12 +1,15 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import type { ScaleBarSide } from '../types';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
 
   const props = defineProps<{ left: ScaleBarSide; right: ScaleBarSide }>();
+  const { t } = useI18n();
 
   const total = computed(() => props.left.value + props.right.value);
-  const leftPct = computed(() => (total.value ? (props.left.value / total.value) * 100 : 0));
-  const rightPct = computed(() => (total.value ? (props.right.value / total.value) * 100 : 0));
+  const leftPct = computed(() => (total.value > 0 ? (props.left.value / total.value) * 100 : 0));
+  const rightPct = computed(() => (total.value > 0 ? (props.right.value / total.value) * 100 : 0));
 </script>
 
 <template>
@@ -21,9 +24,16 @@
         <span class="vt-chart__scale-bar-value">{{ right.value }}</span>
       </div>
     </div>
-    <div class="vt-chart__scale-bar-track">
-      <div :style="{ width: leftPct + '%' }" class="vt-chart__scale-bar-segment vt-chart__scale-bar-segment--left" />
-      <div :style="{ width: rightPct + '%' }" class="vt-chart__scale-bar-segment vt-chart__scale-bar-segment--right" />
+
+    <div class="vt-chart__scale-bar-track" :class="{ 'vt-chart__scale-bar-track--empty': total === 0 }">
+      <template v-if="total > 0">
+        <div :style="{ width: leftPct + '%' }" class="vt-chart__scale-bar-segment vt-chart__scale-bar-segment--left" />
+        <div
+          :style="{ width: rightPct + '%' }"
+          class="vt-chart__scale-bar-segment vt-chart__scale-bar-segment--right"
+        />
+      </template>
+      <span v-else class="vt-chart__empty">{{ t(LOCALE_KEYS.TABLE_EMPTY) }}</span>
     </div>
   </div>
 </template>

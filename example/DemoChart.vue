@@ -429,6 +429,24 @@
       </DocPreview>
     </DocSection>
 
+    <DocPreview title="Sparkline — всі точки = 0">
+      <div style="width: 100%">
+        <VChart
+          :type="VChartType.sparkline"
+          :area="false"
+          :height="120"
+          :points="[
+            { label: 'Пн', primary: 0 },
+            { label: 'Вт', primary: 0 },
+            { label: 'Ср', primary: 0 },
+            { label: 'Чт', primary: 0 },
+            { label: 'Пт', primary: 0 },
+          ]"
+          :series="[{ key: 'primary', label: 'Calls', color: '#3b82f6', format: v => String(Math.round(v)) }]"
+        />
+      </div>
+    </DocPreview>
+
     <!-- ─── Treemap ─── -->
     <DocSection title="Treemap — зважена плиткова карта">
       <DocPreview title="Витрати по моделях AI">
@@ -443,6 +461,21 @@
         </div>
       </DocPreview>
     </DocSection>
+
+    <DocPreview title="Treemap — всі nodes = 0">
+      <div style="width: 100%">
+        <VChart
+          :type="VChartType.treemap"
+          :height="160"
+          :format="v => String(v)"
+          :nodes="[
+            { id: 'a', label: 'GEMINI', value: 0, color: '#1a73e8' },
+            { id: 'b', label: 'OPENAI', value: 0, color: '#10a37f' },
+            { id: 'c', label: 'ANTHROPIC', value: 0, color: '#d97757' },
+          ]"
+        />
+      </div>
+    </DocPreview>
 
     <!-- ─── Radial Progress ─── -->
     <DocSection title="Radial Progress — радіальна шкала 270°">

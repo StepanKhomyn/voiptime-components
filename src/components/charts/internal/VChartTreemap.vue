@@ -1,6 +1,9 @@
 <script lang="ts" setup>
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import type { TreemapNode } from '../types';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
+  import VIcon from '@/components/icon/VIcon.vue';
 
   const props = defineProps<{
     nodes: TreemapNode[];
@@ -8,6 +11,7 @@
     height?: number;
   }>();
 
+  const { t } = useI18n();
   const wrapper = ref<HTMLDivElement | null>(null);
   const containerWidth = ref(600);
   const containerHeight = computed(() => props.height ?? 260);
@@ -133,7 +137,14 @@
 
 <template>
   <div ref="wrapper" :style="{ height: containerHeight + 'px' }" class="vt-chart__treemap-wrapper">
+    <div v-if="!layout.length" class="vt-chart__treemap-wrapper--empty">
+      <div class="vt-chart__treemap-empty">
+        <VIcon name="empty" />
+        <span>{{ t(LOCALE_KEYS.TABLE_EMPTY) }}</span>
+      </div>
+    </div>
     <svg
+      v-else
       :viewBox="`0 0 ${containerWidth} ${containerHeight}`"
       :width="containerWidth"
       :height="containerHeight"

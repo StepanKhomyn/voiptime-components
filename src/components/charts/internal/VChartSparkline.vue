@@ -31,10 +31,16 @@
     return props.points.map(p => (key === 'primary' ? p.primary : (p.secondary ?? 0)));
   }
 
-  const primaryMax = computed(() => Math.max(...valuesFor('primary'), 0) * 1.15);
-  const secondaryMax = computed(() =>
-    props.series.some(s => s.key === 'secondary') ? Math.max(...valuesFor('secondary'), 0) * 1.15 : 0
-  );
+  const primaryMax = computed(() => {
+    const raw = Math.max(...valuesFor('primary'), 0);
+    return raw > 0 ? raw * 1.15 : 1;
+  });
+
+  const secondaryMax = computed(() => {
+    if (!props.series.some(s => s.key === 'secondary')) return 0;
+    const raw = Math.max(...valuesFor('secondary'), 0);
+    return raw > 0 ? raw * 1.15 : 1;
+  });
 
   // ── Coordinate mappers ────────────────────────────────────────────────────────
   function xAt(i: number, w: number) {
@@ -45,7 +51,10 @@
 
   function yAt(val: number, maxVal: number, h: number) {
     const plotH = h - PAD.top - PAD.bottom;
-    return PAD.top + plotH - (maxVal ? (val / maxVal) * plotH : 0);
+    if (maxVal <= 0 || (val === 0 && primaryMax.value === 1)) {
+      return PAD.top + plotH / 2;
+    }
+    return PAD.top + plotH - (val / maxVal) * plotH;
   }
 
   // ── Draw ──────────────────────────────────────────────────────────────────────
@@ -162,6 +171,16 @@
         ctx.lineWidth = 2;
         ctx.stroke();
       });
+
+      const allZero = props.points.every(p => p.primary === 0);
+      if (allZero) {
+        ctx.save();
+        ctx.fillStyle = '#bbb';
+        ctx.font = '11px system-ui, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('немає даних', W / 2, PAD.top + (H - PAD.top - PAD.bottom) / 2 - 14);
+        ctx.restore();
+      }
     }
   }
 
