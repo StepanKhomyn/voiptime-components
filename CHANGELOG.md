@@ -1,3 +1,10 @@
+## [1.21.40](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.39...v1.21.40) (2026-05-18)
+
+
+### Bug Fixes
+
+* Додано Importnat для стилів ширини ([6993305](https://github.com/StepanKhomyn/voiptime-components/commit/69933053c4df8a96c172c34461d17ff8f000525b))
+
 ## [1.21.39](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.38...v1.21.39) (2026-05-18)
 
 
