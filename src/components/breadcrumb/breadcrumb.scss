@@ -58,6 +58,9 @@
     text-overflow: ellipsis;
     max-width: 200px;
     text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 
     a#{&},
     &:not(span) {
@@ -69,7 +72,7 @@
     }
 
     &--active {
-      color: var(--color-gray-1);
+      color: var(--color-gray-1) !important;
       cursor: default;
       pointer-events: none;
     }
