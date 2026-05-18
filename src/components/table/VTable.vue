@@ -637,7 +637,7 @@
               :style="getSelectionColumnStyle()"
               class="vt-table__td vt-table__td--selection"
             >
-              <div class="vt-table__cell-content">
+              <div class="vt-table__cell-content vt-table__cell-content--selection">
                 <VCheckbox
                   :checked="selectionComposable?.isRowSelected(row)"
                   @change="(isChecked, event) => handleCheckboxChange(isChecked, row, event)"
