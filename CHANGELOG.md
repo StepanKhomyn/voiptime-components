@@ -1,3 +1,11 @@
+## [1.21.38](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.37...v1.21.38) (2026-05-18)
+
+
+### Bug Fixes
+
+* Правки по вибраним опціям таблиці, без elipsis ([26573c5](https://github.com/StepanKhomyn/voiptime-components/commit/26573c5d8c6f60cfd330b0bc1fe008ab210bae7f))
+* Правки по вибраним опціям таблиці, без elipsis2 ([add38c9](https://github.com/StepanKhomyn/voiptime-components/commit/add38c91d344278ac19223ba928366703b2a39c9))
+
 ## [1.21.37](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.36...v1.21.37) (2026-05-18)
 
 
