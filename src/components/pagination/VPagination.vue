@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, watch } from 'vue';
+  import { computed, watch, ref } from 'vue';
   import type { PaginationEmits, PaginationProps } from './types';
   import VButton from '@/components/button/VButton.vue';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -18,9 +18,15 @@
   const emit = defineEmits<PaginationEmits>();
 
   // Computed properties
+  const isHandlingPageSizeChange = ref(false);
+
   const currentPage = computed({
     get: () => props.currentPage,
-    set: (value: number) => emit('update:currentPage', value),
+    set: (value: number) => {
+      if (!isHandlingPageSizeChange.value) {
+        emit('update:currentPage', value);
+      }
+    },
   });
 
   const currentPageSize = computed({
@@ -99,7 +105,9 @@
   };
 
   const handlePageSizeChange = () => {
+    isHandlingPageSizeChange.value = true;
     currentPage.value = 1;
+    isHandlingPageSizeChange.value = false;
     emitPageChange();
   };
 
