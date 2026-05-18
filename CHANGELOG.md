@@ -1,3 +1,10 @@
+## [1.21.39](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.38...v1.21.39) (2026-05-18)
+
+
+### Bug Fixes
+
+* Третій раз додав падінг в actions таблиці ([31b576b](https://github.com/StepanKhomyn/voiptime-components/commit/31b576beb7e412ebb67a134d2a504bfe4df95a9c))
+
 ## [1.21.38](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.37...v1.21.38) (2026-05-18)
 
 
