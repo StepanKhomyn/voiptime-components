@@ -1,3 +1,10 @@
+## [1.21.43](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.42...v1.21.43) (2026-05-19)
+
+
+### Bug Fixes
+
+* Вирівняно по горизонталі лейбл та інпут в стилях сторінки vt-page-item ([1a6c469](https://github.com/StepanKhomyn/voiptime-components/commit/1a6c4690a43c737adeba24dea129d7095e884e43))
+
 ## [1.21.42](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.41...v1.21.42) (2026-05-19)
 
 
