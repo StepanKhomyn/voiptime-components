@@ -294,6 +294,12 @@ $transition-fast: filter 0.15s ease;
     display: flex;
     justify-content: space-between;
     font-weight: bold;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: var(--vt-gap-sm);
+    }
   }
 
   &-track {

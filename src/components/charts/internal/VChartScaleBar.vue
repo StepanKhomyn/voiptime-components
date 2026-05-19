@@ -14,11 +14,11 @@
 <template>
   <div class="vt-chart__scale-bar">
     <div class="vt-chart__scale-bar-header">
-      <div class="flex flex-align-center gap-5">
+      <div class="vt-chart__scale-bar-header-item">
         <span class="vt-chart__scale-bar-label">{{ left.label }}</span>
         <span class="vt-chart__scale-bar-value">{{ left.value }}</span>
       </div>
-      <div class="flex flex-align-center gap-5">
+      <div class="vt-chart__scale-bar-header-item">
         <span class="vt-chart__scale-bar-label">{{ right.label }}</span>
         <span class="vt-chart__scale-bar-value">{{ right.value }}</span>
       </div>
