@@ -1,3 +1,10 @@
+## [1.21.42](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.41...v1.21.42) (2026-05-19)
+
+
+### Bug Fixes
+
+* Виправлено стилі Chart scale bar ([8e17613](https://github.com/StepanKhomyn/voiptime-components/commit/8e17613dd3eff9684530063552bbdcaf68da0fda))
+
 ## [1.21.41](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.40...v1.21.41) (2026-05-18)
 
 
