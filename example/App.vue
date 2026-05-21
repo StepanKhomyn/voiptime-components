@@ -31,6 +31,7 @@
   import DemoBreadcrumb from './DemoBreadcrumb.vue';
   import DemoAudio from './DemoAudio.vue';
 
+
   const searchQuery = ref('');
 
   const sections = [
@@ -51,7 +52,6 @@
         },
       ],
     },
-
     {
       group: 'Форми та введення',
       items: [
