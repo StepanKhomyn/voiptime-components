@@ -35,7 +35,10 @@
 
   // ─── Item Helpers ─────────────────────────────────────────────────────────────
 
-  const getId    = (item: T): unknown => item[props.optionValue as keyof T];
+  const getId = (item: T): unknown =>
+    props.optionValue !== undefined
+      ? item[props.optionValue as keyof T]
+      : item;
   const getLabel = (item: T): string  => String(item[props.optionLabel as keyof T] ?? '');
   const isSameId = (a: T, b: T): boolean => getId(a) === getId(b);
   const hasItem  = (item: T, list: T[]): boolean => list.some(i => isSameId(i, item));
