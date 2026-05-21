@@ -11,7 +11,6 @@
 
   const props = withDefaults(defineProps<VTransferListProps<T>>(), {
     optionLabel: 'name' as any,
-    optionValue: 'id' as any,
     isValidRightContainer: true,
     heightStyle: '',
     leftPlaceholder: '',
