@@ -19,14 +19,14 @@ export interface VTransferListProps<T extends Record<string, any>> {
   rightTotal?: number;
   rightLoading?: boolean;
   fetchLimit?: number;
-  added?: T[];
-  removed?: T[];
+  added?: unknown[];
+  removed?: unknown[];
 }
 
 export interface VTransferListEmits<T extends Record<string, any>> {
   selectLeft: [item: T];
   selectRight: [item: T];
   transfer: [item: T, direction: 'left' | 'right'];
-  'update:added': [items: T[]];
-  'update:removed': [items: T[]];
+  'update:added': [items: unknown[]];
+  'update:removed': [items: unknown[]];
 }

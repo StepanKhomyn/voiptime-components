@@ -35,7 +35,6 @@
   const listTwo = defineModel<T[]>('listTwo', { required: true, default: () => [] });
 
   // ─── Item Helpers ─────────────────────────────────────────────────────────────
-  // ⚠️ Мають бути ПЕРШИМИ — використовуються скрізь нижче
 
   const getId    = (item: T): unknown => item[props.optionValue as keyof T];
   const getLabel = (item: T): string  => String(item[props.optionLabel as keyof T] ?? '');
@@ -160,24 +159,27 @@
   });
 
   // ─── Transfer Tracking ────────────────────────────────────────────────────────
+  const getEmitValue = (item: T): unknown =>
+    props.optionValue ? getId(item) : item;
 
   const trackTransfer = (item: T, direction: 'left' | 'right'): void => {
     const id = getId(item);
+    const emitVal = getEmitValue(item);
     const wasInitiallyRight = initialRightIds.has(id);
 
     if (direction === 'right') {
       if (wasInitiallyRight) {
-        emit('update:removed', props.removed.filter(i => getId(i) !== id));
+        emit('update:removed', props.removed.filter(i => i !== emitVal));
       } else {
-        const alreadyAdded = props.added.some(i => getId(i) === id);
-        if (!alreadyAdded) emit('update:added', [...props.added, item]);
+        const alreadyAdded = props.added.some(i => i === emitVal);
+        if (!alreadyAdded) emit('update:added', [...props.added, emitVal]);
       }
     } else {
       if (wasInitiallyRight) {
-        const alreadyRemoved = props.removed.some(i => getId(i) === id);
-        if (!alreadyRemoved) emit('update:removed', [...props.removed, item]);
+        const alreadyRemoved = props.removed.some(i => i === emitVal);
+        if (!alreadyRemoved) emit('update:removed', [...props.removed, emitVal]);
       } else {
-        emit('update:added', props.added.filter(i => getId(i) !== id));
+        emit('update:added', props.added.filter(i => i !== emitVal));
       }
     }
   };
