@@ -1,3 +1,10 @@
+## [1.21.46](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.45...v1.21.46) (2026-05-21)
+
+
+### Bug Fixes
+
+* VTransferList fixes ([05f3d0a](https://github.com/StepanKhomyn/voiptime-components/commit/05f3d0a47b433e60f4f650d62674d3468c3f4ef1))
+
 ## [1.21.45](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.44...v1.21.45) (2026-05-21)
 
 
