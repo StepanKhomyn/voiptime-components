@@ -1,3 +1,11 @@
+## [1.21.44](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.43...v1.21.44) (2026-05-21)
+
+
+### Bug Fixes
+
+* Add new npm token ([17da0f2](https://github.com/StepanKhomyn/voiptime-components/commit/17da0f28b114f4704f6e54eb2b5f2c51081e83a2))
+* fixes related to optionValue in VTransferList ([e3bb497](https://github.com/StepanKhomyn/voiptime-components/commit/e3bb497808357368e53d6c6c5938fde8de18b1e6))
+
 ## [1.21.43](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.42...v1.21.43) (2026-05-19)
 
 
