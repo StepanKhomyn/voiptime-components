@@ -134,6 +134,8 @@ import EmailOutgoingIcon from './mail/EmailOutgoingIcon.vue';
 import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
 import AddIcon from './others/AddIcon.vue';
+import CallQualityBlockIcon from './others/CallQualityBlockIcon.vue';
+import CallQualityTemplateIcon from './others/CallQualityTemplateIcon.vue';
 import DiamondInSquareIcon from './others/DiamondInSquareIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
 import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
@@ -359,6 +361,8 @@ export const icons = {
 
   // others icons
   add: AddIcon,
+  callQualityBlock: CallQualityBlockIcon,
+  callQualityTemplate: CallQualityTemplateIcon,
   diamondInSquare: DiamondInSquareIcon,
   dsr: DsrIcon,
   emptyRound: EmptyRoundIcon,
