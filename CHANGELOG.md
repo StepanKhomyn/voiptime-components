@@ -1,3 +1,10 @@
+## [1.21.47](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.46...v1.21.47) (2026-05-25)
+
+
+### Bug Fixes
+
+* add call quality icons ([764ab77](https://github.com/StepanKhomyn/voiptime-components/commit/764ab77a8379e04c359aef75ad969dc934c9b850))
+
 ## [1.21.46](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.45...v1.21.46) (2026-05-21)
 
 
