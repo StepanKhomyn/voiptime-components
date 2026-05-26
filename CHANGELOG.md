@@ -1,3 +1,17 @@
+## [1.21.48](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.47...v1.21.48) (2026-05-25)
+
+
+### Bug Fixes
+
+* cq icon path ([0aa0629](https://github.com/StepanKhomyn/voiptime-components/commit/0aa06297a5bce7c8d0edc5a8c979d20d2a01a13a))
+
+## [1.21.47](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.46...v1.21.47) (2026-05-25)
+
+
+### Bug Fixes
+
+* add call quality icons ([764ab77](https://github.com/StepanKhomyn/voiptime-components/commit/764ab77a8379e04c359aef75ad969dc934c9b850))
+
 ## [1.21.46](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.45...v1.21.46) (2026-05-21)
 
 
