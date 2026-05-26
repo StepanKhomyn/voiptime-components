@@ -1,3 +1,10 @@
+## [1.21.49](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.48...v1.21.49) (2026-05-26)
+
+
+### Bug Fixes
+
+* 3685 Дефолтний скрол у всіх таблицях ([7278c07](https://github.com/StepanKhomyn/voiptime-components/commit/7278c0744ba54d8d2dfbfc00d98624a03d772908))
+
 ## [1.21.48](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.47...v1.21.48) (2026-05-25)
 
 
