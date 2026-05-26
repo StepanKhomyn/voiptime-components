@@ -30,6 +30,7 @@
   import DemoTransferList from './DemoTransferList.vue';
   import DemoBreadcrumb from './DemoBreadcrumb.vue';
   import DemoAudio from './DemoAudio.vue';
+  import DemoEmpty from './DemoEmpty.vue';
 
 
   const searchQuery = ref('');
@@ -110,6 +111,7 @@
       group: 'Медіа та UI',
       items: [
         { name: 'Іконки', icon: '🎨', component: DemoIcons },
+        { name: 'Empty', icon: '🎨', component: DemoEmpty },
         { name: 'Upload', icon: '📤', component: DemoUpload },
         { name: 'Логін', icon: '🔐', component: DemoLogin },
       ],

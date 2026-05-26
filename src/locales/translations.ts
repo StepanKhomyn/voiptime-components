@@ -7,7 +7,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.LOGIN_USERNAME]: 'Логін',
     [LOCALE_KEYS.LOGIN_PASSWORD]: 'Пароль',
     [LOCALE_KEYS.LOGIN_LANGUAGE]: 'Мова інтерфейсу',
-    [LOCALE_KEYS.LOGIN_REMEMBER]: 'Запам\'ятати мене',
+    [LOCALE_KEYS.LOGIN_REMEMBER]: "Запам'ятати мене",
     [LOCALE_KEYS.LOGIN_SUBMIT]: 'Відправити',
     [LOCALE_KEYS.LOGIN_FORGET_PASSWORD]: 'Забули пароль?',
     [LOCALE_KEYS.LOGIN_PRIVACY_POLICY]: 'Політика конфіденційності',
@@ -130,6 +130,9 @@ export const translations: Translations = <Translations>{
 
     // Filter
     [LOCALE_KEYS.FILTER_MORE]: 'Більше фільтрів',
+
+    //Audio Player
+    [LOCALE_KEYS.AUDIO_EMPTY]: 'Аудіофайл не знайдено!',
   },
 
   [LANGUAGES.en]: {
@@ -261,6 +264,9 @@ export const translations: Translations = <Translations>{
 
     // Filter
     [LOCALE_KEYS.FILTER_MORE]: 'More filters',
+
+    //Audio Player
+    [LOCALE_KEYS.AUDIO_EMPTY]: 'No Sound!',
   },
 
   [LANGUAGES.ru]: {
@@ -392,5 +398,8 @@ export const translations: Translations = <Translations>{
 
     // Filter
     [LOCALE_KEYS.FILTER_MORE]: 'Больше фильтров',
+
+    //Audio Player
+    [LOCALE_KEYS.AUDIO_EMPTY]: 'Аудио не найдено!',
   },
 };
