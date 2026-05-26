@@ -74,6 +74,9 @@
             v-model="form.username"
             :error-message="Array.isArray(v$.username?.$errors) ? v$.username.$errors[0]?.$message : undefined"
             outlined
+            name="username"
+            id="username"
+            autocomplete="username"
             @keyup.enter="submit"
           />
         </div>
