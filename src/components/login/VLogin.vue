@@ -90,6 +90,9 @@
             :error-message="Array.isArray(v$.password?.$errors) ? v$.password.$errors[0]?.$message : undefined"
             :show-password="true"
             outlined
+            name="password"
+            id="password"
+            autocomplete="current-password"
             type="password"
             @keyup.enter="submit"
           />
