@@ -137,6 +137,9 @@ export enum LOCALE_KEYS {
 
   // Фільтр
   FILTER_MORE = 'FILTER_MORE',
+
+  //Audio Player
+  AUDIO_EMPTY = 'AUDIO_EMPTY',
 }
 
 // Тип для перекладів - гарантує наявність всіх ключів

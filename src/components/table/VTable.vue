@@ -9,7 +9,7 @@
   import VIcon from '@/components/icon/VIcon.vue';
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
   import { useI18n } from '@/locales/useI18n';
-  import { LOCALE_KEYS } from '@/locales/types';
+  import VEmpty from '@/components/empty/VEmpty.vue';
 
   const props = withDefaults(defineProps<VTableProps>(), {
     selectable: false,
@@ -596,10 +596,7 @@
             "
             class="vt-table__empty-cell"
           >
-            <div class="vt-table__empty-content">
-              <VIcon class="vt-table__empty-icon" name="empty" />
-              <span class="vt-table__empty-text">{{ t(LOCALE_KEYS.TABLE_EMPTY) }}</span>
-            </div>
+            <VEmpty />
           </td>
         </tr>
         <template v-for="(row, rowIndex) in sortedData" v-else :key="createRowKey(row, rowIndex)">

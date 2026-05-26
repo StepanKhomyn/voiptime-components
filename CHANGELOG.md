@@ -1,3 +1,17 @@
+## [1.21.53](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.52...v1.21.53) (2026-05-26)
+
+
+### Bug Fixes
+
+* Додано компоеннту empty2 ([fa9ffe4](https://github.com/StepanKhomyn/voiptime-components/commit/fa9ffe4d704e94fd2b13aa0d0871c64ad876025c))
+
+## [1.21.52](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.51...v1.21.52) (2026-05-26)
+
+
+### Bug Fixes
+
+* Додано компоеннту empty ([f9ab96a](https://github.com/StepanKhomyn/voiptime-components/commit/f9ab96ab49da0bd8462f6384063bd7a5dd4ff2ee))
+
 ## [1.21.51](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.50...v1.21.51) (2026-05-26)
 
 

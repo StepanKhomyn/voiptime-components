@@ -11,6 +11,11 @@
   // Types
   import type { PlaybackSpeed, VAudioEmits, VAudioProps, WaveSurferInstance } from './types';
   import { CHANNEL_COLORS } from './types';
+  import VEmpty from '@/components/empty/VEmpty.vue';
+  import { useI18n } from '@/locales/useI18n';
+  import { LOCALE_KEYS } from '@/locales/types';
+
+  const { t } = useI18n();
 
   const props = withDefaults(defineProps<VAudioProps>(), {
     recordUrl: '',
@@ -178,7 +183,9 @@
 <template>
   <div class="vt-audio" :class="{ 'is-disabled': isPlayerDisabled }">
     <div v-if="!recordUrl" class="vt-audio__empty">
-      <slot name="empty">Запис не знайдено</slot>
+      <slot name="empty">
+        <VEmpty icon="noSound" :text="t(LOCALE_KEYS.AUDIO_EMPTY)" />
+      </slot>
     </div>
 
     <div v-else class="vt-audio__container">

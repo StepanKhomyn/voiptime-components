@@ -200,6 +200,9 @@ import EmptyIcon from './table/EmptyIcon.vue';
 import ExcelIcon from './table/ExcelIcon.vue';
 import FreezeIcon from './table/FreezeIcon.vue';
 import ListAddIcon from './table/ListAddIcon.vue';
+import NoChatIcon from './table/NoChatIcon.vue';
+import NoDataIcon from './table/NoDataIcon.vue';
+import NoSoundIcon from './table/NoSoundIcon.vue';
 import NumberListIcon from './table/NumberListIcon.vue';
 import TableSettingsIcon from './table/TableSettingsIcon.vue';
 import TwoColumnsIcon from './table/TwoColumnsIcon.vue';
@@ -439,6 +442,9 @@ export const icons = {
   excel: ExcelIcon,
   freeze: FreezeIcon,
   listAdd: ListAddIcon,
+  noChat: NoChatIcon,
+  noData: NoDataIcon,
+  noSound: NoSoundIcon,
   numberList: NumberListIcon,
   tableSettings: TableSettingsIcon,
   twoColumns: TwoColumnsIcon,
