@@ -1,3 +1,10 @@
+## [1.21.56](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.55...v1.21.56) (2026-05-26)
+
+
+### Bug Fixes
+
+* правки у бекграунді скрола ([19e6c97](https://github.com/StepanKhomyn/voiptime-components/commit/19e6c97e7de8ed01c85b85831d836ab090f22b1f))
+
 ## [1.21.55](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.54...v1.21.55) (2026-05-26)
 
 
