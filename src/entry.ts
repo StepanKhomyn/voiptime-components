@@ -330,6 +330,7 @@ const VUIPlugin = {
     app.component(`${prefix}Breadcrumb`, VBreadcrumb);
     app.component(`${prefix}BreadcrumbItem`, VBreadcrumbItem);
     app.component(`${prefix}Audio`, VAudio);
+    app.component(`${prefix}Empty`, VEmpty);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
