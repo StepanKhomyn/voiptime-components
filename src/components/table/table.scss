@@ -37,6 +37,7 @@
     height: 100%;
     overflow-x: auto;
     overflow-y: scroll;
+    scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
   }
 
   &__empty {
