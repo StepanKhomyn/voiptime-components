@@ -1,3 +1,10 @@
+## [1.21.51](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.50...v1.21.51) (2026-05-26)
+
+
+### Bug Fixes
+
+* fix passbolt password autocomplete ([c7f2454](https://github.com/StepanKhomyn/voiptime-components/commit/c7f24544325a537999697b65d3c23874ca412ea1))
+
 ## [1.21.50](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.49...v1.21.50) (2026-05-26)
 
 
