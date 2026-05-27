@@ -1,3 +1,10 @@
+## [1.21.57](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.56...v1.21.57) (2026-05-27)
+
+
+### Bug Fixes
+
+* правки VBreadcrumb, додано можливість прокидувати routes, на основі яких буде формуватися breadcrumb ([f9305e2](https://github.com/StepanKhomyn/voiptime-components/commit/f9305e2fad1ad0e198b65233069468c4423a07dd))
+
 ## [1.21.56](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.55...v1.21.56) (2026-05-26)
 
 
