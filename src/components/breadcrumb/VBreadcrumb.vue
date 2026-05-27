@@ -18,7 +18,7 @@
 
   const normalizedRoutes = computed(() => {
     return props.routes.map((item, index) => ({
-      label: item.i18n ? t(item.i18n) : item.label,
+      label: item.i18n ? t(item.i18n as any) : item.label,
       to: item.route ?? undefined,
       active: index === props.routes.length - 1,
     }));

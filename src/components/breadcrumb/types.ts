@@ -1,5 +1,3 @@
-import type { LOCALE_KEYS } from '@/locales/types';
-
 export type BreadcrumbRouteLocation =
   | string
   | {
@@ -10,7 +8,7 @@ export type BreadcrumbRouteLocation =
 };
 
 export interface BreadcrumbRoute {
-  i18n?: LOCALE_KEYS;
+  i18n?: string;
   label?: string;
   route?: BreadcrumbRouteLocation | null;
 }
