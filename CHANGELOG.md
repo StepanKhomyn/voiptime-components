@@ -1,3 +1,10 @@
+## [1.21.58](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.57...v1.21.58) (2026-05-27)
+
+
+### Bug Fixes
+
+* change type for i18n in breadcrumb ([19e7baf](https://github.com/StepanKhomyn/voiptime-components/commit/19e7baf19e0f13d222b68a7e3833261ac7563453))
+
 ## [1.21.57](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.56...v1.21.57) (2026-05-27)
 
 
