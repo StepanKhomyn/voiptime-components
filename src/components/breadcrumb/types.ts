@@ -7,17 +7,10 @@ export type BreadcrumbRouteLocation =
   query?: Record<string, unknown>;
 };
 
-export interface BreadcrumbRoute {
-  i18n?: string;
-  label?: string;
-  route?: BreadcrumbRouteLocation | null;
-}
-
 export interface VBreadcrumbProps {
   separator?: string;
   ariaLabel?: string;
   goBack?: boolean;
-  routes?: BreadcrumbRoute[];
 }
 
 export interface VBreadcrumbItemProps {
