@@ -22,6 +22,10 @@ export interface VBreadcrumbItemProps {
   disabled?: boolean;
 }
 
+export interface VBreadcrumbEmits {
+  back: [];
+}
+
 export interface VBreadcrumbItemEmits {
   click: [event: MouseEvent];
 }

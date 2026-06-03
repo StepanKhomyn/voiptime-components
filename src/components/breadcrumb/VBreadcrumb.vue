@@ -2,7 +2,7 @@
   import { provide } from 'vue';
   import { useI18n } from '@/locales/useI18n';
 
-  import type { VBreadcrumbProps } from './types';
+  import type { VBreadcrumbProps, VBreadcrumbEmits } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
 
   const props = withDefaults(defineProps<VBreadcrumbProps>(), {
@@ -11,9 +11,7 @@
     goBack: true,
   });
 
-  const emit = defineEmits<{
-    back: [];
-  }>();
+  const emit = defineEmits<VBreadcrumbEmits>();
 
   const { t } = useI18n();
 
