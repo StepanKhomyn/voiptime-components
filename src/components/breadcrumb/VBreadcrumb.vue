@@ -3,7 +3,6 @@
   import { useI18n } from '@/locales/useI18n';
 
   import type { VBreadcrumbProps } from './types';
-
   import VIcon from '@/components/icon/VIcon.vue';
 
   const props = withDefaults(defineProps<VBreadcrumbProps>(), {
@@ -12,12 +11,14 @@
     goBack: true,
   });
 
+  const emit = defineEmits<{
+    back: [];
+  }>();
+
   const { t } = useI18n();
 
   const handleBack = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    }
+    emit('back');
   };
 
   provide('vt-breadcrumb-separator', props.separator);
