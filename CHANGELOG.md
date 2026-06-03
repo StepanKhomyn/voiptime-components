@@ -1,3 +1,10 @@
+## [1.21.60](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.59...v1.21.60) (2026-06-03)
+
+
+### Bug Fixes
+
+* breadcrumb fixes ([28fe795](https://github.com/StepanKhomyn/voiptime-components/commit/28fe795a31db4d19024308972ff0677fe49857e8))
+
 ## [1.21.59](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.58...v1.21.59) (2026-05-28)
 
 
