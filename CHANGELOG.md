@@ -1,3 +1,10 @@
+## [1.21.62](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.61...v1.21.62) (2026-06-08)
+
+
+### Bug Fixes
+
+* повернув назад групування колонок в налаштуванні колонок таблиці ([0144f8c](https://github.com/StepanKhomyn/voiptime-components/commit/0144f8c199fd58e7043d19abe7c23036a012ed03))
+
 ## [1.21.61](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.60...v1.21.61) (2026-06-03)
 
 
