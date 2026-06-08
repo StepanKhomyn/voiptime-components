@@ -99,14 +99,18 @@
   &__group {
     display: flex;
     flex-direction: column;
-    gap: var(--vt-padding-base);
+    gap: 0;
 
     &-header {
-      padding: var(--vt-padding-base) 0;
+      padding: var(--vt-padding-base) var(--vt-padding-sm); // трохи внутрішнього відступу для ховеру
+      margin-left: calc(var(--vt-padding-sm) * -1); // компенсуємо відступ
+      border-radius: var(--radius-main);
       cursor: pointer;
       display: flex;
       align-items: center;
       gap: var(--vt-gap-sm);
+      transition: background-color 0.2s ease;
+      position: relative;
 
       &:hover {
         background-color: var(--color-gray-7);
@@ -120,10 +124,36 @@
     &-toggle {
       margin-left: auto;
       color: var(--color-gray-3);
-      transition: transform 0.2s ease;
+      transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: rotate(0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &-header--expanded &-toggle {
+      transform: rotate(-180deg);
+    }
+
+    &-transition {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      visibility: hidden;
+      transition: grid-template-rows 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.2s ease,
+      visibility 0.2s ease;
+
+      &--expanded {
+        grid-template-rows: 1fr;
+        opacity: 1;
+        visibility: visible;
+        margin-top: var(--vt-padding-base); // Повертаємо відступ тільки коли відкрито
+      }
     }
 
     &-columns {
+      min-height: 0;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: var(--vt-gap-sm);
