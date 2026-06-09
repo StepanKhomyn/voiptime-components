@@ -1,3 +1,10 @@
+## [1.21.64](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.63...v1.21.64) (2026-06-09)
+
+
+### Bug Fixes
+
+* add label key to select ([4df2bb7](https://github.com/StepanKhomyn/voiptime-components/commit/4df2bb75cc6013b7a97ca477a371356d85f84fad))
+
 ## [1.21.63](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.62...v1.21.63) (2026-06-09)
 
 
