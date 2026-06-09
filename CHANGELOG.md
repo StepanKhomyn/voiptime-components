@@ -1,3 +1,10 @@
+## [1.21.66](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.65...v1.21.66) (2026-06-09)
+
+
+### Bug Fixes
+
+* New UI | Автозбереження логіну і паролю у формі логіну ([2a4a6e2](https://github.com/StepanKhomyn/voiptime-components/commit/2a4a6e20cdae1a0b72e5de25c32363d27bc2f763))
+
 ## [1.21.65](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.64...v1.21.65) (2026-06-09)
 
 
