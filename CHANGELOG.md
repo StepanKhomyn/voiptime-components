@@ -1,3 +1,10 @@
+## [1.21.63](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.62...v1.21.63) (2026-06-09)
+
+
+### Bug Fixes
+
+* Правки по селекту з вибраними значеннями обєктів ([a0c8096](https://github.com/StepanKhomyn/voiptime-components/commit/a0c8096831c68eeac49d956c59985e8cbacbabd0))
+
 ## [1.21.62](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.61...v1.21.62) (2026-06-08)
 
 
