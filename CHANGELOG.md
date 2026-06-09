@@ -1,3 +1,10 @@
+## [1.21.65](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.64...v1.21.65) (2026-06-09)
+
+
+### Bug Fixes
+
+* додано двосторонню звіязку через v-model для сортування колонок в таблиці ([9576893](https://github.com/StepanKhomyn/voiptime-components/commit/957689305370c6dda038c44aabadb0863767a63d))
+
 ## [1.21.64](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.63...v1.21.64) (2026-06-09)
 
 
