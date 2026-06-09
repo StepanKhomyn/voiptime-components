@@ -41,7 +41,7 @@ export interface VtSelectProps {
   requiredMessage?: string;
   // Опція для порівняння об'єктів
   valueKey?: string; // Ключ для порівняння об'єктів (наприклад, 'id')
-
+  labelKey?: string;
   // Тексти
   errorMessage?: string;
 
@@ -84,12 +84,13 @@ export interface VLocale {
 }
 
 export interface VLocaleSelectProps {
-  modelValue?: LANGUAGES,
+  modelValue?: LANGUAGES;
   languages?: VLocale[];
 }
 
 export interface VLocaleEmits {
   (e: 'update:modelValue', value: LANGUAGES): void;
+
   (e: 'change', value: LANGUAGES): void;
 }
 

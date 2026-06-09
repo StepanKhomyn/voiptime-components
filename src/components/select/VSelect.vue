@@ -443,6 +443,7 @@
     if (typeof value === 'object') {
       if (value.label) return String(value.label);
       if (value.name) return String(value.name);
+      if (props.labelKey && value[props.labelKey] !== undefined) return String(value[props.labelKey]);
       if (props.valueKey && value[props.valueKey] !== undefined) return String(value[props.valueKey]);
       return JSON.stringify(value);
     }
