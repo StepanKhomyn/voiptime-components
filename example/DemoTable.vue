@@ -328,7 +328,20 @@
     <DocSection description="Мінімальна конфігурація — data + VTableColumn" title="Базова таблиця">
       <DocPreview>
         <div style="width: 100%">
-          <VTable :data="currentPageData.slice(0, 5)">
+          <VTable
+            :columns-selector="[
+              {
+                name: 'Група 1',
+                label: 'Привіт',
+                order: 0,
+                columns: [
+                  { prop: 'id', label: 'ID', width: 80 },
+                  { prop: 'name', label: 'Назва', minWidth: 200 },
+                ],
+              },
+            ]"
+            :data="currentPageData.slice(0, 5)"
+          >
             <VTableColumn label="ID" prop="id" width="80" />
             <VTableColumn label="Ім'я" prop="name">
               <template #name="{ row }">

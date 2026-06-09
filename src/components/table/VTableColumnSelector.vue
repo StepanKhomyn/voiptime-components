@@ -8,6 +8,10 @@
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
 
+  interface WorkingColumn extends VTableColumnProps {
+    _visible: boolean;
+  }
+
   interface Props {
     columns: VTableColumnProps[];
     defaultColumns?: VTableColumnProps[];
@@ -25,30 +29,42 @@
 
   const { t } = useI18n();
 
-  // Стан компонента
-  const workingColumns = ref<VTableColumnProps[]>([]);
+  // ─── Core state ───────────────────────────────────────────────────────────
+  // workingColumns містить ВСІ колонки (активні + неактивні) з флагом _visible
+  const workingColumns = ref<WorkingColumn[]>([]);
   const expandedGroups = ref<Set<string>>(new Set());
 
-  // Стан для drag & drop
+  // ─── Drag & drop state ────────────────────────────────────────────────────
   const draggedIndex = ref<number>(-1);
   const targetIndex = ref<number>(-1);
   const dropPosition = ref<'before' | 'after'>('before');
 
-  // Обчислені властивості для статусу груп
+  // ─── Derived lists ────────────────────────────────────────────────────────
+
+  /** Колонки які зараз активні (показуються в таблиці) */
+  const activeColumns = computed(() => workingColumns.value.filter(col => col._visible));
+
+  /** Колонки які зараз неактивні */
+  const inactiveColumns = computed(() => workingColumns.value.filter(col => !col._visible));
+
+  /** Тільки активні колонки для лівої панелі drag & drop (індекси відносно activeColumns) */
+  const activeColumnsForDrag = computed(() => activeColumns.value);
+
+  // ─── Group logic ──────────────────────────────────────────────────────────
+
+  const regularGroups = computed(() => props.columnsSelector.filter(g => g.name !== 'removed'));
+
   const groupStatuses = computed(() => {
     const statuses: Record<string, { checked: boolean; indeterminate: boolean }> = {};
 
-    props.columnsSelector.forEach(group => {
-      if (group.name === 'removed') {
-        return;
-      }
+    regularGroups.value.forEach(group => {
+      const groupProps = new Set(group.columns.map(c => c.prop));
+      const visibleCount = workingColumns.value.filter(c => groupProps.has(c.prop) && c._visible).length;
+      const total = group.columns.length;
 
-      const groupColumnProps = group.columns.map((col: VTableColumnProps) => col.prop);
-      const selectedGroupColumns = workingColumns.value.filter(col => groupColumnProps.includes(col.prop));
-
-      if (selectedGroupColumns.length === 0) {
+      if (visibleCount === 0) {
         statuses[group.name] = { checked: false, indeterminate: false };
-      } else if (selectedGroupColumns.length === group.columns.length) {
+      } else if (visibleCount === total) {
         statuses[group.name] = { checked: true, indeterminate: false };
       } else {
         statuses[group.name] = { checked: false, indeterminate: true };
@@ -58,98 +74,201 @@
     return statuses;
   });
 
-  const regularGroups = computed(() => {
-    return props.columnsSelector.filter(group => group.name !== 'removed');
-  });
+  // ─── Pinned helpers ───────────────────────────────────────────────────────
 
-  // Перевірка чи колонка закріплена
-  const isPinned = (column: VTableColumnProps) => column.pinnedLeft || column.pinnedRight;
-
-  // Перевірка чи можна перетягувати колонку
+  const isPinned = (column: VTableColumnProps) => !!(column.pinnedLeft || column.pinnedRight);
   const canDragColumn = (column: VTableColumnProps) => !isPinned(column);
 
-  // Знаходимо межі для переміщення
-  const getDragBounds = () => {
-    const columns = workingColumns.value;
+  // ─── Initialization ───────────────────────────────────────────────────────
 
-    let lastPinnedLeftIndex = -1;
-    for (let i = 0; i < columns.length; i++) {
-      if (columns[i].pinnedLeft) {
-        lastPinnedLeftIndex = i;
+  const initializeWorkingCopies = () => {
+    // Активні prop'и (ті що зараз в таблиці)
+    const activePropSet = new Set(props.columns.map(c => c.prop));
+
+    // Збираємо всі унікальні колонки: спочатку з columnsSelector (для порядку в правій панелі),
+    // потім з defaultColumns, потім з поточних активних
+    const allColumnsMap = new Map<string, VTableColumnProps>();
+
+    // 1. Поточні активні — вони мають найактуальніший стан (width, pinned тощо)
+    props.columns.forEach(col => allColumnsMap.set(col.prop, col));
+
+    // 2. Default columns — для тих що були видалені
+    props.defaultColumns.forEach(col => {
+      if (!allColumnsMap.has(col.prop)) {
+        allColumnsMap.set(col.prop, col);
       }
-    }
+    });
 
-    let firstPinnedRightIndex = columns.length;
-    for (let i = 0; i < columns.length; i++) {
-      if (columns[i].pinnedRight) {
+    // 3. columnsSelector — для тих що є в групах але не в defaultColumns
+    props.columnsSelector.forEach(group => {
+      group.columns.forEach(col => {
+        if (!allColumnsMap.has(col.prop)) {
+          allColumnsMap.set(col.prop, col);
+        }
+      });
+    });
+
+    // Будуємо workingColumns: спочатку активні (зберігаємо порядок), потім неактивні
+    const active: WorkingColumn[] = props.columns.map(col => ({
+      ...allColumnsMap.get(col.prop)!,
+      _visible: true,
+    }));
+
+    const inactive: WorkingColumn[] = [];
+    allColumnsMap.forEach((col, prop) => {
+      if (!activePropSet.has(prop)) {
+        inactive.push({ ...col, _visible: false });
+      }
+    });
+
+    workingColumns.value = [...active, ...inactive];
+
+    // Розгортаємо всі групи за замовчуванням
+    regularGroups.value.forEach(group => expandedGroups.value.add(group.name));
+  };
+
+  // ─── Toggle single column ─────────────────────────────────────────────────
+
+  const handleColumnToggle = (column: VTableColumnProps, isChecked: boolean) => {
+    // Закріплені колонки не можна знімати
+    if (isPinned(column) && !isChecked) return;
+
+    const idx = workingColumns.value.findIndex(c => c.prop === column.prop);
+    if (idx === -1) return;
+
+    if (isChecked) {
+      // Вмикаємо: переміщуємо колонку в кінець активних
+      const col = workingColumns.value[idx];
+      const withoutCol = workingColumns.value.filter((_, i) => i !== idx);
+
+      // Знаходимо позицію після останньої активної
+      const lastActiveIdx = withoutCol.reduce((last, c, i) => (c._visible ? i : last), -1);
+
+      const result = [...withoutCol];
+      result.splice(lastActiveIdx + 1, 0, { ...col, _visible: true });
+      workingColumns.value = result;
+    } else {
+      // Вимикаємо: переміщуємо колонку після всіх активних (в зону неактивних)
+      const col = workingColumns.value[idx];
+      const withoutCol = workingColumns.value.filter((_, i) => i !== idx);
+
+      // Знаходимо позицію після останньої активної
+      const lastActiveIdx = withoutCol.reduce((last, c, i) => (c._visible ? i : last), -1);
+
+      const result = [...withoutCol];
+      result.splice(lastActiveIdx + 1, 0, { ...col, _visible: false });
+      workingColumns.value = result;
+    }
+  };
+
+  // ─── Toggle group ─────────────────────────────────────────────────────────
+
+  const handleGroupToggle = (group: VTableColumnGroup, isChecked: boolean) => {
+    const groupProps = new Set(group.columns.map(c => c.prop));
+
+    if (isChecked) {
+      // Вмикаємо всі невидимі колонки групи
+      const lastActiveIdx = workingColumns.value.reduce((last, c, i) => (c._visible ? i : last), -1);
+
+      let insertOffset = 0;
+      workingColumns.value.forEach((col, i) => {
+        if (groupProps.has(col.prop) && !col._visible) {
+          const currentIdx = workingColumns.value.findIndex(c => c.prop === col.prop);
+          const withoutCol = workingColumns.value.filter(c => c.prop !== col.prop);
+          const insertAt = Math.min(lastActiveIdx + insertOffset + 1, withoutCol.length);
+          withoutCol.splice(insertAt, 0, { ...col, _visible: true });
+          workingColumns.value = withoutCol;
+          insertOffset++;
+        }
+      });
+    } else {
+      // Вимикаємо всі незакріплені активні колонки групи
+      workingColumns.value = workingColumns.value.map(col => {
+        if (groupProps.has(col.prop) && col._visible && !isPinned(col)) {
+          return { ...col, _visible: false };
+        }
+        return col;
+      });
+
+      // Сортуємо: активні спочатку, неактивні після
+      const active = workingColumns.value.filter(c => c._visible);
+      const inactive = workingColumns.value.filter(c => !c._visible);
+      workingColumns.value = [...active, ...inactive];
+    }
+  };
+
+  // ─── Group collapse ───────────────────────────────────────────────────────
+
+  const toggleGroup = (groupName: string) => {
+    if (expandedGroups.value.has(groupName)) {
+      expandedGroups.value.delete(groupName);
+    } else {
+      expandedGroups.value.add(groupName);
+    }
+  };
+
+  // ─── Drag & drop (тільки для активних колонок) ────────────────────────────
+
+  const getDragBounds = () => {
+    const active = activeColumns.value;
+    let lastPinnedLeftIndex = -1;
+    let firstPinnedRightIndex = active.length;
+
+    for (let i = 0; i < active.length; i++) {
+      if (active[i].pinnedLeft) lastPinnedLeftIndex = i;
+    }
+    for (let i = 0; i < active.length; i++) {
+      if (active[i].pinnedRight) {
         firstPinnedRightIndex = i;
         break;
       }
     }
 
-    return {
-      minIndex: lastPinnedLeftIndex + 1,
-      maxIndex: firstPinnedRightIndex - 1,
-    };
+    return { minIndex: lastPinnedLeftIndex + 1, maxIndex: firstPinnedRightIndex - 1 };
   };
 
-  // Перевірка чи можна вставити колонку в позицію
   const canDropAtPosition = (insertIndex: number) => {
-    const bounds = getDragBounds();
-
-    // Перевіряємо чи позиція в межах дозволеного діапазону
-    if (insertIndex < bounds.minIndex || insertIndex > bounds.maxIndex + 1) {
-      return false;
-    }
-
-    return true;
+    const { minIndex, maxIndex } = getDragBounds();
+    return insertIndex >= minIndex && insertIndex <= maxIndex + 1;
   };
 
-  // Обробники drag & drop
-  const handleDragStart = (event: DragEvent, index: number) => {
-    const column = workingColumns.value[index];
+  const handleDragStart = (event: DragEvent, activeIndex: number) => {
+    const column = activeColumns.value[activeIndex];
     if (!canDragColumn(column)) {
       event.preventDefault();
       return;
     }
-
-    draggedIndex.value = index;
-
+    draggedIndex.value = activeIndex;
     if (event.dataTransfer) {
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('text/plain', column.prop);
     }
-
     document.body.style.cursor = 'grabbing';
   };
 
-  const handleDragOver = (event: DragEvent, index: number) => {
+  const handleDragOver = (event: DragEvent, activeIndex: number) => {
     if (draggedIndex.value === -1) return;
-
     event.preventDefault();
 
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const mouseY = event.clientY;
     const elementMiddle = rect.top + rect.height / 2;
 
-    let insertIndex = index;
+    let insertIndex = activeIndex;
     let position: 'before' | 'after' = 'before';
 
     if (mouseY < elementMiddle) {
-      insertIndex = index;
+      insertIndex = activeIndex;
       position = 'before';
     } else {
-      insertIndex = index + 1;
+      insertIndex = activeIndex + 1;
       position = 'after';
     }
 
-    // Коригуємо індекс якщо тягнемо вниз
-    if (draggedIndex.value < insertIndex) {
-      insertIndex--;
-    }
+    if (draggedIndex.value < insertIndex) insertIndex--;
 
     if (canDropAtPosition(insertIndex)) {
-      targetIndex.value = index;
+      targetIndex.value = activeIndex;
       dropPosition.value = position;
       event.dataTransfer!.dropEffect = 'move';
     } else {
@@ -159,15 +278,12 @@
   };
 
   const handleDragLeave = () => {
-    // Не скидаємо одразу, дамо трохи часу для переходу на сусідній елемент
     setTimeout(() => {
-      if (draggedIndex.value === -1) {
-        targetIndex.value = -1;
-      }
+      if (draggedIndex.value === -1) targetIndex.value = -1;
     }, 50);
   };
 
-  const handleDrop = (event: DragEvent, index: number) => {
+  const handleDrop = (event: DragEvent, activeIndex: number) => {
     event.preventDefault();
 
     if (draggedIndex.value === -1 || targetIndex.value === -1) {
@@ -179,33 +295,27 @@
     const mouseY = event.clientY;
     const elementMiddle = rect.top + rect.height / 2;
 
-    let insertIndex = index;
-    if (mouseY >= elementMiddle) {
-      insertIndex = index + 1;
-    }
-
-    // Коригуємо індекс
-    if (draggedIndex.value < insertIndex) {
-      insertIndex--;
-    }
+    let insertIndex = activeIndex;
+    if (mouseY >= elementMiddle) insertIndex = activeIndex + 1;
+    if (draggedIndex.value < insertIndex) insertIndex--;
 
     if (!canDropAtPosition(insertIndex) || insertIndex === draggedIndex.value) {
       resetDragState();
       return;
     }
 
-    // Виконуємо переміщення
-    const newColumns = [...workingColumns.value];
-    const [movedColumn] = newColumns.splice(draggedIndex.value, 1);
-    newColumns.splice(insertIndex, 0, movedColumn);
+    // Переміщуємо в межах activeColumns, потім складаємо назад з inactive
+    const active = [...activeColumns.value];
+    const [movedCol] = active.splice(draggedIndex.value, 1);
+    active.splice(insertIndex, 0, movedCol);
 
-    workingColumns.value = newColumns;
+    const inactive = workingColumns.value.filter(c => !c._visible);
+    workingColumns.value = [...active, ...inactive];
+
     resetDragState();
   };
 
-  const handleDragEnd = () => {
-    resetDragState();
-  };
+  const handleDragEnd = () => resetDragState();
 
   const resetDragState = () => {
     draggedIndex.value = -1;
@@ -214,162 +324,69 @@
     document.body.style.cursor = '';
   };
 
-  // CSS класи для візуального фідбеку
   const getItemClasses = (index: number) => {
     const classes = ['vt-columns-selector__panel-item'];
-
-    if (draggedIndex.value === index) {
-      classes.push('vt-columns-selector__panel-item--dragging');
-    }
-
-    if (targetIndex.value === index && dropPosition.value === 'before') {
+    if (draggedIndex.value === index) classes.push('vt-columns-selector__panel-item--dragging');
+    if (targetIndex.value === index && dropPosition.value === 'before')
       classes.push('vt-columns-selector__panel-item--drop-before');
-    }
-
-    if (targetIndex.value === index && dropPosition.value === 'after') {
+    if (targetIndex.value === index && dropPosition.value === 'after')
       classes.push('vt-columns-selector__panel-item--drop-after');
-    }
-
     return classes;
   };
 
-  // Ініціалізація робочих копій
-  const initializeWorkingCopies = () => {
-    workingColumns.value = [...props.columns.map(col => ({ ...col }))];
+  // ─── isColumnSelected для груп ────────────────────────────────────────────
 
-    props.columnsSelector.forEach(group => {
-      if (group.name !== 'removed') {
-        expandedGroups.value.add(group.name);
-      }
-    });
-  };
-
-  // Обробка зміни стану окремої колонки
-  const handleColumnToggle = (column: VTableColumnProps, isChecked: boolean) => {
-    if (isChecked) {
-      const defaultIndex = props.defaultColumns.findIndex(col => col.prop === column.prop);
-
-      const newColumns = [...workingColumns.value];
-
-      let insertAt = newColumns.length;
-      for (let i = 0; i < newColumns.length; i++) {
-        const existingDefaultIndex = props.defaultColumns.findIndex(col => col.prop === newColumns[i].prop);
-        if (existingDefaultIndex > defaultIndex) {
-          insertAt = i;
-          break;
-        }
-      }
-
-      newColumns.splice(insertAt, 0, { ...column });
-      workingColumns.value = newColumns;
-    } else {
-      if (!isPinned(column)) {
-        workingColumns.value = workingColumns.value.filter(col => col.prop !== column.prop);
-      }
-    }
-  };
-
-  // Обробка зміни стану групи
-  const handleGroupToggle = (group: VTableColumnGroup, isChecked: boolean) => {
-    if (isChecked) {
-      group.columns.forEach(column => {
-        if (!workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop)) {
-          workingColumns.value = normalizeColumns([
-            ...workingColumns.value,
-            ...group.columns.map((col: VTableColumnProps) => ({ ...col })),
-          ]);
-        }
-      });
-    } else {
-      const columnsToRemove: VTableColumnProps[] = [];
-
-      group.columns.forEach(column => {
-        const workingColumn = workingColumns.value.find((col: VTableColumnProps) => col.prop === column.prop);
-        if (workingColumn && !isPinned(workingColumn)) {
-          columnsToRemove.push(workingColumn);
-        }
-      });
-
-      workingColumns.value = workingColumns.value.filter(
-        (col: VTableColumnProps) => !columnsToRemove.some(removeCol => removeCol.prop === col.prop)
-      );
-    }
-  };
-
-  // Перевірка чи колонка вибрана
   const isColumnSelected = (column: VTableColumnProps) => {
-    return workingColumns.value.some((col: VTableColumnProps) => col.prop === column.prop);
+    const wc = workingColumns.value.find(c => c.prop === column.prop);
+    return wc?._visible ?? false;
   };
 
-  // Перевірка чи можна змінити стан колонки
   const canToggleColumn = (column: VTableColumnProps) => {
-    const workingColumn = workingColumns.value.find((col: VTableColumnProps) => col.prop === column.prop);
-    return !workingColumn || !isPinned(workingColumn);
+    const wc = workingColumns.value.find(c => c.prop === column.prop);
+    return !wc || !isPinned(wc);
   };
 
-  // Розгортання/згортання групи
-  const toggleGroup = (groupName: string) => {
-    if (expandedGroups.value.has(groupName)) {
-      expandedGroups.value.delete(groupName);
-    } else {
-      expandedGroups.value.add(groupName);
-    }
-  };
+  // ─── Save / Cancel / Reset ────────────────────────────────────────────────
 
-  // Нормалайзер для колонок
-  const normalizeColumns = (columns: VTableColumnProps[]) => {
-    const map = new Map<string, VTableColumnProps>();
-
-    columns.forEach(col => {
-      map.set(col.prop, col);
-    });
-
-    return Array.from(map.values());
-  };
-
-  // Обробники подій
   const handleSave = () => {
-    emit('update-columns', [...workingColumns.value]);
+    // Емітимо тільки видимі колонки (без службового флагу _visible)
+    const result = activeColumns.value.map(({ _visible, ...col }) => col as VTableColumnProps);
+    emit('update-columns', result);
     modalManager.close();
   };
 
-  // Всі неактивні колонки
-  const inactiveColumns = computed(() => {
-    const activeProps = new Set(workingColumns.value.map(c => c.prop));
-
-    const map = new Map<string, VTableColumnProps>();
-
-    props.defaultColumns.forEach(col => {
-      if (!activeProps.has(col.prop)) {
-        map.set(col.prop, col);
-      }
-    });
-
-    return Array.from(map.values());
-  });
-
-  // Скидання до дефолтних
   const resetColumnsToDefault = () => {
-    workingColumns.value = props.defaultColumns.map(col => ({ ...col }));
+    const defaultPropSet = new Set(props.defaultColumns.map(c => c.prop));
+
+    workingColumns.value = workingColumns.value.map(col => ({
+      ...col,
+      _visible: defaultPropSet.has(col.prop),
+    }));
+
+    // Відновлюємо порядок: за defaultColumns спочатку, решта після
+    const defaultOrder = new Map(props.defaultColumns.map((c, i) => [c.prop, i]));
+    const active = workingColumns.value
+      .filter(c => c._visible)
+      .sort((a, b) => (defaultOrder.get(a.prop) ?? 999) - (defaultOrder.get(b.prop) ?? 999));
+    const inactive = workingColumns.value.filter(c => !c._visible);
+
+    workingColumns.value = [...active, ...inactive];
   };
 
-  const handleCancel = () => {
-    modalManager.close();
-  };
+  const handleCancel = () => modalManager.close();
 
-  // Ініціалізація при монтуванні
-  onMounted(() => {
-    initializeWorkingCopies();
-  });
+  // ─── Lifecycle ────────────────────────────────────────────────────────────
+
+  onMounted(() => initializeWorkingCopies());
 </script>
 
 <template>
   <div class="vt-columns-selector-body">
     <div class="vt-columns-selector">
-      <!-- Вибрані колонки (зліва) -->
+      <!-- ── Ліва панель: активні колонки ──────────────────────────────── -->
       <div class="vt-columns-selector__panel">
         <div
-          v-for="(col, index) in workingColumns"
+          v-for="(col, index) in activeColumnsForDrag"
           :key="'active-' + col.prop"
           :class="getItemClasses(index)"
           :draggable="canDragColumn(col)"
@@ -395,9 +412,11 @@
         </div>
       </div>
 
-      <!-- Доступні колонки згруповані (справа) -->
-      <div class="vt-columns-selector__panel">
-        <div v-for="(col, index) in inactiveColumns" :key="'inactive-' + col.prop" class="vt-columns-selector__panel-item">
+      <!-- ── Права панель: згруповані або flat ─────────────────────────── -->
+
+      <!-- Без груп — проста flat-панель -->
+      <div v-if="!regularGroups.length" class="vt-columns-selector__panel">
+        <div v-for="col in inactiveColumns" :key="'inactive-' + col.prop" class="vt-columns-selector__panel-item">
           <VCheckbox
             :checked="false"
             :disabled="isPinned(col)"
@@ -408,42 +427,55 @@
           <span v-if="isPinned(col)" class="vt-columns-selector__panel-item-pinned">pinned</span>
         </div>
       </div>
-      <!--      <div class="vt-columns-selector__available">-->
-      <!--        <div v-for="group in regularGroups" :key="group.name" class="vt-columns-selector__group">-->
-      <!--          <div class="vt-columns-selector__group-header" @click="toggleGroup(group.name)">-->
-      <!--            <VCheckbox-->
-      <!--              :checked="groupStatuses[group.name]?.checked || false"-->
-      <!--              :indeterminate="groupStatuses[group.name]?.indeterminate || false"-->
-      <!--              :label="group.label"-->
-      <!--              @change="checked => handleGroupToggle(group, checked)"-->
-      <!--              @click.stop-->
-      <!--            />-->
-      <!--            <VIcon v-if="group.icon" :name="group.icon" class="vt-columns-selector__group-icon" />-->
-      <!--          </div>-->
 
-      <!--          <div v-if="expandedGroups.has(group.name)" class="vt-columns-selector__group-columns">-->
-      <!--            <div v-for="col in group.columns" :key="col.prop" class="vt-columns-selector__group-column">-->
-      <!--              <VCheckbox-->
-      <!--                :checked="isColumnSelected(col)"-->
-      <!--                :disabled="!canToggleColumn(col)"-->
-      <!--                :label="col.label"-->
-      <!--                @change="checked => handleColumnToggle(col, checked)"-->
-      <!--              />-->
-      <!--              <span v-if="!canToggleColumn(col)" class="vt-columns-selector__pinned-note">-->
-      <!--                {{ t(LOCALE_KEYS.TABLE_PINNED) }}-->
-      <!--              </span>-->
-      <!--            </div>-->
-      <!--          </div>-->
-      <!--        </div>-->
-      <!--      </div>-->
+      <!-- З групами -->
+      <div v-else class="vt-columns-selector__available">
+        <div v-for="group in regularGroups" :key="group.name" class="vt-columns-selector__group">
+          <div
+            :class="{ 'vt-columns-selector__group-header--expanded': expandedGroups.has(group.name) }"
+            class="vt-columns-selector__group-header"
+            @click="toggleGroup(group.name)"
+          >
+            <VCheckbox
+              :checked="groupStatuses[group.name]?.checked || false"
+              :indeterminate="groupStatuses[group.name]?.indeterminate || false"
+              :label="group.label"
+              @change="checked => handleGroupToggle(group, checked)"
+              @click.stop
+            />
+            <VIcon v-if="group.icon" :name="group.icon" class="vt-columns-selector__group-icon" />
+
+            <VIcon class="vt-columns-selector__group-toggle" name="arrowDown" />
+          </div>
+
+          <div
+            :class="{ 'vt-columns-selector__group-transition--expanded': expandedGroups.has(group.name) }"
+            class="vt-columns-selector__group-transition"
+          >
+            <div class="vt-columns-selector__group-columns">
+              <div v-for="col in group.columns" :key="col.prop" class="vt-columns-selector__group-column">
+                <VCheckbox
+                  :checked="isColumnSelected(col)"
+                  :disabled="!canToggleColumn(col)"
+                  :label="col.label"
+                  @change="checked => handleColumnToggle(col, checked)"
+                />
+                <span v-if="!canToggleColumn(col)" class="vt-columns-selector__pinned-note">
+                  {{ t(LOCALE_KEYS.TABLE_PINNED) }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <!-- Кнопки -->
+    <!-- ── Кнопки ─────────────────────────────────────────────────────── -->
     <div class="vt-modal__content-button">
       <VButton @click="handleCancel">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
       <VButton icon="save" type="primary" @click="handleSave">{{ t(LOCALE_KEYS.BUTTON_SAVE) }}</VButton>
-      <VButton icon="arrowReload" shape="circle" tooltip tooltipPlacement="right" @click="resetColumnsToDefault"
-        >{{ t(LOCALE_KEYS.BUTTON_RESET) }}
+      <VButton icon="arrowReload" shape="circle" tooltip tooltipPlacement="right" @click="resetColumnsToDefault">
+        {{ t(LOCALE_KEYS.BUTTON_RESET) }}
       </VButton>
     </div>
   </div>

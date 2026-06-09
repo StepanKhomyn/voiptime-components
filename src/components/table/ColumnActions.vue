@@ -29,17 +29,13 @@
 
   // Обробка команд dropdown
   const handleCommand = (command: string | number): void => {
-    console.log('ColumnActions - Command received:', command, typeof command); // Debug log
-
     switch (
       String(command) // Приводимо до string для надійності
     ) {
       case 'pin':
-        console.log('Executing pin command'); // Debug log
         handlePin();
         break;
       case 'columns':
-        console.log('Executing columns command'); // Debug log
         handleToggleVisibility();
         break;
       default:
@@ -49,7 +45,6 @@
 
   const handlePin = (): void => {
     const isPinned = isPinnedAny();
-    console.log('handlePin called, isPinned:', isPinned); // Debug log
 
     if (isPinned) {
       emit('pin', props.column, 'none');

@@ -38,14 +38,17 @@
     default: undefined,
   });
 
+  const sortState = defineModel<SortState | null>('sort', {
+    default: null,
+  });
+
   // Refs
   const columnRefs = ref<Record<string, HTMLElement>>({});
-  const tableWrapperRef = ref<HTMLElement>();
 
+  const tableWrapperRef = ref<HTMLElement>();
   // Reactive state
   const internalColumns = reactive<VTableColumnProps[]>([]);
   const defaultColumns = ref<VTableColumnProps[]>([]);
-  const sortState = ref<SortState | null>(props.defaultSort || null);
 
   const isDefaultColumnsInitialized = ref(false);
 

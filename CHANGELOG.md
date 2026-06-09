@@ -1,3 +1,31 @@
+## [1.21.65](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.64...v1.21.65) (2026-06-09)
+
+
+### Bug Fixes
+
+* додано двосторонню звіязку через v-model для сортування колонок в таблиці ([9576893](https://github.com/StepanKhomyn/voiptime-components/commit/957689305370c6dda038c44aabadb0863767a63d))
+
+## [1.21.64](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.63...v1.21.64) (2026-06-09)
+
+
+### Bug Fixes
+
+* add label key to select ([4df2bb7](https://github.com/StepanKhomyn/voiptime-components/commit/4df2bb75cc6013b7a97ca477a371356d85f84fad))
+
+## [1.21.63](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.62...v1.21.63) (2026-06-09)
+
+
+### Bug Fixes
+
+* Правки по селекту з вибраними значеннями обєктів ([a0c8096](https://github.com/StepanKhomyn/voiptime-components/commit/a0c8096831c68eeac49d956c59985e8cbacbabd0))
+
+## [1.21.62](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.61...v1.21.62) (2026-06-08)
+
+
+### Bug Fixes
+
+* повернув назад групування колонок в налаштуванні колонок таблиці ([0144f8c](https://github.com/StepanKhomyn/voiptime-components/commit/0144f8c199fd58e7043d19abe7c23036a012ed03))
+
 ## [1.21.61](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.60...v1.21.61) (2026-06-03)
 
 

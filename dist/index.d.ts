@@ -1,5 +1,7 @@
+import { AllowedComponentProps } from 'vue';
 import { App } from 'vue';
 import { Component } from 'vue';
+import { ComponentCustomProps } from 'vue';
 import { ComponentOptionsMixin } from 'vue';
 import { ComponentProvideOptions } from 'vue';
 import { ComputedRef } from 'vue';
@@ -12,7 +14,11 @@ import { InjectionKey } from 'vue';
 import { ObjectDirective } from 'vue';
 import { PublicProps } from 'vue';
 import { Ref } from 'vue';
+import { RendererElement } from 'vue';
+import { RendererNode } from 'vue';
+import { ShallowUnwrapRef } from 'vue';
 import { VNode } from 'vue';
+import { VNodeProps } from 'vue';
 
 declare const __VLS_component: DefineComponent<VButtonProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
     click: (event: MouseEvent) => any;
@@ -118,6 +124,52 @@ declare const __VLS_component_16: DefineComponent<VInfoBoxProps, {}, {}, {}, {},
     message: string;
     showIcon: boolean;
 }, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
+
+declare const __VLS_component_17: DefineComponent<VBreadcrumbProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+    back: () => any;
+}, string, PublicProps, Readonly<VBreadcrumbProps> & Readonly<{
+    onBack?: (() => any) | undefined;
+}>, {
+    separator: string;
+    ariaLabel: string;
+    goBack: boolean;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLElement>;
+
+declare const __VLS_component_18: DefineComponent<VBreadcrumbItemProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+    click: (event: MouseEvent) => any;
+}, string, PublicProps, Readonly<VBreadcrumbItemProps> & Readonly<{
+    onClick?: ((event: MouseEvent) => any) | undefined;
+}>, {
+    disabled: boolean;
+    active: boolean;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {
+    itemRef: HTMLLIElement;
+}, HTMLLIElement>;
+
+declare const __VLS_component_19: DefineComponent<VAudioProps, {
+    play: () => Promise<void> | undefined;
+    pause: () => void | undefined;
+    getCurrentTime: () => number;
+}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {
+    ended: () => any;
+    error: () => any;
+    pause: () => any;
+    play: () => any;
+    timeUpdate: (currentTime: number) => any;
+}, string, PublicProps, Readonly<VAudioProps> & Readonly<{
+    onEnded?: (() => any) | undefined;
+    onError?: (() => any) | undefined;
+    onPause?: (() => any) | undefined;
+    onPlay?: (() => any) | undefined;
+    onTimeUpdate?: ((currentTime: number) => any) | undefined;
+}>, {
+    disabled: boolean;
+    recordUrl: string | null;
+    userA: string | null;
+    userB: string | null;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {
+    timelineContainer: HTMLDivElement;
+}, HTMLDivElement>;
 
 declare const __VLS_component_2: DefineComponent<VModalProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {} & {
     close: () => any;
@@ -463,6 +515,10 @@ declare const __VLS_component_9: DefineComponent<{}, {}, {}, {}, {}, ComponentOp
     onClick?: ((option: VtSelectOption) => any) | undefined;
 }>, {}, {}, {}, {}, string, ComponentProvideOptions, false, {}, any>;
 
+declare type __VLS_PrettifyLocal<T> = {
+    [K in keyof T]: T[K];
+} & {};
+
 declare type __VLS_Props = VTableProps;
 
 declare type __VLS_Props_2 = {
@@ -562,6 +618,39 @@ declare function __VLS_template_16(): {
         default?(_: {}): any;
     };
     refs: {};
+    rootEl: HTMLDivElement;
+};
+
+declare function __VLS_template_17(): {
+    attrs: Partial<{}>;
+    slots: {
+        default?(_: {}): any;
+    };
+    refs: {};
+    rootEl: HTMLElement;
+};
+
+declare function __VLS_template_18(): {
+    attrs: Partial<{}>;
+    slots: {
+        default?(_: {}): any;
+    };
+    refs: {
+        itemRef: HTMLLIElement;
+    };
+    rootEl: HTMLLIElement;
+};
+
+declare function __VLS_template_19(): {
+    attrs: Partial<{}>;
+    slots: {
+        empty?(_: {}): any;
+        'icon-pause'?(_: {}): any;
+        'icon-play'?(_: {}): any;
+    };
+    refs: {
+        timelineContainer: HTMLDivElement;
+    };
     rootEl: HTMLDivElement;
 };
 
@@ -765,6 +854,12 @@ declare type __VLS_TemplateResult_15 = ReturnType<typeof __VLS_template_15>;
 
 declare type __VLS_TemplateResult_16 = ReturnType<typeof __VLS_template_16>;
 
+declare type __VLS_TemplateResult_17 = ReturnType<typeof __VLS_template_17>;
+
+declare type __VLS_TemplateResult_18 = ReturnType<typeof __VLS_template_18>;
+
+declare type __VLS_TemplateResult_19 = ReturnType<typeof __VLS_template_19>;
+
 declare type __VLS_TemplateResult_2 = ReturnType<typeof __VLS_template_2>;
 
 declare type __VLS_TemplateResult_3 = ReturnType<typeof __VLS_template_3>;
@@ -829,6 +924,24 @@ declare type __VLS_WithTemplateSlots_16<T, S> = T & {
     };
 };
 
+declare type __VLS_WithTemplateSlots_17<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+
+declare type __VLS_WithTemplateSlots_18<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+
+declare type __VLS_WithTemplateSlots_19<T, S> = T & {
+    new (): {
+        $slots: S;
+    };
+};
+
 declare type __VLS_WithTemplateSlots_2<T, S> = T & {
     new (): {
         $slots: S;
@@ -879,6 +992,13 @@ declare type __VLS_WithTemplateSlots_9<T, S> = T & {
 
 declare type AnyObject = Record<string, any>;
 
+declare type BreadcrumbRouteLocation = string | {
+    name?: string;
+    path?: string;
+    params?: Record<string, unknown>;
+    query?: Record<string, unknown>;
+};
+
 declare interface ChartSegment {
     label: string;
     count: number;
@@ -905,6 +1025,7 @@ export declare interface CollapseItemProps {
     title?: string;
     name: string;
     disabled?: boolean;
+    flex?: boolean;
 }
 
 export declare interface CollapseProps {
@@ -1108,17 +1229,18 @@ declare const icons: {
     readonly logOut: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly paperClip: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly plusRound: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
-    readonly prompter: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly prompt: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly prompter: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly reply: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly save: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly settingsFilled: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly star: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
-    readonly statusChange2: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly statusChange: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly unlock: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly uploadCloud: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly usersGroup: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly arrowDoubleLeft: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly arrowDoubleRight: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly arrowDown: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly arrowLeft: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly arrowReload: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
@@ -1193,6 +1315,7 @@ declare const icons: {
     readonly fileChoose: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly fileDoc: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly fileSign: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly folder: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly filterAdd: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly filterAdvanced: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly filterDateCheck: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
@@ -1221,6 +1344,8 @@ declare const icons: {
     readonly emailQueue: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly emailSpam: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly add: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly callQualityBlock: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly callQualityTemplate: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly diamondInSquare: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly dsr: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly emptyRound: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
@@ -1231,7 +1356,6 @@ declare const icons: {
     readonly nodeTree: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly notification: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly notificationRead: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
-    readonly operator: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly plus: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly predictive: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly preview: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
@@ -1249,6 +1373,7 @@ declare const icons: {
     readonly transcription: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly transcriptionStart: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly windowStart: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly operator: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly pause: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly start: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly stop: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
@@ -1269,9 +1394,8 @@ declare const icons: {
     readonly dashboard: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly group: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly home: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
-    readonly integration: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly iTR: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
-    readonly ivr2: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly integration: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly pbx: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly scenario: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly scenarios: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
@@ -1286,6 +1410,9 @@ declare const icons: {
     readonly excel: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly freeze: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly listAdd: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly noChat: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly noData: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
+    readonly noSound: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly numberList: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly tableSettings: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
     readonly twoColumns: DefineComponent<{}, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<{}> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, true, {}, SVGSVGElement>;
@@ -1405,6 +1532,18 @@ declare interface Props {
     color?: string;
 }
 
+declare interface RadialProgressChartProps {
+    type: VChartType.radialProgress;
+    /** 0–100 */
+    value: number;
+    label?: string;
+    sublabel?: string;
+    color?: string;
+    trackColor?: string;
+    size?: number;
+    strokeWidth?: number;
+}
+
 export declare const required: ValidatorFn;
 
 export declare interface ResizeState {
@@ -1489,6 +1628,28 @@ export declare interface SortState {
     direction: SortDirection;
 }
 
+declare interface SparklineChartProps {
+    type: VChartType.sparkline;
+    points: SparklineDataPoint[];
+    series: SparklineSeries[];
+    height?: number;
+    /** Show area fill under the primary line */
+    area?: boolean;
+}
+
+declare interface SparklineDataPoint {
+    label: string;
+    primary: number;
+    secondary?: number;
+}
+
+declare interface SparklineSeries {
+    key: 'primary' | 'secondary';
+    label: string;
+    color: string;
+    format?: (v: number) => string;
+}
+
 export declare type StickyPosition = 'left' | 'right';
 
 export declare interface TimeObject {
@@ -1516,6 +1677,23 @@ export declare type TimeValue = string | Date;
 export declare const tooltipDirective: ObjectDirective;
 
 export declare type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
+
+declare interface TreemapChartProps {
+    type: VChartType.treemap;
+    nodes: TreemapNode[];
+    /** Format value for tooltip/label, e.g. (v) => `$${v.toFixed(2)}` */
+    format?: (v: number) => string;
+    height?: number;
+}
+
+declare interface TreemapNode {
+    id: string;
+    label: string;
+    value: number;
+    color: string;
+    /** Optional group label shown as a parent tile header */
+    group?: string;
+}
 
 export declare const uniqueAsync: (checkFn: (val: any) => Promise<boolean>, message?: string) => ValidatorFn;
 
@@ -1571,6 +1749,23 @@ export declare type ValidatorFn = (value: any, vm?: any, sibling?: any) => Valid
 
 export declare type ValidatorResult = boolean | string | Promise<boolean | string>;
 
+export declare const VAudio: __VLS_WithTemplateSlots_19<typeof __VLS_component_19, __VLS_TemplateResult_19["slots"]>;
+
+export declare type VAudioEmits = {
+    timeUpdate: [currentTime: number];
+    play: [];
+    pause: [];
+    ended: [];
+    error: [];
+};
+
+export declare interface VAudioProps {
+    recordUrl?: string | null;
+    userA?: string | null;
+    userB?: string | null;
+    disabled?: boolean;
+}
+
 export declare interface VAuthentificationData {
     username: string;
     password: string;
@@ -1585,6 +1780,29 @@ export declare interface VAuthentificationProps {
     loading?: boolean;
     privacyPolicyUrl?: string;
     forgotPasswordUrl?: string;
+}
+
+export declare const VBreadcrumb: __VLS_WithTemplateSlots_17<typeof __VLS_component_17, __VLS_TemplateResult_17["slots"]>;
+
+export declare const VBreadcrumbItem: __VLS_WithTemplateSlots_18<typeof __VLS_component_18, __VLS_TemplateResult_18["slots"]>;
+
+export declare interface VBreadcrumbItemEmits {
+    click: [event: MouseEvent];
+}
+
+export declare interface VBreadcrumbItemProps {
+    /** Якщо передано — рендериться як RouterLink або <a> */
+    to?: BreadcrumbRouteLocation;
+    /** Поточна активна сторінка (остання у ланцюжку) */
+    active?: boolean;
+    /** Вимикає клік і змінює стиль */
+    disabled?: boolean;
+}
+
+export declare interface VBreadcrumbProps {
+    separator?: string;
+    ariaLabel?: string;
+    goBack?: boolean;
 }
 
 export declare const VButton: __VLS_WithTemplateSlots<typeof __VLS_component, __VLS_TemplateResult["slots"]>;
@@ -1609,15 +1827,18 @@ declare type VButtonShape = 'circle' | 'square';
 
 export declare type VButtonType = 'default' | 'primary' | 'success' | 'danger' | 'warning' | 'info';
 
-export declare const VChart: DefineComponent<DonutChartProps | HorizontalBarChartProps | ComboChartProps | ScaleBarChartProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<DonutChartProps | HorizontalBarChartProps | ComboChartProps | ScaleBarChartProps> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
+export declare const VChart: DefineComponent<DonutChartProps | HorizontalBarChartProps | ComboChartProps | ScaleBarChartProps | SparklineChartProps | TreemapChartProps | RadialProgressChartProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<DonutChartProps | HorizontalBarChartProps | ComboChartProps | ScaleBarChartProps | SparklineChartProps | TreemapChartProps | RadialProgressChartProps> & Readonly<{}>, {}, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
 
-export declare type VChartProps = DonutChartProps | HorizontalBarChartProps | ComboChartProps | ScaleBarChartProps;
+export declare type VChartProps = DonutChartProps | HorizontalBarChartProps | ComboChartProps | ScaleBarChartProps | SparklineChartProps | TreemapChartProps | RadialProgressChartProps;
 
 export declare enum VChartType {
     donut = "donut",
     combo = "combo",
     horizontal = "horizontal-bar",
-    scale = "scale-bar"
+    scale = "scale-bar",
+    sparkline = "sparkline",
+    treemap = "treemap",
+    radialProgress = "radial-progress"
 }
 
 export declare const VCheckbox: __VLS_WithTemplateSlots_3<typeof __VLS_component_3, __VLS_TemplateResult_3["slots"]>;
@@ -1915,6 +2136,16 @@ export declare const VDropdown: __VLS_WithTemplateSlots_6<typeof __VLS_component
 export declare const VDropdownItem: __VLS_WithTemplateSlots_7<typeof __VLS_component_7, __VLS_TemplateResult_7["slots"]>;
 
 export declare const VDynamicFilter: __VLS_WithTemplateSlots_15<typeof __VLS_component_15, __VLS_TemplateResult_15["slots"]>;
+
+export declare const VEmpty: DefineComponent<VEmptyProps, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<VEmptyProps> & Readonly<{}>, {
+    text: string;
+    icon: IconName;
+}, {}, {}, {}, string, ComponentProvideOptions, false, {}, HTMLDivElement>;
+
+export declare interface VEmptyProps {
+    icon?: IconName;
+    text?: string;
+}
 
 export declare const VIcon: DefineComponent<Props, {}, {}, {}, {}, ComponentOptionsMixin, ComponentOptionsMixin, {}, string, PublicProps, Readonly<Props> & Readonly<{}>, {
     color: string;
@@ -2595,6 +2826,73 @@ export declare interface VtInputValidationResult {
 
 export declare interface VtOptionEmits {
     click: [option: VtSelectOption];
+}
+
+export declare const VTransferList: <T extends Record<string, any>>(__VLS_props: NonNullable<Awaited<typeof __VLS_setup>>["props"], __VLS_ctx?: __VLS_PrettifyLocal<Pick<NonNullable<Awaited<typeof __VLS_setup>>, "attrs" | "emit" | "slots">>, __VLS_expose?: NonNullable<Awaited<typeof __VLS_setup>>["expose"], __VLS_setup?: Promise<{
+    props: __VLS_PrettifyLocal<Pick<Partial<{}> & Omit<{
+        readonly "onUpdate:listOne"?: ((value: T[]) => any) | undefined;
+        readonly "onUpdate:listTwo"?: ((value: T[]) => any) | undefined;
+        readonly onSelectLeft?: ((item: T) => any) | undefined;
+        readonly onSelectRight?: ((item: T) => any) | undefined;
+        readonly onTransfer?: ((item: T, direction: "left" | "right") => any) | undefined;
+        readonly "onUpdate:added"?: ((items: unknown[]) => any) | undefined;
+        readonly "onUpdate:removed"?: ((items: unknown[]) => any) | undefined;
+    } & VNodeProps & AllowedComponentProps & ComponentCustomProps, never>, "onUpdate:listOne" | "onUpdate:listTwo" | "onSelectLeft" | "onSelectRight" | "onTransfer" | "onUpdate:added" | "onUpdate:removed"> & ({
+        listOne: T[];
+        listTwo: T[];
+    } & VTransferListProps<T>) & Partial<{}>> & PublicProps;
+    expose(exposed: ShallowUnwrapRef<{}>): void;
+    attrs: any;
+    slots: {
+        'left-empty'?(_: {}): any;
+        item?(_: {
+            item: T;
+        }): any;
+        item?(_: {
+            item: T;
+        }): any;
+        'left-loader'?(_: {}): any;
+        'right-empty'?(_: {}): any;
+        'right-loader'?(_: {}): any;
+    };
+    emit: (((evt: "selectLeft", item: T) => void) & ((evt: "selectRight", item: T) => void) & ((evt: "transfer", item: T, direction: "left" | "right") => void) & ((evt: "update:added", items: unknown[]) => void) & ((evt: "update:removed", items: unknown[]) => void)) & (((evt: "update:listOne", value: T[]) => void) & ((evt: "update:listTwo", value: T[]) => void));
+}>) => VNode<RendererNode, RendererElement, {
+    [key: string]: any;
+}> & {
+    __ctx?: Awaited<typeof __VLS_setup>;
+};
+
+export declare interface VTransferListEmits<T extends Record<string, any>> {
+    selectLeft: [item: T];
+    selectRight: [item: T];
+    transfer: [item: T, direction: 'left' | 'right'];
+    'update:added': [items: unknown[]];
+    'update:removed': [items: unknown[]];
+}
+
+declare interface VTransferListFetchParams {
+    limit: number;
+    offset: number;
+}
+
+export declare interface VTransferListProps<T extends Record<string, any>> {
+    optionLabel?: keyof T & string;
+    optionValue?: keyof T & string;
+    isValidRightContainer?: boolean;
+    heightStyle?: string;
+    leftPlaceholder?: string;
+    rightPlaceholder?: string;
+    leftLabel?: string;
+    rightLabel?: string;
+    fetchLeft?: (params: VTransferListFetchParams) => Promise<void>;
+    leftTotal?: number;
+    leftLoading?: boolean;
+    fetchRight?: (params: VTransferListFetchParams) => Promise<void>;
+    rightTotal?: number;
+    rightLoading?: boolean;
+    fetchLimit?: number;
+    added?: unknown[];
+    removed?: unknown[];
 }
 
 export declare interface VtSelectContext {
