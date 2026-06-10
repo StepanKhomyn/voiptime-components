@@ -1,3 +1,10 @@
+## [1.21.67](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.66...v1.21.67) (2026-06-10)
+
+
+### Bug Fixes
+
+* remember on login -> true ([fccb686](https://github.com/StepanKhomyn/voiptime-components/commit/fccb686825e923d47bdf63dfe326195163dc7596))
+
 ## [1.21.66](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.65...v1.21.66) (2026-06-09)
 
 
