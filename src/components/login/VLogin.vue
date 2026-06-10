@@ -26,7 +26,7 @@
   const form = reactive<VAuthentificationData>({
     username: '',
     password: '',
-    remember: false,
+    remember: true,
   });
 
   /* -------------------- Validation -------------------- */
