@@ -1,6 +1,5 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import dts from 'vite-plugin-dts';
 import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -15,21 +14,6 @@ export default defineConfig({
         propsDestructure: true,
       },
     }),
-    dts({
-      entryRoot: 'src',
-      outDir: 'dist',
-      include: ['src/**/*.ts', 'src/**/*.vue'],
-      exclude: ['**/*.test.*', '**/tests/**'],
-      insertTypesEntry: true,
-      rollupTypes: true,
-      tsconfigPath: './tsconfig.build.json',
-      cleanVueFileName: true,
-      copyDtsFiles: false,
-      staticImport: true,
-      beforeWriteFile: (filePath, content) => {
-        return { filePath, content };
-      },
-    }),
   ],
   css: {
     preprocessorOptions: {
@@ -40,13 +24,13 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: path.resolve(__dirname, 'src/entry.ts'),
+      entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'VoiptimeComponents', // глобальне ім'я для window
       fileName: format => `index.${format}.js`,
       formats: ['es', 'cjs', 'umd'], // ДОДАНО umd
     },
     rollupOptions: {
-      external: ['vue'], // не включаємо Vue у бандл
+      external: ['vue'],
       output: {
         globals: {
           vue: 'Vue', // Vue глобально в браузері

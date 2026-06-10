@@ -5,8 +5,8 @@
   import VSelect from '@/components/select/VSelect.vue';
   import VOption from '@/components/select/VOption.vue';
   import VIcon from '@/components/icon/VIcon.vue';
-  import { LANGUAGES } from '@/entry';
-  import type {IconName} from '@/entry'
+  import { LANGUAGES } from '@/index';
+  import type {IconName} from '@/index'
 
   const emit = defineEmits<VLocaleEmits>();
 
