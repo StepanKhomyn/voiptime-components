@@ -41,7 +41,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: path.resolve(__dirname, 'src/index.ts'),
-      name: 'VoiptimeComponents',
+      name: 'VoiptimeComponents', // глобальне ім'я для window
       fileName: format => `index.${format}.js`,
       formats: ['es', 'cjs', 'umd'], // ДОДАНО umd
     },
