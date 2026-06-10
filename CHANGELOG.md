@@ -1,3 +1,12 @@
+## [1.21.70](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.69...v1.21.70) (2026-06-10)
+
+
+### Bug Fixes
+
+* fix lock json ([de32286](https://github.com/StepanKhomyn/voiptime-components/commit/de322868d5cc0258ece2de3522c44f6d728d415d))
+* fixes ([09c80ba](https://github.com/StepanKhomyn/voiptime-components/commit/09c80baea8729eec76663fc8f7efe0bf65ba2210))
+* revert build speed commit ([c14a5e3](https://github.com/StepanKhomyn/voiptime-components/commit/c14a5e364207ca3a47befebd8afdffa9d0bd4f75))
+
 ## [1.21.69](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.68...v1.21.69) (2026-06-10)
 
 
