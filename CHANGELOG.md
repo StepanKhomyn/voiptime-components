@@ -1,3 +1,10 @@
+## [1.21.73](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.72...v1.21.73) (2026-06-10)
+
+
+### Bug Fixes
+
+* install testing ([2d02c22](https://github.com/StepanKhomyn/voiptime-components/commit/2d02c22c46368aa3a7779fe90fb3c0506403d5b5))
+
 ## [1.21.72](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.71...v1.21.72) (2026-06-10)
 
 
