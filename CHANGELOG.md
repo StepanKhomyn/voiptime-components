@@ -1,3 +1,68 @@
+## [1.21.73](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.72...v1.21.73) (2026-06-10)
+
+
+### Bug Fixes
+
+* install testing ([2d02c22](https://github.com/StepanKhomyn/voiptime-components/commit/2d02c22c46368aa3a7779fe90fb3c0506403d5b5))
+
+## [1.21.72](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.71...v1.21.72) (2026-06-10)
+
+
+### Bug Fixes
+
+* revert changes related to build time ([2ff1057](https://github.com/StepanKhomyn/voiptime-components/commit/2ff1057501b0860c29f2044eb01a14668785087f))
+
+## [1.21.71](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.70...v1.21.71) (2026-06-10)
+
+
+### Bug Fixes
+
+* revert for build/install testing ([03bef3d](https://github.com/StepanKhomyn/voiptime-components/commit/03bef3d8450abbaab489df730bb1f3690d805460))
+
+## [1.21.70](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.69...v1.21.70) (2026-06-10)
+
+
+### Bug Fixes
+
+* fix lock json ([de32286](https://github.com/StepanKhomyn/voiptime-components/commit/de322868d5cc0258ece2de3522c44f6d728d415d))
+* fixes ([09c80ba](https://github.com/StepanKhomyn/voiptime-components/commit/09c80baea8729eec76663fc8f7efe0bf65ba2210))
+* revert build speed commit ([c14a5e3](https://github.com/StepanKhomyn/voiptime-components/commit/c14a5e364207ca3a47befebd8afdffa9d0bd4f75))
+
+## [1.21.69](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.68...v1.21.69) (2026-06-10)
+
+
+### Bug Fixes
+
+* for build/install testing ([7b76687](https://github.com/StepanKhomyn/voiptime-components/commit/7b76687f6af97e830527232396a4bb3b950a9078))
+
+## [1.21.68](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.67...v1.21.68) (2026-06-10)
+
+
+### Bug Fixes
+
+* build time ([f6da3c3](https://github.com/StepanKhomyn/voiptime-components/commit/f6da3c3717f144370ff730c5692e2074b25933ff))
+
+## [1.21.67](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.66...v1.21.67) (2026-06-10)
+
+
+### Bug Fixes
+
+* remember on login -> true ([fccb686](https://github.com/StepanKhomyn/voiptime-components/commit/fccb686825e923d47bdf63dfe326195163dc7596))
+
+## [1.21.66](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.65...v1.21.66) (2026-06-09)
+
+
+### Bug Fixes
+
+* New UI | Автозбереження логіну і паролю у формі логіну ([2a4a6e2](https://github.com/StepanKhomyn/voiptime-components/commit/2a4a6e20cdae1a0b72e5de25c32363d27bc2f763))
+
+## [1.21.65](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.64...v1.21.65) (2026-06-09)
+
+
+### Bug Fixes
+
+* додано двосторонню звіязку через v-model для сортування колонок в таблиці ([9576893](https://github.com/StepanKhomyn/voiptime-components/commit/957689305370c6dda038c44aabadb0863767a63d))
+
 ## [1.21.64](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.63...v1.21.64) (2026-06-09)
 
 

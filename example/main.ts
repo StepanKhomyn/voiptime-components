@@ -1,6 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
-import VUIPlugin, { LANGUAGES } from '../src/entry';
+import VUIPlugin, { LANGUAGES } from '../src/index';
 
 const app = createApp(App);
 app.use(VUIPlugin, {

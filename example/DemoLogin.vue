@@ -3,7 +3,7 @@
   import VLogin from '../src/components/login/VLogin.vue';
   import VLocaleSelect from '../src/components/select/VLocaleSelect.vue';
   import VLoginLogo from '../src/components/login/VLoginLogo.vue';
-  import { LANGUAGES } from '../src/entry';
+  import { LANGUAGES } from '../src/index';
   import { VLocale } from '../src/components/select/types';
   import { ref } from 'vue';
 

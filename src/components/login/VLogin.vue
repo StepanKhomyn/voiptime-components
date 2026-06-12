@@ -5,7 +5,7 @@
   import VButton from '@/components/button/VButton.vue';
   import { LOCALE_KEYS } from '@/locales/types';
   import { useI18n } from '@/locales/useI18n';
-  import VRadiobox from '@/components/radiobox/VRadiobox.vue';
+  import VCheckbox from '@/components/checkbox/VCheckbox.vue';
   import type { VAuthentificationData, VAuthentificationEmits, VAuthentificationProps } from '@/components/login/types';
 
   const { t } = useI18n();
@@ -26,7 +26,7 @@
   const form = reactive<VAuthentificationData>({
     username: '',
     password: '',
-    remember: false,
+    remember: true,
   });
 
   /* -------------------- Validation -------------------- */
@@ -106,7 +106,7 @@
         </div>
 
         <div class="vt-login__form-item vt-login__form-item--row">
-          <VRadiobox v-model="form.remember" :label="t(LOCALE_KEYS.LOGIN_REMEMBER)" />
+          <VCheckbox v-model="form.remember" :label="t(LOCALE_KEYS.LOGIN_REMEMBER)" />
           <a :href="props.forgotPasswordUrl" class="vt-login__link">
             {{ t(LOCALE_KEYS.LOGIN_FORGET_PASSWORD) }}
           </a>
