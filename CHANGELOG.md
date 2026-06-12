@@ -1,3 +1,10 @@
+## [1.21.74](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.73...v1.21.74) (2026-06-12)
+
+
+### Bug Fixes
+
+* add field type icons ([dc289a2](https://github.com/StepanKhomyn/voiptime-components/commit/dc289a28df0316563a0f2cee0aee37993ac07360))
+
 ## [1.21.73](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.72...v1.21.73) (2026-06-10)
 
 
