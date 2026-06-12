@@ -101,6 +101,11 @@ import TerroristIcon from './country/TerroristIcon.vue';
 import ThailandIcon from './country/ThailandIcon.vue';
 import UkraineIcon from './country/UkraineIcon.vue';
 import UnitedKingdomIcon from './country/UnitedKingdomIcon.vue';
+import FieldBooleanIcon from './field-types/FieldBooleanIcon.vue';
+import FieldEnumIcon from './field-types/FieldEnumIcon.vue';
+import FieldFKIcon from './field-types/FieldFKIcon.vue';
+import FieldIntegerIcon from './field-types/FieldIntegerIcon.vue';
+import FieldStringIcon from './field-types/FieldStringIcon.vue';
 import EmptyImgIcon from './files/EmptyImgIcon.vue';
 import FileChooseIcon from './files/FileChooseIcon.vue';
 import FileDocIcon from './files/FileDocIcon.vue';
@@ -321,6 +326,13 @@ export const icons = {
   thailand: ThailandIcon,
   ukraine: UkraineIcon,
   unitedKingdom: UnitedKingdomIcon,
+
+  // field-types icons
+  fieldBoolean: FieldBooleanIcon,
+  fieldEnum: FieldEnumIcon,
+  fieldFK: FieldFKIcon,
+  fieldInteger: FieldIntegerIcon,
+  fieldString: FieldStringIcon,
 
   // files icons
   emptyImg: EmptyImgIcon,
