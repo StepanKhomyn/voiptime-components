@@ -53,6 +53,7 @@ import PhoneExecuteRecallIcon from './call/PhoneExecuteRecallIcon.vue';
 import PhoneHangupIcon from './call/PhoneHangupIcon.vue';
 import PhoneInactiveTalkIcon from './call/PhoneInactiveTalkIcon.vue';
 import PhoneOfflineIcon from './call/PhoneOfflineIcon.vue';
+import PhoneOutgoingCallIcon from './call/PhoneOutgoingCallIcon.vue';
 import PhoneRecallIcon from './call/PhoneRecallIcon.vue';
 import PhoneTalkingIcon from './call/PhoneTalkingIcon.vue';
 import PhoneTransferIcon from './call/PhoneTransferIcon.vue';
@@ -94,6 +95,31 @@ import ClientLocationIcon from './client/ClientLocationIcon.vue';
 import ClientSocialIcon from './client/ClientSocialIcon.vue';
 import ClientTaskIcon from './client/ClientTaskIcon.vue';
 import ClientVoiceChannelIcon from './client/ClientVoiceChannelIcon.vue';
+import CloseReplyIcon from './converstion/CloseReplyIcon.vue';
+import ConversationAcceptButtonIcon from './converstion/ConversationAcceptButtonIcon.vue';
+import ConversationAcceptIcon from './converstion/ConversationAcceptIcon.vue';
+import ConversationAudioIcon from './converstion/ConversationAudioIcon.vue';
+import ConversationBotIcon from './converstion/ConversationBotIcon.vue';
+import ConversationCancelChatIcon from './converstion/ConversationCancelChatIcon.vue';
+import ConversationDeclineIcon from './converstion/ConversationDeclineIcon.vue';
+import ConversationDismissIcon from './converstion/ConversationDismissIcon.vue';
+import ConversationEmojisIcon from './converstion/ConversationEmojisIcon.vue';
+import ConversationHashIcon from './converstion/ConversationHashIcon.vue';
+import ConversationJoinMemberIcon from './converstion/ConversationJoinMemberIcon.vue';
+import ConversationLeftRedIcon from './converstion/ConversationLeftRedIcon.vue';
+import ConversationPinIcon from './converstion/ConversationPinIcon.vue';
+import ConversationQuickAnswerIcon from './converstion/ConversationQuickAnswerIcon.vue';
+import ConversationRedirectIcon from './converstion/ConversationRedirectIcon.vue';
+import ConversationSendMessageIcon from './converstion/ConversationSendMessageIcon.vue';
+import ConversationTopPanelIcon from './converstion/ConversationTopPanelIcon.vue';
+import ConversationUnPinIcon from './converstion/ConversationUnPinIcon.vue';
+import ConversationVideoIcon from './converstion/ConversationVideoIcon.vue';
+import MessageDocumentIcon from './converstion/MessageDocumentIcon.vue';
+import MessageEditBlueIcon from './converstion/MessageEditBlueIcon.vue';
+import MessageEditIcon from './converstion/MessageEditIcon.vue';
+import MessageReplyBlueIcon from './converstion/MessageReplyBlueIcon.vue';
+import MessageReplyIcon from './converstion/MessageReplyIcon.vue';
+import MessageStatusDeliveredIcon from './converstion/MessageStatusDeliveredIcon.vue';
 import AzerbaijanIcon from './country/AzerbaijanIcon.vue';
 import KazakhstanIcon from './country/KazakhstanIcon.vue';
 import PolanIcon from './country/PolanIcon.vue';
@@ -101,6 +127,7 @@ import TerroristIcon from './country/TerroristIcon.vue';
 import ThailandIcon from './country/ThailandIcon.vue';
 import UkraineIcon from './country/UkraineIcon.vue';
 import UnitedKingdomIcon from './country/UnitedKingdomIcon.vue';
+import EllipseGreenIcon from './ellipses/EllipseGreenIcon.vue';
 import FieldBooleanIcon from './field-types/FieldBooleanIcon.vue';
 import FieldEnumIcon from './field-types/FieldEnumIcon.vue';
 import FieldFKIcon from './field-types/FieldFKIcon.vue';
@@ -157,10 +184,12 @@ import CallQualityBlockIcon from './others/CallQualityBlockIcon.vue';
 import CallQualityTemplateIcon from './others/CallQualityTemplateIcon.vue';
 import CallToOperatorIcon from './others/CallToOperatorIcon.vue';
 import CheckBoxIcon from './others/CheckBoxIcon.vue';
+import CheckConnectionIcon from './others/CheckConnectionIcon.vue';
 import ConditionIcon from './others/ConditionIcon.vue';
 import ContinueInDialPlanIcon from './others/ContinueInDialPlanIcon.vue';
 import DbReadIcon from './others/DbReadIcon.vue';
 import DbWriteIcon from './others/DbWriteIcon.vue';
+import DiamondIcon from './others/DiamondIcon.vue';
 import DiamondInSquareIcon from './others/DiamondInSquareIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
 import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
@@ -203,10 +232,12 @@ import StatusSelectIcon from './others/StatusSelectIcon.vue';
 import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
+import UserIcon from './others/UserIcon.vue';
 import VoiceMailIcon from './others/VoiceMailIcon.vue';
 import WaitIcon from './others/WaitIcon.vue';
 import WeekIcon from './others/WeekIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
+import CircleDownloadIcon from './player/CircleDownloadIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -230,7 +261,6 @@ import HomeIcon from './sidebar/HomeIcon.vue';
 import IntegrationIcon from './sidebar/IntegrationIcon.vue';
 import ITRIcon from './sidebar/ITRIcon.vue';
 import PbxIcon from './sidebar/PbxIcon.vue';
-import ScenarioIcon from './sidebar/ScenarioIcon.vue';
 import ScenariosIcon from './sidebar/ScenariosIcon.vue';
 import SettingsIcon from './sidebar/SettingsIcon.vue';
 import TasksIcon from './sidebar/TasksIcon.vue';
@@ -310,6 +340,7 @@ export const icons = {
   phoneHangup: PhoneHangupIcon,
   phoneInactiveTalk: PhoneInactiveTalkIcon,
   phoneOffline: PhoneOfflineIcon,
+  phoneOutgoingCall: PhoneOutgoingCallIcon,
   phoneRecall: PhoneRecallIcon,
   phoneTalking: PhoneTalkingIcon,
   phoneTransfer: PhoneTransferIcon,
@@ -356,6 +387,33 @@ export const icons = {
   clientTask: ClientTaskIcon,
   clientVoiceChannel: ClientVoiceChannelIcon,
 
+  // converstion icons
+  closeReply: CloseReplyIcon,
+  conversationAcceptButton: ConversationAcceptButtonIcon,
+  conversationAccept: ConversationAcceptIcon,
+  conversationAudio: ConversationAudioIcon,
+  conversationBot: ConversationBotIcon,
+  conversationCancelChat: ConversationCancelChatIcon,
+  conversationDecline: ConversationDeclineIcon,
+  conversationDismiss: ConversationDismissIcon,
+  conversationEmojis: ConversationEmojisIcon,
+  conversationHash: ConversationHashIcon,
+  conversationJoinMember: ConversationJoinMemberIcon,
+  conversationLeftRed: ConversationLeftRedIcon,
+  conversationPin: ConversationPinIcon,
+  conversationQuickAnswer: ConversationQuickAnswerIcon,
+  conversationRedirect: ConversationRedirectIcon,
+  conversationSendMessage: ConversationSendMessageIcon,
+  conversationTopPanel: ConversationTopPanelIcon,
+  conversationUnPin: ConversationUnPinIcon,
+  conversationVideo: ConversationVideoIcon,
+  messageDocument: MessageDocumentIcon,
+  messageEditBlue: MessageEditBlueIcon,
+  messageEdit: MessageEditIcon,
+  messageReplyBlue: MessageReplyBlueIcon,
+  messageReply: MessageReplyIcon,
+  messageStatusDelivered: MessageStatusDeliveredIcon,
+
   // country icons
   azerbaijan: AzerbaijanIcon,
   kazakhstan: KazakhstanIcon,
@@ -364,6 +422,9 @@ export const icons = {
   thailand: ThailandIcon,
   ukraine: UkraineIcon,
   unitedKingdom: UnitedKingdomIcon,
+
+  // ellipses icons
+  ellipseGreen: EllipseGreenIcon,
 
   // field-types icons
   fieldBoolean: FieldBooleanIcon,
@@ -432,10 +493,12 @@ export const icons = {
   callQualityTemplate: CallQualityTemplateIcon,
   callToOperator: CallToOperatorIcon,
   checkBox: CheckBoxIcon,
+  checkConnection: CheckConnectionIcon,
   condition: ConditionIcon,
   continueInDialPlan: ContinueInDialPlanIcon,
   dbRead: DbReadIcon,
   dbWrite: DbWriteIcon,
+  diamond: DiamondIcon,
   diamondInSquare: DiamondInSquareIcon,
   dsr: DsrIcon,
   emptyRound: EmptyRoundIcon,
@@ -478,12 +541,14 @@ export const icons = {
   taskSelect: TaskSelectIcon,
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
+  user: UserIcon,
   voiceMail: VoiceMailIcon,
   wait: WaitIcon,
   week: WeekIcon,
   windowStart: WindowStartIcon,
 
   // player icons
+  circleDownload: CircleDownloadIcon,
   pause: PauseIcon,
   start: StartIcon,
   stop: StopIcon,
@@ -513,7 +578,6 @@ export const icons = {
   integration: IntegrationIcon,
   iTR: ITRIcon,
   pbx: PbxIcon,
-  scenario: ScenarioIcon,
   scenarios: ScenariosIcon,
   settings: SettingsIcon,
   tasks: TasksIcon,
