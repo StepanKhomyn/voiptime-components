@@ -19,8 +19,8 @@ import LockIcon from './actions/LockIcon.vue';
 import LogOutIcon from './actions/LogOutIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
+import PromptIcon from './actions/PromptIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import SettingsFilledIcon from './actions/SettingsFilledIcon.vue';
@@ -138,26 +138,62 @@ import EmailNewIcon from './mail/EmailNewIcon.vue';
 import EmailOutgoingIcon from './mail/EmailOutgoingIcon.vue';
 import EmailQueueIcon from './mail/EmailQueueIcon.vue';
 import EmailSpamIcon from './mail/EmailSpamIcon.vue';
+import AcdConditionIcon from './others/AcdConditionIcon.vue';
+import AcdConditionInTimeIcon from './others/AcdConditionInTimeIcon.vue';
+import AcdConditionOperatorAvailableIcon from './others/AcdConditionOperatorAvailableIcon.vue';
+import AcdConditionOperatorInAvailableIcon from './others/AcdConditionOperatorInAvailableIcon.vue';
+import AcdConditionOutOfTimeIcon from './others/AcdConditionOutOfTimeIcon.vue';
+import AcdPresentOperatorConditionIcon from './others/AcdPresentOperatorConditionIcon.vue';
+import AcdQueueTimeoutConditionIcon from './others/AcdQueueTimeoutConditionIcon.vue';
+import AddCelebrationDayIcon from './others/AddCelebrationDayIcon.vue';
+import AddDayIcon from './others/AddDayIcon.vue';
 import AddIcon from './others/AddIcon.vue';
+import AddToQueueIcon from './others/AddToQueueIcon.vue';
+import AnalizeIvrNumberIcon from './others/AnalizeIvrNumberIcon.vue';
+import BlackListIcon from './others/BlackListIcon.vue';
+import BoxIcon from './others/BoxIcon.vue';
+import CallAcdIcon from './others/CallAcdIcon.vue';
 import CallQualityBlockIcon from './others/CallQualityBlockIcon.vue';
 import CallQualityTemplateIcon from './others/CallQualityTemplateIcon.vue';
+import CallToOperatorIcon from './others/CallToOperatorIcon.vue';
+import CheckBoxIcon from './others/CheckBoxIcon.vue';
+import ConditionIcon from './others/ConditionIcon.vue';
+import ContinueInDialPlanIcon from './others/ContinueInDialPlanIcon.vue';
+import DbReadIcon from './others/DbReadIcon.vue';
+import DbWriteIcon from './others/DbWriteIcon.vue';
 import DiamondInSquareIcon from './others/DiamondInSquareIcon.vue';
 import DsrIcon from './others/DsrIcon.vue';
 import EmptyRoundIcon from './others/EmptyRoundIcon.vue';
 import HoldIcon from './others/HoldIcon.vue';
+import HttpGetIcon from './others/HttpGetIcon.vue';
+import HungUpPhoneIcon from './others/HungUpPhoneIcon.vue';
+import IdentificatorIcon from './others/IdentificatorIcon.vue';
 import ImportIcon from './others/ImportIcon.vue';
 import IvrIcon from './others/IvrIcon.vue';
+import IvrRecallIcon from './others/IvrRecallIcon.vue';
+import MenuIcon from './others/MenuIcon.vue';
 import MinusIcon from './others/MinusIcon.vue';
+import MoveToIvrIcon from './others/MoveToIvrIcon.vue';
 import NodeTreeIcon from './others/NodeTreeIcon.vue';
 import NotificationIcon from './others/NotificationIcon.vue';
 import NotificationReadIcon from './others/NotificationReadIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
+import OperatorSkillIcon from './others/OperatorSkillIcon.vue';
+import PlayFileIcon from './others/PlayFileIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
 import PredictiveIcon from './others/PredictiveIcon.vue';
 import PreviewIcon from './others/PreviewIcon.vue';
 import PrioritySelectIcon from './others/PrioritySelectIcon.vue';
 import ProgressiveIcon from './others/ProgressiveIcon.vue';
 import QrCodeIcon from './others/QrCodeIcon.vue';
+import QuizIcon from './others/QuizIcon.vue';
+import ReadDTMFIcon from './others/ReadDTMFIcon.vue';
+import RecordEndIcon from './others/RecordEndIcon.vue';
+import RecordStartIcon from './others/RecordStartIcon.vue';
 import ScheduleIcon from './others/ScheduleIcon.vue';
+import SendEmailIcon from './others/SendEmailIcon.vue';
+import SendTextIcon from './others/SendTextIcon.vue';
+import SetVariableValueIcon from './others/SetVariableValueIcon.vue';
 import SmsIcon from './others/SmsIcon.vue';
 import StarFilledIcon from './others/StarFilledIcon.vue';
 import StatisticDetailIcon from './others/StatisticDetailIcon.vue';
@@ -167,8 +203,10 @@ import StatusSelectIcon from './others/StatusSelectIcon.vue';
 import TaskSelectIcon from './others/TaskSelectIcon.vue';
 import TranscriptionIcon from './others/TranscriptionIcon.vue';
 import TranscriptionStartIcon from './others/TranscriptionStartIcon.vue';
+import VoiceMailIcon from './others/VoiceMailIcon.vue';
+import WaitIcon from './others/WaitIcon.vue';
+import WeekIcon from './others/WeekIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
 import StopIcon from './player/StopIcon.vue';
@@ -189,8 +227,8 @@ import CrmIcon from './sidebar/CrmIcon.vue';
 import DashboardIcon from './sidebar/DashboardIcon.vue';
 import GroupIcon from './sidebar/GroupIcon.vue';
 import HomeIcon from './sidebar/HomeIcon.vue';
-import ITRIcon from './sidebar/ITRIcon.vue';
 import IntegrationIcon from './sidebar/IntegrationIcon.vue';
+import ITRIcon from './sidebar/ITRIcon.vue';
 import PbxIcon from './sidebar/PbxIcon.vue';
 import ScenarioIcon from './sidebar/ScenarioIcon.vue';
 import ScenariosIcon from './sidebar/ScenariosIcon.vue';
@@ -234,8 +272,8 @@ export const icons = {
   logOut: LogOutIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompt: PromptIcon,
   prompter: PrompterIcon,
+  prompt: PromptIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   settingsFilled: SettingsFilledIcon,
@@ -375,26 +413,62 @@ export const icons = {
   emailSpam: EmailSpamIcon,
 
   // others icons
+  acdCondition: AcdConditionIcon,
+  acdConditionInTime: AcdConditionInTimeIcon,
+  acdConditionOperatorAvailable: AcdConditionOperatorAvailableIcon,
+  acdConditionOperatorInAvailable: AcdConditionOperatorInAvailableIcon,
+  acdConditionOutOfTime: AcdConditionOutOfTimeIcon,
+  acdPresentOperatorCondition: AcdPresentOperatorConditionIcon,
+  acdQueueTimeoutCondition: AcdQueueTimeoutConditionIcon,
+  addCelebrationDay: AddCelebrationDayIcon,
+  addDay: AddDayIcon,
   add: AddIcon,
+  addToQueue: AddToQueueIcon,
+  analizeIvrNumber: AnalizeIvrNumberIcon,
+  blackList: BlackListIcon,
+  box: BoxIcon,
+  callAcd: CallAcdIcon,
   callQualityBlock: CallQualityBlockIcon,
   callQualityTemplate: CallQualityTemplateIcon,
+  callToOperator: CallToOperatorIcon,
+  checkBox: CheckBoxIcon,
+  condition: ConditionIcon,
+  continueInDialPlan: ContinueInDialPlanIcon,
+  dbRead: DbReadIcon,
+  dbWrite: DbWriteIcon,
   diamondInSquare: DiamondInSquareIcon,
   dsr: DsrIcon,
   emptyRound: EmptyRoundIcon,
   hold: HoldIcon,
+  httpGet: HttpGetIcon,
+  hungUpPhone: HungUpPhoneIcon,
+  identificator: IdentificatorIcon,
   import: ImportIcon,
   ivr: IvrIcon,
+  ivrRecall: IvrRecallIcon,
+  menu: MenuIcon,
   minus: MinusIcon,
+  moveToIvr: MoveToIvrIcon,
   nodeTree: NodeTreeIcon,
   notification: NotificationIcon,
   notificationRead: NotificationReadIcon,
+  operator: operatorIcon,
+  operatorSkill: OperatorSkillIcon,
+  playFile: PlayFileIcon,
   plus: PlusIcon,
   predictive: PredictiveIcon,
   preview: PreviewIcon,
   prioritySelect: PrioritySelectIcon,
   progressive: ProgressiveIcon,
   qrCode: QrCodeIcon,
+  quiz: QuizIcon,
+  readDTMF: ReadDTMFIcon,
+  recordEnd: RecordEndIcon,
+  recordStart: RecordStartIcon,
   schedule: ScheduleIcon,
+  sendEmail: SendEmailIcon,
+  sendText: SendTextIcon,
+  setVariableValue: SetVariableValueIcon,
   sms: SmsIcon,
   starFilled: StarFilledIcon,
   statisticDetail: StatisticDetailIcon,
@@ -404,8 +478,10 @@ export const icons = {
   taskSelect: TaskSelectIcon,
   transcription: TranscriptionIcon,
   transcriptionStart: TranscriptionStartIcon,
+  voiceMail: VoiceMailIcon,
+  wait: WaitIcon,
+  week: WeekIcon,
   windowStart: WindowStartIcon,
-  operator: operatorIcon,
 
   // player icons
   pause: PauseIcon,
@@ -434,8 +510,8 @@ export const icons = {
   dashboard: DashboardIcon,
   group: GroupIcon,
   home: HomeIcon,
-  iTR: ITRIcon,
   integration: IntegrationIcon,
+  iTR: ITRIcon,
   pbx: PbxIcon,
   scenario: ScenarioIcon,
   scenarios: ScenariosIcon,
