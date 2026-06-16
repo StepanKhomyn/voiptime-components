@@ -1,3 +1,10 @@
+## [1.21.77](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.76...v1.21.77) (2026-06-16)
+
+
+### Bug Fixes
+
+* change scenarioCall icon ([ff8d961](https://github.com/StepanKhomyn/voiptime-components/commit/ff8d96113fd04c52c595a2cf1de6e1ee0d6c1558))
+
 ## [1.21.76](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.75...v1.21.76) (2026-06-15)
 
 
