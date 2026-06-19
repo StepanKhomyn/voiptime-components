@@ -15,6 +15,18 @@
     flex-direction: column;
     overflow: hidden;
 
+    // Модифікатор: картка по висоті контенту (не розтягується)
+    &--shrink {
+      height: auto;
+      flex-shrink: 0;
+    }
+
+    // Модифікатор: картка займає залишок висоти (flex-grow)
+    &--grow {
+      flex: 1 1 0;
+      min-height: 0;
+    }
+
     &-header {
       // Хедер картки (в ньому фільтр + можлива кнопка зправа)
       display: flex;
@@ -71,7 +83,7 @@
         &-element {
           display: inline-block;
           white-space: nowrap;
-          margin-right: 10px; /* той же GAP, що і у логіці */
+          margin-right: 10px;
         }
       }
 
@@ -93,6 +105,11 @@
       overflow: hidden;
       display: flex;
       gap: var(--vt-gap-base);
+
+      // Модифікатор: колонка замість рядка (для правого side-панелі)
+      &--column {
+        flex-direction: column;
+      }
 
       &-header {
         height: 46px;
@@ -117,6 +134,12 @@
         min-height: 0;
         display: flex;
         flex-direction: column;
+
+        // Модифікатор: горизонтальний паддінг
+        &--padded {
+          padding-left: var(--vt-padding-lg);
+          padding-right: var(--vt-padding-lg);
+        }
 
         &-item {
           display: flex;
@@ -145,6 +168,20 @@
             }
           }
         }
+
+        // Рядок всередині body без label (для inline-форм типу caller-id)
+        &-row {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          gap: var(--vt-gap-base);
+          padding: 0 var(--vt-padding-lg) var(--vt-padding-base);
+
+          // Вкладений рядок зі зміщенням (для змінних номера)
+          &--nested {
+            padding-left: calc(var(--vt-padding-lg) + 16px);
+          }
+        }
       }
     }
   }
@@ -157,5 +194,31 @@
     justify-content: flex-end;
     gap: var(--vt-gap-base);
     align-items: center;
+  }
+}
+
+// ── Утиліти layout ────────────────────────────────────────────────────────────
+
+// Вертикальний стек карток (side-панель з кількох карток)
+.vt-card-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--vt-gap-base);
+  min-height: 0;
+  overflow: hidden;
+}
+
+@use "sass:math";
+
+// Генеруємо дробові ширини
+@function fraction-to-percent($numerator, $denominator) {
+  @return math.div($numerator, $denominator) * 100%;
+}
+
+@for $denominator from 2 through 6 {
+  @for $numerator from 1 through $denominator - 1 {
+    .w-#{$numerator}\/#{$denominator} {
+      width: fraction-to-percent($numerator, $denominator);
+    }
   }
 }
