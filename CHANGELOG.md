@@ -1,3 +1,12 @@
+## [1.21.78](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.77...v1.21.78) (2026-06-19)
+
+
+### Bug Fixes
+
+* add page styles ([22d51ff](https://github.com/StepanKhomyn/voiptime-components/commit/22d51ffb3d22d40b974385ea35d31aea5f2db2a3))
+* add page styles2 ([d846a7a](https://github.com/StepanKhomyn/voiptime-components/commit/d846a7afc4e7cbe77b39fedc69e58bf14d76e0ce))
+* add page styles3 ([9382fed](https://github.com/StepanKhomyn/voiptime-components/commit/9382fedf806c335ad54c4fcd542c440e45bbd751))
+
 ## [1.21.77](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.76...v1.21.77) (2026-06-16)
 
 
