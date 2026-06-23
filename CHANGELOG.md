@@ -1,3 +1,10 @@
+## [1.21.79](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.78...v1.21.79) (2026-06-23)
+
+
+### Bug Fixes
+
+* fix with global properties ([e3987b6](https://github.com/StepanKhomyn/voiptime-components/commit/e3987b65dcbbaca9608a3b2e810d10d98f6f53f5))
+
 ## [1.21.78](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.77...v1.21.78) (2026-06-19)
 
 
