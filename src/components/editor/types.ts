@@ -37,7 +37,7 @@ export interface VtEditorValidationResult {
 
 // ─── Props ───────────────────────────────────────────────────────────────────
 export interface VtEditorProps {
-  modelValue?: string;
+  modelValue?: string | null | undefined;
   placeholder?: string;
   toolbar?: VtEditorToolbarGroup[];
   disabled?: boolean;
