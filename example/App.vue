@@ -31,7 +31,7 @@
   import DemoBreadcrumb from './DemoBreadcrumb.vue';
   import DemoAudio from './DemoAudio.vue';
   import DemoEmpty from './DemoEmpty.vue';
-
+  import DemoEditor from './DemoEditor.vue';
 
   const searchQuery = ref('');
 
@@ -64,6 +64,7 @@
         { name: 'Валідація', icon: '✅', component: DemoValidationForm },
         { name: 'Slider', icon: '🎚', component: DemoSlider },
         { name: 'Transfer List', icon: '↔️', component: DemoTransferList },
+        { name: 'Editor', icon: '📝', component: DemoEditor },
       ],
     },
 

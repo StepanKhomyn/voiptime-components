@@ -19,8 +19,8 @@ import LockIcon from './actions/LockIcon.vue';
 import LogOutIcon from './actions/LogOutIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PrompterIcon from './actions/PrompterIcon.vue';
 import PromptIcon from './actions/PromptIcon.vue';
+import PrompterIcon from './actions/PrompterIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import SettingsFilledIcon from './actions/SettingsFilledIcon.vue';
@@ -127,6 +127,29 @@ import TerroristIcon from './country/TerroristIcon.vue';
 import ThailandIcon from './country/ThailandIcon.vue';
 import UkraineIcon from './country/UkraineIcon.vue';
 import UnitedKingdomIcon from './country/UnitedKingdomIcon.vue';
+import AlignCenterIcon from './editor/AlignCenterIcon.vue';
+import AlignJustifyIcon from './editor/AlignJustifyIcon.vue';
+import AlignLeftIcon from './editor/AlignLeftIcon.vue';
+import AlignRightIcon from './editor/AlignRightIcon.vue';
+import BlockquoteIcon from './editor/BlockquoteIcon.vue';
+import ClearFormatIcon from './editor/ClearFormatIcon.vue';
+import FontNameIcon from './editor/FontNameIcon.vue';
+import HtmlIcon from './editor/HtmlIcon.vue';
+import ImageIcon from './editor/ImageIcon.vue';
+import IndentIcon from './editor/IndentIcon.vue';
+import LinkIcon from './editor/LinkIcon.vue';
+import OrderedListIcon from './editor/OrderedListIcon.vue';
+import OutdentIcon from './editor/OutdentIcon.vue';
+import RedoIcon from './editor/RedoIcon.vue';
+import SubscriptIcon from './editor/SubscriptIcon.vue';
+import SuperscriptIcon from './editor/SuperscriptIcon.vue';
+import TagTypeIcon from './editor/TagTypeIcon.vue';
+import TextBoldIcon from './editor/TextBoldIcon.vue';
+import TextItalicIcon from './editor/TextItalicIcon.vue';
+import TextStrikethroughIcon from './editor/TextStrikethroughIcon.vue';
+import TextUndelineIcon from './editor/TextUndelineIcon.vue';
+import UndoIcon from './editor/UndoIcon.vue';
+import UnorderedListIcon from './editor/UnorderedListIcon.vue';
 import EllipseGreenIcon from './ellipses/EllipseGreenIcon.vue';
 import FieldBooleanIcon from './field-types/FieldBooleanIcon.vue';
 import FieldEnumIcon from './field-types/FieldEnumIcon.vue';
@@ -206,7 +229,6 @@ import MoveToIvrIcon from './others/MoveToIvrIcon.vue';
 import NodeTreeIcon from './others/NodeTreeIcon.vue';
 import NotificationIcon from './others/NotificationIcon.vue';
 import NotificationReadIcon from './others/NotificationReadIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
 import OperatorSkillIcon from './others/OperatorSkillIcon.vue';
 import PlayFileIcon from './others/PlayFileIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
@@ -237,6 +259,7 @@ import VoiceMailIcon from './others/VoiceMailIcon.vue';
 import WaitIcon from './others/WaitIcon.vue';
 import WeekIcon from './others/WeekIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import CircleDownloadIcon from './player/CircleDownloadIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
@@ -258,8 +281,8 @@ import CrmIcon from './sidebar/CrmIcon.vue';
 import DashboardIcon from './sidebar/DashboardIcon.vue';
 import GroupIcon from './sidebar/GroupIcon.vue';
 import HomeIcon from './sidebar/HomeIcon.vue';
-import IntegrationIcon from './sidebar/IntegrationIcon.vue';
 import ITRIcon from './sidebar/ITRIcon.vue';
+import IntegrationIcon from './sidebar/IntegrationIcon.vue';
 import PbxIcon from './sidebar/PbxIcon.vue';
 import ScenariosIcon from './sidebar/ScenariosIcon.vue';
 import SettingsIcon from './sidebar/SettingsIcon.vue';
@@ -302,8 +325,8 @@ export const icons = {
   logOut: LogOutIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompter: PrompterIcon,
   prompt: PromptIcon,
+  prompter: PrompterIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   settingsFilled: SettingsFilledIcon,
@@ -423,6 +446,31 @@ export const icons = {
   ukraine: UkraineIcon,
   unitedKingdom: UnitedKingdomIcon,
 
+  // editor icons
+  alignCenter: AlignCenterIcon,
+  alignJustify: AlignJustifyIcon,
+  alignLeft: AlignLeftIcon,
+  alignRight: AlignRightIcon,
+  blockquote: BlockquoteIcon,
+  clearFormat: ClearFormatIcon,
+  fontName: FontNameIcon,
+  html: HtmlIcon,
+  image: ImageIcon,
+  indent: IndentIcon,
+  link: LinkIcon,
+  orderedList: OrderedListIcon,
+  outdent: OutdentIcon,
+  redo: RedoIcon,
+  subscript: SubscriptIcon,
+  superscript: SuperscriptIcon,
+  tagType: TagTypeIcon,
+  textBold: TextBoldIcon,
+  textItalic: TextItalicIcon,
+  textStrikethrough: TextStrikethroughIcon,
+  textUndeline: TextUndelineIcon,
+  undo: UndoIcon,
+  unorderedList: UnorderedListIcon,
+
   // ellipses icons
   ellipseGreen: EllipseGreenIcon,
 
@@ -515,7 +563,6 @@ export const icons = {
   nodeTree: NodeTreeIcon,
   notification: NotificationIcon,
   notificationRead: NotificationReadIcon,
-  operator: operatorIcon,
   operatorSkill: OperatorSkillIcon,
   playFile: PlayFileIcon,
   plus: PlusIcon,
@@ -546,6 +593,7 @@ export const icons = {
   wait: WaitIcon,
   week: WeekIcon,
   windowStart: WindowStartIcon,
+  operator: operatorIcon,
 
   // player icons
   circleDownload: CircleDownloadIcon,
@@ -575,8 +623,8 @@ export const icons = {
   dashboard: DashboardIcon,
   group: GroupIcon,
   home: HomeIcon,
-  integration: IntegrationIcon,
   iTR: ITRIcon,
+  integration: IntegrationIcon,
   pbx: PbxIcon,
   scenarios: ScenariosIcon,
   settings: SettingsIcon,

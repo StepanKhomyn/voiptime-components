@@ -1,0 +1,332 @@
+@use '../../assets/fonts' as *;
+@use '../../assets/scrollbar' as *;
+
+.vt-editor {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: 1px solid var(--color-gray-5);
+  border-radius: var(--radius-main);
+  background-color: var(--color-white);
+  transition: border-color 0.2s ease-in-out;
+  overflow: hidden;
+
+  &:hover:not(&--disabled) {
+    border-color: var(--color-primary-hover);
+  }
+
+  &--focused {
+    border-color: var(--color-primary-main);
+  }
+
+  &--error {
+    border-color: var(--color-danger-main);
+
+    &.vt-editor--focused {
+      border-color: var(--color-danger-main);
+    }
+  }
+
+  &--disabled {
+    border-color: var(--color-gray-5);
+    background-color: var(--color-gray-6);
+    cursor: not-allowed;
+    pointer-events: none;
+
+    .vt-editor__content {
+      color: var(--color-gray-4);
+    }
+  }
+
+  // ─── Wrapper для забезпечення горизонтального скролу та кнопок ─────────
+
+  &__toolbar-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-gray-5);
+    background-color: var(--color-gray-7);
+    border-radius: var(--radius-main) var(--radius-main) 0 0;
+  }
+
+  // Нативний скрол-контейнер без перенесення рядків
+  &__toolbar {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap; // Тільки в один рядок!
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+
+    // Ховаємо нативні скролбари
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    scrollbar-width: none;
+  }
+
+  // Кнопки прокрутки ліворуч/праворуч
+  &__toolbar-scroll-btn {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    border: none;
+    background: var(--color-gray-7);
+    color: var(--color-gray-2);
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+      color: var(--color-primary-main);
+    }
+
+    &--left {
+      left: 0;
+      box-shadow: 6px 0 10px -4px rgba(0, 0, 0, 0.15);
+      border-right: 1px solid var(--color-gray-5);
+    }
+
+    &--right {
+      right: 0;
+      box-shadow: -6px 0 10px -4px rgba(0, 0, 0, 0.15);
+      border-left: 1px solid var(--color-gray-5);
+    }
+  }
+
+  &__toolbar-sep {
+    display: inline-block;
+    width: 1px;
+    height: 20px;
+    background-color: var(--color-gray-5);
+    margin: 0 2px;
+    flex-shrink: 0;
+  }
+
+  &__toolbar-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    border-radius: var(--radius-main);
+    color: var(--color-gray-2);
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: var(--color-primary-bg);
+      color: var(--color-primary-main);
+    }
+
+    &:active {
+      background-color: var(--color-primary-focus);
+    }
+
+    &--active {
+      background-color: var(--color-primary-bg);
+      color: var(--color-primary-main);
+    }
+  }
+
+
+  // Колірний пікер
+  &__color-picker {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid var(--color-gray-5);
+    border-radius: var(--radius-main);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-sizing: border-box;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 2px;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: calc(var(--radius-main) - 2px);
+    }
+  }
+
+  // ─── Body (скролиться) ───────────────────────────────────────────────────
+
+  &__body {
+    @include vt-scrollbar;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  // ─── Editable area ───────────────────────────────────────────────────────
+
+  &__content {
+    @include vt-typography('vt-input');
+    flex: 1;
+    padding: 10px 12px;
+    outline: none;
+    color: var(--color-gray-2);
+    word-break: break-word;
+    overflow-wrap: break-word;
+
+    &:empty::before {
+      content: attr(data-placeholder);
+      color: var(--color-gray-4);
+      pointer-events: none;
+    }
+
+    p {
+      margin: 0 0 8px;
+    }
+
+    h1 {
+      font-size: 1.75em;
+      font-weight: var(--font-weight-bold);
+      margin: 0 0 10px;
+    }
+
+    h2 {
+      font-size: 1.5em;
+      font-weight: var(--font-weight-bold);
+      margin: 0 0 10px;
+    }
+
+    h3 {
+      font-size: 1.25em;
+      font-weight: var(--font-weight-semibold);
+      margin: 0 0 8px;
+    }
+
+    h4 {
+      font-size: 1.1em;
+      font-weight: var(--font-weight-semibold);
+      margin: 0 0 8px;
+    }
+
+    a {
+      color: var(--color-primary-main);
+      text-decoration: underline;
+    }
+
+    blockquote {
+      margin: 8px 0;
+      padding: 8px 12px;
+      border-left: 3px solid var(--color-primary-border);
+      background-color: var(--color-primary-bg);
+      color: var(--color-gray-3);
+      border-radius: 0 var(--radius-main) var(--radius-main) 0;
+    }
+
+    code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.875em;
+      background-color: var(--color-gray-6);
+      color: var(--color-gray-1);
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    ul, ol {
+      padding-left: 20px;
+      margin: 0 0 8px;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-main);
+    }
+  }
+
+  &__html-source {
+    @include vt-typography('vt-input');
+    flex: 1;
+    padding: 10px 12px;
+    border: none;
+    outline: none;
+    resize: none;
+    color: var(--color-gray-2);
+    background-color: var(--color-gray-7);
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+  }
+
+
+  &__error {
+    flex-shrink: 0;
+    padding: 4px 12px 6px;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--color-danger-main);
+  }
+
+  &__dialog-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__dialog-label {
+    font-size: 12px;
+    font-weight: var(--font-weight-medium);
+    color: var(--color-gray-2);
+  }
+
+  &__dialog-input {
+    @include vt-typography('vt-input');
+    width: 100%;
+    padding: 0 12px;
+    height: 36px;
+    border: 1px solid var(--color-gray-5);
+    border-radius: var(--radius-main);
+    background-color: var(--color-white);
+    color: var(--color-gray-2);
+    outline: none;
+    transition: border-color 0.2s ease;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: var(--color-gray-4);
+    }
+
+    &:focus {
+      border-color: var(--color-primary-main);
+    }
+  }
+
+  &__dialog-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-2);
+    cursor: pointer;
+    margin-top: 2px;
+
+    input[type='checkbox'] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--color-primary-main);
+      cursor: pointer;
+    }
+  }
+}
