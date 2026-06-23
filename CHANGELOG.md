@@ -1,3 +1,10 @@
+## [1.21.80](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.79...v1.21.80) (2026-06-23)
+
+
+### Bug Fixes
+
+* Створенно нову компоненту Editor ([d316b5c](https://github.com/StepanKhomyn/voiptime-components/commit/d316b5cfcdd11827e46ffb6c7a377dee21dceffb))
+
 ## [1.21.79](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.78...v1.21.79) (2026-06-23)
 
 
