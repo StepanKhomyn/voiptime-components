@@ -55,7 +55,7 @@ export interface VModalStack {
 }
 
 // Розширення глобальних властивостей Vue
-declare module '@vue/runtime-core' {
+declare module 'vue' {
   interface ComponentCustomProperties {
     $modal: VModalInstance;
     $modalStack: VModalStack;

@@ -25,7 +25,7 @@ export interface VMessageMethods {
   (options: VMessageOptions): number;
 }
 
-declare module '@vue/runtime-core' {
+declare module 'vue' {
   interface ComponentCustomProperties {
     $message: VMessageMethods;
   }

@@ -354,7 +354,7 @@ export default VUIPlugin;
 export const install = VUIPlugin.install;
 
 // ----------------- Глобальні властивості -----------------
-declare module '@vue/runtime-core' {
+declare module 'vue' {
   interface ComponentCustomProperties {
     $modal: import('./components/modal/types').VModalInstance;
     $message: import('./components/message/types').VMessageMethods;
@@ -365,3 +365,5 @@ declare module '@vue/runtime-core' {
     };
   }
 }
+
+export {};
