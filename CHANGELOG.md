@@ -1,3 +1,10 @@
+## [1.21.81](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.80...v1.21.81) (2026-06-23)
+
+
+### Bug Fixes
+
+* Видалено непотрібні бібліотеки з npm. Створено нову компоненту veditor замість ckeditor ([e4041fd](https://github.com/StepanKhomyn/voiptime-components/commit/e4041fd9f1df005d78d6b8f7e9e2b14c1f5ed180))
+
 ## [1.21.80](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.79...v1.21.80) (2026-06-23)
 
 
