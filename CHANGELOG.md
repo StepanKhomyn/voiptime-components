@@ -1,3 +1,10 @@
+## [1.21.83](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.82...v1.21.83) (2026-06-24)
+
+
+### Bug Fixes
+
+* add end modificator for page header ([4ada01d](https://github.com/StepanKhomyn/voiptime-components/commit/4ada01deac953b103d0bcf351c8cd5e094ffd239))
+
 ## [1.21.82](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.81...v1.21.82) (2026-06-24)
 
 
