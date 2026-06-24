@@ -35,6 +35,11 @@
       justify-content: space-between;
       padding: var(--vt-padding-sm) var(--vt-padding-base);
       gap: var(--vt-gap-base);
+
+      // Модифікатор: контент притиснутий вправо (одна кнопка без фільтра)
+      &--end {
+        justify-content: flex-end;
+      }
     }
 
     &-filter {
