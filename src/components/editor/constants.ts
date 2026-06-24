@@ -1,26 +1,6 @@
-export const ALLOWED_TAGS = new Set([
-  'p',
-  'br',
-  'b',
-  'i',
-  'u',
-  'span',
-  'a',
-  'img',
-  'ul',
-  'ol',
-  'li',
-  'h1',
-  'h2',
-  'h3',
-  'h4',
-  'blockquote',
-  'div',
-]);
+import type { IconName } from '@/icons';
 
-export const ALLOWED_ATTRS = new Set(['href', 'target', 'src', 'alt', 'style', 'class', 'rel']);
-
-export const TOOLBAR_ICONS: Record<string, string> = {
+export const TOOLBAR_ICONS: Record<string, IconName> = {
   undo: 'undo',
   redo: 'redo',
   bold: 'textBold',
