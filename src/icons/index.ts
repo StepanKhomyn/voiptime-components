@@ -147,7 +147,7 @@ import TagTypeIcon from './editor/TagTypeIcon.vue';
 import TextBoldIcon from './editor/TextBoldIcon.vue';
 import TextItalicIcon from './editor/TextItalicIcon.vue';
 import TextStrikethroughIcon from './editor/TextStrikethroughIcon.vue';
-import TextUndelineIcon from './editor/TextUndelineIcon.vue';
+import TextUnderlineIcon from './editor/TextUnderlineIcon.vue';
 import UndoIcon from './editor/UndoIcon.vue';
 import UnorderedListIcon from './editor/UnorderedListIcon.vue';
 import EllipseGreenIcon from './ellipses/EllipseGreenIcon.vue';
@@ -467,7 +467,7 @@ export const icons = {
   textBold: TextBoldIcon,
   textItalic: TextItalicIcon,
   textStrikethrough: TextStrikethroughIcon,
-  textUndeline: TextUndelineIcon,
+  textUnderline: TextUnderlineIcon,
   undo: UndoIcon,
   unorderedList: UnorderedListIcon,
 

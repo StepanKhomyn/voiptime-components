@@ -1,37 +1,19 @@
 <script lang="ts" setup>
   import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-  import type {
-    VtEditorCommand,
-    VtEditorEmits,
-    VtEditorImageState,
-    VtEditorLinkState,
-    VtEditorMethods,
-    VtEditorProps,
-    VtEditorToolbarGroup,
-    VtEditorValidationResult,
-  } from './types';
+  import type { VtEditorEmits, VtEditorMethods, VtEditorProps, VtEditorValidationResult } from './types';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
 
-  // Компоненти
   import VButton from '@/components/button/VButton.vue';
   import VModal from '@/components/modal/VModal.vue';
   import VDropdown from '@/components/dropdown/VDropdown.vue';
   import VDropdownItem from '@/components/dropdown/VDropdownItem.vue';
   import VIcon from '@/components/icon/VIcon.vue';
 
-  // Константи та Хелпери
-  import { FONT_GROUPS, HEADING_GROUPS, TOOLBAR_ICONS } from './constants';
   import { customSanitizeHtml, stripHtml } from './helpers';
-
-  interface ToolbarItem {
-    type: 'button' | 'select' | 'separator';
-    id?: string;
-    tooltip?: string;
-    iconName?: any;
-    action?: () => void;
-    activeCheck?: () => boolean;
-  }
+  import { useEditorCommands } from './useEditorCommands';
+  import { useEditorDialogs } from './useEditorDialogs';
+  import { useEditorToolbar } from './useEditorToolbar';
 
   // ─── i18n ─────────────────────────────────────────────────────────────────────
 
@@ -64,9 +46,10 @@
 
   const editorRef = ref<HTMLDivElement | null>(null);
   const toolbarRef = ref<HTMLDivElement | null>(null);
+  const htmlSourceRef = ref<HTMLTextAreaElement | null>(null);
+
   const isFocused = ref(false);
   const isHtmlMode = ref(false);
-  const htmlSourceRef = ref<HTMLTextAreaElement | null>(null);
   const htmlSourceValue = ref('');
 
   const validationErrors = ref<string[]>([]);
@@ -75,56 +58,88 @@
   const showScrollLeft = ref(false);
   const showScrollRight = ref(false);
 
-  const currentColor = ref('#000000');
+  const currentForeColor = ref('#000000');
+  const currentBackColor = ref('#ffffff');
 
-  const linkState = ref<VtEditorLinkState>({
-    visible: false,
-    url: '',
-    text: '',
-    openInNewTab: false,
-  });
+  // ─── Sync model ───────────────────────────────────────────────────────────────
 
-  const imageState = ref<VtEditorImageState>({
-    visible: false,
-    url: '',
-    alt: '',
-  });
-
-  let savedRange: Range | null = null;
-
-  // ─── Validation ───────────────────────────────────────────────────────────────
-
-  function validateValue(html: string): void {
-    const errors: string[] = [];
-    const text = stripHtml(html).trim();
-
-    if (props.required && !text) {
-      errors.push(t(LOCALE_KEYS.VALIDATION_REQUIRED));
-    }
-
-    validationErrors.value = errors;
-    isValid.value = errors.length === 0;
-    emit('validation', { isValid: isValid.value, errors });
+  function syncModel(overrideHtml?: string): void {
+    const rawHtml = overrideHtml ?? editorRef.value?.innerHTML ?? '';
+    const cleanHtml = customSanitizeHtml(rawHtml);
+    emit('update:modelValue', cleanHtml);
+    emit('input', cleanHtml);
   }
 
-  // ─── Computed state ───────────────────────────────────────────────────────────
+  // ─── Commands composable ──────────────────────────────────────────────────────
 
-  const displayErrorMessage = computed(() => {
-    if (props.errorMessage) return props.errorMessage;
-    if (validationErrors.value.length) return validationErrors.value[0];
-    return '';
-  });
+  const { exec, isActive, applyBlock, applyFont, applyForeColor, applyBackColor, handleIndent } = useEditorCommands(
+    editorRef,
+    syncModel
+  );
 
-  const hasError = computed(() => Boolean(displayErrorMessage.value));
+  // ─── HTML source mode ─────────────────────────────────────────────────────────
 
-  const rootClasses = computed(() => [
-    'vt-editor',
-    {
-      'vt-editor--focused': isFocused.value,
-      'vt-editor--error': hasError.value,
-      'vt-editor--disabled': props.disabled,
-    },
-  ]);
+  function toggleHtmlMode(): void {
+    if (!editorRef.value) return;
+    if (!isHtmlMode.value) {
+      // Entering HTML mode — snapshot current innerHTML
+      htmlSourceValue.value = editorRef.value.innerHTML;
+      isHtmlMode.value = true;
+      nextTick(() => htmlSourceRef.value?.focus());
+    } else {
+      // Leaving HTML mode — write textarea content back into editor
+      const sanitized = customSanitizeHtml(htmlSourceValue.value);
+      isHtmlMode.value = false;
+      nextTick(() => {
+        if (editorRef.value) {
+          editorRef.value.innerHTML = sanitized;
+          syncModel(sanitized);
+          editorRef.value.focus();
+        }
+      });
+    }
+  }
+
+  // While in HTML mode, keep the model in sync but don't touch the editor DOM
+  function onHtmlSourceInput(): void {
+    const sanitized = customSanitizeHtml(htmlSourceValue.value);
+    emit('update:modelValue', sanitized);
+    emit('input', sanitized);
+  }
+
+  // ─── Dialogs composable ───────────────────────────────────────────────────────
+
+  const { linkState, openLinkDialog, confirmLink, cancelLink, imageState, openImageDialog, confirmImage, cancelImage } =
+    useEditorDialogs(html => exec('insertHTML', html), syncModel);
+
+  // ─── Toolbar composable ───────────────────────────────────────────────────────
+
+  const { toolbarItems, selectionTick, onSelectionChange, getItemActive, HEADING_GROUPS, FONT_GROUPS } =
+    useEditorToolbar(() => props.toolbar, {
+      exec,
+      isActive,
+      applyBlock,
+      applyFont,
+      handleIndent,
+      openLinkDialog,
+      openImageDialog,
+      toggleHtmlMode,
+      isHtmlMode: () => isHtmlMode.value,
+    });
+
+  // ─── Color pickers ────────────────────────────────────────────────────────────
+
+  function onForeColorInput(event: Event): void {
+    const color = (event.target as HTMLInputElement).value;
+    currentForeColor.value = color;
+    applyForeColor(color);
+  }
+
+  function onBackColorInput(event: Event): void {
+    const color = (event.target as HTMLInputElement).value;
+    currentBackColor.value = color;
+    applyBackColor(color);
+  }
 
   // ─── Toolbar scroll ───────────────────────────────────────────────────────────
 
@@ -142,409 +157,32 @@
     setTimeout(updateScrollButtons, 250);
   }
 
-  // ─── Color picker ─────────────────────────────────────────────────────────────
+  // ─── Validation ───────────────────────────────────────────────────────────────
 
-  function onColorInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    currentColor.value = input.value;
-    editorRef.value?.focus();
-    document.execCommand('foreColor', false, input.value);
-    syncModel();
-  }
-
-  // ─── Editor commands ──────────────────────────────────────────────────────────
-
-  function exec(command: VtEditorCommand, value?: string): void {
-    if (!editorRef.value) return;
-    editorRef.value.focus();
-    document.execCommand(command, false, value ?? '');
-    syncModel();
-  }
-
-  function isActive(command: string): boolean {
-    try {
-      return document.queryCommandState(command);
-    } catch {
-      return false;
+  function validateValue(html: string): void {
+    const errors: string[] = [];
+    if (props.required && !stripHtml(html).trim()) {
+      errors.push(t(LOCALE_KEYS.VALIDATION_REQUIRED));
     }
+    validationErrors.value = errors;
+    isValid.value = errors.length === 0;
+    emit('validation', { isValid: isValid.value, errors });
   }
 
-  function applyHeading(tag: string): void {
-    if (!editorRef.value) return;
-    editorRef.value.focus();
-    document.execCommand('formatBlock', false, tag);
-    syncModel();
-  }
+  // ─── Computed ─────────────────────────────────────────────────────────────────
 
-  function handleIndent(type: 'indent' | 'outdent') {
-    const selection = window.getSelection();
-    if (!selection || selection.rangeCount === 0) return;
+  const displayErrorMessage = computed(() => props.errorMessage || validationErrors.value[0] || '');
 
-    let element = selection.anchorNode as HTMLElement;
-    if (element.nodeType === Node.TEXT_NODE) {
-      element = element.parentElement!;
-    }
+  const hasError = computed(() => Boolean(displayErrorMessage.value));
 
-    const closestBlock = element.closest('.vt-editor__content > *') as HTMLElement;
-    if (closestBlock) {
-      const currentMargin = parseInt(closestBlock.style.marginLeft || '0', 10);
-      const step = 20;
-      const newMargin = type === 'indent' ? currentMargin + step : Math.max(0, currentMargin - step);
-      closestBlock.style.marginLeft = newMargin ? `${newMargin}px` : '';
-      syncModel();
-    }
-  }
-
-  // ─── Toolbar builder ──────────────────────────────────────────────────────────
-
-  function buildToolbarItems(groups: VtEditorToolbarGroup[]): (ToolbarItem | null)[] {
-    const items: (ToolbarItem | null)[] = [];
-
-    groups.forEach((group, idx) => {
-      if (idx > 0) items.push({ type: 'separator' });
-
-      switch (group) {
-        case 'history':
-          items.push(
-            {
-              type: 'button',
-              id: 'undo',
-              tooltip: t(LOCALE_KEYS.EDITOR_UNDO),
-              iconName: TOOLBAR_ICONS.undo,
-              action: () => exec('undo'),
-            },
-            {
-              type: 'button',
-              id: 'redo',
-              tooltip: t(LOCALE_KEYS.EDITOR_REDO),
-              iconName: TOOLBAR_ICONS.redo,
-              action: () => exec('redo'),
-            }
-          );
-          break;
-
-        case 'format':
-          items.push(
-            {
-              type: 'button',
-              id: 'bold',
-              tooltip: t(LOCALE_KEYS.EDITOR_BOLD),
-              iconName: TOOLBAR_ICONS.bold,
-              action: () => exec('bold'),
-              activeCheck: () => isActive('bold'),
-            },
-            {
-              type: 'button',
-              id: 'italic',
-              tooltip: t(LOCALE_KEYS.EDITOR_ITALIC),
-              iconName: TOOLBAR_ICONS.italic,
-              action: () => exec('italic'),
-              activeCheck: () => isActive('italic'),
-            },
-            {
-              type: 'button',
-              id: 'underline',
-              tooltip: t(LOCALE_KEYS.EDITOR_UNDERLINE),
-              iconName: TOOLBAR_ICONS.underline,
-              action: () => exec('underline'),
-              activeCheck: () => isActive('underline'),
-            },
-            {
-              type: 'button',
-              id: 'strikethrough',
-              tooltip: t(LOCALE_KEYS.EDITOR_STRIKETHROUGH),
-              iconName: TOOLBAR_ICONS.strikethrough,
-              action: () => exec('strikethrough'),
-              activeCheck: () => isActive('strikeThrough'),
-            }
-          );
-          break;
-
-        case 'script':
-          items.push(
-            {
-              type: 'button',
-              id: 'subscript',
-              tooltip: t(LOCALE_KEYS.EDITOR_SUBSCRIPT),
-              iconName: TOOLBAR_ICONS.subscript,
-              action: () => exec('subscript'),
-              activeCheck: () => isActive('subscript'),
-            },
-            {
-              type: 'button',
-              id: 'superscript',
-              tooltip: t(LOCALE_KEYS.EDITOR_SUPERSCRIPT),
-              iconName: TOOLBAR_ICONS.superscript,
-              action: () => exec('superscript'),
-              activeCheck: () => isActive('superscript'),
-            }
-          );
-          break;
-
-        case 'heading':
-          items.push({ type: 'select', id: 'heading' });
-          break;
-
-        case 'fontName':
-          items.push({ type: 'select', id: 'fontName' });
-          break;
-
-        case 'foreColor':
-          items.push({ type: 'select', id: 'foreColor' });
-          break;
-
-        case 'align':
-          items.push(
-            {
-              type: 'button',
-              id: 'alignLeft',
-              tooltip: t(LOCALE_KEYS.EDITOR_ALIGN_LEFT),
-              iconName: TOOLBAR_ICONS.alignLeft,
-              action: () => exec('justifyLeft'),
-              activeCheck: () => isActive('justifyLeft'),
-            },
-            {
-              type: 'button',
-              id: 'alignCenter',
-              tooltip: t(LOCALE_KEYS.EDITOR_ALIGN_CENTER),
-              iconName: TOOLBAR_ICONS.alignCenter,
-              action: () => exec('justifyCenter'),
-              activeCheck: () => isActive('justifyCenter'),
-            },
-            {
-              type: 'button',
-              id: 'alignRight',
-              tooltip: t(LOCALE_KEYS.EDITOR_ALIGN_RIGHT),
-              iconName: TOOLBAR_ICONS.alignRight,
-              action: () => exec('justifyRight'),
-              activeCheck: () => isActive('justifyRight'),
-            },
-            {
-              type: 'button',
-              id: 'alignJustify',
-              tooltip: t(LOCALE_KEYS.EDITOR_ALIGN_JUSTIFY),
-              iconName: TOOLBAR_ICONS.alignJustify,
-              action: () => exec('justifyFull'),
-              activeCheck: () => isActive('justifyFull'),
-            }
-          );
-          break;
-
-        case 'list':
-          items.push(
-            {
-              type: 'button',
-              id: 'orderedList',
-              tooltip: t(LOCALE_KEYS.EDITOR_ORDERED_LIST),
-              iconName: TOOLBAR_ICONS.orderedList,
-              action: () => exec('insertOrderedList'),
-              activeCheck: () => isActive('insertOrderedList'),
-            },
-            {
-              type: 'button',
-              id: 'unorderedList',
-              tooltip: t(LOCALE_KEYS.EDITOR_UNORDERED_LIST),
-              iconName: TOOLBAR_ICONS.unorderedList,
-              action: () => exec('insertUnorderedList'),
-              activeCheck: () => isActive('insertUnorderedList'),
-            }
-          );
-          break;
-
-        case 'indent':
-          items.push(
-            {
-              type: 'button',
-              id: 'indent',
-              tooltip: t(LOCALE_KEYS.EDITOR_INDENT),
-              iconName: TOOLBAR_ICONS.indent,
-              action: () => handleIndent('indent'),
-            },
-            {
-              type: 'button',
-              id: 'outdent',
-              tooltip: t(LOCALE_KEYS.EDITOR_OUTDENT),
-              iconName: TOOLBAR_ICONS.outdent,
-              action: () => handleIndent('outdent'),
-            }
-          );
-          break;
-
-        case 'link':
-          items.push({
-            type: 'button',
-            id: 'link',
-            tooltip: t(LOCALE_KEYS.EDITOR_INSERT_LINK),
-            iconName: TOOLBAR_ICONS.link,
-            action: openLinkDialog,
-          });
-          break;
-
-        case 'image':
-          items.push({
-            type: 'button',
-            id: 'image',
-            tooltip: t(LOCALE_KEYS.EDITOR_INSERT_IMAGE),
-            iconName: TOOLBAR_ICONS.image,
-            action: openImageDialog,
-          });
-          break;
-
-        case 'blockquote':
-          items.push({
-            type: 'button',
-            id: 'blockquote',
-            tooltip: t(LOCALE_KEYS.EDITOR_BLOCKQUOTE),
-            iconName: TOOLBAR_ICONS.blockquote,
-            action: () => applyHeading('blockquote'),
-          });
-          break;
-
-        case 'clear':
-          items.push({
-            type: 'button',
-            id: 'clear',
-            tooltip: t(LOCALE_KEYS.EDITOR_CLEAR_FORMAT),
-            iconName: TOOLBAR_ICONS.clearFormat,
-            action: () => exec('removeFormat'),
-          });
-          break;
-
-        case 'html':
-          items.push({
-            type: 'button',
-            id: 'html',
-            tooltip: t(LOCALE_KEYS.EDITOR_HTML_SOURCE),
-            iconName: TOOLBAR_ICONS.html,
-            action: toggleHtmlMode,
-            activeCheck: () => isHtmlMode.value,
-          });
-          break;
-      }
-    });
-
-    return items;
-  }
-
-  const toolbarItems = computed(() => buildToolbarItems(props.toolbar));
-  const selectionTick = ref(0);
-
-  function onSelectionChange(): void {
-    if (isFocused.value) selectionTick.value++;
-  }
-
-  function getItemActive(item: ToolbarItem): boolean {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    selectionTick.value;
-    return item.activeCheck?.() ?? false;
-  }
-
-  // ─── HTML source mode ─────────────────────────────────────────────────────────
-
-  function toggleHtmlMode(): void {
-    if (!editorRef.value) return;
-    if (!isHtmlMode.value) {
-      htmlSourceValue.value = editorRef.value.innerHTML;
-      isHtmlMode.value = true;
-      nextTick(() => htmlSourceRef.value?.focus());
-    } else {
-      isHtmlMode.value = false;
-      nextTick(() => {
-        if (editorRef.value) {
-          editorRef.value.innerHTML = customSanitizeHtml(htmlSourceValue.value);
-          syncModel();
-          editorRef.value.focus();
-        }
-      });
-    }
-  }
-
-  function onHtmlSourceInput(): void {
-    syncModel(htmlSourceValue.value);
-  }
-
-  // ─── Link dialog ──────────────────────────────────────────────────────────────
-
-  function saveSelection(): void {
-    const sel = window.getSelection();
-    if (sel && sel.rangeCount > 0) {
-      savedRange = sel.getRangeAt(0).cloneRange();
-    }
-  }
-
-  function restoreSelection(): void {
-    if (!savedRange) return;
-    const sel = window.getSelection();
-    if (!sel) return;
-    sel.removeAllRanges();
-    sel.addRange(savedRange);
-  }
-
-  function openLinkDialog(): void {
-    saveSelection();
-    const sel = window.getSelection();
-    const text = sel?.toString() ?? '';
-    const anchor = sel?.anchorNode?.parentElement?.closest('a');
-    linkState.value = {
-      visible: true,
-      url: anchor?.getAttribute('href') ?? '',
-      text,
-      openInNewTab: anchor?.getAttribute('target') === '_blank',
-    };
-  }
-
-  function confirmLink(): void {
-    restoreSelection();
-    const { url, text, openInNewTab } = linkState.value;
-    if (!url) {
-      cancelLink();
-      return;
-    }
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.textContent = text || url;
-    if (openInNewTab) a.setAttribute('target', '_blank');
-    a.setAttribute('rel', 'noopener noreferrer');
-
-    const sel = window.getSelection();
-    if (sel && sel.rangeCount > 0 && savedRange) {
-      savedRange.deleteContents();
-      savedRange.insertNode(a);
-    } else {
-      exec('insertHTML', a.outerHTML);
-    }
-    cancelLink();
-    syncModel();
-  }
-
-  function cancelLink(): void {
-    linkState.value = { visible: false, url: '', text: '', openInNewTab: false };
-    savedRange = null;
-  }
-
-  // ─── Image dialog ─────────────────────────────────────────────────────────────
-
-  function openImageDialog(): void {
-    saveSelection();
-    imageState.value = { visible: true, url: '', alt: '' };
-  }
-
-  function confirmImage(): void {
-    restoreSelection();
-    const { url, alt } = imageState.value;
-    if (!url) {
-      cancelImage();
-      return;
-    }
-    exec('insertHTML', `<img src="${url}" alt="${alt}" style="max-width:100%;" />`);
-    cancelImage();
-  }
-
-  function cancelImage(): void {
-    imageState.value = { visible: false, url: '', alt: '' };
-    savedRange = null;
-  }
+  const rootClasses = computed(() => [
+    'vt-editor',
+    {
+      'vt-editor--focused': isFocused.value,
+      'vt-editor--error': hasError.value,
+      'vt-editor--disabled': props.disabled,
+    },
+  ]);
 
   // ─── Editor events ────────────────────────────────────────────────────────────
 
@@ -571,23 +209,16 @@
     }
   }
 
-  // ─── Model sync ───────────────────────────────────────────────────────────────
-
-  function syncModel(overrideHtml?: string): void {
-    const rawHtml = overrideHtml ?? editorRef.value?.innerHTML ?? '';
-    const cleanHtml = customSanitizeHtml(rawHtml);
-    emit('update:modelValue', cleanHtml);
-    emit('input', cleanHtml);
-  }
+  // ─── Model watcher ────────────────────────────────────────────────────────────
 
   watch(
     () => props.modelValue,
     newVal => {
-      if (!editorRef.value || isFocused.value) return;
+      // Don't touch the editor while the user is typing or while in HTML mode
+      if (!editorRef.value || isFocused.value || isHtmlMode.value) return;
       if (editorRef.value.innerHTML !== newVal) {
         editorRef.value.innerHTML = newVal ?? '';
       }
-      if (isHtmlMode.value) htmlSourceValue.value = newVal ?? '';
     }
   );
 
@@ -598,6 +229,7 @@
       editorRef.value.innerHTML = customSanitizeHtml(props.modelValue);
     }
     document.addEventListener('selectionchange', onSelectionChange);
+
     nextTick(() => {
       updateScrollButtons();
       const resizeObserver = new ResizeObserver(updateScrollButtons);
@@ -611,7 +243,7 @@
     window.removeEventListener('resize', updateScrollButtons);
   });
 
-  // ─── Exposed public API ───────────────────────────────────────────────────────
+  // ─── Public API ───────────────────────────────────────────────────────────────
 
   function focus(): void {
     editorRef.value?.focus();
@@ -684,6 +316,7 @@
 
 <template>
   <div :class="rootClasses">
+    <!-- ─── Toolbar ───────────────────────────────────────────────────────── -->
     <div v-if="!disabled && toolbarItems.length" class="vt-editor__toolbar-wrapper">
       <button
         v-if="showScrollLeft"
@@ -697,8 +330,10 @@
 
       <div ref="toolbarRef" class="vt-editor__toolbar" @scroll="updateScrollButtons">
         <template v-for="(item, idx) in toolbarItems" :key="idx">
+          <!-- Separator -->
           <span v-if="item?.type === 'separator'" class="vt-editor__toolbar-sep" />
 
+          <!-- Heading dropdown -->
           <VDropdown
             v-else-if="item?.type === 'select' && item.id === 'heading'"
             :max-height="220"
@@ -709,12 +344,13 @@
           >
             <VIcon v-tooltip="t(LOCALE_KEYS.EDITOR_HEADING)" name="tagType" />
             <template #dropdown>
-              <VDropdownItem v-for="h in HEADING_GROUPS" :key="h.value" @click="exec('fontName', h.value)">
+              <VDropdownItem v-for="h in HEADING_GROUPS" :key="h.value" @click="applyBlock(h.value)" @mousedown.prevent>
                 {{ h.label }}
               </VDropdownItem>
             </template>
           </VDropdown>
 
+          <!-- Font dropdown -->
           <VDropdown
             v-else-if="item?.type === 'select' && item.id === 'fontName'"
             :max-height="220"
@@ -725,22 +361,33 @@
           >
             <VIcon v-tooltip="t(LOCALE_KEYS.EDITOR_FONT)" name="fontName" />
             <template #dropdown>
-              <VDropdownItem v-for="f in FONT_GROUPS" :key="f.value" @click="exec('fontName', f.value)">
+              <VDropdownItem v-for="f in FONT_GROUPS" :key="f.value" @click="applyFont(f.value)" @mousedown.prevent>
                 <span :style="{ fontFamily: f.value }">{{ f.label }}</span>
               </VDropdownItem>
             </template>
           </VDropdown>
 
+          <!-- Color pickers (foreground + background) -->
           <template v-else-if="item?.type === 'select' && item.id === 'foreColor'">
             <input
-              :value="currentColor"
+              v-tooltip="t(LOCALE_KEYS.EDITOR_FORE_COLOR)"
+              :value="currentForeColor"
               class="vt-editor__color-picker"
               type="color"
-              @input="onColorInput"
+              @input="onForeColorInput"
+              @mousedown.stop
+            />
+            <input
+              v-tooltip="t(LOCALE_KEYS.EDITOR_BACK_COLOR)"
+              :value="currentBackColor"
+              class="vt-editor__color-picker vt-editor__color-picker--bg"
+              type="color"
+              @input="onBackColorInput"
               @mousedown.stop
             />
           </template>
 
+          <!-- Regular button -->
           <button
             v-else-if="item?.type === 'button'"
             v-tooltip="item?.tooltip"
@@ -750,7 +397,7 @@
             @click="item?.action?.()"
             @mousedown.prevent
           >
-            <VIcon :name="item?.iconName" />
+            <VIcon v-if="item?.iconName" :name="item.iconName" />
           </button>
         </template>
       </div>
@@ -766,6 +413,7 @@
       </button>
     </div>
 
+    <!-- ─── Editor body ───────────────────────────────────────────────────── -->
     <div class="vt-editor__body">
       <div
         v-show="!isHtmlMode"
@@ -788,10 +436,12 @@
       />
     </div>
 
+    <!-- ─── Validation error ──────────────────────────────────────────────── -->
     <div v-if="displayErrorMessage" class="vt-editor__error">
       {{ displayErrorMessage }}
     </div>
 
+    <!-- ─── Link dialog ───────────────────────────────────────────────────── -->
     <VModal
       v-model="linkState.visible"
       :close-on-backdrop-click="false"
@@ -818,9 +468,10 @@
           @keydown.enter="confirmLink"
           @keydown.esc="cancelLink"
         />
-        <label class="vt-editor__dialog-checkbox"
-          ><input v-model="linkState.openInNewTab" type="checkbox" /> {{ t(LOCALE_KEYS.EDITOR_LINK_NEW_TAB) }}</label
-        >
+        <label class="vt-editor__dialog-checkbox">
+          <input v-model="linkState.openInNewTab" type="checkbox" />
+          {{ t(LOCALE_KEYS.EDITOR_LINK_NEW_TAB) }}
+        </label>
       </div>
       <div class="vt-modal__footer">
         <VButton @click="cancelLink">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
@@ -828,6 +479,7 @@
       </div>
     </VModal>
 
+    <!-- ─── Image dialog ──────────────────────────────────────────────────── -->
     <VModal
       v-model="imageState.visible"
       :close-on-backdrop-click="false"
