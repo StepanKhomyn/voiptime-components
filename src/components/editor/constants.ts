@@ -5,7 +5,7 @@ export const TOOLBAR_ICONS: Record<string, IconName> = {
   redo: 'redo',
   bold: 'textBold',
   italic: 'textItalic',
-  underline: 'textUndeline',
+  underline: 'textUnderline',
   strikethrough: 'textStrikethrough',
   subscript: 'subscript',
   superscript: 'superscript',

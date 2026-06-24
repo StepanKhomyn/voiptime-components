@@ -467,7 +467,7 @@ export const icons = {
   textBold: TextBoldIcon,
   textItalic: TextItalicIcon,
   textStrikethrough: TextStrikethroughIcon,
-  textUndeline: TextUnderlineIcon,
+  textUnderline: TextUnderlineIcon,
   undo: UndoIcon,
   unorderedList: UnorderedListIcon,
 

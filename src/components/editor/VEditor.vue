@@ -397,7 +397,7 @@
             @click="item?.action?.()"
             @mousedown.prevent
           >
-            <VIcon :name="item?.iconName" />
+            <VIcon v-if="item?.iconName" :name="item.iconName" />
           </button>
         </template>
       </div>
