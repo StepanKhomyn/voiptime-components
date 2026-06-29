@@ -212,3 +212,33 @@
   min-height: 0;
   overflow: hidden;
 }
+
+// ── Form primitives ───────────────────────────────────────────────────────────
+
+// Секція з floating title (fieldset-паттерн)
+.vt-fieldset {
+  position: relative;
+  border: 1px solid var(--color-gray-5);
+  border-radius: var(--radius-main);
+  padding: var(--vt-padding-lg) var(--vt-padding-base) var(--vt-padding-base);
+  margin-bottom: var(--vt-gap-base);
+
+  &__title {
+    position: absolute;
+    top: -10px;
+    left: 40px;
+    padding: 0 var(--vt-padding-sm);
+    background: #fff;
+    font-weight: 500;
+    color: var(--color-primary-main);
+    font-size: var(--font-size-sm);
+  }
+
+  &--invalid {
+    border-color: var(--color-danger-main);
+
+    .vt-fieldset__title {
+      color: var(--color-danger-main);
+    }
+  }
+}
