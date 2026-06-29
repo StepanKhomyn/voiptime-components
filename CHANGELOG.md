@@ -1,3 +1,10 @@
+## [1.21.84](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.83...v1.21.84) (2026-06-29)
+
+
+### Bug Fixes
+
+* add fieldset styles ([00a16b6](https://github.com/StepanKhomyn/voiptime-components/commit/00a16b627fb8bda470d8a0e6279445007b6b58ed))
+
 ## [1.21.83](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.82...v1.21.83) (2026-06-24)
 
 
