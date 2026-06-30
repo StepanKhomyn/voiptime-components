@@ -1,3 +1,10 @@
+## [1.21.87](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.86...v1.21.87) (2026-06-30)
+
+
+### Bug Fixes
+
+* add value style in page scss ([f122258](https://github.com/StepanKhomyn/voiptime-components/commit/f12225842ca36273e765efe96ac77990946f7127))
+
 ## [1.21.86](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.85...v1.21.86) (2026-06-30)
 
 
