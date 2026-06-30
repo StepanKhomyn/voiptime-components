@@ -1,3 +1,10 @@
+## [1.21.88](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.87...v1.21.88) (2026-06-30)
+
+
+### Bug Fixes
+
+* add vertical item style in page scss ([22e4935](https://github.com/StepanKhomyn/voiptime-components/commit/22e493558d91f73f8b5fb55eff0c5158e861f0b6))
+
 ## [1.21.87](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.86...v1.21.87) (2026-06-30)
 
 
