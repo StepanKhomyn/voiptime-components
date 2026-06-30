@@ -1,3 +1,11 @@
+## [1.21.89](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.88...v1.21.89) (2026-06-30)
+
+
+### Bug Fixes
+
+* add plain item style in page scss ([ee7d139](https://github.com/StepanKhomyn/voiptime-components/commit/ee7d139b8aed4fb4422ed2e46a83a8aad80f8cf8))
+* add здфшт item style in page scss ([f1d2915](https://github.com/StepanKhomyn/voiptime-components/commit/f1d291580f35a6b4af6d046a82bfc0377ca7e2f0))
+
 ## [1.21.88](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.87...v1.21.88) (2026-06-30)
 
 
