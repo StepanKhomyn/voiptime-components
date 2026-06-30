@@ -152,6 +152,17 @@
           align-items: center;
           padding: 0 var(--vt-padding-lg) var(--vt-padding-base);
 
+          // Модифікатор: лейбл над контролом замість збоку
+          &--vertical {
+            flex-direction: column;
+            align-items: flex-start;
+
+            > label {
+              width: 100%;
+              margin-bottom: var(--vt-gap-sm, 4px);
+            }
+          }
+
           > label {
             width: 250px;
             font-size: var(--font-size-sm);
