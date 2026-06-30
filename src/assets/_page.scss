@@ -172,6 +172,21 @@
               color: var(--color-danger-main);
             }
           }
+
+          &-value {
+            width: 100%;
+            min-height: 36px;
+            padding: var(--padding-button);
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            font-size: var(--font-size-sm);
+            font-weight: var(--font-weight-medium);
+            color: var(--color-gray-1);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
         }
 
         // Рядок всередині body без label (для inline-форм типу caller-id)
