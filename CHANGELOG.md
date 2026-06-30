@@ -1,3 +1,10 @@
+## [1.21.86](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.85...v1.21.86) (2026-06-30)
+
+
+### Bug Fixes
+
+* fix span in page scss ([161cedf](https://github.com/StepanKhomyn/voiptime-components/commit/161cedf72435bf195cc37eb101a7790c397b46b8))
+
 ## [1.21.85](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.84...v1.21.85) (2026-06-30)
 
 
