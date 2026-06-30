@@ -1,3 +1,10 @@
+## [1.21.85](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.84...v1.21.85) (2026-06-30)
+
+
+### Bug Fixes
+
+* fix label in page scss ([da2971b](https://github.com/StepanKhomyn/voiptime-components/commit/da2971bc96d1645190b7df9d565e170723c2b292))
+
 ## [1.21.84](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.83...v1.21.84) (2026-06-29)
 
 
