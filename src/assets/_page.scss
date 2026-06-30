@@ -198,7 +198,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
 
-            // Без "коробки" інпута — суцільний рядок тексту,
+            // Без "коробки" інпута — суцільний рядок тексту
             &--plain {
               min-height: auto;
               padding: 0;
