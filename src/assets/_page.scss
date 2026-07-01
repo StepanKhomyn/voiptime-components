@@ -152,17 +152,6 @@
           align-items: center;
           padding: 0 var(--vt-padding-lg) var(--vt-padding-base);
 
-          // Модифікатор: лейбл над контролом замість збоку
-          &--vertical {
-            flex-direction: column;
-            align-items: flex-start;
-
-            > label {
-              width: 100%;
-              margin-bottom: var(--vt-gap-sm, 4px);
-            }
-          }
-
           > label {
             width: 250px;
             font-size: var(--font-size-sm);
@@ -181,27 +170,6 @@
 
             &.vt-label-error {
               color: var(--color-danger-main);
-            }
-          }
-
-          &-item-value {
-            width: 100%;
-            min-height: 36px;
-            padding: var(--padding-button);
-            box-sizing: border-box;
-            display: flex;
-            align-items: center;
-            font-size: var(--font-size-sm);
-            font-weight: var(--font-weight-medium);
-            color: var(--color-gray-1);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-
-            // Без "коробки" інпута — суцільний рядок тексту
-            &--plain {
-              min-height: auto;
-              padding: 0;
             }
           }
         }
