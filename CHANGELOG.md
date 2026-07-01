@@ -1,3 +1,10 @@
+## [1.21.93](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.92...v1.21.93) (2026-07-01)
+
+
+### Bug Fixes
+
+* change styles in page.scss ([eacec8e](https://github.com/StepanKhomyn/voiptime-components/commit/eacec8ed5289364cd008fe917f28b3dd0584fd56))
+
 ## [1.21.92](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.91...v1.21.92) (2026-07-01)
 
 
