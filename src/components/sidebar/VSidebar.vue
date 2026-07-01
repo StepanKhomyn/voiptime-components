@@ -52,9 +52,9 @@
 </script>
 
 <template>
-  <aside class="hub-sidebar" :class="{ collapsed }">
-    <nav class="hub-sidebar-nav">
-      <ul class="hub-sidebar-list">
+  <aside class="vt-hub-sidebar" :class="{ collapsed }">
+    <nav class="vt-hub-sidebar-nav">
+      <ul class="vt-hub-sidebar-list">
         <SidebarItem
           v-for="item in items"
           :key="item.i18n"
@@ -65,7 +65,7 @@
         />
       </ul>
     </nav>
-    <div @click="toggleCollapse" class="hub-sidebar-footer" :class="{ collapsed }">
+    <div @click="toggleCollapse" class="vt-hub-sidebar-footer" :class="{ collapsed }">
       <VIcon v-if="collapsed" name="arrowRight"></VIcon>
       <!--      <span v-if="!collapsed" class="hub-sidebar-footer__label">Згорнути меню</span>-->
       <VIcon v-if="!collapsed" name="arrowLeft"></VIcon>

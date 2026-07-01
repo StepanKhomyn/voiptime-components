@@ -107,7 +107,7 @@
   };
 
   const handleClick = () => {
-    // Якщо collapsed, як у HubSpot — відкриваємо popout по кліку
+    // Якщо collapsed, як у vt-hubSpot — відкриваємо popout по кліку
     if (props.collapsed && props.item.children) {
       showSub.value = true;
       positionSubmenu();
@@ -127,22 +127,22 @@
 </script>
 
 <template>
-  <li class="hub-item" @mouseenter="openSubmenu" @mouseleave="closeSubmenu" ref="itemEl">
+  <li class="vt-hub-item" @mouseenter="openSubmenu" @mouseleave="closeSubmenu" ref="itemEl">
     <!-- MAIN ROW -->
-    <div class="hub-item-main" @click="handleClick" :class="{ collapsed, active: isActive }">
-      <VIcon class="hub-item-icon" :name="(item.icon ?? 'empty') as IconName" width="24" height="24" />
-      <span v-if="!collapsed" class="hub-item-label">{{ item.i18n }}</span>
-      <VIcon v-if="item.children && !collapsed" class="hub-item-arrow" name="arrowRight"></VIcon>
+    <div class="vt-hub-item-main" @click="handleClick" :class="{ collapsed, active: isActive }">
+      <VIcon class="vt-hub-item-icon" :name="(item.icon ?? 'empty') as IconName" width="24" height="24" />
+      <span v-if="!collapsed" class="vt-hub-item-label">{{ item.i18n }}</span>
+      <VIcon v-if="item.children && !collapsed" class="vt-hub-item-arrow" name="arrowRight"></VIcon>
     </div>
 
     <!-- DIVIDER -->
-    <div class="hub-item-divider"></div>
+    <div class="vt-hub-item-divider"></div>
 
     <!-- POPOUT SUBMENU -->
     <teleport to="body">
       <div
         v-if="showSub"
-        class="hub-submenu"
+        class="vt-hub-submenu"
         :style="submenuStyle"
         @mouseenter="
           hoveringSub = true;
@@ -153,18 +153,18 @@
           closeSubmenu();
         "
       >
-        <ul class="hub-submenu-list">
+        <ul class="vt-hub-submenu-list">
           <li v-if="collapsed"
-            ><span class="hub-submenu-parent-label">{{ item.i18n }}</span></li
+            ><span class="vt-hub-submenu-parent-label">{{ item.i18n }}</span></li
           >
           <li
             v-for="child in item.children"
             :key="child.i18n"
-            class="hub-submenu-item"
+            class="vt-hub-submenu-item"
             :class="{ active: isChildActive(child) }"
             @click="navigate(child)"
           >
-            <span class="hub-submenu-label">{{ child.i18n }}</span>
+            <span class="vt-hub-submenu-label">{{ child.i18n }}</span>
           </li>
         </ul>
       </div>
