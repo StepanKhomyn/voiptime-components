@@ -1,3 +1,10 @@
+## [1.21.90](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.89...v1.21.90) (2026-07-01)
+
+
+### Bug Fixes
+
+* remove unnecessary styles in page scss ([733b593](https://github.com/StepanKhomyn/voiptime-components/commit/733b593e7e02eef33bc744245a2c9a48262604ad))
+
 ## [1.21.89](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.88...v1.21.89) (2026-06-30)
 
 
