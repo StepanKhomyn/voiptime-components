@@ -1,3 +1,10 @@
+## [1.21.92](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.91...v1.21.92) (2026-07-01)
+
+
+### Bug Fixes
+
+* change sidebar styles naming add vt- ([670394c](https://github.com/StepanKhomyn/voiptime-components/commit/670394ca7da72b689e146dc7c4e3b36caf120cda))
+
 ## [1.21.91](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.90...v1.21.91) (2026-07-01)
 
 
