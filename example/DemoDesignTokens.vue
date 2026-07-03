@@ -1,5 +1,6 @@
 <script setup>
   import { ref } from 'vue';
+  import ClassesTab from './demo-components/ClassesTab.vue';
 
   const activeGroup = ref('colors');
 
@@ -7,6 +8,7 @@
     { key: 'colors', label: 'Кольори' },
     { key: 'typography', label: 'Типографіка' },
     { key: 'spacing', label: 'Відступи' },
+    { key: 'classes', label: 'Класи' },
     { key: 'tokens', label: 'CSS Змінні' },
   ];
 
@@ -334,6 +336,9 @@
           </div>
         </div>
       </div>
+    </div>
+    <div v-if="activeGroup === 'classes'">
+      <ClassesTab />
     </div>
   </div>
 </template>
