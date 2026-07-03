@@ -1,3 +1,10 @@
+## [1.21.94](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.93...v1.21.94) (2026-07-03)
+
+
+### Bug Fixes
+
+* add a description of a page.scss classes demo version ([6de2cd3](https://github.com/StepanKhomyn/voiptime-components/commit/6de2cd32ffb34bf174551f1eddb682aa12043bc2))
+
 ## [1.21.93](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.92...v1.21.93) (2026-07-01)
 
 
