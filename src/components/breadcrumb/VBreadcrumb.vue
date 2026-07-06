@@ -26,7 +26,7 @@
   <nav :aria-label="ariaLabel" class="vt-breadcrumb">
     <ol class="vt-breadcrumb__list">
       <li v-if="goBack" class="vt-breadcrumb__back" @click="handleBack">
-        <VIcon name="arrowLeft" />
+        <VIcon :width="24" :height="24" name="arrowLeft" />
       </li>
       <slot />
     </ol>
