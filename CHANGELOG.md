@@ -1,3 +1,10 @@
+## [1.21.97](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.96...v1.21.97) (2026-07-07)
+
+
+### Bug Fixes
+
+* remove pagination padding ([86ebf02](https://github.com/StepanKhomyn/voiptime-components/commit/86ebf02233a6cfb108c44960fd58ae54fe943eff))
+
 ## [1.21.96](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.95...v1.21.96) (2026-07-07)
 
 
