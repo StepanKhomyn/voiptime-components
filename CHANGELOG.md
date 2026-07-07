@@ -1,3 +1,10 @@
+## [1.21.98](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.97...v1.21.98) (2026-07-07)
+
+
+### Bug Fixes
+
+* remove paddings from tags ([70f537c](https://github.com/StepanKhomyn/voiptime-components/commit/70f537c01fc1c3d1626e34003f2da7318342a0b1))
+
 ## [1.21.97](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.96...v1.21.97) (2026-07-07)
 
 
