@@ -19,8 +19,8 @@ import LockIcon from './actions/LockIcon.vue';
 import LogOutIcon from './actions/LogOutIcon.vue';
 import PaperClipIcon from './actions/PaperClipIcon.vue';
 import PlusRoundIcon from './actions/PlusRoundIcon.vue';
-import PromptIcon from './actions/PromptIcon.vue';
 import PrompterIcon from './actions/PrompterIcon.vue';
+import PromptIcon from './actions/PromptIcon.vue';
 import ReplyIcon from './actions/ReplyIcon.vue';
 import SaveIcon from './actions/SaveIcon.vue';
 import SettingsFilledIcon from './actions/SettingsFilledIcon.vue';
@@ -151,6 +151,8 @@ import TextUnderlineIcon from './editor/TextUnderlineIcon.vue';
 import UndoIcon from './editor/UndoIcon.vue';
 import UnorderedListIcon from './editor/UnorderedListIcon.vue';
 import EllipseGreenIcon from './ellipses/EllipseGreenIcon.vue';
+import EllipseRedIcon from './ellipses/EllipseRedIcon.vue';
+import EllipseWhiteIcon from './ellipses/EllipseWhiteIcon.vue';
 import FieldBooleanIcon from './field-types/FieldBooleanIcon.vue';
 import FieldEnumIcon from './field-types/FieldEnumIcon.vue';
 import FieldFKIcon from './field-types/FieldFKIcon.vue';
@@ -229,6 +231,7 @@ import MoveToIvrIcon from './others/MoveToIvrIcon.vue';
 import NodeTreeIcon from './others/NodeTreeIcon.vue';
 import NotificationIcon from './others/NotificationIcon.vue';
 import NotificationReadIcon from './others/NotificationReadIcon.vue';
+import operatorIcon from './others/operatorIcon.vue';
 import OperatorSkillIcon from './others/OperatorSkillIcon.vue';
 import PlayFileIcon from './others/PlayFileIcon.vue';
 import PlusIcon from './others/PlusIcon.vue';
@@ -259,7 +262,6 @@ import VoiceMailIcon from './others/VoiceMailIcon.vue';
 import WaitIcon from './others/WaitIcon.vue';
 import WeekIcon from './others/WeekIcon.vue';
 import WindowStartIcon from './others/WindowStartIcon.vue';
-import operatorIcon from './others/operatorIcon.vue';
 import CircleDownloadIcon from './player/CircleDownloadIcon.vue';
 import PauseIcon from './player/PauseIcon.vue';
 import StartIcon from './player/StartIcon.vue';
@@ -281,8 +283,8 @@ import CrmIcon from './sidebar/CrmIcon.vue';
 import DashboardIcon from './sidebar/DashboardIcon.vue';
 import GroupIcon from './sidebar/GroupIcon.vue';
 import HomeIcon from './sidebar/HomeIcon.vue';
-import ITRIcon from './sidebar/ITRIcon.vue';
 import IntegrationIcon from './sidebar/IntegrationIcon.vue';
+import ITRIcon from './sidebar/ITRIcon.vue';
 import PbxIcon from './sidebar/PbxIcon.vue';
 import ScenariosIcon from './sidebar/ScenariosIcon.vue';
 import SettingsIcon from './sidebar/SettingsIcon.vue';
@@ -325,8 +327,8 @@ export const icons = {
   logOut: LogOutIcon,
   paperClip: PaperClipIcon,
   plusRound: PlusRoundIcon,
-  prompt: PromptIcon,
   prompter: PrompterIcon,
+  prompt: PromptIcon,
   reply: ReplyIcon,
   save: SaveIcon,
   settingsFilled: SettingsFilledIcon,
@@ -473,6 +475,8 @@ export const icons = {
 
   // ellipses icons
   ellipseGreen: EllipseGreenIcon,
+  ellipseRed: EllipseRedIcon,
+  ellipseWhite: EllipseWhiteIcon,
 
   // field-types icons
   fieldBoolean: FieldBooleanIcon,
@@ -563,6 +567,7 @@ export const icons = {
   nodeTree: NodeTreeIcon,
   notification: NotificationIcon,
   notificationRead: NotificationReadIcon,
+  operator: operatorIcon,
   operatorSkill: OperatorSkillIcon,
   playFile: PlayFileIcon,
   plus: PlusIcon,
@@ -593,7 +598,6 @@ export const icons = {
   wait: WaitIcon,
   week: WeekIcon,
   windowStart: WindowStartIcon,
-  operator: operatorIcon,
 
   // player icons
   circleDownload: CircleDownloadIcon,
@@ -623,8 +627,8 @@ export const icons = {
   dashboard: DashboardIcon,
   group: GroupIcon,
   home: HomeIcon,
-  iTR: ITRIcon,
   integration: IntegrationIcon,
+  iTR: ITRIcon,
   pbx: PbxIcon,
   scenarios: ScenariosIcon,
   settings: SettingsIcon,
