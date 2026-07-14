@@ -1,3 +1,10 @@
+## [1.21.100](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.99...v1.21.100) (2026-07-13)
+
+
+### Bug Fixes
+
+* Фільтрування по телемаркетингу ([2eb217e](https://github.com/StepanKhomyn/voiptime-components/commit/2eb217e5dca94dd515934aed7b318da5c08776d1))
+
 ## [1.21.99](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.98...v1.21.99) (2026-07-08)
 
 
