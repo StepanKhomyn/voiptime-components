@@ -68,10 +68,10 @@ import ChatAttentionIcon from './chat/ChatAttentionIcon.vue';
 import ChatBlockIcon from './chat/ChatBlockIcon.vue';
 import ChatCheckIcon from './chat/ChatCheckIcon.vue';
 import ChatDabbleIcon from './chat/ChatDabbleIcon.vue';
-import ChatDeclineIcon from './chat/ChatDeclineIcon.vue';
 import ChatDeleteIcon from './chat/ChatDeleteIcon.vue';
 import ChatFlashIcon from './chat/ChatFlashIcon.vue';
 import ChatForwardIcon from './chat/ChatForwardIcon.vue';
+import ChatIdentificationIcon from './chat/ChatIdentificationIcon.vue';
 import ChatInIcon from './chat/ChatInIcon.vue';
 import ChatOutIcon from './chat/ChatOutIcon.vue';
 import ChatRemoveIcon from './chat/ChatRemoveIcon.vue';
@@ -373,10 +373,10 @@ export const icons = {
   chatBlock: ChatBlockIcon,
   chatCheck: ChatCheckIcon,
   chatDabble: ChatDabbleIcon,
-  chatDecline: ChatDeclineIcon,
   chatDelete: ChatDeleteIcon,
   chatFlash: ChatFlashIcon,
   chatForward: ChatForwardIcon,
+  chatIdentification: ChatIdentificationIcon,
   chatIn: ChatInIcon,
   chatOut: ChatOutIcon,
   chatRemove: ChatRemoveIcon,
