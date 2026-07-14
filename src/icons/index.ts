@@ -68,6 +68,7 @@ import ChatAttentionIcon from './chat/ChatAttentionIcon.vue';
 import ChatBlockIcon from './chat/ChatBlockIcon.vue';
 import ChatCheckIcon from './chat/ChatCheckIcon.vue';
 import ChatDabbleIcon from './chat/ChatDabbleIcon.vue';
+import ChatDeclineIcon from './chat/ChatDeclineIcon.vue';
 import ChatDeleteIcon from './chat/ChatDeleteIcon.vue';
 import ChatFlashIcon from './chat/ChatFlashIcon.vue';
 import ChatForwardIcon from './chat/ChatForwardIcon.vue';
@@ -95,18 +96,13 @@ import ClientLocationIcon from './client/ClientLocationIcon.vue';
 import ClientSocialIcon from './client/ClientSocialIcon.vue';
 import ClientTaskIcon from './client/ClientTaskIcon.vue';
 import ClientVoiceChannelIcon from './client/ClientVoiceChannelIcon.vue';
-import CloseReplyIcon from './converstion/CloseReplyIcon.vue';
-import ConversationAcceptButtonIcon from './converstion/ConversationAcceptButtonIcon.vue';
 import ConversationAcceptIcon from './converstion/ConversationAcceptIcon.vue';
 import ConversationAudioIcon from './converstion/ConversationAudioIcon.vue';
 import ConversationBotIcon from './converstion/ConversationBotIcon.vue';
-import ConversationCancelChatIcon from './converstion/ConversationCancelChatIcon.vue';
-import ConversationDeclineIcon from './converstion/ConversationDeclineIcon.vue';
 import ConversationDismissIcon from './converstion/ConversationDismissIcon.vue';
 import ConversationEmojisIcon from './converstion/ConversationEmojisIcon.vue';
 import ConversationHashIcon from './converstion/ConversationHashIcon.vue';
 import ConversationJoinMemberIcon from './converstion/ConversationJoinMemberIcon.vue';
-import ConversationLeftRedIcon from './converstion/ConversationLeftRedIcon.vue';
 import ConversationPinIcon from './converstion/ConversationPinIcon.vue';
 import ConversationQuickAnswerIcon from './converstion/ConversationQuickAnswerIcon.vue';
 import ConversationRedirectIcon from './converstion/ConversationRedirectIcon.vue';
@@ -115,14 +111,12 @@ import ConversationTopPanelIcon from './converstion/ConversationTopPanelIcon.vue
 import ConversationUnPinIcon from './converstion/ConversationUnPinIcon.vue';
 import ConversationVideoIcon from './converstion/ConversationVideoIcon.vue';
 import MessageDocumentIcon from './converstion/MessageDocumentIcon.vue';
-import MessageEditBlueIcon from './converstion/MessageEditBlueIcon.vue';
 import MessageEditIcon from './converstion/MessageEditIcon.vue';
-import MessageReplyBlueIcon from './converstion/MessageReplyBlueIcon.vue';
 import MessageReplyIcon from './converstion/MessageReplyIcon.vue';
 import MessageStatusDeliveredIcon from './converstion/MessageStatusDeliveredIcon.vue';
 import AzerbaijanIcon from './country/AzerbaijanIcon.vue';
 import KazakhstanIcon from './country/KazakhstanIcon.vue';
-import PolanIcon from './country/PolanIcon.vue';
+import PolandIcon from './country/PolandIcon.vue';
 import TerroristIcon from './country/TerroristIcon.vue';
 import ThailandIcon from './country/ThailandIcon.vue';
 import UkraineIcon from './country/UkraineIcon.vue';
@@ -150,9 +144,7 @@ import TextStrikethroughIcon from './editor/TextStrikethroughIcon.vue';
 import TextUnderlineIcon from './editor/TextUnderlineIcon.vue';
 import UndoIcon from './editor/UndoIcon.vue';
 import UnorderedListIcon from './editor/UnorderedListIcon.vue';
-import EllipseGreenIcon from './ellipses/EllipseGreenIcon.vue';
-import EllipseRedIcon from './ellipses/EllipseRedIcon.vue';
-import EllipseWhiteIcon from './ellipses/EllipseWhiteIcon.vue';
+import EllipseIcon from './ellipses/EllipseIcon.vue';
 import FieldBooleanIcon from './field-types/FieldBooleanIcon.vue';
 import FieldEnumIcon from './field-types/FieldEnumIcon.vue';
 import FieldFKIcon from './field-types/FieldFKIcon.vue';
@@ -208,7 +200,6 @@ import CallAcdIcon from './others/CallAcdIcon.vue';
 import CallQualityBlockIcon from './others/CallQualityBlockIcon.vue';
 import CallQualityTemplateIcon from './others/CallQualityTemplateIcon.vue';
 import CallToOperatorIcon from './others/CallToOperatorIcon.vue';
-import CheckBoxIcon from './others/CheckBoxIcon.vue';
 import CheckConnectionIcon from './others/CheckConnectionIcon.vue';
 import ConditionIcon from './others/ConditionIcon.vue';
 import ContinueInDialPlanIcon from './others/ContinueInDialPlanIcon.vue';
@@ -382,6 +373,7 @@ export const icons = {
   chatBlock: ChatBlockIcon,
   chatCheck: ChatCheckIcon,
   chatDabble: ChatDabbleIcon,
+  chatDecline: ChatDeclineIcon,
   chatDelete: ChatDeleteIcon,
   chatFlash: ChatFlashIcon,
   chatForward: ChatForwardIcon,
@@ -413,18 +405,13 @@ export const icons = {
   clientVoiceChannel: ClientVoiceChannelIcon,
 
   // converstion icons
-  closeReply: CloseReplyIcon,
-  conversationAcceptButton: ConversationAcceptButtonIcon,
   conversationAccept: ConversationAcceptIcon,
   conversationAudio: ConversationAudioIcon,
   conversationBot: ConversationBotIcon,
-  conversationCancelChat: ConversationCancelChatIcon,
-  conversationDecline: ConversationDeclineIcon,
   conversationDismiss: ConversationDismissIcon,
   conversationEmojis: ConversationEmojisIcon,
   conversationHash: ConversationHashIcon,
   conversationJoinMember: ConversationJoinMemberIcon,
-  conversationLeftRed: ConversationLeftRedIcon,
   conversationPin: ConversationPinIcon,
   conversationQuickAnswer: ConversationQuickAnswerIcon,
   conversationRedirect: ConversationRedirectIcon,
@@ -433,16 +420,14 @@ export const icons = {
   conversationUnPin: ConversationUnPinIcon,
   conversationVideo: ConversationVideoIcon,
   messageDocument: MessageDocumentIcon,
-  messageEditBlue: MessageEditBlueIcon,
   messageEdit: MessageEditIcon,
-  messageReplyBlue: MessageReplyBlueIcon,
   messageReply: MessageReplyIcon,
   messageStatusDelivered: MessageStatusDeliveredIcon,
 
   // country icons
   azerbaijan: AzerbaijanIcon,
   kazakhstan: KazakhstanIcon,
-  polan: PolanIcon,
+  poland: PolandIcon,
   terrorist: TerroristIcon,
   thailand: ThailandIcon,
   ukraine: UkraineIcon,
@@ -474,9 +459,7 @@ export const icons = {
   unorderedList: UnorderedListIcon,
 
   // ellipses icons
-  ellipseGreen: EllipseGreenIcon,
-  ellipseRed: EllipseRedIcon,
-  ellipseWhite: EllipseWhiteIcon,
+  ellipse: EllipseIcon,
 
   // field-types icons
   fieldBoolean: FieldBooleanIcon,
@@ -544,7 +527,6 @@ export const icons = {
   callQualityBlock: CallQualityBlockIcon,
   callQualityTemplate: CallQualityTemplateIcon,
   callToOperator: CallToOperatorIcon,
-  checkBox: CheckBoxIcon,
   checkConnection: CheckConnectionIcon,
   condition: ConditionIcon,
   continueInDialPlan: ContinueInDialPlanIcon,

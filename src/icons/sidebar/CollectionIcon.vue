@@ -1,6 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path
       d="M16.902 6.129C18 7.257 18 9.074 18 12.708V14.293C18 17.926 18 19.743 16.902 20.871C15.804 21.999 14.035 22 10.5 22C6.965 22 5.197 22 4.098 20.871C3 19.743 3 17.926 3 14.293V12.708C3 9.074 3 7.258 4.098 6.128C5.197 5 6.964 5 10.5 5C14.036 5 15.803 5 16.902 6.129Z"
       stroke="currentColor"

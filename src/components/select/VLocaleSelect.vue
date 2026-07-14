@@ -48,7 +48,7 @@
       :value="lang.value"
     >
       <div class="vt-language-select__option">
-        <VIcon :name="lang?.icon as IconName" class="vt-language-select__flag"/>
+        <VIcon :name="lang?.icon as IconName" :width="24" :height="24" class="vt-language-select__flag"/>
         <span class="vt-language-select__label">{{ lang.locale }}</span>
       </div>
     </VOption>

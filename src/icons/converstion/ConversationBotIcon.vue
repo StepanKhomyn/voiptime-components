@@ -12,7 +12,7 @@
             <circle cx="20" cy="20" fill="#F2F6F6" r="20"/>
         </mask>
         <g mask="url(#mask0_2861_1436)">
-            <rect fill="#56CCF2" height="50" width="50" x="-9" y="-3.5"/>
+            <rect fill="currentColor" height="50" width="50" x="-9" y="-3.5"/>
         </g>
         <path
                 clip-rule="evenodd"
