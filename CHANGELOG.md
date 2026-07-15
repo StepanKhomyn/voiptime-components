@@ -1,3 +1,10 @@
+## [1.21.104](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.103...v1.21.104) (2026-07-15)
+
+
+### Bug Fixes
+
+* fix modal row padding ([3e32deb](https://github.com/StepanKhomyn/voiptime-components/commit/3e32debed6c27fcdfa1649df27940d4b4791cf98))
+
 ## [1.21.103](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.102...v1.21.103) (2026-07-15)
 
 
