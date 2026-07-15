@@ -12,9 +12,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000; // Базовий z-index, буде перевизначений програмно
+    z-index: 1000;
 
-    // Якщо це не перше модальне вікно, робимо фон менш темним
     &:not(:first-of-type) {
       background-color: rgba(0, 0, 0, 0.2);
     }
@@ -29,7 +28,6 @@
     display: flex;
     flex-direction: column;
 
-    // Додаємо більшу тінь для модальних вікон що знаходяться у стеку
     .vt-modal__backdrop:not(:first-of-type) & {
       box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
     }
@@ -101,14 +99,60 @@
     padding: var(--vt-padding-base);
     padding-bottom: 0;
   }
+
+  &__row {
+    padding: var(--vt-padding-base);
+    line-height: 1.5;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--vt-gap-base);
+
+    &-label {
+      min-width: 30%;
+      width: 30%;
+    }
+
+    &--border {
+      border-bottom: 1px solid var(--color-gray-5);
+    }
+
+    &--gray {
+      background: var(--color-neutral);
+    }
+
+    &-icon-delete {
+      flex-shrink: 0;
+      cursor: pointer;
+      color: var(--color-primary-main);
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    .text-input,
+    .select__dropdown {
+      flex: 1;
+      min-width: 0;
+      gap: 0 !important;
+    }
+
+    .text-input__input {
+      width: 100%;
+      max-width: none !important;
+      min-width: 0 !important;
+    }
+  }
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--vt-gap-base);
+  }
 }
 
-.vt-modal__row {
-  padding: var(--vt-padding-base);
-  line-height: 1.5;
-}
-
-// Анімації для плавного відкриття/закриття
 .vt-modal__backdrop {
   animation: modal-fade-in 0.2s ease-out;
 }
