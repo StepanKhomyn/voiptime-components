@@ -161,7 +161,7 @@ $transition-fast: filter 0.15s ease;
   }
 
   &-icon {
-    @include legend-dot(12px);
+    @include legend-dot(20px);
     display: block;
   }
 
