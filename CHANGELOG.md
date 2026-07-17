@@ -1,3 +1,10 @@
+## [1.21.105](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.104...v1.21.105) (2026-07-17)
+
+
+### Bug Fixes
+
+* fix icons in horizontal bar ([b134ac8](https://github.com/StepanKhomyn/voiptime-components/commit/b134ac8a79d1fe83467f77cba95a60b5cfce6b40))
+
 ## [1.21.104](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.103...v1.21.104) (2026-07-15)
 
 
