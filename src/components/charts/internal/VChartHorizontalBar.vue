@@ -1,6 +1,7 @@
 <script lang="ts" setup>
   import { computed } from 'vue';
   import type { ChartSegment } from '../types';
+  import VIcon from '@/components/icon/VIcon.vue';
 
   const props = defineProps<{
     segments: ChartSegment[];
@@ -37,7 +38,7 @@
 
     <div v-for="(seg, i) in filtered" :key="i" class="vt-chart__bar-item">
       <div class="vt-chart__bar-label">
-        <component :is="seg.icon" v-if="seg.icon" class="vt-chart__bar-icon" />
+        <VIcon v-if="seg.icon" :name="seg.icon" class="vt-chart__bar-icon" />
         <span v-else :style="{ backgroundColor: seg.color }" class="vt-chart__bar-icon" />
       </div>
       <div class="vt-chart__bar-track">
