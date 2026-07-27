@@ -1,6 +1,7 @@
 import type { InjectionKey, Ref } from 'vue';
 
 export type DropdownPlacement = 'bottom' | 'bottom-start' | 'bottom-end' | 'top' | 'top-start' | 'top-end';
+
 export type DropdownTriggerType = 'click' | 'hover';
 
 export interface DropdownProps {
