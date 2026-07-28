@@ -44,7 +44,11 @@ export function useResponsiveFilters(
     const cardRect = manageFormCard.getBoundingClientRect();
 
     // Обчислюємо ширину правих елементів
+
     let rightElementsWidth = 0;
+    if (containerRect.width === 0 || cardRect.width === 0) {
+      return;
+    }
 
     // Кнопки дій (якщо є)
     if (actionsRef.value) {
