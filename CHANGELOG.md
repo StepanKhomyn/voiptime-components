@@ -1,3 +1,12 @@
+## [1.21.107](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.106...v1.21.107) (2026-07-27)
+
+
+### Bug Fixes
+
+* change dropdown command type ([5bcc695](https://github.com/StepanKhomyn/voiptime-components/commit/5bcc695593ba93f531b34a5a3bc26da865d4e7d9))
+* change dropdown command type ([7e78561](https://github.com/StepanKhomyn/voiptime-components/commit/7e78561a831e0ba7c660ef69b6c78eb39cffa283))
+* change dropdown command type ([4e22591](https://github.com/StepanKhomyn/voiptime-components/commit/4e225919af58e0a10a4878b29336ec1aeb25fcf7))
+
 ## [1.21.106](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.105...v1.21.106) (2026-07-17)
 
 
