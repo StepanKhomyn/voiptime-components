@@ -1,3 +1,10 @@
+## [1.21.115](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.114...v1.21.115) (2026-08-03)
+
+
+### Bug Fixes
+
+* register component ([939faf4](https://github.com/StepanKhomyn/voiptime-components/commit/939faf4adc064d8bef0d66a5d3c0175110653996))
+
 ## [1.21.114](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.113...v1.21.114) (2026-08-03)
 
 
