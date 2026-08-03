@@ -31,6 +31,7 @@ import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 import VChart from '@/components/charts/VChart.vue';
 import VInfoBox from '@/components/info-box/VInfoBox.vue';
 import VTransferList from '@/components/transfer-list/VTransferList.vue';
+import VImageFullscreen from '@/components/image-fullscreen/VImageFullscreen.vue';
 import VBreadcrumb from '@/components/breadcrumb/VBreadcrumb.vue';
 import VBreadcrumbItem from '@/components/breadcrumb/VBreadcrumbItem.vue';
 import VAudio from '@/components/audio/VAudio.vue';
@@ -78,6 +79,7 @@ export {
   VChart,
   VInfoBox,
   VTransferList,
+  VImageFullscreen,
   VBreadcrumb,
   VBreadcrumbItem,
   VAudio,
@@ -332,6 +334,7 @@ const VUIPlugin = {
     app.component(`${prefix}Chart`, VChart);
     app.component(`${prefix}InfoBox`, VInfoBox);
     app.component(`${prefix}TransferList`, VTransferList);
+    app.component(`${prefix}ImageFullscreen`, VImageFullscreen);
     app.component(`${prefix}Breadcrumb`, VBreadcrumb);
     app.component(`${prefix}BreadcrumbItem`, VBreadcrumbItem);
     app.component(`${prefix}Audio`, VAudio);
