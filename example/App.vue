@@ -114,7 +114,7 @@
       items: [
         { name: 'Іконки', icon: '🎨', component: DemoIcons },
         { name: 'Empty', icon: '🎨', component: DemoEmpty },
-        { name: 'ImageFullscreen', icon: '🎨', component: DemoImageFullScreen },
+        { name: 'Фото', icon: '🎨', component: DemoImageFullScreen },
         { name: 'Upload', icon: '📤', component: DemoUpload },
         { name: 'Логін', icon: '🔐', component: DemoLogin },
       ],
