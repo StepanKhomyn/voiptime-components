@@ -17,6 +17,15 @@
     gap: var(--vt-gap-base);
   }
 
+  &__list {
+    padding-bottom: 0!important;
+  }
+
+  &__tab {
+    margin-top: auto;
+    background: var(--color-neutral);
+  }
+
   &__label {
     text-wrap: nowrap;
   }
