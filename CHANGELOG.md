@@ -1,3 +1,10 @@
+## [1.21.111](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.110...v1.21.111) (2026-08-03)
+
+
+### Bug Fixes
+
+* add list and tab modificators for pagination ([acdfe51](https://github.com/StepanKhomyn/voiptime-components/commit/acdfe513304a5883b7d6675dcd28a1b18a5c864f))
+
 ## [1.21.110](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.109...v1.21.110) (2026-08-03)
 
 
