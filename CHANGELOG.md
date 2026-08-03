@@ -1,3 +1,10 @@
+## [1.21.117](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.116...v1.21.117) (2026-08-03)
+
+
+### Bug Fixes
+
+* ImageFullScreen fixes ([b5b83ae](https://github.com/StepanKhomyn/voiptime-components/commit/b5b83ae68ecadca2473253504226df3a4092a97f))
+
 ## [1.21.116](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.115...v1.21.116) (2026-08-03)
 
 
