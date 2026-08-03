@@ -1,3 +1,10 @@
+## [1.21.116](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.115...v1.21.116) (2026-08-03)
+
+
+### Bug Fixes
+
+* add DemoImageFullScreen ([c94ab80](https://github.com/StepanKhomyn/voiptime-components/commit/c94ab8071c83a74ec8856aef885383bfa3b4ef99))
+
 ## [1.21.115](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.114...v1.21.115) (2026-08-03)
 
 
