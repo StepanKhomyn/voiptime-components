@@ -14,11 +14,11 @@ export interface DropdownProps {
   tabindex?: number;
   maxHeight?: string | number;
   background?: string;
-  hoverBackground?: string
+  hoverBackground?: string;
 }
 
 export interface DropdownItemProps {
-  command?: string | number;
+  command?: any;
   disabled?: boolean;
   divided?: boolean;
   icon?: string;
@@ -27,7 +27,7 @@ export interface DropdownItemProps {
 export interface DropdownEmits {
   'visible-change': [visible: boolean];
   click: [event: MouseEvent];
-  command: [command: string | number];
+  command: [command: any];
   scrolled: [];
 }
 
@@ -43,7 +43,7 @@ export interface DropdownExpose {
 
 // Типи для provide/inject
 export interface DropdownContext {
-  handleCommand: (command: string | number) => void;
+  handleCommand: (command: any) => void;
   hideOnClick: boolean;
 }
 
