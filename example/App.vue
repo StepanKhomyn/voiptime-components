@@ -31,7 +31,7 @@
   import DemoBreadcrumb from './DemoBreadcrumb.vue';
   import DemoAudio from './DemoAudio.vue';
   import DemoEmpty from './DemoEmpty.vue';
-  import DemoImageFullScreen from './DemoImageFullScreen.vue';
+  import DemoImageFullScreen from './DemoImageFullscreen.vue';
   import DemoEditor from './DemoEditor.vue';
 
   const searchQuery = ref('');
