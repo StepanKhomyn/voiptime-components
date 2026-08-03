@@ -1,3 +1,10 @@
+## [1.21.109](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.108...v1.21.109) (2026-08-03)
+
+
+### Bug Fixes
+
+* add padding modificator for pagination in card ([ee6d5a2](https://github.com/StepanKhomyn/voiptime-components/commit/ee6d5a201b54ed42ef620cdd0adfde4d0ecb8bf8))
+
 ## [1.21.108](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.107...v1.21.108) (2026-07-28)
 
 
