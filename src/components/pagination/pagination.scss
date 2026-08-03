@@ -72,4 +72,10 @@
       color: var(--color-gray-3);
     }
   }
+
+  &--in-card {
+    padding-right: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+  }
 }
