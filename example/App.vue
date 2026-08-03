@@ -31,6 +31,7 @@
   import DemoBreadcrumb from './DemoBreadcrumb.vue';
   import DemoAudio from './DemoAudio.vue';
   import DemoEmpty from './DemoEmpty.vue';
+  import DemoImageFullScreen from './DemoImageFullScreen.vue';
   import DemoEditor from './DemoEditor.vue';
 
   const searchQuery = ref('');
@@ -113,6 +114,7 @@
       items: [
         { name: 'Іконки', icon: '🎨', component: DemoIcons },
         { name: 'Empty', icon: '🎨', component: DemoEmpty },
+        { name: 'ImageFullscreen', icon: '🎨', component: DemoImageFullScreen },
         { name: 'Upload', icon: '📤', component: DemoUpload },
         { name: 'Логін', icon: '🔐', component: DemoLogin },
       ],
