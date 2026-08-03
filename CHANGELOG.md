@@ -1,3 +1,10 @@
+## [1.21.112](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.111...v1.21.112) (2026-08-03)
+
+
+### Bug Fixes
+
+* pagination fixes ([c2152a7](https://github.com/StepanKhomyn/voiptime-components/commit/c2152a729191c6f1ea9fdcff2993a005204ff0f8))
+
 ## [1.21.111](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.110...v1.21.111) (2026-08-03)
 
 
