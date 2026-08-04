@@ -6,7 +6,7 @@
   const props = withDefaults(defineProps<VColorPickerProps>(), {
     color: '#FFFFFF',
     isShowLabel: false,
-    presets: () => ['#00475A', '#F2994A', '#27AE60', '#EB5757', '#2F80ED', '#9B51E0', '#000000', '#FFFFFF'],
+    presets: () => ['#00475A', '#F2994A', '#27AE60', '#EB5757', '#2F80ED', '#000000', '#FFFFFF'],
     disabled: false,
   });
 
