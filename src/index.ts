@@ -31,6 +31,7 @@ import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 import VChart from '@/components/charts/VChart.vue';
 import VInfoBox from '@/components/info-box/VInfoBox.vue';
 import VTransferList from '@/components/transfer-list/VTransferList.vue';
+import VTimerDuration from '@/components/timer/VTimerDuration.vue';
 import VImageFullscreen from '@/components/image-fullscreen/VImageFullscreen.vue';
 import VBreadcrumb from '@/components/breadcrumb/VBreadcrumb.vue';
 import VBreadcrumbItem from '@/components/breadcrumb/VBreadcrumbItem.vue';
@@ -79,6 +80,7 @@ export {
   VChart,
   VInfoBox,
   VTransferList,
+  VTimerDuration,
   VImageFullscreen,
   VBreadcrumb,
   VBreadcrumbItem,
@@ -246,6 +248,9 @@ export type { VInfoBoxProps, VInfoBoxType } from './components/info-box/types';
 
 //TransferList
 export type { VTransferListProps, VTransferListEmits } from './components/transfer-list/types';
+
+//TimerDuration
+export type { VTimerDurationProps } from './components/timer/types';
 
 //Breadcrumb
 export type { VBreadcrumbProps, VBreadcrumbItemProps, VBreadcrumbItemEmits } from './components/breadcrumb/types';

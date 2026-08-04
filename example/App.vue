@@ -13,6 +13,7 @@
   import DemoSelect from './DemoSelect.vue';
   import DemoRadioBox from './DemoRadioBox.vue';
   import DemoTimePicker from './DemoTimePicker.vue';
+  import DemoTimer from './DemoTimer.vue';
   import DemoCollapse from './DemoCollapse.vue';
   import DemoMessage from './DemoMessage.vue';
   import DemoTabs from './DemoTabs.vue';
@@ -74,6 +75,7 @@
       items: [
         { name: 'Дата пікер', icon: '📅', component: DemoDatePicker },
         { name: 'Тайм пікер', icon: '🕐', component: DemoTimePicker },
+        { name: 'Таймер', icon: '🕐', component: DemoTimer },
       ],
     },
 
