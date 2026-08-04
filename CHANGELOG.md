@@ -1,3 +1,10 @@
+## [1.21.127](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.126...v1.21.127) (2026-08-04)
+
+
+### Bug Fixes
+
+* resolve problem with outside click on color picker ([3e73dcb](https://github.com/StepanKhomyn/voiptime-components/commit/3e73dcb7d171edcc791be38bf2f116352f52129e))
+
 ## [1.21.126](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.125...v1.21.126) (2026-08-04)
 
 
