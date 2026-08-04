@@ -1,3 +1,10 @@
+## [1.21.119](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.118...v1.21.119) (2026-08-04)
+
+
+### Bug Fixes
+
+* connect ImageFullScreen scss ([04f233e](https://github.com/StepanKhomyn/voiptime-components/commit/04f233ef3020ac315e700bc261ae278393e6bfe0))
+
 ## [1.21.118](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.117...v1.21.118) (2026-08-03)
 
 
