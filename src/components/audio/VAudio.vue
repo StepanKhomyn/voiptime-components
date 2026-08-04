@@ -22,6 +22,7 @@
     userA: '',
     userB: '',
     disabled: false,
+    type: 'default',
   });
 
   const emit = defineEmits<VAudioEmits>();
@@ -37,6 +38,10 @@
   const wavesurfer = ref<WaveSurferInstance | null>(null);
   const timelineContainer = ref<HTMLElement | null>(null);
   const audioContext = ref<AudioContext | null>(null);
+  const leftGain = ref<GainNode | null>(null);
+  const rightGain = ref<GainNode | null>(null);
+
+  const isChannelRoutedMode = computed(() => props.type === 'channel-routed');
 
   const drawWaveform = (peaks: Float32Array[], ctx: CanvasRenderingContext2D) => {
     const { width, height } = ctx.canvas;
@@ -78,6 +83,33 @@
     });
   };
 
+  const setupChannelRouting = () => {
+    const mediaElement = wavesurfer.value?.getMediaElement();
+    if (!mediaElement) return;
+
+    audioContext.value = new (window.AudioContext || (window as any).webkitAudioContext)();
+    const source = audioContext.value.createMediaElementSource(mediaElement);
+    const splitter = audioContext.value.createChannelSplitter(2);
+    const merger = audioContext.value.createChannelMerger(2);
+
+    leftGain.value = audioContext.value.createGain();
+    rightGain.value = audioContext.value.createGain();
+
+    source.connect(splitter);
+    splitter.connect(leftGain.value, 0);
+    splitter.connect(rightGain.value, 1);
+    leftGain.value.connect(merger, 0, 0);
+    rightGain.value.connect(merger, 0, 1);
+    merger.connect(audioContext.value.destination);
+  };
+
+  const teardownChannelRouting = () => {
+    audioContext.value?.close();
+    audioContext.value = null;
+    leftGain.value = null;
+    rightGain.value = null;
+  };
+
   const initWaveSurfer = () => {
     if (!props.recordUrl) return;
     isError.value = false;
@@ -88,12 +120,14 @@
       progressColor: CHANNEL_COLORS.PROGRESS,
       barWidth: 2,
       height: isMultiChannelMode.value ? 100 : 50,
-      plugins: [
-        TimelinePlugin.create({
-          container: timelineContainer.value!,
-          style: { fontSize: '10px', color: '#999' },
-        }),
-      ],
+      plugins: isChannelRoutedMode.value
+        ? []
+        : [
+            TimelinePlugin.create({
+              container: timelineContainer.value!,
+              style: { fontSize: '10px', color: '#999' },
+            }),
+          ],
       renderFunction: (peaks, ctx) => drawWaveform(peaks as any, ctx),
     });
 
@@ -117,11 +151,28 @@
       emit('error');
     });
 
+    if (isChannelRoutedMode.value) {
+      wavesurfer.value.on('ready', setupChannelRouting);
+    }
+
     wavesurfer.value.load(props.recordUrl);
   };
 
   const togglePlay = async () => {
     if (!wavesurfer.value || isPlayerDisabled.value) return;
+
+    if (isChannelRoutedMode.value) {
+      const mediaElement = wavesurfer.value.getMediaElement();
+      if (!mediaElement || !audioContext.value) return;
+
+      if (audioContext.value.state === 'suspended') {
+        await audioContext.value.resume();
+      }
+
+      mediaElement.paused ? await mediaElement.play() : mediaElement.pause();
+      return;
+    }
+
     isPlay.value ? wavesurfer.value.pause() : wavesurfer.value.play();
   };
 
@@ -163,12 +214,15 @@
   };
 
   onMounted(() => nextTick(initWaveSurfer));
-  onBeforeUnmount(() => wavesurfer.value?.destroy());
-
+  onBeforeUnmount(() => {
+    wavesurfer.value?.destroy();
+    teardownChannelRouting();
+  });
   watch(
     () => props.recordUrl,
     () => {
       wavesurfer.value?.destroy();
+      teardownChannelRouting();
       nextTick(initWaveSurfer);
     }
   );
@@ -188,25 +242,27 @@
       </slot>
     </div>
 
-    <div v-else class="vt-audio__container">
+    <div v-else class="vt-audio__container" :class="{ 'is-single-channel': !isMultiChannelMode }">
       <div class="vt-audio__wave-area">
         <div :id="`waveform-${uuid}`" class="vt-audio__waveform"></div>
-        <div ref="timelineContainer" class="vt-audio__timeline"></div>
+        <div v-if="!isChannelRoutedMode" ref="timelineContainer" class="vt-audio__timeline"></div>
       </div>
 
       <div class="vt-audio__controls">
-        <button class="vt-audio__btn" :disabled="isPlayerDisabled" @click="downloadRecord">
-          <VIcon name="import" />
-        </button>
+        <template v-if="!isChannelRoutedMode">
+          <button class="vt-audio__btn" :disabled="isPlayerDisabled" @click="downloadRecord">
+            <VIcon name="import" />
+          </button>
 
-        <VDropdown trigger="click" placement="top" :disabled="isPlayerDisabled" @command="handleSpeedChange">
-          <button class="vt-audio__speed-val" :disabled="isPlayerDisabled"> {{ activeSpeed }}x</button>
-          <template #dropdown>
-            <VDropdownItem v-for="s in [1, 1.5, 2]" :key="s" :command="s" :class="{ 'is-active': activeSpeed === s }">
-              {{ s }}x
-            </VDropdownItem>
-          </template>
-        </VDropdown>
+          <VDropdown trigger="click" placement="top" :disabled="isPlayerDisabled" @command="handleSpeedChange">
+            <button class="vt-audio__speed-val" :disabled="isPlayerDisabled"> {{ activeSpeed }}x</button>
+            <template #dropdown>
+              <VDropdownItem v-for="s in [1, 1.5, 2]" :key="s" :command="s" :class="{ 'is-active': activeSpeed === s }">
+                {{ s }}x
+              </VDropdownItem>
+            </template>
+          </VDropdown>
+        </template>
 
         <button class="vt-audio__btn vt-audio__btn--main" :disabled="isPlayerDisabled" @click="togglePlay">
           <slot v-if="isPlay" name="icon-pause">

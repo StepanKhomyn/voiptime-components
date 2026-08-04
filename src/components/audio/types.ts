@@ -1,10 +1,13 @@
 import WaveSurfer from 'wavesurfer.js';
 
+export type VAudioType = 'default' | 'channel-routed';
+
 export interface VAudioProps {
   recordUrl?: string | null;
   userA?: string | null;
   userB?: string | null;
   disabled?: boolean;
+  type?: VAudioType;
 }
 
 export type PlaybackSpeed = 1 | 1.5 | 2;

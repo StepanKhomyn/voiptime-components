@@ -76,6 +76,13 @@
           default: 'false',
           description: 'Повністю блокує всі контроли плеєра',
         },
+        {
+          name: 'type',
+          type: "'default' | 'channel-routed'",
+          default: "'default'",
+          description:
+            "Режим програвання. 'default' — керування напряму через wavesurfer.play()/pause(). 'channel-routed' — через AudioContext/GainNode-граф (сумісний з VoipTimeSinglePlayer)",
+        },
       ],
     },
     {
@@ -125,6 +132,23 @@
           :record-url="MONO_URL"
           user-a="Оператор"
           user-b="Клієнт"
+          @time-update="onTimeUpdate"
+          @play="onPlay"
+          @pause="onPause"
+          @ended="onEnded"
+        />
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── Channel-routed ─── -->
+    <DocSection
+      title="Channel-routed відтворення"
+      description="Режим type='channel-routed' — аудіо-граф будується через AudioContext (як у старому VoipTimeSinglePlayer), а не напряму через wavesurfer.play()/pause()"
+    >
+      <DocPreview>
+        <VAudio
+          :record-url="MONO_URL"
+          type="channel-routed"
           @time-update="onTimeUpdate"
           @play="onPlay"
           @pause="onPause"
