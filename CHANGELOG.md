@@ -1,3 +1,10 @@
+## [1.21.121](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.120...v1.21.121) (2026-08-04)
+
+
+### Bug Fixes
+
+* add single player audio type ([ba2f71d](https://github.com/StepanKhomyn/voiptime-components/commit/ba2f71d351a6d305dfd02273c093ad191ec7b4f9))
+
 ## [1.21.120](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.119...v1.21.120) (2026-08-04)
 
 
