@@ -1,3 +1,10 @@
+## [1.21.120](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.119...v1.21.120) (2026-08-04)
+
+
+### Bug Fixes
+
+* change naming ([ba73618](https://github.com/StepanKhomyn/voiptime-components/commit/ba736182ec134586f75478ba53070d16ea95a618))
+
 ## [1.21.119](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.118...v1.21.119) (2026-08-04)
 
 
