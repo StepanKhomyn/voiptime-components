@@ -1,3 +1,10 @@
+## [1.21.123](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.122...v1.21.123) (2026-08-04)
+
+
+### Bug Fixes
+
+* add timer duration ([eb8f703](https://github.com/StepanKhomyn/voiptime-components/commit/eb8f703b791bfcd6507b615d463b7ae1478199df))
+
 ## [1.21.122](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.121...v1.21.122) (2026-08-04)
 
 
