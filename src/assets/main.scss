@@ -31,8 +31,9 @@
 @use '../components/transfer-list/transfer-list';
 @use '../components/loader/loader' as loader-component;
 @use '../components/image-fullscreen/imageFullscreen';
-
-;
+@use '../components/timer/timer';
+@use '../components/video-player/video';
+@use '../components/chat-audio-player/chat-audio-player';
 @use '../components/pagination/pagination';
 @use '../components/table/table';
 @use '../components/table/column-selector';

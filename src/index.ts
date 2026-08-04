@@ -31,6 +31,8 @@ import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 import VChart from '@/components/charts/VChart.vue';
 import VInfoBox from '@/components/info-box/VInfoBox.vue';
 import VTransferList from '@/components/transfer-list/VTransferList.vue';
+import VChatAudioPlayer from '@/components/chat-audio-player/VChatAudioPlayer.vue';
+import VVideoPlayer from '@/components/video-player/VVideoPlayer.vue';
 import VTimerDuration from '@/components/timer/VTimerDuration.vue';
 import VImageFullscreen from '@/components/image-fullscreen/VImageFullscreen.vue';
 import VBreadcrumb from '@/components/breadcrumb/VBreadcrumb.vue';
@@ -80,6 +82,8 @@ export {
   VChart,
   VInfoBox,
   VTransferList,
+  VChatAudioPlayer,
+  VVideoPlayer,
   VTimerDuration,
   VImageFullscreen,
   VBreadcrumb,
@@ -251,6 +255,12 @@ export type { VTransferListProps, VTransferListEmits } from './components/transf
 
 //TimerDuration
 export type { VTimerDurationProps } from './components/timer/types';
+
+//VideoPlayer
+export type { VVideoPlayerProps, VVideoPlayerEmits } from './components/video-player/types';
+
+//ChatAudioPlayer
+export type { VChatAudioPlayerProps } from './components/chat-audio-player/types';
 
 //Breadcrumb
 export type { VBreadcrumbProps, VBreadcrumbItemProps, VBreadcrumbItemEmits } from './components/breadcrumb/types';

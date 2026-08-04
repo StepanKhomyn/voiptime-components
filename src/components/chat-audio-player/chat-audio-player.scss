@@ -1,0 +1,58 @@
+.vt-chat-audio-player {
+  border-radius: var(--vt-padding-sm);
+  max-width: 100%;
+  min-height: 60px;
+  background-color: var(--color-neutral);
+
+  &__waveform-container {
+    gap: var(--vt-gap-sm);
+  }
+
+  &__btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: var(--color-white);
+
+    svg {
+      fill: var(--color-gray-1);
+      width: var(--vt-padding-lg);
+      height: var(--vt-padding-lg);
+    }
+  }
+
+  &__waveform {
+    flex-grow: 1;
+    position: relative;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border-radius: var(--vt-padding-sm);
+    margin-right: 15px;
+    cursor: pointer;
+    width: 100%;
+
+    canvas {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__timer {
+    font-size: 14px;
+    color: var(--color-gray-3);
+  }
+
+  &__info {
+    height: var(--vt-padding-lg);
+  }
+
+  &__download {
+    svg {
+      height: var(--vt-padding-lg);
+      cursor: pointer;
+    }
+  }
+}
