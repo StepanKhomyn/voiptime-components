@@ -1,3 +1,10 @@
+## [1.21.128](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.127...v1.21.128) (2026-08-04)
+
+
+### Bug Fixes
+
+* change amount of presets ([7068e0d](https://github.com/StepanKhomyn/voiptime-components/commit/7068e0d00f510a486ccbd8f544be2dd9be1bdb33))
+
 ## [1.21.127](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.126...v1.21.127) (2026-08-04)
 
 
