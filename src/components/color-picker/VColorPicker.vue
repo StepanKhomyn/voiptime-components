@@ -100,10 +100,7 @@
 
   // компонент тепер складається з двох "зон" (тригер + телепортована панель) —
   // хук закриття по кліку поза межами має враховувати обидві
-  useDetectOutsideClick(componentRef, () => {
-    const target = panelRef.value;
-    return target;
-  });
+  useDetectOutsideClick(componentRef, closePanel, [panelRef]);
 </script>
 
 <template>

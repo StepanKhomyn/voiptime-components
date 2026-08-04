@@ -1,12 +1,23 @@
 import { onBeforeUnmount, onMounted, type Ref } from 'vue';
 
-export default function useDetectOutsideClick(component: Ref<HTMLElement | null>, callback: () => void) {
+export default function useDetectOutsideClick(
+  component: Ref<HTMLElement | null>,
+  callback: () => void,
+  excludeRefs: Ref<HTMLElement | null>[] = [],
+) {
   if (!component) return;
 
   const listener = (event: Event) => {
-    if (event.target !== component.value && event.composedPath().includes(component.value as EventTarget)) {
+    const path = event.composedPath();
+
+    if (event.target !== component.value && path.includes(component.value as EventTarget)) {
       return;
     }
+
+    if (excludeRefs.some((ref) => ref.value && path.includes(ref.value as EventTarget))) {
+      return;
+    }
+
     if (typeof callback === 'function') {
       callback();
     }
