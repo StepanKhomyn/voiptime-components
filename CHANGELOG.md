@@ -1,3 +1,10 @@
+## [1.21.125](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.124...v1.21.125) (2026-08-04)
+
+
+### Bug Fixes
+
+* remove video and chat audio players ([091003c](https://github.com/StepanKhomyn/voiptime-components/commit/091003c33d789c93e5ddc2479afaad97b45df139))
+
 ## [1.21.124](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.123...v1.21.124) (2026-08-04)
 
 
