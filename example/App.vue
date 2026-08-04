@@ -33,6 +33,7 @@
   import DemoAudio from './DemoAudio.vue';
   import DemoEmpty from './DemoEmpty.vue';
   import DemoImageFullScreen from './DemoImageFullscreen.vue';
+  import DemoColorPicker from './DemoColorPicker.vue';
   import DemoEditor from './DemoEditor.vue';
 
   const searchQuery = ref('');
@@ -117,6 +118,7 @@
         { name: 'Іконки', icon: '🎨', component: DemoIcons },
         { name: 'Empty', icon: '🎨', component: DemoEmpty },
         { name: 'Fullscreen image', icon: '🎨', component: DemoImageFullScreen },
+        { name: 'Color picker', icon: '🎨', component: DemoColorPicker },
         { name: 'Upload', icon: '📤', component: DemoUpload },
         { name: 'Логін', icon: '🔐', component: DemoLogin },
       ],

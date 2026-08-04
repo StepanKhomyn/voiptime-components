@@ -1,0 +1,136 @@
+.vt-color-picker {
+  position: relative;
+  display: inline-block;
+
+  &.is-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 10px;
+    border: 1px solid var(--color-gray-5);
+    border-radius: 6px;
+    background: var(--color-white);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--color-primary-main);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  &__swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1px solid var(--color-gray-5);
+    box-shadow: inset 0 0 0 2px var(--color-white);
+    flex-shrink: 0;
+  }
+
+  &__label {
+    font-size: 13px;
+    color: var(--color-gray-2);
+    text-transform: uppercase;
+  }
+
+  &__panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    width: 200px;
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-5);
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  &__native-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--color-gray-5);
+    border-radius: 6px;
+    cursor: pointer;
+    padding: 0;
+
+    &::-webkit-color-swatch-wrapper {
+      padding: 2px;
+    }
+
+    &::-webkit-color-swatch {
+      border: none;
+      border-radius: 4px;
+    }
+
+    &::-moz-color-swatch {
+      border: none;
+      border-radius: 4px;
+    }
+  }
+
+  &__hex-input {
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--color-gray-5);
+    border-radius: 6px;
+    font-size: 13px;
+    text-transform: uppercase;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary-main);
+    }
+  }
+
+  &__presets {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 6px;
+  }
+
+  &__preset {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1px solid var(--color-gray-5);
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.15s ease;
+
+    &:hover {
+      transform: scale(1.15);
+    }
+
+    &.is-active {
+      box-shadow: 0 0 0 2px var(--color-white), 0 0 0 3px var(--color-primary-main);
+    }
+  }
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
