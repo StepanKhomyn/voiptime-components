@@ -1,3 +1,10 @@
+## [1.21.126](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.125...v1.21.126) (2026-08-04)
+
+
+### Bug Fixes
+
+* add color picker ([e511ee6](https://github.com/StepanKhomyn/voiptime-components/commit/e511ee6e72096c644b7b08276ea803414957cc10))
+
 ## [1.21.125](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.124...v1.21.125) (2026-08-04)
 
 
