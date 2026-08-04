@@ -149,7 +149,6 @@
         <VAudio
           :record-url="MONO_URL"
           type="channel-routed"
-          @time-update="onTimeUpdate"
           @play="onPlay"
           @pause="onPause"
           @ended="onEnded"
