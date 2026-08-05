@@ -1,3 +1,10 @@
+## [1.21.134](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.133...v1.21.134) (2026-08-05)
+
+
+### Bug Fixes
+
+* change audio player group ([64914bd](https://github.com/StepanKhomyn/voiptime-components/commit/64914bd62d42cfaa4fe1e9040c362ab3c5907002))
+
 ## [1.21.133](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.132...v1.21.133) (2026-08-05)
 
 
