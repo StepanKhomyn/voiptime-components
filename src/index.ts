@@ -31,6 +31,8 @@ import VSliderMarkRange from '@/components/slider/VSliderMarkRange.vue';
 import VChart from '@/components/charts/VChart.vue';
 import VInfoBox from '@/components/info-box/VInfoBox.vue';
 import VTransferList from '@/components/transfer-list/VTransferList.vue';
+import VAvatar from '@/components/avatar/VAvatar.vue';
+import VAvatarUpload from '@/components/avatar-upload/VAvatarUpload.vue';
 import VColorPicker from '@/components/color-picker/VColorPicker.vue';
 import VTimerDuration from '@/components/timer/VTimerDuration.vue';
 import VImageFullscreen from '@/components/image-fullscreen/VImageFullscreen.vue';
@@ -81,6 +83,8 @@ export {
   VChart,
   VInfoBox,
   VTransferList,
+  VAvatar,
+  VAvatarUpload,
   VColorPicker,
   VTimerDuration,
   VImageFullscreen,
@@ -254,6 +258,12 @@ export type { VTransferListProps, VTransferListEmits } from './components/transf
 //ColorPicker
 export type { VColorPickerProps, VColorPickerEmits } from './components/color-picker/types';
 
+//Avatar
+export type { VAvatarProps } from './components/avatar/types';
+
+//AvatarUpload
+export type { VAvatarUploadProps, VAvatarUploadEmits } from './components/avatar-upload/types';
+
 //TimerDuration
 export type { VTimerDurationProps } from './components/timer/types';
 
@@ -344,6 +354,8 @@ const VUIPlugin = {
     app.component(`${prefix}Chart`, VChart);
     app.component(`${prefix}InfoBox`, VInfoBox);
     app.component(`${prefix}TransferList`, VTransferList);
+    app.component(`${prefix}Avatar`, VAvatar);
+    app.component(`${prefix}AvatarUpload`, VAvatarUpload);
     app.component(`${prefix}ImageFullscreen`, VImageFullscreen);
     app.component(`${prefix}Breadcrumb`, VBreadcrumb);
     app.component(`${prefix}BreadcrumbItem`, VBreadcrumbItem);
