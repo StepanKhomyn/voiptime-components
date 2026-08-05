@@ -1,3 +1,10 @@
+## [1.21.132](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.131...v1.21.132) (2026-08-05)
+
+
+### Bug Fixes
+
+* add VChartCombo ([9156ec2](https://github.com/StepanKhomyn/voiptime-components/commit/9156ec237dd6b2f20c8ade5e2162b04c6e386184))
+
 ## [1.21.131](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.130...v1.21.131) (2026-08-05)
 
 
