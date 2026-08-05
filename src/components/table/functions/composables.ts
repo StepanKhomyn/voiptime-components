@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import type { ResizeState, StickyPosition, VTableColumnProps, VTableProps, VTableStyleConfig } from '../types';
 
+const ACTION_COLUMN_WIDTH = 50;
 /**
  * Композабл для роботи з колонками таблиці
  */
@@ -89,8 +90,11 @@ export function useTableStyles(props: VTableProps) {
   ): VTableStyleConfig => {
     const style: VTableStyleConfig = {};
 
-    // Ширина колонки
-    if (col.width) {
+    if (col.manage) {
+      style.width = `${ACTION_COLUMN_WIDTH}px`;
+      style.minWidth = `${ACTION_COLUMN_WIDTH}px`;
+      style.maxWidth = `${ACTION_COLUMN_WIDTH}px`;
+    } else if (col.width) {
       const w = Number(col.width);
       style.width = `${w}px`;
       style.minWidth = `${w}px`;

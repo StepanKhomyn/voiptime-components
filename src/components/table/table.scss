@@ -42,10 +42,12 @@
 
   &__empty {
     &-row {
+      height: 100%;
       background: transparent;
     }
 
     &-cell {
+      height: 100%;
       padding: 0;
       border: none;
       text-align: center;

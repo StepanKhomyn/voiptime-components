@@ -131,6 +131,13 @@
     flex-shrink: 0;
     color: var(--color-gray-4);
     font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      display: block;
+    }
   }
 
 
