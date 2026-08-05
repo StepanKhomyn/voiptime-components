@@ -37,94 +37,81 @@
   import DemoAvatarUpload from './DemoAvatarUpload.vue';
   import DemoColorPicker from './DemoColorPicker.vue';
   import DemoEditor from './DemoEditor.vue';
+  import DemoBadge from './DemoBadge.vue';
 
   const searchQuery = ref('');
 
   const sections = [
     {
-      group: 'Початок роботи',
+      group: 'Getting Started',
       items: [
-        {
-          name: 'Встановлення',
-          icon: '📦',
-          tag: 'new',
-          component: DemoInstallation,
-        },
-        {
-          name: 'Дизайн токени',
-          icon: '🎨',
-          tag: 'new',
-          component: DemoDesignTokens,
-        },
+        { name: 'Installation', icon: '📦', tag: 'new', component: DemoInstallation },
+        { name: 'Design Tokens', icon: '🎨', tag: 'new', component: DemoDesignTokens },
       ],
     },
     {
-      group: 'Форми та введення',
+      group: 'Forms & Inputs',
       items: [
-        { name: 'Кнопки', icon: '🆎', component: DemoButton },
-        { name: 'Інпут', icon: '📝', component: DemoInput },
-        { name: 'Селект', icon: '⬇️', component: DemoSelect },
-        { name: 'Чекбокси', icon: '☑️', component: DemoCheckbox },
-        { name: 'Радіобокс', icon: '🔘', component: DemoRadioBox },
-        { name: 'Валідація', icon: '✅', component: DemoValidationForm },
-        { name: 'Slider', icon: '🎚', component: DemoSlider },
+        { name: 'Button', icon: '🆎', component: DemoButton },
+        { name: 'Input', icon: '📝', component: DemoInput },
+        { name: 'Select', icon: '⬇️', component: DemoSelect },
+        { name: 'Checkbox', icon: '☑️', component: DemoCheckbox },
+        { name: 'Radio', icon: '🔘', component: DemoRadioBox },
+        { name: 'Validation', icon: '✅', component: DemoValidationForm },
+        { name: 'Slider', icon: '🎚️', component: DemoSlider },
         { name: 'Transfer List', icon: '↔️', component: DemoTransferList },
-        { name: 'Editor', icon: '📝', component: DemoEditor },
+        { name: 'Editor', icon: '🖋️', component: DemoEditor },
+        { name: 'Upload', icon: '📤', component: DemoUpload },
       ],
     },
-
     {
-      group: 'Дата та час',
+      group: 'Date & Time',
       items: [
-        { name: 'Дата пікер', icon: '📅', component: DemoDatePicker },
-        { name: 'Тайм пікер', icon: '🕐', component: DemoTimePicker },
-        { name: 'Таймер', icon: '🕐', component: DemoTimer },
+        { name: 'Date Picker', icon: '📅', component: DemoDatePicker },
+        { name: 'Time Picker', icon: '🕐', component: DemoTimePicker },
+        { name: 'Timer', icon: '⏱️', component: DemoTimer },
       ],
     },
-
     {
-      group: 'Дані та відображення',
+      group: 'Data Display',
       items: [
-        { name: 'Таблиці', icon: '📊', component: DemoTable },
-        { name: 'VChart', icon: '📈', component: DemoChart },
-        { name: 'Пагінація', icon: '📄', component: DemoPagination },
-        { name: 'Аудіо Плеєр', icon: '📄', component: DemoAudio },
+        { name: 'Table', icon: '📊', component: DemoTable },
+        { name: 'Chart', icon: '📈', component: DemoChart },
+        { name: 'Pagination', icon: '📄', component: DemoPagination },
+        { name: 'Audio Player', icon: '🎧', component: DemoAudio },
       ],
     },
-
     {
-      group: 'Навігація та оверлеї',
+      group: 'Navigation & Overlays',
       items: [
-        { name: 'Модальні вікна', icon: '🪟', component: DemoModal },
-        { name: 'Дропдавн', icon: '☰', component: DemoDropDown },
-        { name: 'Тултіпи', icon: '💬', component: DemoTooltip },
+        { name: 'Modal', icon: '🪟', component: DemoModal },
+        { name: 'Dropdown', icon: '☰', component: DemoDropDown },
+        { name: 'Tooltip', icon: '💬', component: DemoTooltip },
         { name: 'Tabs', icon: '📑', component: DemoTabs },
-        { name: 'Sidebar', icon: '◀', component: DemoSidebar },
-        { name: 'Breadcrumb', icon: '◀', component: DemoBreadcrumb },
+        { name: 'Sidebar', icon: '◀️', component: DemoSidebar },
+        { name: 'Breadcrumb', icon: '🧭', component: DemoBreadcrumb },
       ],
     },
-
     {
-      group: "Зворотній зв'язок",
+      group: 'Feedback',
       items: [
         { name: 'Message', icon: '💌', component: DemoMessage },
-        { name: 'InfoBox', icon: '💌', component: DemoInfoBox },
-        { name: 'Лоадер', icon: '⏳', component: DemoLoader },
-        { name: 'Коллапс', icon: '🔽', component: DemoCollapse },
+        { name: 'Info Box', icon: 'ℹ️', component: DemoInfoBox },
+        { name: 'Loader', icon: '⏳', component: DemoLoader },
+        { name: 'Collapse', icon: '🔽', component: DemoCollapse },
       ],
     },
-
     {
-      group: 'Медіа та UI',
+      group: 'Media & UI',
       items: [
-        { name: 'Іконки', icon: '🎨', component: DemoIcons },
-        { name: 'Empty', icon: '🎨', component: DemoEmpty },
-        { name: 'Fullscreen image', icon: '🎨', component: DemoImageFullScreen },
-        { name: 'Color picker', icon: '🎨', component: DemoColorPicker },
-        { name: 'Avatar', icon: '🎨', component: DemoAvatar },
-        { name: 'AvatarUpload', icon: '🎨', component: DemoAvatarUpload },
-        { name: 'Upload', icon: '📤', component: DemoUpload },
-        { name: 'Логін', icon: '🔐', component: DemoLogin },
+        { name: 'Icons', icon: '🎨', component: DemoIcons },
+        { name: 'Empty', icon: '🗂️', component: DemoEmpty },
+        { name: 'Fullscreen Image', icon: '🖼️', component: DemoImageFullScreen },
+        { name: 'Color Picker', icon: '🎨', component: DemoColorPicker },
+        { name: 'Avatar', icon: '👤', component: DemoAvatar },
+        { name: 'Avatar Upload', icon: '📸', component: DemoAvatarUpload },
+        { name: 'Badge', icon: '🔴', component: DemoBadge },
+        { name: 'Login', icon: '🔐', component: DemoLogin },
       ],
     },
   ];
@@ -169,7 +156,7 @@
         <input
           v-model="searchQuery"
           class="docs-sidebar__search-input"
-          placeholder="Пошук компонентів..."
+          placeholder="Search components..."
           type="text"
         />
       </div>
@@ -189,7 +176,7 @@
           </button>
         </template>
 
-        <div v-if="filteredSections.length === 0" class="docs-sidebar__empty"> Нічого не знайдено</div>
+        <div v-if="filteredSections.length === 0" class="docs-sidebar__empty"> Nothing found</div>
       </nav>
     </aside>
 
@@ -197,9 +184,9 @@
     <div class="docs-main">
       <header class="docs-topbar">
         <div class="docs-topbar__breadcrumb">
-          <span class="docs-topbar__breadcrumb-root">Документація</span>
+          <span class="docs-topbar__breadcrumb-root">Documentation</span>
           <span class="docs-topbar__breadcrumb-sep">›</span>
-          <span class="docs-topbar__breadcrumb-current">{{ activeItem?.name ?? 'Головна' }}</span>
+          <span class="docs-topbar__breadcrumb-current">{{ activeItem?.name ?? 'Home' }}</span>
         </div>
         <div class="docs-topbar__actions">
           <a class="docs-topbar__link" href="https://npmjs.com/package/voiptime-components" target="_blank">NPM ↗</a>

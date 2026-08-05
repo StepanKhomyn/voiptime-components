@@ -1,0 +1,109 @@
+.vt-badge {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+
+  &__content {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--color-white);
+    background-color: var(--color-danger-main);
+    white-space: nowrap;
+    box-sizing: border-box;
+    pointer-events: none;
+    transition:
+            transform 0.15s ease,
+            opacity 0.15s ease;
+
+    // Стандартне позиціонування — центр бейджа рівно на кутовій точці вмісту
+    &--top-end {
+      top: 0;
+      right: 0;
+      transform: translate(50%, -50%);
+    }
+
+    &--top-start {
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+    }
+
+    &--bottom-end {
+      bottom: 0;
+      right: 0;
+      transform: translate(50%, 50%);
+    }
+
+    &--bottom-start {
+      bottom: 0;
+      left: 0;
+      transform: translate(-50%, 50%);
+    }
+
+    &--dot {
+      min-width: 9px;
+      width: 9px;
+      height: 9px;
+      padding: 0;
+    }
+
+    &--bordered {
+      box-shadow: 0 0 0 2px var(--color-white);
+    }
+
+    // Кольорові варіанти — сумісні з палітрою бібліотеки
+    &--primary {
+      background-color: var(--color-primary-main);
+      color: var(--color-white);
+    }
+
+    &--yellow {
+      background-color: var(--color-yellow-main);
+      color: var(--color-gray-1);
+    }
+
+    &--success {
+      background-color: var(--color-success-main);
+      color: var(--color-white);
+    }
+
+    &--warning {
+      background-color: var(--color-warning-main);
+      color: var(--color-gray-1);
+    }
+
+    &--danger {
+      background-color: var(--color-danger-main);
+      color: var(--color-white);
+    }
+
+    &--gray {
+      background-color: var(--color-gray-4);
+      color: var(--color-gray-1);
+    }
+  }
+
+  // Enter/leave анімація появи бейджа
+  &__fade-enter-active,
+  &__fade-leave-active {
+    transition:
+            opacity 0.15s ease,
+            transform 0.15s ease;
+  }
+
+  &__fade-enter-from,
+  &__fade-leave-to {
+    opacity: 0;
+    transform: scale(0.5) translate(50%, -50%);
+  }
+}

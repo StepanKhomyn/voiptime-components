@@ -41,6 +41,7 @@ import VBreadcrumbItem from '@/components/breadcrumb/VBreadcrumbItem.vue';
 import VAudio from '@/components/audio/VAudio.vue';
 import VEmpty from '@/components/empty/VEmpty.vue';
 import VEditor from '@/components/editor/VEditor.vue';
+import VBadge from '@/components/badge/VBadge.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -93,6 +94,7 @@ export {
   VAudio,
   VEmpty,
   VEditor,
+  VBadge,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -249,22 +251,22 @@ export type {
 
 export type { VChartType, VChartProps } from './components/charts/types';
 
-//InfoBox
+//InfoBoxProps
 export type { VInfoBoxProps, VInfoBoxType } from './components/info-box/types';
 
-//TransferList
+//TransferListProps
 export type { VTransferListProps, VTransferListEmits } from './components/transfer-list/types';
 
-//ColorPicker
+//ColorPickerProps
 export type { VColorPickerProps, VColorPickerEmits } from './components/color-picker/types';
 
-//Avatar
+//AvatarProps
 export type { VAvatarProps } from './components/avatar/types';
 
-//AvatarUpload
+//AvatarUploadProps
 export type { VAvatarUploadProps, VAvatarUploadEmits } from './components/avatar-upload/types';
 
-//TimerDuration
+//TimerDurationProps
 export type { VTimerDurationProps } from './components/timer/types';
 
 //Breadcrumb
@@ -278,6 +280,9 @@ export type { VEmptyProps } from './components/empty/types';
 
 //EditorProps
 export type { VtEditorProps, VtEditorEmits, VtEditorCommand } from './components/editor/types';
+
+//BadgeProps
+export type { VBadgeProps } from './components/badge/types';
 
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
@@ -362,6 +367,7 @@ const VUIPlugin = {
     app.component(`${prefix}Audio`, VAudio);
     app.component(`${prefix}Empty`, VEmpty);
     app.component(`${prefix}Editor`, VEditor);
+    app.component(`${prefix}Badge`, VBadge);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);
