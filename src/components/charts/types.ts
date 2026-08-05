@@ -52,6 +52,17 @@ export interface ComboChartProps {
   padding?: { top: number; right: number; bottom: number; left: number };
 }
 
+export interface ComboDataPoint {
+  [key: string]: number | string;
+}
+
+export interface ComboChartPadding {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
+}
+
 // ── Scale Bar ─────────────────────────────────────────────────────────────────
 export interface ScaleBarChartProps {
   type: VChartType.scale;

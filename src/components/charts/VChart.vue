@@ -1,5 +1,6 @@
 <script lang="ts" setup>
   import type {
+    ComboChartProps,
     DonutChartProps,
     HorizontalBarChartProps,
     RadialProgressChartProps,
@@ -17,6 +18,7 @@
   import VChartTreemap from './internal/VChartTreemap.vue';
 
   import './chart.scss';
+  import VChartCombo from '@/components/charts/internal/VChartCombo.vue';
 
   const props = defineProps<VChartProps>();
 </script>
@@ -68,6 +70,16 @@
       :track-color="(props as RadialProgressChartProps).trackColor"
       :size="(props as RadialProgressChartProps).size"
       :stroke-width="(props as RadialProgressChartProps).strokeWidth"
+    />
+
+    <VChartCombo
+      v-else-if="props.type === 'combo'"
+      :data="(props as ComboChartProps).data"
+      :series-config="(props as ComboChartProps).seriesConfig"
+      :category-key="(props as ComboChartProps).categoryKey"
+      :width="(props as ComboChartProps).width"
+      :height="(props as ComboChartProps).height"
+      :padding="(props as ComboChartProps).padding"
     />
   </div>
 </template>
