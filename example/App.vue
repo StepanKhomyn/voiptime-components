@@ -78,7 +78,6 @@
         { name: 'Table', icon: '📊', component: DemoTable },
         { name: 'Chart', icon: '📈', component: DemoChart },
         { name: 'Pagination', icon: '📄', component: DemoPagination },
-        { name: 'Audio Player', icon: '🎧', component: DemoAudio },
       ],
     },
     {
@@ -107,6 +106,7 @@
         { name: 'Icons', icon: '🎨', component: DemoIcons },
         { name: 'Empty', icon: '🗂️', component: DemoEmpty },
         { name: 'Fullscreen Image', icon: '🖼️', component: DemoImageFullScreen },
+        { name: 'Audio Player', icon: '🎧', component: DemoAudio },
         { name: 'Color Picker', icon: '🎨', component: DemoColorPicker },
         { name: 'Avatar', icon: '👤', component: DemoAvatar },
         { name: 'Avatar Upload', icon: '📸', component: DemoAvatarUpload },
