@@ -1,3 +1,10 @@
+## [1.21.133](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.132...v1.21.133) (2026-08-05)
+
+
+### Bug Fixes
+
+* add VBadge ([759497b](https://github.com/StepanKhomyn/voiptime-components/commit/759497bfc84cc3aa1940747cff06be3c92f11351))
+
 ## [1.21.132](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.131...v1.21.132) (2026-08-05)
 
 
