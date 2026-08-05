@@ -1,3 +1,10 @@
+## [1.21.129](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.128...v1.21.129) (2026-08-05)
+
+
+### Bug Fixes
+
+* add avatars ([0ff3c43](https://github.com/StepanKhomyn/voiptime-components/commit/0ff3c4341dd61e8ba29f3421b8971bdcfe1992aa))
+
 ## [1.21.128](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.127...v1.21.128) (2026-08-04)
 
 
