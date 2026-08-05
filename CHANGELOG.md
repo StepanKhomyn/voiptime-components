@@ -1,3 +1,10 @@
+## [1.21.130](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.129...v1.21.130) (2026-08-05)
+
+
+### Bug Fixes
+
+* fix avatar text size ([d911916](https://github.com/StepanKhomyn/voiptime-components/commit/d9119163e83ecf92593d9ae2d0b949de77bfb08e))
+
 ## [1.21.129](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.128...v1.21.129) (2026-08-05)
 
 
