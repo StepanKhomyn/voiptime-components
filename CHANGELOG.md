@@ -1,3 +1,10 @@
+## [1.21.136](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.135...v1.21.136) (2026-08-05)
+
+
+### Bug Fixes
+
+* revert col width ([ec51006](https://github.com/StepanKhomyn/voiptime-components/commit/ec510064298dfe6f4df57a602a9f68e5c808594c))
+
 ## [1.21.135](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.134...v1.21.135) (2026-08-05)
 
 
