@@ -215,6 +215,10 @@
             flex-shrink: 0;
             transition: color 0.2s ease;
 
+            @container vt-page__card-form-body-item (max-width: 400px) {
+              width: 100%;
+            }
+
             &.vt-label-required::after {
               content: ' *';
               color: var(--color-danger-main);
