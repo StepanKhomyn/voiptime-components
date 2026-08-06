@@ -1,3 +1,10 @@
+## [1.21.138](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.137...v1.21.138) (2026-08-06)
+
+
+### Bug Fixes
+
+* add nav rail and app bar ([a1a172a](https://github.com/StepanKhomyn/voiptime-components/commit/a1a172a30d3be4d7d7a098dc27da96d47ef72e12))
+
 ## [1.21.137](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.136...v1.21.137) (2026-08-06)
 
 
