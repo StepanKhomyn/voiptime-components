@@ -1,0 +1,52 @@
+.vt-app-bar {
+  --vt-app-bar-height: 60px;
+  --vt-app-bar-bg: var(--color-primary-hover);
+  --vt-app-bar-logo-width: 150px;
+  --vt-app-bar-logo-height: 40px;
+  --vt-app-bar-z-index: 1100;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: var(--vt-app-bar-height);
+  padding: 0 var(--vt-padding-base);
+  background-color: var(--vt-app-bar-bg);
+
+  &--sticky {
+    position: sticky;
+    top: 0;
+    z-index: var(--vt-app-bar-z-index);
+  }
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    height: var(--vt-app-bar-logo-height);
+    width: var(--vt-app-bar-logo-width);
+    margin: var(--vt-padding-base);
+
+    svg {
+      height: 35px;
+      width: 100%;
+      color: var(--color-white);
+    }
+  }
+
+  &__center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 40px;
+    gap: var(--vt-gap-base);
+    margin-left: var(--vt-padding-base);
+    z-index: var(--vt-app-bar-z-index);
+  }
+}

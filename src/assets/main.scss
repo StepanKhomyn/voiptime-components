@@ -58,6 +58,8 @@
 @use '../components/audio/audio';
 @use '../components/empty/empty';
 @use '../components/editor/editor';
+@use '../components/app-bar/app-bar';
+@use '../components/nav-rail/nav-rail';
 @use '../directives/tooltip/tooltip';
 @use '../directives/loader/loader' as loader-directive;
 

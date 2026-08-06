@@ -42,6 +42,8 @@ import VAudio from '@/components/audio/VAudio.vue';
 import VEmpty from '@/components/empty/VEmpty.vue';
 import VEditor from '@/components/editor/VEditor.vue';
 import VBadge from '@/components/badge/VBadge.vue';
+import VAppBar from '@/components/app-bar/VAppBar.vue';
+import VNavRail from '@/components/nav-rail/VNavRail.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -95,6 +97,8 @@ export {
   VEmpty,
   VEditor,
   VBadge,
+  VAppBar,
+  VNavRail,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -284,6 +288,12 @@ export type { VtEditorProps, VtEditorEmits, VtEditorCommand } from './components
 //BadgeProps
 export type { VBadgeProps } from './components/badge/types';
 
+//AppBarProps
+export type { VAppBarProps } from './components/app-bar/types';
+
+//NavRailProps
+export type { VNavRailProps, VNavRailEmits } from './components/nav-rail/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -368,6 +378,8 @@ const VUIPlugin = {
     app.component(`${prefix}Empty`, VEmpty);
     app.component(`${prefix}Editor`, VEditor);
     app.component(`${prefix}Badge`, VBadge);
+    app.component(`${prefix}AppBar`, VAppBar);
+    app.component(`${prefix}NavRail`, VNavRail);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

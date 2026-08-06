@@ -38,6 +38,8 @@
   import DemoColorPicker from './DemoColorPicker.vue';
   import DemoEditor from './DemoEditor.vue';
   import DemoBadge from './DemoBadge.vue';
+  import DemoAppBar from './DemoAppBar.vue';
+  import DemoNavRail from './DemoNavRail.vue';
 
   const searchQuery = ref('');
 
@@ -88,6 +90,8 @@
         { name: 'Tooltip', icon: '💬', component: DemoTooltip },
         { name: 'Tabs', icon: '📑', component: DemoTabs },
         { name: 'Sidebar', icon: '◀️', component: DemoSidebar },
+        { name: 'Header', icon: '📋', component: DemoAppBar },
+        { name: 'Navigation Rail', icon: '🗃️', component: DemoNavRail },
         { name: 'Breadcrumb', icon: '🧭', component: DemoBreadcrumb },
       ],
     },
