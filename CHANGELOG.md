@@ -1,3 +1,10 @@
+## [1.21.139](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.138...v1.21.139) (2026-08-06)
+
+
+### Bug Fixes
+
+* nav rail fixes ([9a450d9](https://github.com/StepanKhomyn/voiptime-components/commit/9a450d9da62b57b7f56e54156f89b8f49a97c4f3))
+
 ## [1.21.138](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.137...v1.21.138) (2026-08-06)
 
 
