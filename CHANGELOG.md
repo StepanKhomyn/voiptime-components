@@ -1,3 +1,10 @@
+## [1.21.137](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.136...v1.21.137) (2026-08-06)
+
+
+### Bug Fixes
+
+* add select-all props to multyselect ([c22f7e5](https://github.com/StepanKhomyn/voiptime-components/commit/c22f7e570189c6746aab85dbb86f805d4feef9bd))
+
 ## [1.21.136](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.135...v1.21.136) (2026-08-05)
 
 
