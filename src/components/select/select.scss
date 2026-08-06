@@ -407,7 +407,13 @@
   animation: dropdown-fade-in 0.2s ease;
 
   &__search {
+    display: flex;
+    gap: var(--vt-gap-base);
     padding: 0 var(--vt-padding-base) var(--vt-padding-base) var(--vt-padding-base);
+
+    .vt-checkbox {
+      padding-left: var(--vt-padding-sm);
+    }
 
     &.vt-input--focused {
       border-color: transparent;

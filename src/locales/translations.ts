@@ -169,6 +169,10 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.EDITOR_IMAGE_URL]: 'URL зображення',
     [LOCALE_KEYS.EDITOR_IMAGE_ALT]: 'Альтернативний текст',
     [LOCALE_KEYS.EDITOR_INSERT]: 'Вставити',
+
+    //Checkbox
+    [LOCALE_KEYS.CHECKBOX_SELECT_ALL]: 'Виділити всі',
+    [LOCALE_KEYS.CHECKBOX_UNSELECT_ALL]: 'Відмінити вибір',
   },
 
   [LANGUAGES.en]: {
@@ -339,6 +343,10 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.EDITOR_IMAGE_URL]: 'Image URL',
     [LOCALE_KEYS.EDITOR_IMAGE_ALT]: 'Alt text',
     [LOCALE_KEYS.EDITOR_INSERT]: 'Insert',
+
+    //Checkbox
+    [LOCALE_KEYS.CHECKBOX_SELECT_ALL]: 'Select all',
+    [LOCALE_KEYS.CHECKBOX_UNSELECT_ALL]: 'Unselect all',
   },
 
   [LANGUAGES.ru]: {
@@ -509,5 +517,9 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.EDITOR_IMAGE_URL]: 'URL изображения',
     [LOCALE_KEYS.EDITOR_IMAGE_ALT]: 'Альтернативный текст',
     [LOCALE_KEYS.EDITOR_INSERT]: 'Вставить',
+
+    //Checkbox
+    [LOCALE_KEYS.CHECKBOX_SELECT_ALL]: 'Выбрать все',
+    [LOCALE_KEYS.CHECKBOX_UNSELECT_ALL]: 'Отменить выбор',
   },
 };

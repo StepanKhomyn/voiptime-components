@@ -63,6 +63,12 @@
         },
         { name: 'multiple', type: 'boolean', default: 'false', description: 'Множинний вибір' },
         {
+          name: 'select-all',
+          type: 'boolean',
+          default: 'false',
+          description: 'Можливість вибрати всі значення мультиселекту',
+        },
+        {
           name: 'collapsedTags',
           type: 'boolean',
           default: 'false',
@@ -135,6 +141,11 @@
         { name: 'validation', type: '{ isValid: boolean, errors: string[] }', description: 'Результат валідації' },
         { name: 'focus', type: 'FocusEvent', description: 'Отримання фокусу' },
         { name: 'blur', type: 'FocusEvent', description: 'Втрата фокусу' },
+        {
+          name: 'select-all-change',
+          type: '{ isAllSelected: boolean; selectedValues: any[] }',
+          description: 'Масове виділення всіх елементів мультиселекту',
+        },
       ],
     },
     {
@@ -167,7 +178,15 @@
       </DocPreview>
 
       <DocPreview title="Множинний вибір з collapsed tags">
-        <VSelect v-model="demo.multiple" collapsed-tags label="Технології" multiple placeholder="Оберіть декілька...">
+        <VSelect
+          v-model="demo.multiple"
+          collapsed-tags
+          filterable
+          label="Технології"
+          multiple
+          placeholder="Оберіть декілька..."
+          select-all
+        >
           <VOption v-for="item in technologies" :key="item.value" :label="item.label" :value="item.value" />
         </VSelect>
       </DocPreview>

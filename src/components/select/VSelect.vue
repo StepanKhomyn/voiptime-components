@@ -36,6 +36,7 @@
     clearable: false,
     loading: false,
     multiple: false,
+    selectAll: false,
     filterable: false,
     collapsedTags: false,
     outlined: false,
@@ -234,6 +235,26 @@
     return registeredOptions.value.filter(option => filterOption(option, state.filterQuery.value));
   });
 
+  const isAllSelected = computed(() => {
+    if (!props.multiple || filteredOptions.value.length === 0) return false;
+
+    // Перевіряємо, чи всі НЕвідключені (enabled) опції вибрані
+    const enabledOptions = filteredOptions.value.filter(opt => !opt.disabled);
+    if (enabledOptions.length === 0) return false;
+
+    return enabledOptions.every(opt => isOptionSelectedUtil(opt.value));
+  });
+
+  // Computed для indeterminate стану (коли вибрано частину, але не всі)
+  const isIndeterminate = computed(() => {
+    if (!props.multiple || filteredOptions.value.length === 0) return false;
+
+    const enabledOptions = filteredOptions.value.filter(opt => !opt.disabled);
+    const selectedCount = enabledOptions.filter(opt => isOptionSelectedUtil(opt.value)).length;
+
+    return selectedCount > 0 && selectedCount < enabledOptions.length;
+  });
+
   // ===== ПРОСТИЙ SCROLL HANDLER =====
   const lastEmitTime = ref(0);
   const cooldown = 300; // мс
@@ -257,6 +278,44 @@
     if (nearBottom && canEmit) {
       lastEmitTime.value = now;
       emit('scrolled');
+    }
+  };
+
+  // Перемикач "Виділити все / Зняти все"
+  const handleToggleSelectAll = () => {
+    if (!props.multiple) return;
+
+    const currentValues = Array.isArray(props.modelValue) ? [...props.modelValue] : [];
+    const enabledOptions = filteredOptions.value.filter(opt => !opt.disabled);
+
+    let newValues: any[] = [];
+
+    if (isAllSelected.value) {
+      // Якщо всі вибрані — знімаємо виділення лише з ТИХ, що у filteredOptions
+      newValues = currentValues.filter(
+        val => !enabledOptions.some(opt => compareValues(opt.value, val, props.valueKey))
+      );
+    } else {
+      // Якщо не всі — додаємо всі з enabledOptions, унікалізуючи масив
+      const toAdd = enabledOptions
+        .map(opt => opt.value)
+        .filter(val => !currentValues.some(item => compareValues(item, val, props.valueKey)));
+
+      newValues = [...currentValues, ...toAdd];
+    }
+
+    // Оновлюємо modelValue
+    emit('update:modelValue', newValues);
+    emit('change', newValues);
+
+    // Відправляємо івент для бекенду про те, що активовано Select All
+    emit('select-all-change', {
+      isAllSelected: !isAllSelected.value,
+      selectedValues: newValues,
+    });
+
+    if (props.validateOnInput) {
+      validation.validate();
     }
   };
 
@@ -1092,9 +1151,23 @@
           @click.stop
           @mousedown.prevent
         >
-          <!-- Search Input -->
-          <div v-if="filterable" class="vt-select-dropdown__search">
+          <div v-if="filterable || (multiple && selectAll)" class="vt-select-dropdown__search">
+            <VCheckbox
+              v-if="multiple && selectAll"
+              :checked="isAllSelected"
+              :indeterminate="isIndeterminate"
+              :label="
+                filterable
+                  ? ''
+                  : isAllSelected
+                    ? t(LOCALE_KEYS.CHECKBOX_UNSELECT_ALL)
+                    : t(LOCALE_KEYS.CHECKBOX_SELECT_ALL)
+              "
+              @change="handleToggleSelectAll"
+            />
+
             <VInput
+              v-if="filterable"
               ref="filterInputRef"
               v-model="state.filterQuery.value"
               :placeholder="filterPlaceholderText"

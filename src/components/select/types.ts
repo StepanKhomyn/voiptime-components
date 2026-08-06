@@ -17,6 +17,7 @@ export interface VtSelectProps {
   modelValue?: any; // Змінено для підтримки будь-яких значень
   options?: VtSelectOption[];
   multiple?: boolean;
+  selectAll?: boolean;
   disabled?: boolean;
   clearable?: boolean;
   filterable?: boolean;
@@ -71,6 +72,7 @@ export interface VtSelectEmits {
 
   (e: 'filter', query: string): void; // Еміт при зміні фільтра
   (e: 'filter-clear'): void; // Еміт при очищенні фільтра
+  (e: 'select-all-change', payload: { isAllSelected: boolean; selectedValues: any[] }): void;
 }
 
 export interface VtOptionEmits {
