@@ -15,7 +15,7 @@
   align-items: center;
   justify-content: space-between;
   flex-grow: 1;
-  width: var(--vt-nav-rail-width);
+  max-width: var(--vt-nav-rail-width);
   height: 100%;
   background-color: var(--vt-nav-rail-bg);
   border-left: 1px solid var(--vt-nav-rail-border-color);
