@@ -1,3 +1,10 @@
+## [1.21.147](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.146...v1.21.147) (2026-08-10)
+
+
+### Bug Fixes
+
+* center empty block in table ([eafc648](https://github.com/StepanKhomyn/voiptime-components/commit/eafc648a5e9ae26a73845119550790473a1a4c46))
+
 ## [1.21.146](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.145...v1.21.146) (2026-08-10)
 
 
