@@ -185,7 +185,9 @@
         display: flex;
         flex-direction: column;
 
-        // Модифікатор: горизонтальний паддінг
+        container-type: inline-size;
+        container-name: vt-page__card-form-body;
+
         &--padded {
           padding-left: var(--vt-padding-lg);
           padding-right: var(--vt-padding-lg);
@@ -197,18 +199,10 @@
           align-items: center;
           padding: 0 var(--vt-padding-lg) var(--vt-padding-base);
 
-          container-type: inline-size;
-          container-name: vt-page__card-form-body-item;
-
-          @container vt-page__card-form-body-item (max-width: 400px) {
+          @container vt-page__card-form-body (max-width: 400px) {
             flex-direction: column;
             align-items: flex-start;
             gap: 4px;
-
-            > .vt-page__card-form-body-label {
-              width: 100%;
-              margin-bottom: 0;
-            }
           }
         }
 
@@ -220,6 +214,11 @@
           text-align: left;
           flex-shrink: 0;
           transition: color 0.2s ease, width 0.2s ease;
+
+          @container vt-page__card-form-body (max-width: 400px) {
+            width: 100%;
+            margin-bottom: 0;
+          }
 
           &.vt-label-required::after {
             content: ' *';
@@ -241,7 +240,6 @@
           gap: var(--vt-gap-base);
           padding: 0 var(--vt-padding-lg) var(--vt-padding-base);
 
-          // Вкладений рядок зі зміщенням (для змінних номера)
           &--nested {
             padding-left: calc(var(--vt-padding-lg) + 16px);
           }
