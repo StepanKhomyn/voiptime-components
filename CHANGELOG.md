@@ -1,3 +1,10 @@
+## [1.21.145](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.144...v1.21.145) (2026-08-10)
+
+
+### Bug Fixes
+
+* adaptive body-item in form ([dbe40a1](https://github.com/StepanKhomyn/voiptime-components/commit/dbe40a179284eff828eae3b3b178ace048cb92e9))
+
 ## [1.21.144](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.143...v1.21.144) (2026-08-10)
 
 
