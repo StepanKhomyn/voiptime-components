@@ -1,3 +1,10 @@
+## [1.21.144](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.143...v1.21.144) (2026-08-10)
+
+
+### Bug Fixes
+
+* add separated class for labels in forms ([0e82559](https://github.com/StepanKhomyn/voiptime-components/commit/0e82559f4fc9f338ac062095556a7d28023bebf9))
+
 ## [1.21.143](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.142...v1.21.143) (2026-08-06)
 
 
