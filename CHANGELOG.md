@@ -1,3 +1,10 @@
+## [1.21.149](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.148...v1.21.149) (2026-08-11)
+
+
+### Bug Fixes
+
+* [#4272](https://github.com/StepanKhomyn/voiptime-components/issues/4272) Поплила сторінка записів розмов ([fcb20b4](https://github.com/StepanKhomyn/voiptime-components/commit/fcb20b4c1ac957ef8bc147582d37cc3abdd16845))
+
 ## [1.21.148](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.147...v1.21.148) (2026-08-10)
 
 
