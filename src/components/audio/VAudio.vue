@@ -66,13 +66,27 @@
       const chH = height / channels.length;
       const available = chH - (isMultiChannelMode.value ? TOP_MARGIN : 0);
       const centerY = idx * chH + (isMultiChannelMode.value ? TOP_MARGIN : 0) + available / 2;
-      const step = Math.ceil(data.length / width);
+      const scale = data.length / width;
+
+      let maxAmp = 0;
+      for (let i = 0; i < data.length; i += 100) {
+        const v = Math.abs(data[i] ?? 0);
+        if (v > maxAmp) maxAmp = v;
+      }
+      if (maxAmp === 0) maxAmp = 1;
 
       ctx.fillStyle = CHANNEL_COLORS.WAVE_DEFAULT;
 
       for (let i = 0; i < width; i += 2) {
-        const val = Math.abs(data[i * step] || 0);
-        const barH = Math.max(val * chH * 0.8, 2);
+        const startIdx = Math.floor(i * scale);
+        const endIdx = Math.min(Math.floor((i + 2) * scale), data.length - 1);
+        let maxVal = 0;
+        for (let j = startIdx; j <= endIdx; j++) {
+          const v = Math.abs(data[j] ?? 0);
+          if (v > maxVal) maxVal = v;
+        }
+        const normalized = maxVal / maxAmp;
+        const barH = Math.max(normalized * available * 0.85, 2);
         ctx.fillRect(i, centerY - barH / 2, 1.5, barH);
       }
 
@@ -177,6 +191,8 @@
     if (gain) gain.gain.value = state.value;
   };
 
+  const MUTE_ICON = { x: 5, y: 0, size: 18 };
+
   const attachMuteClickHandler = () => {
     const canvas = document.querySelector(`#waveform-${uuid.value} canvas`) as HTMLCanvasElement | null;
     if (!canvas || !isMultiChannelMode.value) return;
@@ -184,9 +200,21 @@
     canvas.addEventListener('click', (event: MouseEvent) => {
       if (isPlayerDisabled.value) return;
       const rect = canvas.getBoundingClientRect();
+      const clickX = event.clientX - rect.left;
       const clickY = event.clientY - rect.top;
-      const idx: 0 | 1 = clickY < rect.height / 2 ? 0 : 1;
-      toggleChannelMute(idx);
+      const chH = rect.height / 2;
+
+      [0, 1].forEach((idx) => {
+        const areaY = idx * chH + MUTE_ICON.y;
+        if (
+          clickX >= MUTE_ICON.x && clickX <= MUTE_ICON.x + MUTE_ICON.size &&
+          clickY >= areaY && clickY <= areaY + MUTE_ICON.size
+        ) {
+          event.stopPropagation();
+          event.preventDefault();
+          toggleChannelMute(idx as 0 | 1);
+        }
+      });
     });
   };
 
