@@ -171,7 +171,7 @@
       emit('error');
     });
 
-    if (isMultiChannelMode.value) {
+    if (isMultiChannelMode.value || isChannelRoutedMode.value) {
       wavesurfer.value.on('ready', () => {
         setupChannelRouting();
         attachMuteClickHandler();
