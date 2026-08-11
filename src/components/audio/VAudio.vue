@@ -119,7 +119,7 @@
       waveColor: CHANNEL_COLORS.WAVE_DEFAULT,
       progressColor: CHANNEL_COLORS.PROGRESS,
       barWidth: 2,
-      height: isMultiChannelMode.value ? 100 : 50,
+      height: isChannelRoutedMode.value ? 36 : isMultiChannelMode.value ? 100 : 50,
       plugins: isChannelRoutedMode.value
         ? []
         : [
@@ -235,14 +235,15 @@
 </script>
 
 <template>
-  <div class="vt-audio" :class="{ 'is-disabled': isPlayerDisabled }">
+  <div class="vt-audio" :class="{ 'is-disabled': isPlayerDisabled, 'is-channel-routed': isChannelRoutedMode }">
     <div v-if="!recordUrl" class="vt-audio__empty">
       <slot name="empty">
-        <VEmpty icon="noSound" :text="t(LOCALE_KEYS.AUDIO_EMPTY)" />
+        <VEmpty v-if="!isChannelRoutedMode" icon="noSound" :text="t(LOCALE_KEYS.AUDIO_EMPTY)" />
+        <span v-else>{{ t(LOCALE_KEYS.AUDIO_EMPTY) }}</span>
       </slot>
     </div>
 
-    <div v-else class="vt-audio__container" :class="{ 'is-single-channel': !isMultiChannelMode }">
+    <div v-else class="vt-audio__container" :class="{ 'is-single-channel': !isMultiChannelMode, 'is-channel-routed': isChannelRoutedMode }">
       <div class="vt-audio__wave-area">
         <div :id="`waveform-${uuid}`" class="vt-audio__waveform"></div>
         <div v-if="!isChannelRoutedMode" ref="timelineContainer" class="vt-audio__timeline"></div>
