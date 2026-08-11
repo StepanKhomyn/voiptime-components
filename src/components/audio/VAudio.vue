@@ -60,9 +60,12 @@
 
     ctx.clearRect(0, 0, width, height);
 
+    const TOP_MARGIN = 20;
+
     channels.forEach((data, idx) => {
       const chH = height / channels.length;
-      const centerY = idx * chH + chH / 2;
+      const available = chH - (isMultiChannelMode.value ? TOP_MARGIN : 0);
+      const centerY = idx * chH + (isMultiChannelMode.value ? TOP_MARGIN : 0) + available / 2;
       const step = Math.ceil(data.length / width);
 
       ctx.fillStyle = CHANNEL_COLORS.WAVE_DEFAULT;
@@ -75,10 +78,10 @@
 
       if (isMultiChannelMode.value) {
         ctx.fillStyle = '#999999';
-        ctx.font = '10px Inter, sans-serif';
+        ctx.font = '12px Inter, sans-serif';
         ctx.textAlign = 'right';
         const userName = (idx === 0 ? props.userA : props.userB) ?? '';
-        ctx.fillText(userName, width - 10, idx * chH + 15);
+        ctx.fillText(userName, width - 10, idx * chH + TOP_MARGIN - 5);
       }
     });
   };
@@ -94,6 +97,9 @@
 
     leftGain.value = audioContext.value.createGain();
     rightGain.value = audioContext.value.createGain();
+
+    leftGain.value.gain.value = stateLeft.value;
+    rightGain.value.gain.value = stateRight.value;
 
     source.connect(splitter);
     splitter.connect(leftGain.value, 0);
@@ -151,11 +157,37 @@
       emit('error');
     });
 
-    if (isChannelRoutedMode.value) {
-      wavesurfer.value.on('ready', setupChannelRouting);
+    if (isMultiChannelMode.value) {
+      wavesurfer.value.on('ready', () => {
+        setupChannelRouting();
+        attachMuteClickHandler();
+      });
     }
 
     wavesurfer.value.load(props.recordUrl);
+  };
+
+  const stateLeft = ref<0 | 1>(1);
+  const stateRight = ref<0 | 1>(1);
+
+  const toggleChannelMute = (idx: 0 | 1) => {
+    const gain = idx === 0 ? leftGain.value : rightGain.value;
+    const state = idx === 0 ? stateLeft : stateRight;
+    state.value = state.value ? 0 : 1;
+    if (gain) gain.gain.value = state.value;
+  };
+
+  const attachMuteClickHandler = () => {
+    const canvas = document.querySelector(`#waveform-${uuid.value} canvas`) as HTMLCanvasElement | null;
+    if (!canvas || !isMultiChannelMode.value) return;
+
+    canvas.addEventListener('click', (event: MouseEvent) => {
+      if (isPlayerDisabled.value) return;
+      const rect = canvas.getBoundingClientRect();
+      const clickY = event.clientY - rect.top;
+      const idx: 0 | 1 = clickY < rect.height / 2 ? 0 : 1;
+      toggleChannelMute(idx);
+    });
   };
 
   const togglePlay = async () => {
@@ -252,7 +284,7 @@
       <div class="vt-audio__controls">
         <template v-if="!isChannelRoutedMode">
           <button class="vt-audio__btn" :disabled="isPlayerDisabled" @click="downloadRecord">
-            <VIcon name="import" />
+            <VIcon name="import" width="20" height="20" />
           </button>
 
           <VDropdown trigger="click" placement="top" :disabled="isPlayerDisabled" @command="handleSpeedChange">
@@ -267,10 +299,10 @@
 
         <button class="vt-audio__btn vt-audio__btn--main" :disabled="isPlayerDisabled" @click="togglePlay">
           <slot v-if="isPlay" name="icon-pause">
-            <VIcon name="pause" />
+            <VIcon name="pause" width="24" height="24" />
           </slot>
           <slot v-else name="icon-play">
-            <VIcon name="start" />
+            <VIcon name="start" width="24" height="24" />
           </slot>
         </button>
       </div>
