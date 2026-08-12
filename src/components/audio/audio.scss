@@ -43,6 +43,7 @@
 
     ::part(canvases) {
       clip-path: none !important;
+      pointer-events: auto !important;
     }
   }
 

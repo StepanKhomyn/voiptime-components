@@ -15,6 +15,66 @@
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
 
+  interface ClickableArea {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    channelIdx: 0 | 1;
+  }
+
+  type CreateImageFn = (color: string, callback: (img: HTMLImageElement) => void) => void;
+
+  const svgToImage = (svgString: string, callback: (img: HTMLImageElement) => void): void => {
+    const img = new Image();
+    img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgString)));
+    img.onload = () => callback(img);
+  };
+
+  const createVolumeImage: CreateImageFn = (color, callback) =>
+    svgToImage(
+      `<svg width="20" height="20" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12.9167 7.4982C13.3072 7.88555 13.6172 8.34639 13.8287 8.85413C14.0403 9.36188
+               14.1492 9.90649 14.1492 10.4565C14.1492 11.0066 14.0403 11.5512 13.8287 12.0589
+               C13.6172 12.5667 13.3072 13.0275 12.9167 13.4149M15.3333 15.8315C16.0388 15.134
+               16.5989 14.3035 16.9812 13.388C17.3634 12.4725 17.5602 11.4903 17.5602 10.4982
+               C17.5602 9.50612 17.3634 8.5239 16.9812 7.60841C16.5989 6.69293 16.0388 5.86238
+               15.3333 5.16487M10 5.58154V15.4982C9.98569 15.6458 9.93223 15.787 9.84513 15.9071
+               C9.75804 16.0272 9.64047 16.1218 9.50457 16.1813C9.36867 16.2407 9.21936 16.2628
+               9.07206 16.2453C8.92476 16.2278 8.78481 16.1712 8.66667 16.0815L5 12.9982H3.33333
+               C3.11232 12.9982 2.90036 12.9104 2.74408 12.7541C2.5878 12.5978 2.5 12.3859 2.5
+               12.1649V8.83154C2.5 8.33154 2.83333 7.9982 3.33333 7.9982H5L8.66667 4.9982
+               C8.77919 4.90986 8.91256 4.85197 9.05394 4.8301C9.19532 4.80824 9.33994 4.82314
+               9.4739 4.87337C9.60785 4.9236 9.72661 5.00747 9.81875 5.11691C9.9109 5.22634
+               9.97332 5.35765 10 5.4982V5.58154Z"
+        stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+      callback
+    );
+
+  const createNoVolumeImage: CreateImageFn = (color, callback) =>
+    svgToImage(
+      `<svg width="20" height="20" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path  d="M10 5.58154V15.4982C9.98569 15.6458 9.93223 15.787 9.84513 15.9071C9.75804 16.0272
+               9.64047 16.1218 9.50457 16.1813C9.36867 16.2407 9.21936 16.2628 9.07206 16.2453
+               C8.92476 16.2278 8.78481 16.1712 8.66667 16.0815L5 12.9982H3.33333C3.11232 12.9982
+               2.90036 12.9104 2.74408 12.7541C2.5878 12.5978 2.5 12.3859 2.5 12.1649V8.83154
+               C2.5 8.33154 2.83333 7.9982 3.33333 7.9982H5L8.66667 4.9982C8.77919 4.90986
+               8.91256 4.85197 9.05394 4.8301C9.19532 4.80824 9.33994 4.82314 9.4739 4.87337
+               C9.60785 4.9236 9.72661 5.00747 9.81875 5.11691C9.9109 5.22634 9.97332 5.35765
+               10 5.4982V5.58154Z" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12.916 7.4974C13.3066 7.88474 13.6165 8.34558 13.8281 8.85333C14.0396 9.36107
+               14.1485 9.90568 14.1485 10.4557C14.1485 11.0058 14.0396 11.5504 13.8281 12.0581
+               C13.6165 12.5659 13.3066 13.0267 12.916 13.4141M15.3327 15.8307C16.0382 15.1332
+               16.5982 14.3027 16.9805 13.3872C17.3628 12.4717 17.5596 11.4895 17.5596 10.4974
+               C17.5596 9.50531 17.3628 8.52309 16.9805 7.60761C16.5982 6.69212 16.0382 5.86158
+               15.3327 5.16406" stroke="#F2F2F2" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`,
+      callback
+    );
+
+  const canvasClickHandlers = new WeakMap<HTMLCanvasElement, (e: MouseEvent) => void>();
+
   const { t } = useI18n();
 
   const props = withDefaults(defineProps<VAudioProps>(), {
@@ -44,8 +104,13 @@
   const isChannelRoutedMode = computed(() => props.type === 'channel-routed');
 
   const drawWaveform = (peaks: Float32Array[], ctx: CanvasRenderingContext2D) => {
-    const { width, height } = ctx.canvas;
+    const canvas = ctx.canvas;
+    const { width, height } = canvas;
     const decoded = wavesurfer.value?.decodedData;
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = rect.width > 0 ? width / rect.width : 1;
+    const scaleY = rect.height > 0 ? height / rect.height : 1;
 
     if (!peaks.length && !decoded) {
       ctx.fillStyle = CHANNEL_COLORS.WAVE_DEFAULT;
@@ -60,7 +125,10 @@
 
     ctx.clearRect(0, 0, width, height);
 
-    const TOP_MARGIN = 20;
+    const TOP_MARGIN = 20 * scaleY;
+    const ICON_SIZE_CSS = 20;
+    const ICON_SIZE = ICON_SIZE_CSS * scaleX;
+    const localAreas: ClickableArea[] = [];
 
     channels.forEach((data, idx) => {
       const chH = height / channels.length;
@@ -92,12 +160,61 @@
 
       if (isMultiChannelMode.value) {
         ctx.fillStyle = '#999999';
-        ctx.font = '12px Inter, sans-serif';
+        ctx.font = `${12 * scaleX}px Inter, sans-serif`;
         ctx.textAlign = 'right';
         const userName = (idx === 0 ? props.userA : props.userB) ?? '';
-        ctx.fillText(userName, width - 10, idx * chH + TOP_MARGIN - 5);
+        ctx.fillText(userName, width - 10 * scaleX, idx * chH + TOP_MARGIN - 5 * scaleY);
+
+        // ── Іконка mute/unmute ──
+        const channelIdx = idx as 0 | 1;
+        const iconX = 5 * scaleX;
+        const iconY = idx * chH + 1 * scaleY;
+        const isMuted = (channelIdx === 0 ? stateLeft.value : stateRight.value) === 0;
+
+        (isMuted ? createNoVolumeImage : createVolumeImage)(
+          channelIdx === 0 ? CHANNEL_COLORS.CHANNEL_A : CHANNEL_COLORS.CHANNEL_B,
+          img => ctx.drawImage(img, iconX, iconY, ICON_SIZE, ICON_SIZE)
+        );
+
+        localAreas.push({ x: iconX, y: iconY, width: ICON_SIZE, height: ICON_SIZE, channelIdx });
       }
     });
+
+    if (isMultiChannelMode.value) {
+      const oldHandler = canvasClickHandlers.get(canvas);
+      if (oldHandler) canvas.removeEventListener('click', oldHandler);
+
+      const clickHandler = (event: MouseEvent): void => {
+        if (isPlayerDisabled.value) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const sx = rect.width > 0 ? canvas.width / rect.width : 1;
+        const sy = rect.height > 0 ? canvas.height / rect.height : 1;
+        const clickX = (event.clientX - rect.left) * sx;
+        const clickY = (event.clientY - rect.top) * sy;
+
+        for (const area of localAreas) {
+          if (clickX >= area.x && clickX <= area.x + area.width && clickY >= area.y && clickY <= area.y + area.height) {
+            event.stopPropagation();
+            event.preventDefault();
+            toggleChannelMute(area.channelIdx);
+
+            const isMutedNow = (area.channelIdx === 0 ? stateLeft.value : stateRight.value) === 0;
+            ctx.save();
+            ctx.clearRect(area.x, area.y, area.width, area.height);
+            (isMutedNow ? createNoVolumeImage : createVolumeImage)(
+              area.channelIdx === 0 ? CHANNEL_COLORS.CHANNEL_A : CHANNEL_COLORS.CHANNEL_B,
+              img => ctx.drawImage(img, area.x, area.y, area.width, area.height)
+            );
+            ctx.restore();
+            break;
+          }
+        }
+      };
+
+      canvas.addEventListener('click', clickHandler);
+      canvasClickHandlers.set(canvas, clickHandler);
+    }
   };
 
   const setupChannelRouting = () => {
@@ -174,7 +291,6 @@
     if (isMultiChannelMode.value || isChannelRoutedMode.value) {
       wavesurfer.value.on('ready', () => {
         setupChannelRouting();
-        attachMuteClickHandler();
       });
     }
 
@@ -189,33 +305,6 @@
     const state = idx === 0 ? stateLeft : stateRight;
     state.value = state.value ? 0 : 1;
     if (gain) gain.gain.value = state.value;
-  };
-
-  const MUTE_ICON = { x: 5, y: 0, size: 18 };
-
-  const attachMuteClickHandler = () => {
-    const canvas = document.querySelector(`#waveform-${uuid.value} canvas`) as HTMLCanvasElement | null;
-    if (!canvas || !isMultiChannelMode.value) return;
-
-    canvas.addEventListener('click', (event: MouseEvent) => {
-      if (isPlayerDisabled.value) return;
-      const rect = canvas.getBoundingClientRect();
-      const clickX = event.clientX - rect.left;
-      const clickY = event.clientY - rect.top;
-      const chH = rect.height / 2;
-
-      [0, 1].forEach((idx) => {
-        const areaY = idx * chH + MUTE_ICON.y;
-        if (
-          clickX >= MUTE_ICON.x && clickX <= MUTE_ICON.x + MUTE_ICON.size &&
-          clickY >= areaY && clickY <= areaY + MUTE_ICON.size
-        ) {
-          event.stopPropagation();
-          event.preventDefault();
-          toggleChannelMute(idx as 0 | 1);
-        }
-      });
-    });
   };
 
   const togglePlay = async () => {
@@ -274,10 +363,12 @@
   };
 
   onMounted(() => nextTick(initWaveSurfer));
+
   onBeforeUnmount(() => {
     wavesurfer.value?.destroy();
     teardownChannelRouting();
   });
+
   watch(
     () => props.recordUrl,
     () => {
@@ -303,7 +394,11 @@
       </slot>
     </div>
 
-    <div v-else class="vt-audio__container" :class="{ 'is-single-channel': !isMultiChannelMode, 'is-channel-routed': isChannelRoutedMode }">
+    <div
+      v-else
+      class="vt-audio__container"
+      :class="{ 'is-single-channel': !isMultiChannelMode, 'is-channel-routed': isChannelRoutedMode }"
+    >
       <div class="vt-audio__wave-area">
         <div :id="`waveform-${uuid}`" class="vt-audio__waveform"></div>
         <div v-if="!isChannelRoutedMode" ref="timelineContainer" class="vt-audio__timeline"></div>

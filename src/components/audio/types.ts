@@ -31,4 +31,6 @@ export interface WaveSurferInstance extends WaveSurfer {
 export const CHANNEL_COLORS = {
   WAVE_DEFAULT: '#D9D9D9',
   PROGRESS: '#F2994A',
+  CHANNEL_A: '#FFBD3E',
+  CHANNEL_B: '#00475A',
 } as const;
