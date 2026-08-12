@@ -1,3 +1,10 @@
+## [1.21.153](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.152...v1.21.153) (2026-08-12)
+
+
+### Bug Fixes
+
+* [#4131](https://github.com/StepanKhomyn/voiptime-components/issues/4131) Call quality | Правки карти якості ([810c49d](https://github.com/StepanKhomyn/voiptime-components/commit/810c49d28162911b93f6efd163ee9f657cb23eef))
+
 ## [1.21.152](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.151...v1.21.152) (2026-08-11)
 
 
