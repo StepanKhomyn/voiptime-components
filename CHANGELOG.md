@@ -1,3 +1,10 @@
+## [1.21.158](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.157...v1.21.158) (2026-08-13)
+
+
+### Bug Fixes
+
+* test new dynamic logic for $each in validation pt.2 ([b5b8476](https://github.com/StepanKhomyn/voiptime-components/commit/b5b8476cc6bc8011fa9b951b93c0b6033924a260))
+
 ## [1.21.157](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.156...v1.21.157) (2026-08-13)
 
 
