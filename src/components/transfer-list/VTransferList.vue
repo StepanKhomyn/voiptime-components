@@ -251,15 +251,24 @@
 
   // ─── Drag & Drop ──────────────────────────────────────────────────────────────
 
-  const onDragStart = (event: DragEvent, item: T): void => {
-    event.dataTransfer?.setData('application/json', JSON.stringify(item));
+  const onDragStart = (event: DragEvent, item: T, from: 'left' | 'right'): void => {
+    event.dataTransfer?.setData('application/json', JSON.stringify({ id: getId(item), from }));
     if (event.dataTransfer) event.dataTransfer.effectAllowed = 'move';
   };
+
+  const findById = (id: unknown, list: T[]): T | undefined =>
+    list.find(i => getId(i) === id);
 
   const onDrop = (event: DragEvent, target: 'left' | 'right'): void => {
     event.preventDefault();
     try {
-      const item = JSON.parse(event.dataTransfer!.getData('application/json')) as T;
+      const { id, from } = JSON.parse(event.dataTransfer!.getData('application/json'));
+      if (from === target) return;
+
+      const sourceList = from === 'left' ? listOne.value : listTwo.value;
+      const item = findById(id, sourceList);
+      if (!item) return;
+
       target === 'right' ? moveToRight(item) : moveToLeft(item);
     } catch (e) {
       console.error('[VTransferList] drop parse error:', e);
@@ -288,7 +297,7 @@
           class="vt-transfer-list__item"
           :class="{ 'vt-transfer-list__item--active': isActive(item, activeLeft) }"
           draggable="true"
-          @dragstart="onDragStart($event, item)"
+          @dragstart="onDragStart($event, item, 'left')"
           @click="selectLeft(item)"
         >
           <slot name="item" :item="item">{{ getLabel(item) }}</slot>
@@ -347,7 +356,7 @@
           class="vt-transfer-list__item"
           :class="{ 'vt-transfer-list__item--active': isActive(item, activeRight) }"
           draggable="true"
-          @dragstart="onDragStart($event, item)"
+          @dragstart="onDragStart($event, item, 'right')"
           @click="selectRight(item)"
         >
           <slot name="item" :item="item">{{ getLabel(item) }}</slot>
