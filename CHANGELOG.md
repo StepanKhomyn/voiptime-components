@@ -1,3 +1,10 @@
+## [1.21.154](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.153...v1.21.154) (2026-08-13)
+
+
+### Bug Fixes
+
+* [#4244](https://github.com/StepanKhomyn/voiptime-components/issues/4244) Transfer list: коли перетягувати з одної колонки в ту саму значення, то воно дублюється ([07fe6ac](https://github.com/StepanKhomyn/voiptime-components/commit/07fe6ac1f28cd6bd4abe903718b306fb95b3c528))
+
 ## [1.21.153](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.152...v1.21.153) (2026-08-12)
 
 
