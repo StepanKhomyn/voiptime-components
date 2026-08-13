@@ -1,3 +1,10 @@
+## [1.21.159](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.158...v1.21.159) (2026-08-13)
+
+
+### Bug Fixes
+
+* add class in vt-modal__row ([a9cb01c](https://github.com/StepanKhomyn/voiptime-components/commit/a9cb01c6e95dae131eaf994230c6eee172389d69))
+
 ## [1.21.158](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.157...v1.21.158) (2026-08-13)
 
 
