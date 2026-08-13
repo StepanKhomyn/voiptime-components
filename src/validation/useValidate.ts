@@ -27,10 +27,6 @@ function setPath(obj: AnyObject, path: string, value: any) {
   cur[parts[parts.length - 1]] = value;
 }
 
-function isEachRule(rule: any) {
-  return rule && typeof rule === 'object' && !Array.isArray(rule) && '$each' in rule;
-}
-
 /**
  * Build a "ref-like" object for path inside state (get/set)
  * Now supports both regular objects and refs
@@ -235,14 +231,16 @@ export function useValidate(
       const path = basePath ? `${basePath}.${key}` : key;
 
       if (typeof rule === 'function' || (Array.isArray(rule) && rule.length > 0 && typeof rule[0] === 'function')) {
-        // Field validators
+        // Field validators - accept either single function or array of functions
         const validators: ValidatorFn[] = Array.isArray(rule) ? (rule as ValidatorFn[]) : [rule as ValidatorFn];
         group[key] = createFieldNode(actualState, path, validators, opts);
-      } else if (isEachRule(rule)) {
-        group[key] = buildEachGroup(rule.$each, path);
       } else if (typeof rule === 'object' && rule !== null) {
-        group[key] = build(rule as any, path);
+        // nested group or lazy factory
+        if (typeof rule === 'object' && Array.isArray(rule) === false) {
+          group[key] = build(rule as any, path);
+        }
       } else {
+        // fallback: treat as empty group
         group[key] = build({}, path);
       }
     }
@@ -361,73 +359,6 @@ export function useValidate(
 
     Object.assign(group, meta);
     return group as ValidationGroup;
-  }
-
-  function buildEachGroup(itemRules: any, arrayPath: string) {
-    const itemsRef = ref<any[]>([]);
-
-    function getArray(): any[] {
-      const actualState = isRef(state) ? state.value : state;
-      const arr = getPath(actualState, arrayPath);
-      return Array.isArray(arr) ? arr : [];
-    }
-
-    // синхронізує кількість вузлів валідації з поточною довжиною масиву
-    function sync() {
-      const arr = getArray();
-      const currentLen = itemsRef.value.length;
-      if (arr.length > currentLen) {
-        for (let i = currentLen; i < arr.length; i++) {
-          itemsRef.value.push(build(itemRules, `${arrayPath}.${i}`));
-        }
-      } else if (arr.length < currentLen) {
-        itemsRef.value.splice(arr.length, currentLen - arr.length);
-      }
-    }
-
-    sync();
-
-    // ре-синк при зміні довжини масиву (add/remove)
-    watch(
-      () => {
-        const actualState = isRef(state) ? state.value : state;
-        const arr = getPath(actualState, arrayPath);
-        return Array.isArray(arr) ? arr.length : 0;
-      },
-      () => sync()
-    );
-
-    const $each = computed(() => itemsRef.value);
-
-    const $validate = async () => {
-      sync();
-      const results = await Promise.all(itemsRef.value.map(item => item.$validate()));
-      return results.every(Boolean);
-    };
-
-    const $touch = () => {
-      itemsRef.value.forEach(item => item.$touch());
-    };
-
-    const $reset = () => {
-      itemsRef.value.forEach(item => item.$reset());
-    };
-
-    const $anyDirty = computed(() => itemsRef.value.some(item => item.$anyDirty ?? item.$dirty));
-    const $anyInvalid = computed(() => itemsRef.value.some(item => item.$anyInvalid ?? item.$invalid));
-    const $anyError = computed(() => itemsRef.value.some(item => item.$anyError ?? item.$error));
-    const $pending = computed(() => itemsRef.value.some(item => item.$pending));
-
-    return reactive({
-      $each,
-      $validate,
-      $touch,
-      $reset,
-      $anyDirty,
-      $anyInvalid,
-      $anyError,
-      $pending,
-    });
   }
 
   // helper to traverse the built result
