@@ -121,6 +121,11 @@
       background: var(--color-neutral);
     }
 
+    &--add {
+      background: var(--color-neutral);
+      padding: var(--vt-gap-base);
+    }
+
     &-icon-delete {
       flex-shrink: 0;
       cursor: pointer;
