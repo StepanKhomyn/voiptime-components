@@ -1,3 +1,10 @@
+## [1.21.160](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.159...v1.21.160) (2026-08-17)
+
+
+### Bug Fixes
+
+* fix useValidate ([f68abe0](https://github.com/StepanKhomyn/voiptime-components/commit/f68abe03c5f5b33ad2c8a29643f15f28b763b86a))
+
 ## [1.21.159](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.158...v1.21.159) (2026-08-13)
 
 
