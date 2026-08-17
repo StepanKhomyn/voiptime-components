@@ -234,7 +234,7 @@ export function useValidate(
       const rule = nodeRules[key];
       const path = basePath ? `${basePath}.${key}` : key;
 
-      if (typeof rule === 'function' || (Array.isArray(rule) && rule.length > 0 && typeof rule[0] === 'function')) {
+      if (typeof rule === 'function' || Array.isArray(rule)) {
         // Field validators
         const validators: ValidatorFn[] = Array.isArray(rule) ? (rule as ValidatorFn[]) : [rule as ValidatorFn];
         group[key] = createFieldNode(actualState, path, validators, opts);
