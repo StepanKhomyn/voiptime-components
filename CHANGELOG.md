@@ -1,3 +1,10 @@
+## [1.21.161](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.160...v1.21.161) (2026-08-19)
+
+
+### Bug Fixes
+
+* [#4271](https://github.com/StepanKhomyn/voiptime-components/issues/4271) Оптимізувати ширину інпутів ([e9ff988](https://github.com/StepanKhomyn/voiptime-components/commit/e9ff9881af114a32b9d8b9ceb8dc4cbee059191e))
+
 ## [1.21.160](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.159...v1.21.160) (2026-08-17)
 
 
