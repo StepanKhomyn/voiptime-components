@@ -1,3 +1,10 @@
+## [1.21.163](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.162...v1.21.163) (2026-08-25)
+
+
+### Bug Fixes
+
+* no wrap button text ([c37d05a](https://github.com/StepanKhomyn/voiptime-components/commit/c37d05a1f60588834102eb3509adfe937361d4c0))
+
 ## [1.21.162](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.161...v1.21.162) (2026-08-21)
 
 
