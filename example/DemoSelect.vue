@@ -1,12 +1,11 @@
 <script lang="ts" setup>
   import { reactive } from 'vue';
-  import VSelect from '@/components/select/VSelect.vue';
-  import VOption from '@/components/select/VOption.vue';
   import DocSection from './helper/DocSection.vue';
   import DocPreview from './helper/DocPreview.vue';
   import DocPropsTable, { TableSection } from './helper/DocPropsTable.vue';
   import DocFeature from './helper/DocFeature.vue';
   import DocCodeBlock from './helper/DocCodeBlock.vue';
+  import { VOption, VSelect } from '@';
 
   const demo = reactive({
     single: '',
@@ -20,7 +19,17 @@
     clearable: 'option1',
     disabled: 'disabled',
     collapsed: ['opt1', 'opt2', 'opt3', 'opt4', 'opt5'],
+    colors: 'ready',
   });
+
+  const statusColorOptions = [
+    { value: 'ready', label: 'READY', color: '#219754' },
+    { value: 'not-ready', label: 'NOT READY', color: 'var(--color-status-not-ready)' },
+    { value: 'reserved', label: 'RESERVED', color: 'var(--color-status-reserved)' },
+    { value: 'in-process', label: 'IN PROCESS', color: 'var(--color-status-in-process)' },
+    { value: 'talking', label: 'TALKING', color: 'var(--color-status-talking)' },
+    { value: 'working', label: 'WORKING', color: 'var(--color-status-working)' },
+  ];
 
   const languages = [
     { label: 'JavaScript', value: 'js' },
@@ -116,6 +125,9 @@
           default: '-',
           description: 'Кастомна функція фільтрації',
         },
+        { name: 'backgroundColor', type: 'string', default: '-', description: 'Колір селекту' },
+        { name: 'borderColor', type: 'string', default: '-', description: 'Колір бордера' },
+        { name: 'textColor', type: 'string', default: '-', description: 'Колір тексту' },
       ],
     },
     {
@@ -267,6 +279,60 @@
           placeholder="Виберіть..."
         >
           <VOption v-for="item in manyOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </VSelect>
+      </DocPreview>
+    </DocSection>
+
+    <DocSection title="Кастомна стилізація (статуси)">
+      <DocPreview>
+        <VSelect
+          v-model="demo.colors"
+          background-color="#219754"
+          border-color="#219754"
+          style="width: 150px"
+          text-color="#FFFFFF"
+        >
+          <VOption v-for="item in statusColorOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </VSelect>
+
+        <VSelect
+          v-model="demo.colors"
+          background-color="#DC2828"
+          border-color="#DC2828"
+          style="width: 150px"
+          text-color="#FFFFFF"
+        >
+          <VOption v-for="item in statusColorOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </VSelect>
+
+        <VSelect
+          v-model="demo.colors"
+          background-color="#FFBB3D"
+          border-color="#FFBB3D"
+          style="width: 150px"
+          text-color="#4F4F4F"
+        >
+          <VOption v-for="item in statusColorOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </VSelect>
+
+        <VSelect
+          v-model="demo.colors"
+          background-color="#004B8F"
+          border-color="#004B8F"
+          style="width: 150px"
+          text-color="#FFFFFF"
+        >
+          <VOption v-for="item in statusColorOptions" :key="item.value" :label="item.label" :value="item.value" />
+        </VSelect>
+
+        <VSelect
+          v-model="demo.colors"
+          background-color="#2E9CDC"
+          border-color="#2E9CDC"
+          style="width: 150px"
+          text-color="#FFFFFF"
+        >
+          <VOption v-for="item in statusColorOptions" :key="item.value" :label="item.label" :value="item.value" />
         </VSelect>
       </DocPreview>
     </DocSection>

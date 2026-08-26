@@ -1,6 +1,10 @@
 @use '../../assets/fonts' as *;
 @use '../../assets/scrollbar' as *;
 
+:root {
+  --vt-select-text-color: #4F4F4F;
+}
+
 .vt-select {
   display: flex;
   flex-direction: column;
@@ -31,6 +35,7 @@
     transition: all 0.2s ease-in-out;
     cursor: pointer;
     min-height: 36px;
+    color: var(--vt-select-text-color, inherit);
 
     &:hover {
       border-color: var(--color-primary-hover);
@@ -56,7 +61,7 @@
     outline: none;
     background: transparent;
     padding: var(--padding-input);
-    color: var(--color-gray-2);
+    color: inherit;
     cursor: pointer;
     min-width: 0;
 
@@ -115,7 +120,7 @@
 
   &__icon {
     flex-shrink: 0;
-    color: var(--color-gray-4);
+    color: var(--vt-select-text-color, var(--color-gray-4));
     transition: color 0.2s ease-in-out;
 
     &--error {
