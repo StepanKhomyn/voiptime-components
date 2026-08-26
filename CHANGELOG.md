@@ -1,3 +1,10 @@
+## [1.21.167](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.166...v1.21.167) (2026-08-26)
+
+
+### Bug Fixes
+
+* add new row icon ([9ffefdb](https://github.com/StepanKhomyn/voiptime-components/commit/9ffefdb7ab9176f069f190cd93dc0908b37d1507))
+
 ## [1.21.166](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.165...v1.21.166) (2026-08-26)
 
 
