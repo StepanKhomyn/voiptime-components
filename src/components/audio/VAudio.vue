@@ -1,12 +1,7 @@
-<script setup lang="ts">
+<script lang="ts" setup>
   import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
   import WaveSurfer from 'wavesurfer.js';
   import TimelinePlugin from 'wavesurfer.js/dist/plugins/timeline.js';
-
-  // Components
-  import VIcon from '@/components/icon/VIcon.vue';
-  import VDropdown from '@/components/dropdown/VDropdown.vue';
-  import VDropdownItem from '@/components/dropdown/VDropdownItem.vue';
 
   // Types
   import type { PlaybackSpeed, VAudioEmits, VAudioProps, WaveSurferInstance } from './types';
@@ -14,6 +9,9 @@
   import VEmpty from '@/components/empty/VEmpty.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
+  import VDropdown from '@/components/dropdown/VDropdown.vue';
+  import VIcon from '@/components/icon/VIcon.vue';
+  import VDropdownItem from '@/components/dropdown/VDropdownItem.vue';
 
   interface ClickableArea {
     x: number;
@@ -83,6 +81,7 @@
     userB: '',
     disabled: false,
     type: 'default',
+    download: true,
   });
 
   const emit = defineEmits<VAudioEmits>();
@@ -217,6 +216,14 @@
     }
   };
 
+  const waveformHeight = computed<number>(() => {
+    if (props.height) {
+      const parsed = parseInt(props.height, 10);
+      if (!isNaN(parsed)) return parsed;
+    }
+    return isChannelRoutedMode.value ? 36 : isMultiChannelMode.value ? 100 : 50;
+  });
+
   const setupChannelRouting = () => {
     const mediaElement = wavesurfer.value?.getMediaElement();
     if (!mediaElement) return;
@@ -256,7 +263,7 @@
       waveColor: CHANNEL_COLORS.WAVE_DEFAULT,
       progressColor: CHANNEL_COLORS.PROGRESS,
       barWidth: 2,
-      height: isChannelRoutedMode.value ? 36 : isMultiChannelMode.value ? 100 : 50,
+      height: waveformHeight.value,
       plugins: isChannelRoutedMode.value
         ? []
         : [
@@ -386,48 +393,50 @@
 </script>
 
 <template>
-  <div class="vt-audio" :class="{ 'is-disabled': isPlayerDisabled, 'is-channel-routed': isChannelRoutedMode }">
+  <div :class="{ 'is-disabled': isPlayerDisabled, 'is-channel-routed': isChannelRoutedMode }" class="vt-audio">
     <div v-if="!recordUrl" class="vt-audio__empty">
       <slot name="empty">
-        <VEmpty v-if="!isChannelRoutedMode" icon="noSound" :text="t(LOCALE_KEYS.AUDIO_EMPTY)" />
+        <VEmpty v-if="!isChannelRoutedMode" :text="t(LOCALE_KEYS.AUDIO_EMPTY)" icon="noSound" />
         <span v-else>{{ t(LOCALE_KEYS.AUDIO_EMPTY) }}</span>
       </slot>
     </div>
 
     <div
       v-else
-      class="vt-audio__container"
       :class="{ 'is-single-channel': !isMultiChannelMode, 'is-channel-routed': isChannelRoutedMode }"
+      class="vt-audio__container"
     >
+      <button :disabled="isPlayerDisabled" class="vt-audio__btn vt-audio__btn--main" @click="togglePlay">
+        <slot v-if="isPlay" name="icon-pause">
+          <VIcon height="24" name="pause" width="24" />
+        </slot>
+        <slot v-else name="icon-play">
+          <VIcon height="24" name="start" width="24" />
+        </slot>
+      </button>
       <div class="vt-audio__wave-area">
         <div :id="`waveform-${uuid}`" class="vt-audio__waveform"></div>
         <div v-if="!isChannelRoutedMode" ref="timelineContainer" class="vt-audio__timeline"></div>
       </div>
 
       <div class="vt-audio__controls">
-        <template v-if="!isChannelRoutedMode">
-          <button class="vt-audio__btn" :disabled="isPlayerDisabled" @click="downloadRecord">
-            <VIcon name="import" width="20" height="20" />
-          </button>
-
-          <VDropdown trigger="click" placement="top" :disabled="isPlayerDisabled" @command="handleSpeedChange">
-            <button class="vt-audio__speed-val" :disabled="isPlayerDisabled"> {{ activeSpeed }}x</button>
-            <template #dropdown>
-              <VDropdownItem v-for="s in [1, 1.5, 2]" :key="s" :command="s" :class="{ 'is-active': activeSpeed === s }">
-                {{ s }}x
-              </VDropdownItem>
-            </template>
-          </VDropdown>
-        </template>
-
-        <button class="vt-audio__btn vt-audio__btn--main" :disabled="isPlayerDisabled" @click="togglePlay">
-          <slot v-if="isPlay" name="icon-pause">
-            <VIcon name="pause" width="24" height="24" />
-          </slot>
-          <slot v-else name="icon-play">
-            <VIcon name="start" width="24" height="24" />
-          </slot>
+        <button v-if="props.download" :disabled="isPlayerDisabled" class="vt-audio__btn" @click="downloadRecord">
+          <VIcon height="20" name="import" width="20" />
         </button>
+
+        <VDropdown :disabled="isPlayerDisabled" placement="top" trigger="click" @command="handleSpeedChange">
+          <button :disabled="isPlayerDisabled" class="vt-audio__speed-val"> {{ activeSpeed }}x</button>
+          <template #dropdown>
+            <VDropdownItem
+              v-for="s in [0.5, 1, 1.5, 2]"
+              :key="s"
+              :class="{ 'is-active': activeSpeed === s }"
+              :command="s"
+            >
+              {{ s }}x
+            </VDropdownItem>
+          </template>
+        </VDropdown>
       </div>
     </div>
   </div>

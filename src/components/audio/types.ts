@@ -8,9 +8,11 @@ export interface VAudioProps {
   userB?: string | null;
   disabled?: boolean;
   type?: VAudioType;
+  download?: boolean;
+  height?: string;
 }
 
-export type PlaybackSpeed = 1 | 1.5 | 2;
+export type PlaybackSpeed = 0.5 | 1 | 1.5 | 2;
 
 // Типізація для емітів
 export type VAudioEmits = {
@@ -23,9 +25,9 @@ export type VAudioEmits = {
 
 // @ts-ignore
 export interface WaveSurferInstance extends WaveSurfer {
-  getMediaElement(): HTMLMediaElement;
-
   decodedData: AudioBuffer | null;
+
+  getMediaElement(): HTMLMediaElement;
 }
 
 export const CHANNEL_COLORS = {
