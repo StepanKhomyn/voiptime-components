@@ -1,3 +1,10 @@
+## [1.21.164](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.163...v1.21.164) (2026-08-26)
+
+
+### Bug Fixes
+
+* add speed to wave surfer audio player ([7392627](https://github.com/StepanKhomyn/voiptime-components/commit/7392627ab913839147cd04891fef8c0196eb527e))
+
 ## [1.21.163](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.162...v1.21.163) (2026-08-25)
 
 
