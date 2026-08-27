@@ -1,3 +1,10 @@
+## [1.21.169](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.168...v1.21.169) (2026-08-27)
+
+
+### Bug Fixes
+
+* Повернуто стилі кнопки очищення селекту ([4d56689](https://github.com/StepanKhomyn/voiptime-components/commit/4d56689c94fa95dfeb12eb8fb3b6efe87b955a31))
+
 ## [1.21.168](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.167...v1.21.168) (2026-08-27)
 
 
