@@ -1,3 +1,10 @@
+## [1.21.168](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.167...v1.21.168) (2026-08-27)
+
+
+### Bug Fixes
+
+* change color of clear btn in select ([ae80714](https://github.com/StepanKhomyn/voiptime-components/commit/ae80714de3927ff59bfb9a8a232638341523d11f))
+
 ## [1.21.167](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.166...v1.21.167) (2026-08-26)
 
 
