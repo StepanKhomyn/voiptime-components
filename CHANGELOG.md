@@ -1,3 +1,10 @@
+## [1.21.170](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.169...v1.21.170) (2026-08-27)
+
+
+### Bug Fixes
+
+* Виправлено стилі outlined інпуту ([86fe1c9](https://github.com/StepanKhomyn/voiptime-components/commit/86fe1c9e9312335e25d368e0d4b5526967737a47))
+
 ## [1.21.169](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.168...v1.21.169) (2026-08-27)
 
 
