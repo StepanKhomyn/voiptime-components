@@ -1,3 +1,10 @@
+# [1.22.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.170...v1.22.0) (2026-08-28)
+
+
+### Features
+
+* Перероблено компонент таймера ([72bba87](https://github.com/StepanKhomyn/voiptime-components/commit/72bba87b362e29265202173be9958108091f8cef))
+
 ## [1.21.170](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.169...v1.21.170) (2026-08-27)
 
 
