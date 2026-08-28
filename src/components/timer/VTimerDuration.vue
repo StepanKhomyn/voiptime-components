@@ -1,11 +1,11 @@
-<script setup lang="ts">
-  import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+<script lang="ts" setup>
+  import { computed } from 'vue';
   import type { VTimerDurationProps } from './types';
+  import { useClock } from '@/components/timer/useClock';
 
   const props = defineProps<VTimerDurationProps>();
 
-  const elapsedSeconds = ref(0);
-  let intervalId: ReturnType<typeof setInterval> | null = null;
+  const { now } = useClock();
 
   const formatTime = (seconds: number): string => {
     const days = Math.floor(seconds / 86400);
@@ -18,37 +18,10 @@
   };
 
   const formattedTime = computed(() => {
-    return props.timestamp ? formatTime(elapsedSeconds.value) : '-';
+    if (!props.timestamp) return '-';
+    const elapsedSeconds = Math.floor((now.value - props.timestamp) / 1000);
+    return formatTime(Math.max(0, elapsedSeconds));
   });
-
-  const updateElapsed = () => {
-    if (props.timestamp) {
-      elapsedSeconds.value = Math.floor((Date.now() - props.timestamp) / 1000);
-    }
-  };
-
-  const startTimer = () => {
-    stopTimer();
-    if (!props.timestamp) return;
-
-    updateElapsed();
-    intervalId = setInterval(updateElapsed, 1000);
-  };
-
-  const stopTimer = () => {
-    if (intervalId) {
-      clearInterval(intervalId);
-      intervalId = null;
-    }
-  };
-
-  watch(
-    () => props.timestamp,
-    () => startTimer()
-  );
-
-  onMounted(() => startTimer());
-  onUnmounted(() => stopTimer());
 </script>
 
 <template>
