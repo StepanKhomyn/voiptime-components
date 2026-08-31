@@ -1,3 +1,10 @@
+## [1.22.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.5...v1.22.6) (2026-08-31)
+
+
+### Bug Fixes
+
+* change height ([9ab3429](https://github.com/StepanKhomyn/voiptime-components/commit/9ab3429cd2814a3189407119d2da984b77b62462))
+
 ## [1.22.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.4...v1.22.5) (2026-08-31)
 
 
