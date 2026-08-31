@@ -1,3 +1,10 @@
+## [1.22.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.2...v1.22.3) (2026-08-31)
+
+
+### Bug Fixes
+
+* add action style to header page ([f62c72e](https://github.com/StepanKhomyn/voiptime-components/commit/f62c72e90ace5eb2a92b4d71f3071594b83d4702))
+
 ## [1.22.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.1...v1.22.2) (2026-08-31)
 
 
