@@ -5,6 +5,14 @@ import type { ResizeState, StickyPosition, VTableColumnProps, VTableProps, VTabl
 /**
  * Композабл для роботи з колонками таблиці
  */
+
+const MANAGE_COLUMN_WIDTH = 40;
+
+const getColumnWidth = (col: VTableColumnProps): number | undefined => {
+  if (col.manage) return MANAGE_COLUMN_WIDTH;
+  return col.width || col.minWidth || undefined;
+};
+
 export function useTableColumns(columns: VTableColumnProps[]) {
   const DEFAULT_COLUMN_WIDTH = 150;
 
@@ -18,8 +26,8 @@ export function useTableColumns(columns: VTableColumnProps[]) {
 
   const getDefaultColumnWidth = (): number => {
     const totalColumns = sortedColumns.value.length;
-    const columnsWithFixedWidth = sortedColumns.value.filter(col => col.width || col.minWidth);
-    const fixedWidth = columnsWithFixedWidth.reduce((sum, col) => sum + (col.width || col.minWidth || 0), 0);
+    const columnsWithFixedWidth = sortedColumns.value.filter(col => col.manage || col.width || col.minWidth);
+    const fixedWidth = columnsWithFixedWidth.reduce((sum, col) => sum + (getColumnWidth(col) || 0), 0);
     const flexibleColumns = totalColumns - columnsWithFixedWidth.length;
 
     if (flexibleColumns === 0) return 150;
@@ -46,14 +54,14 @@ export function useTableColumns(columns: VTableColumnProps[]) {
       for (let i = 0; i < index; i++) {
         const c = cols[i];
         if (c.pinnedLeft) {
-          offset += Number(c.width) || Number(c.minWidth) || DEFAULT_COLUMN_WIDTH;
+          offset += getColumnWidth(c) || DEFAULT_COLUMN_WIDTH;
         }
       }
     } else {
       for (let i = cols.length - 1; i > index; i--) {
         const c = cols[i];
         if (c.pinnedRight) {
-          offset += Number(c.width) || Number(c.minWidth) || DEFAULT_COLUMN_WIDTH;
+          offset += getColumnWidth(c) || DEFAULT_COLUMN_WIDTH;
         }
       }
     }
@@ -89,7 +97,11 @@ export function useTableStyles(props: VTableProps) {
   ): VTableStyleConfig => {
     const style: VTableStyleConfig = {};
 
-    if (col.width) {
+    if (col.manage) {
+      style.width = `${MANAGE_COLUMN_WIDTH}px`;
+      style.minWidth = `${MANAGE_COLUMN_WIDTH}px`;
+      style.maxWidth = `${MANAGE_COLUMN_WIDTH}px`;
+    } else if (col.width) {
       const w = Number(col.width);
       style.width = `${w}px`;
       style.minWidth = `${w}px`;
@@ -100,8 +112,7 @@ export function useTableStyles(props: VTableProps) {
       style.width = `${m_w}px`;
       style.maxWidth = 'none';
     } else {
-      const defaultWidth = getDefaultColumnWidth();
-      style.width = `${defaultWidth}px`;
+      style.width = 'auto';
       style.minWidth = '80px';
       style.maxWidth = 'none';
     }
