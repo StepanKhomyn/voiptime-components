@@ -591,18 +591,8 @@
           </th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-if="!hasData" class="vt-table__empty-row">
-          <td
-            :colspan="
-              sortedColumns.length + (props.selectable ? 1 : 0) + (props.rowDraggable && props.showDragHandle ? 1 : 0)
-            "
-            class="vt-table__empty-cell"
-          >
-            <VEmpty />
-          </td>
-        </tr>
-        <template v-for="(row, rowIndex) in sortedData" v-else :key="createRowKey(row, rowIndex)">
+      <tbody v-if="hasData">
+        <template v-for="(row, rowIndex) in sortedData" :key="createRowKey(row, rowIndex)">
           <tr
             :class="{
               'vt-table__row--insert-before': dragComposable?.shouldShowInsertLine(rowIndex, 'before'),
@@ -746,5 +736,9 @@
         </tr>
       </tfoot>
     </table>
+
+    <div v-if="!hasData" class="vt-table__empty-state">
+      <VEmpty />
+    </div>
   </div>
 </template>
