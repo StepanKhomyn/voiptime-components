@@ -1,3 +1,10 @@
+## [1.22.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.3...v1.22.4) (2026-08-31)
+
+
+### Bug Fixes
+
+* Зробити фіксовану ширину actions column у VTable pt.2 ([b7a36cc](https://github.com/StepanKhomyn/voiptime-components/commit/b7a36cc62330c693b6a037587b09116922bb39e0))
+
 ## [1.22.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.2...v1.22.3) (2026-08-31)
 
 
