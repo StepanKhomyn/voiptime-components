@@ -85,6 +85,12 @@
       &--end {
         justify-content: flex-end;
       }
+
+      &--actions {
+        display: flex;
+        align-items: center;
+        gap: var(--vt-gap-base);
+      }
     }
 
     &-filter {
