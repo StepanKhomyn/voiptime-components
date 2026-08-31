@@ -1,3 +1,10 @@
+## [1.22.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.1...v1.22.2) (2026-08-31)
+
+
+### Bug Fixes
+
+* change table manage column width to fixed 40 px pt.2 ([c1d5812](https://github.com/StepanKhomyn/voiptime-components/commit/c1d5812ef86d8ac65d8075fe3ed28cdcfc51d388))
+
 ## [1.22.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.0...v1.22.1) (2026-08-31)
 
 

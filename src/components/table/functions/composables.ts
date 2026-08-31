@@ -89,6 +89,7 @@ export function useTableStyles(props: VTableProps) {
     return style;
   };
 
+// useTableStyles -> getColumnStyle
   const getColumnStyle = (
     col: VTableColumnProps,
     index: number,
@@ -106,14 +107,10 @@ export function useTableStyles(props: VTableProps) {
       style.width = `${w}px`;
       style.minWidth = `${w}px`;
       style.maxWidth = `${w}px`;
-    } else if (col.minWidth) {
-      const m_w = Number(col.minWidth);
-      style.minWidth = `${m_w}px`;
-      style.width = `${m_w}px`;
-      style.maxWidth = 'none';
     } else {
+      const floor = col.minWidth ? Number(col.minWidth) : 80;
       style.width = 'auto';
-      style.minWidth = '80px';
+      style.minWidth = `${floor}px`;
       style.maxWidth = 'none';
     }
 
