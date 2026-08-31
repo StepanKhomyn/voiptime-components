@@ -1,3 +1,10 @@
+## [1.22.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.4...v1.22.5) (2026-08-31)
+
+
+### Bug Fixes
+
+* change empty icon block height in table ([ec98f7c](https://github.com/StepanKhomyn/voiptime-components/commit/ec98f7cd0b1b84055b4339889be78b07c8245e52))
+
 ## [1.22.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.3...v1.22.4) (2026-08-31)
 
 
