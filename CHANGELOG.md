@@ -1,3 +1,10 @@
+## [1.22.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.6...v1.22.7) (2026-09-01)
+
+
+### Bug Fixes
+
+* test audio mono and stereo in both ears ([7108ec0](https://github.com/StepanKhomyn/voiptime-components/commit/7108ec0a3fa2224823c6bc53e788fb3f12f64820))
+
 ## [1.22.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.5...v1.22.6) (2026-08-31)
 
 
