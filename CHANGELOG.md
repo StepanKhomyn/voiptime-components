@@ -1,3 +1,10 @@
+## [1.22.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.7...v1.22.8) (2026-09-01)
+
+
+### Bug Fixes
+
+* опціональний падінг в vt-modal__body ([592ef50](https://github.com/StepanKhomyn/voiptime-components/commit/592ef50d6bb8308e97a73d99044185874dee3bab))
+
 ## [1.22.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.6...v1.22.7) (2026-09-01)
 
 
