@@ -242,8 +242,17 @@
     source.connect(splitter);
     splitter.connect(leftGain.value, 0);
     splitter.connect(rightGain.value, 1);
-    leftGain.value.connect(merger, 0, 0);
-    rightGain.value.connect(merger, 0, 1);
+
+    if (isMultiChannelMode.value) {
+      leftGain.value.connect(merger, 0, 0);
+      rightGain.value.connect(merger, 0, 1);
+    } else {
+      leftGain.value.connect(merger, 0, 0);
+      leftGain.value.connect(merger, 0, 1);
+      rightGain.value.connect(merger, 0, 0);
+      rightGain.value.connect(merger, 0, 1);
+    }
+
     merger.connect(audioContext.value.destination);
   };
 
