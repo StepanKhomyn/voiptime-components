@@ -74,6 +74,14 @@
     flex-direction: column;
     padding: var(--vt-padding-lg);
     overflow: hidden;
+
+    &--padding-bottom {
+      padding: 0 0 var(--vt-padding-lg);
+    }
+
+    &--padding-none {
+      padding: 0;
+    }
   }
 
   &__content {

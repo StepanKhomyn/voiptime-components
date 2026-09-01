@@ -12,6 +12,8 @@ export interface VModalProps {
   closeOnBackdropClick?: boolean;
   /** Z-index для модального вікна */
   zIndex?: number;
+  /** Padding для модального вікна */
+  bodyPadding?: 'all' | 'bottom' | 'none';
 }
 
 export interface VModalEmits {
