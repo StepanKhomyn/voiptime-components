@@ -33,6 +33,7 @@ export interface VModalConfig {
   size?: VModalSize;
   showCloseButton?: boolean;
   closeOnBackdropClick?: boolean;
+  bodyPadding?: 'all' | 'bottom' | 'none';
 }
 
 // Оновлений інтерфейс для $modal із підтримкою стеку
