@@ -1,3 +1,10 @@
+## [1.22.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.11...v1.22.12) (2026-09-09)
+
+
+### Bug Fixes
+
+* header buttons group style class flex row ([55ad5b1](https://github.com/StepanKhomyn/voiptime-components/commit/55ad5b12b0f4cd90b9cbcaedda84be580afb93dc))
+
 ## [1.22.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.10...v1.22.11) (2026-09-09)
 
 
