@@ -187,7 +187,7 @@
         },
         {
           key: 'card-header-button-groups',
-          selector: '.vt-page__card-header--buttons',
+          selector: '.vt-page__card-header--actions',
           desc: 'Група кнопок у хедері. Використовується, якщо кнопок більше однієї.',
         },
         {
