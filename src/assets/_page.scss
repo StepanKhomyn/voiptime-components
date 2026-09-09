@@ -81,6 +81,13 @@
       padding: var(--vt-padding-base);
       gap: var(--vt-gap-base);
 
+      &--buttons {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--vt-gap-base);
+      }
+
       // Модифікатор: контент притиснутий вправо (одна кнопка без фільтра)
       &--end {
         justify-content: flex-end;
