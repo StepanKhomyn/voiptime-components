@@ -1,3 +1,11 @@
+## [1.22.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.9...v1.22.10) (2026-09-09)
+
+
+### Bug Fixes
+
+* header buttons group style class ([83fb37a](https://github.com/StepanKhomyn/voiptime-components/commit/83fb37a2e68d06a66754993044e959c156ac7678))
+* header buttons group style class ([91816cb](https://github.com/StepanKhomyn/voiptime-components/commit/91816cb9c800e75fe6b219eb1f765d6fb4302210))
+
 ## [1.22.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.8...v1.22.9) (2026-09-01)
 
 
