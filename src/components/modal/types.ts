@@ -12,6 +12,8 @@ export interface VModalProps {
   closeOnBackdropClick?: boolean;
   /** Z-index для модального вікна */
   zIndex?: number;
+  /** Padding для модального вікна */
+  bodyPadding?: 'all' | 'bottom' | 'none';
 }
 
 export interface VModalEmits {
@@ -31,6 +33,7 @@ export interface VModalConfig {
   size?: VModalSize;
   showCloseButton?: boolean;
   closeOnBackdropClick?: boolean;
+  bodyPadding?: 'all' | 'bottom' | 'none';
 }
 
 // Оновлений інтерфейс для $modal із підтримкою стеку

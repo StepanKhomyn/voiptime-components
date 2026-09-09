@@ -49,6 +49,11 @@ export interface VtSelectProps {
   // Нові пропи для фільтрації
   filterPlaceholder?: string; // Плейсхолдер для поля фільтрації
   allowRemoteFilter?: boolean; // Чи дозволяти віддалену фільтрацію (не фільтрувати локально)
+
+  //Кастомна стилізація
+  backgroundColor?: string;
+  borderColor?: string;
+  textColor?: string;
 }
 
 export interface VtSelectEmits {

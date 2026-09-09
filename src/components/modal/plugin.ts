@@ -61,6 +61,7 @@ class VModalManager implements VModalInstance {
               size: config.size || 'medium',
               showCloseButton: config.showCloseButton !== false,
               closeOnBackdropClick: config.closeOnBackdropClick !== false,
+              bodyPadding: config.bodyPadding || 'all',
               onClose: handleClose,
               zIndex: currentZIndex,
             },

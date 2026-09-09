@@ -581,6 +581,16 @@
     },
   ]);
 
+  const containerStyle = computed(() => {
+    const parts: string[] = [];
+
+    if (props.backgroundColor) parts.push(`background-color: ${props.backgroundColor}`);
+    if (props.borderColor) parts.push(`border-color: ${props.borderColor}`);
+    if (props.textColor) parts.push(`--vt-select-text-color: ${props.textColor} !important`);
+
+    return parts.join('; ');
+  });
+
   // Повернення помилки
   const displayErrorMessage = computed(() => {
     if (props.errorMessage) return props.errorMessage;
@@ -1021,6 +1031,7 @@
     <!-- Trigger -->
     <div
       ref="triggerRef"
+      :style="containerStyle"
       class="vt-select__container"
       tabindex="0"
       @blur="handleBlur"

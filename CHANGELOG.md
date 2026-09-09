@@ -1,3 +1,122 @@
+## [1.22.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.8...v1.22.9) (2026-09-01)
+
+
+### Bug Fixes
+
+* опціональний падінг в vt-modal__body pt.2 ([651aff8](https://github.com/StepanKhomyn/voiptime-components/commit/651aff828dbc7af6c9cdc4e7613d1c8517a8a17d))
+
+## [1.22.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.7...v1.22.8) (2026-09-01)
+
+
+### Bug Fixes
+
+* опціональний падінг в vt-modal__body ([592ef50](https://github.com/StepanKhomyn/voiptime-components/commit/592ef50d6bb8308e97a73d99044185874dee3bab))
+
+## [1.22.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.6...v1.22.7) (2026-09-01)
+
+
+### Bug Fixes
+
+* test audio mono and stereo in both ears ([7108ec0](https://github.com/StepanKhomyn/voiptime-components/commit/7108ec0a3fa2224823c6bc53e788fb3f12f64820))
+
+## [1.22.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.5...v1.22.6) (2026-08-31)
+
+
+### Bug Fixes
+
+* change height ([9ab3429](https://github.com/StepanKhomyn/voiptime-components/commit/9ab3429cd2814a3189407119d2da984b77b62462))
+
+## [1.22.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.4...v1.22.5) (2026-08-31)
+
+
+### Bug Fixes
+
+* change empty icon block height in table ([ec98f7c](https://github.com/StepanKhomyn/voiptime-components/commit/ec98f7cd0b1b84055b4339889be78b07c8245e52))
+
+## [1.22.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.3...v1.22.4) (2026-08-31)
+
+
+### Bug Fixes
+
+* Зробити фіксовану ширину actions column у VTable pt.2 ([b7a36cc](https://github.com/StepanKhomyn/voiptime-components/commit/b7a36cc62330c693b6a037587b09116922bb39e0))
+
+## [1.22.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.2...v1.22.3) (2026-08-31)
+
+
+### Bug Fixes
+
+* add action style to header page ([f62c72e](https://github.com/StepanKhomyn/voiptime-components/commit/f62c72e90ace5eb2a92b4d71f3071594b83d4702))
+
+## [1.22.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.1...v1.22.2) (2026-08-31)
+
+
+### Bug Fixes
+
+* change table manage column width to fixed 40 px pt.2 ([c1d5812](https://github.com/StepanKhomyn/voiptime-components/commit/c1d5812ef86d8ac65d8075fe3ed28cdcfc51d388))
+
+## [1.22.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.0...v1.22.1) (2026-08-31)
+
+
+### Bug Fixes
+
+* change table manage column width to fixed 40 px ([b0b8a26](https://github.com/StepanKhomyn/voiptime-components/commit/b0b8a26de632c5127baa0236343d3226daaa4319))
+
+# [1.22.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.170...v1.22.0) (2026-08-28)
+
+
+### Features
+
+* Перероблено компонент таймера ([72bba87](https://github.com/StepanKhomyn/voiptime-components/commit/72bba87b362e29265202173be9958108091f8cef))
+
+## [1.21.170](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.169...v1.21.170) (2026-08-27)
+
+
+### Bug Fixes
+
+* Виправлено стилі outlined інпуту ([86fe1c9](https://github.com/StepanKhomyn/voiptime-components/commit/86fe1c9e9312335e25d368e0d4b5526967737a47))
+
+## [1.21.169](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.168...v1.21.169) (2026-08-27)
+
+
+### Bug Fixes
+
+* Повернуто стилі кнопки очищення селекту ([4d56689](https://github.com/StepanKhomyn/voiptime-components/commit/4d56689c94fa95dfeb12eb8fb3b6efe87b955a31))
+
+## [1.21.168](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.167...v1.21.168) (2026-08-27)
+
+
+### Bug Fixes
+
+* change color of clear btn in select ([ae80714](https://github.com/StepanKhomyn/voiptime-components/commit/ae80714de3927ff59bfb9a8a232638341523d11f))
+
+## [1.21.167](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.166...v1.21.167) (2026-08-26)
+
+
+### Bug Fixes
+
+* add new row icon ([9ffefdb](https://github.com/StepanKhomyn/voiptime-components/commit/9ffefdb7ab9176f069f190cd93dc0908b37d1507))
+
+## [1.21.166](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.165...v1.21.166) (2026-08-26)
+
+
+### Bug Fixes
+
+* change styles in select ([48d6fbf](https://github.com/StepanKhomyn/voiptime-components/commit/48d6fbf6178c66a3fb8d4a01127e1385e5f68882))
+
+## [1.21.165](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.164...v1.21.165) (2026-08-26)
+
+
+### Bug Fixes
+
+* add custom styles to select ([5a5c60b](https://github.com/StepanKhomyn/voiptime-components/commit/5a5c60bf1912297f316467567d14058d6f6cc1b8))
+
+## [1.21.164](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.163...v1.21.164) (2026-08-26)
+
+
+### Bug Fixes
+
+* add speed to wave surfer audio player ([7392627](https://github.com/StepanKhomyn/voiptime-components/commit/7392627ab913839147cd04891fef8c0196eb527e))
+
 ## [1.21.163](https://github.com/StepanKhomyn/voiptime-components/compare/v1.21.162...v1.21.163) (2026-08-25)
 
 

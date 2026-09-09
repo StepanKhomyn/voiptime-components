@@ -10,6 +10,7 @@
     showCloseButton: true,
     closeOnBackdropClick: true,
     zIndex: 1000,
+    bodyPadding: 'all',
   });
 
   // Emits
@@ -21,6 +22,11 @@
   const backdropStyles = computed(() => ({
     zIndex: props.zIndex,
   }));
+
+  const bodyClasses = computed(() => [
+    'vt-modal__body',
+    props.bodyPadding !== 'all' ? `vt-modal__body--padding-${props.bodyPadding}` : '',
+  ]);
 
   // Methods
   const closeModal = () => {
@@ -48,7 +54,7 @@
         </div>
 
         <!-- Scrollable content -->
-        <div class="vt-modal__body">
+        <div :class="bodyClasses">
           <slot />
         </div>
       </div>

@@ -280,7 +280,11 @@
   // Для outlined стилю визначаємо чи label має бути вгорі
   const isLabelFloating = computed(() => {
     if (!props.outlined) return false;
-    return isFocused.value || (props.modelValue !== undefined && props.modelValue !== '');
+
+    const value = props.modelValue;
+    const isEmpty = value === undefined || value === null || value === '';
+
+    return isFocused.value || !isEmpty;
   });
 
   const inputClasses = computed(() => [

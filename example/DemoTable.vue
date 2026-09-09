@@ -348,7 +348,7 @@
                 <VInput v-model="row.name" />
               </template>
             </VTableColumn>
-            <VTableColumn label="Рахунок" manage prop="score" />
+            <VTableColumn manage prop="score" />
           </VTable>
         </div>
       </DocPreview>
