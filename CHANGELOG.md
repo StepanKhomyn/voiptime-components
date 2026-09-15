@@ -1,3 +1,10 @@
+## [1.22.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.12...v1.22.13) (2026-09-15)
+
+
+### Bug Fixes
+
+* table heigh in modal container ([f93479f](https://github.com/StepanKhomyn/voiptime-components/commit/f93479fc0fd8bad75ad6aeb9856bc5f54c3d5215))
+
 ## [1.22.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.11...v1.22.12) (2026-09-09)
 
 
