@@ -77,6 +77,12 @@
           description: 'Повністю блокує всі контроли плеєра',
         },
         {
+          name: 'playPosition',
+          type: "'left' | 'right'",
+          default: 'left',
+          description: 'Кнопка програвання розташування',
+        },
+        {
           name: 'type',
           type: "'default' | 'channel-routed'",
           default: "'default'",
@@ -132,6 +138,7 @@
           :record-url="MONO_URL"
           user-a="Оператор"
           user-b="Клієнт"
+          play-position="right"
           @time-update="onTimeUpdate"
           @play="onPlay"
           @pause="onPause"
