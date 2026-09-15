@@ -1,3 +1,10 @@
+## [1.22.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.13...v1.22.14) (2026-09-15)
+
+
+### Bug Fixes
+
+* add position of player button pause/play ([402cf68](https://github.com/StepanKhomyn/voiptime-components/commit/402cf68151e1ecd6479715c36aec2566a2635e68))
+
 ## [1.22.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.12...v1.22.13) (2026-09-15)
 
 
