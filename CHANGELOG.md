@@ -1,3 +1,10 @@
+## [1.22.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.14...v1.22.15) (2026-09-23)
+
+
+### Bug Fixes
+
+* margin left auto for action buttons in form header ([f25418a](https://github.com/StepanKhomyn/voiptime-components/commit/f25418ab051d3cb33e232bfe1ebed517703af48d))
+
 ## [1.22.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.13...v1.22.14) (2026-09-15)
 
 
