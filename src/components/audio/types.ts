@@ -10,6 +10,7 @@ export interface VAudioProps {
   type?: VAudioType;
   download?: boolean;
   height?: string;
+  playPosition?: VAudioPlayPosition
 }
 
 export type PlaybackSpeed = 0.5 | 1 | 1.5 | 2;
@@ -22,6 +23,8 @@ export type VAudioEmits = {
   ended: [];
   error: [];
 };
+
+export type VAudioPlayPosition = 'left' | 'right';
 
 // @ts-ignore
 export interface WaveSurferInstance extends WaveSurfer {

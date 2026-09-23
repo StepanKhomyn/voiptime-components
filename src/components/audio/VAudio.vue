@@ -82,6 +82,7 @@
     disabled: false,
     type: 'default',
     download: true,
+    playPosition: 'left',
   });
 
   const emit = defineEmits<VAudioEmits>();
@@ -415,7 +416,12 @@
       :class="{ 'is-single-channel': !isMultiChannelMode, 'is-channel-routed': isChannelRoutedMode }"
       class="vt-audio__container"
     >
-      <button :disabled="isPlayerDisabled" class="vt-audio__btn vt-audio__btn--main" @click="togglePlay">
+      <button
+        v-if="playPosition === 'left'"
+        :disabled="isPlayerDisabled"
+        class="vt-audio__btn vt-audio__btn--main"
+        @click="togglePlay"
+      >
         <slot v-if="isPlay" name="icon-pause">
           <VIcon height="24" name="pause" width="24" />
         </slot>
@@ -431,6 +437,20 @@
       <div class="vt-audio__controls">
         <button v-if="props.download" :disabled="isPlayerDisabled" class="vt-audio__btn" @click="downloadRecord">
           <VIcon height="20" name="import" width="20" />
+        </button>
+
+        <button
+          v-if="playPosition === 'right'"
+          :disabled="isPlayerDisabled"
+          class="vt-audio__btn vt-audio__btn--main"
+          @click="togglePlay"
+        >
+          <slot v-if="isPlay" name="icon-pause">
+            <VIcon height="24" name="pause" width="24" />
+          </slot>
+          <slot v-else name="icon-play">
+            <VIcon height="24" name="start" width="24" />
+          </slot>
         </button>
 
         <VDropdown :disabled="isPlayerDisabled" placement="top" trigger="click" @command="handleSpeedChange">

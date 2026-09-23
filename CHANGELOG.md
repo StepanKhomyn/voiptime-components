@@ -1,3 +1,39 @@
+## [1.22.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.13...v1.22.14) (2026-09-15)
+
+
+### Bug Fixes
+
+* add position of player button pause/play ([402cf68](https://github.com/StepanKhomyn/voiptime-components/commit/402cf68151e1ecd6479715c36aec2566a2635e68))
+
+## [1.22.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.12...v1.22.13) (2026-09-15)
+
+
+### Bug Fixes
+
+* table heigh in modal container ([f93479f](https://github.com/StepanKhomyn/voiptime-components/commit/f93479fc0fd8bad75ad6aeb9856bc5f54c3d5215))
+
+## [1.22.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.11...v1.22.12) (2026-09-09)
+
+
+### Bug Fixes
+
+* header buttons group style class flex row ([55ad5b1](https://github.com/StepanKhomyn/voiptime-components/commit/55ad5b12b0f4cd90b9cbcaedda84be580afb93dc))
+
+## [1.22.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.10...v1.22.11) (2026-09-09)
+
+
+### Bug Fixes
+
+* header buttons group style class ([d181e11](https://github.com/StepanKhomyn/voiptime-components/commit/d181e11b0af12eeb31afd683c6a079f9be81b5e8))
+
+## [1.22.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.9...v1.22.10) (2026-09-09)
+
+
+### Bug Fixes
+
+* header buttons group style class ([83fb37a](https://github.com/StepanKhomyn/voiptime-components/commit/83fb37a2e68d06a66754993044e959c156ac7678))
+* header buttons group style class ([91816cb](https://github.com/StepanKhomyn/voiptime-components/commit/91816cb9c800e75fe6b219eb1f765d6fb4302210))
+
 ## [1.22.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.8...v1.22.9) (2026-09-01)
 
 
