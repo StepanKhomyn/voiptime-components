@@ -187,6 +187,13 @@
           font-weight: var(--font-weight-regular);
           line-height: 1.5;
         }
+
+        &-actions {
+          display: flex;
+          align-items: center;
+          gap: var(--vt-gap-base);
+          margin-left: auto;
+        }
       }
 
       &-body {
