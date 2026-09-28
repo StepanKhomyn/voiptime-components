@@ -1,3 +1,10 @@
+## [1.22.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.19...v1.22.20) (2026-09-28)
+
+
+### Bug Fixes
+
+* add new ai icons pack ([a755e87](https://github.com/StepanKhomyn/voiptime-components/commit/a755e875eeb5f20369139cab278e4c5bc9644c33))
+
 ## [1.22.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.18...v1.22.19) (2026-09-28)
 
 
