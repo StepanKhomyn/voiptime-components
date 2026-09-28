@@ -1,3 +1,10 @@
+## [1.22.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.16...v1.22.17) (2026-09-28)
+
+
+### Bug Fixes
+
+* for build ([482dc22](https://github.com/StepanKhomyn/voiptime-components/commit/482dc22e56777fc707f40ca32749ff2c6457aad5))
+
 ## [1.22.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.15...v1.22.16) (2026-09-28)
 
 
