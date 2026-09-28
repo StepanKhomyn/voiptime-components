@@ -1,3 +1,10 @@
+## [1.22.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.17...v1.22.18) (2026-09-28)
+
+
+### Bug Fixes
+
+* Revert "fix: make responsive filter measurement deterministic" ([bd0eddc](https://github.com/StepanKhomyn/voiptime-components/commit/bd0eddcf8ba38d3e8cedc808391bb0ecbdaba323))
+
 ## [1.22.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.16...v1.22.17) (2026-09-28)
 
 
