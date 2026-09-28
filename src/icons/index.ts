@@ -29,6 +29,9 @@ import StatusChangeIcon from './actions/StatusChangeIcon.vue';
 import UnlockIcon from './actions/UnlockIcon.vue';
 import UploadCloudIcon from './actions/UploadCloudIcon.vue';
 import UsersGroupIcon from './actions/UsersGroupIcon.vue';
+import AIIcon from './ai/AIIcon.vue';
+import AIPromptIcon from './ai/AIPromptIcon.vue';
+import AIPrompterIcon from './ai/AIPrompterIcon.vue';
 import ArrowDoubleLeftIcon from './arrow/ArrowDoubleLeftIcon.vue';
 import ArrowDoubleRightIcon from './arrow/ArrowDoubleRightIcon.vue';
 import ArrowDownIcon from './arrow/ArrowDownIcon.vue';
@@ -65,6 +68,8 @@ import SpeakerMutedIcon from './call/SpeakerMutedIcon.vue';
 import TelemarketCallIcon from './call/TelemarketCallIcon.vue';
 import TransferCallIcon from './call/TransferCallIcon.vue';
 import VolumeCallIcon from './call/VolumeCallIcon.vue';
+import ScaleIcon from './call-quality/ScaleIcon.vue';
+import ScaleOffIcon from './call-quality/ScaleOffIcon.vue';
 import ChatAttentionIcon from './chat/ChatAttentionIcon.vue';
 import ChatBlockIcon from './chat/ChatBlockIcon.vue';
 import ChatCheckIcon from './chat/ChatCheckIcon.vue';
@@ -330,6 +335,11 @@ export const icons = {
   uploadCloud: UploadCloudIcon,
   usersGroup: UsersGroupIcon,
 
+  // ai icons
+  aI: AIIcon,
+  aIPrompt: AIPromptIcon,
+  aIPrompter: AIPrompterIcon,
+
   // arrow icons
   arrowDoubleLeft: ArrowDoubleLeftIcon,
   arrowDoubleRight: ArrowDoubleRightIcon,
@@ -369,6 +379,10 @@ export const icons = {
   telemarketCall: TelemarketCallIcon,
   transferCall: TransferCallIcon,
   volumeCall: VolumeCallIcon,
+
+  // call-quality icons
+  scale: ScaleIcon,
+  scaleOff: ScaleOffIcon,
 
   // chat icons
   chatAttention: ChatAttentionIcon,
