@@ -64,8 +64,8 @@
   <div class="demo-container">
     <VSidebar :items="menuItems" v-model:collapsed="collapsed" />
 
-    <div class="manage-form__card">
-      <div class="manage-form__card-list">
+    <div class="vt-page__card">
+      <div class="vt-page__card-header">
         <VDynamicFilter>
           <VInput />
           <VInput />

@@ -1,4 +1,26 @@
-import { nextTick, onBeforeUnmount, onMounted, ref, type Ref, watch } from 'vue';
+import { onBeforeUnmount, onMounted, ref, type Ref, watch } from 'vue';
+
+const MEASURE_SELECTOR = '.vt-page__card-filter__measure-element';
+const INLINE_SELECTOR = '.vt-page__card-filter__inline';
+const DROPDOWN_SELECTOR = '.vt-page__card-filter__dropdown';
+
+const MIN_FILTER_WIDTH = 150;
+// Запасна ширина кнопки «Більше», поки її ще жодного разу не було в DOM
+const FALLBACK_TRIGGER_WIDTH = 140;
+// Запас на субпіксельні округлення
+const SAFETY = 2;
+
+const px = (value: string | null | undefined): number => {
+  const n = parseFloat(value ?? '');
+  return Number.isFinite(n) ? n : 0; // "normal" / "" / NaN -> 0
+};
+
+const outerWidth = (node: HTMLElement): number => {
+  const s = getComputedStyle(node);
+  return node.getBoundingClientRect().width + px(s.marginLeft) + px(s.marginRight);
+};
+
+const sameArray = (a: number[], b: number[]): boolean => a.length === b.length && a.every((v, i) => v === b[i]);
 
 export function useResponsiveFilters(
   containerRef: Ref<HTMLElement | null>,
@@ -8,228 +30,170 @@ export function useResponsiveFilters(
   slotNodesLength: Ref<number>
 ) {
   const visibleIndexes = ref<number[]>([]);
+  // true після першого успішного розрахунку (можна використати, щоб не показувати фільтр до цього)
+  const isReady = ref(false);
 
-  // debounce через rAF
+  let triggerWidth = FALLBACK_TRIGGER_WIDTH;
   let rafId = 0;
-  function scheduleCalculate() {
-    if (rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => {
-      calculate();
-      rafId = 0;
-    });
-  }
-
-  // ResizeObserver для відстеження змін розмірів
   let ro: ResizeObserver | null = null;
-
-  function getHorizontalMargins(el: HTMLElement) {
-    const s = getComputedStyle(el);
-    return parseFloat(s.marginLeft || "0") + parseFloat(s.marginRight || "0");
-  }
+  let disposed = false;
+  const observed = new Set<Element>();
 
   function calculate() {
     const el = containerRef.value;
     const measureRoot = measurementContainerRef.value;
-    if (!el || !measureRoot) return;
+    if (disposed || !el || !measureRoot) return;
 
-    // Знаходимо головний контейнер vt-page__card
-    const manageFormCard = el.closest('.vt-page__card') as HTMLElement;
-    if (!manageFormCard) {
-      console.warn('vt-page__card container not found');
-      return;
+    // display:none (прихована вкладка, keep-alive) — зберігаємо попередній стан,
+    // ResizeObserver спрацює, коли елемент знову з'явиться
+    if (el.getClientRects().length === 0) return;
+
+    const elStyle = getComputedStyle(el);
+    const contentWidth =
+      el.getBoundingClientRect().width -
+      px(elStyle.paddingLeft) -
+      px(elStyle.paddingRight) -
+      px(elStyle.borderLeftWidth) -
+      px(elStyle.borderRightWidth);
+
+    const outerGap = px(elStyle.columnGap); // gap між __inline / __dropdown / __actions
+    const inline = el.querySelector<HTMLElement>(`:scope > ${INLINE_SELECTOR}`);
+    const innerGap = inline ? px(getComputedStyle(inline).columnGap) : outerGap; // gap між фільтрами
+
+    // Запам'ятовуємо реальну ширину кнопки «Більше», коли вона є в DOM
+    const trigger = dropdownTriggerRef.value;
+    if (trigger) {
+      const host = trigger.closest<HTMLElement>(DROPDOWN_SELECTOR) ?? trigger;
+      const w = outerWidth(host);
+      if (w > 0) triggerWidth = w;
     }
 
-    // Отримуємо розміри
-    const containerRect = el.getBoundingClientRect();
-    const cardRect = manageFormCard.getBoundingClientRect();
+    // Кнопки дій завжди в DOM: gap перед ними є навіть коли вони порожні
+    const actions = actionsRef.value;
+    const actionsReserve = actions ? outerWidth(actions) + outerGap : 0;
+    const triggerReserve = triggerWidth + outerGap;
 
-    // Обчислюємо ширину правих елементів
+    const widths = Array.from(measureRoot.querySelectorAll<HTMLElement>(MEASURE_SELECTOR)).map(node =>
+      Math.max(node.getBoundingClientRect().width, MIN_FILTER_WIDTH)
+    );
 
-    let rightElementsWidth = 0;
-    if (containerRect.width === 0 || cardRect.width === 0) {
-      return;
-    }
-
-    // Кнопки дій (якщо є)
-    if (actionsRef.value) {
-      const actionsRect = actionsRef.value.getBoundingClientRect();
-      rightElementsWidth += actionsRect.width + getHorizontalMargins(actionsRef.value);
-    }
-
-    // Дропдаун тригер
-    if (dropdownTriggerRef.value) {
-      const triggerRect = dropdownTriggerRef.value.getBoundingClientRect();
-      rightElementsWidth += triggerRect.width + getHorizontalMargins(dropdownTriggerRef.value);
-    }
-
-    // Шукаємо всі елементи праворуч від фільтрів в рамках vt-page__card-header
-    const cardList = el.closest('.vt-page__card-header') as HTMLElement;
-    if (cardList) {
-      const allChildren = Array.from(cardList.children) as HTMLElement[];
-      const containerIndex = allChildren.findIndex(child => child.contains(el));
-
-      if (containerIndex >= 0) {
-        const rightSiblings = allChildren.slice(containerIndex + 1);
-        rightSiblings.forEach((sibling) => {
-          // Пропускаємо приховані елементи
-          const siblingStyles = getComputedStyle(sibling);
-          if (siblingStyles.display === 'none' || siblingStyles.visibility === 'hidden') {
-            return;
-          }
-
-          const siblingRect = sibling.getBoundingClientRect();
-          rightElementsWidth += siblingRect.width + getHorizontalMargins(sibling);
-        });
+    const fit = (available: number): number[] => {
+      const result: number[] = [];
+      let used = 0;
+      for (let i = 0; i < widths.length; i++) {
+        const w = widths[i] + (i > 0 ? innerGap : 0);
+        if (used + w > available) break;
+        result.push(i);
+        used += w;
       }
-    }
-
-    // Додаємо запас для стабільності
-    const extraReserve = 20;
-
-    // Доступна ширина: від лівого краю контейнера до правого краю карти мінус праві елементи
-    let availableWidth = Math.max(0, cardRect.right - containerRect.left - rightElementsWidth - extraReserve);
-
-    // Обмежуємо власною шириною контейнера
-    const containerPadding = parseFloat(getComputedStyle(el).paddingLeft || "0") +
-      parseFloat(getComputedStyle(el).paddingRight || "0");
-    availableWidth = Math.min(availableWidth, el.clientWidth - containerPadding);
-
-    // Вимірюємо фільтри
-    const measureItems = measureRoot.querySelectorAll<HTMLElement>(".vt-page__card-filter__measure-element");
-    const newVisible: number[] = [];
-    let used = 0;
-    const GAP = 10;
-    const MIN_FILTER_WIDTH = 150;
-    for (let i = 0; i < measureItems.length; i++) {
-      const itemRect = measureItems[i].getBoundingClientRect();
-      const itemWidth = Math.max(
-        itemRect.width,
-        MIN_FILTER_WIDTH
-      );
-      const wWithGap = itemWidth + (i > 0 ? GAP : 0);
-
-      if (used + wWithGap <= availableWidth) {
-        newVisible.push(i);
-        used += wWithGap;
-      } else {
-        break;
-      }
-    }
-
-    visibleIndexes.value = newVisible;
-  }
-
-  const init = () => {
-    // Перший розрахунок
-    nextTick(() => {
-      setTimeout(calculate, 50); // Невелика затримка для стабілізації
-    });
-
-    // Window resize
-    window.addEventListener("resize", scheduleCalculate);
-
-    // ResizeObserver для ключових контейнерів
-    if ('ResizeObserver' in window) {
-      ro = new ResizeObserver((entries) => {
-        // Перевіряємо чи є значні зміни розмірів
-        const hasSignificantChange = entries.some(entry => {
-          const { width, height } = entry.contentRect;
-          return width > 0 && height > 0; // Ігноруємо нульові розміри
-        });
-
-        if (hasSignificantChange) {
-          scheduleCalculate();
-        }
-      });
-
-      const el = containerRef.value;
-      if (el) {
-        // Стежимо за основними контейнерами
-        ro.observe(el);
-
-        const manageFormCard = el.closest('.vt-page__card');
-        if (manageFormCard) {
-          ro.observe(manageFormCard);
-        }
-
-        // Стежимо за левим sidebar
-        const sidebar = document.querySelector('.left-panel, .sidebar, nav[class*="nav"], .main-layout__aside');
-        if (sidebar) {
-          ro.observe(sidebar);
-        }
-      }
-    }
-
-    // Спостерігач за змінами класів (для sidebar toggle)
-    const body = document.body;
-    const bodyObserver = new MutationObserver((mutations) => {
-      const hasClassChanges = mutations.some(mutation =>
-        mutation.type === 'attributes' && mutation.attributeName === 'class'
-      );
-
-      if (hasClassChanges) {
-        // Затримка для завершення CSS анімації
-        setTimeout(scheduleCalculate, 300);
-      }
-    });
-
-    bodyObserver.observe(body, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    // Cleanup function для body observer
-    const cleanup = () => {
-      bodyObserver.disconnect();
+      return result;
     };
 
-    // Додаємо cleanup до основної функції cleanup
-    const originalCleanup = window.addEventListener.prototype;
+    const available = contentWidth - actionsReserve - SAFETY;
 
-    // Слухач змін слотів
-    watch(
-      () => slotNodesLength.value,
-      () => {
-        nextTick(() => {
-          setTimeout(calculate, 100);
-        });
-      },
-    );
+    // Прохід 1: чи вміщаються ВСІ без кнопки «Більше»
+    let next = fit(available);
+    // Прохід 2: не вміщаються — резервуємо місце під кнопку
+    if (next.length < widths.length) {
+      next = fit(available - triggerReserve);
+    }
 
-    // Слухач змін кнопок
-    watch(
-      [actionsRef, dropdownTriggerRef],
-      () => {
-        nextTick(scheduleCalculate);
-      },
-      { flush: 'post' }
-    );
-  };
+    if (!sameArray(visibleIndexes.value, next)) {
+      visibleIndexes.value = next;
+    }
+    isReady.value = true;
+  }
 
-  const cleanup = () => {
-    window.removeEventListener("resize", scheduleCalculate);
+  // Синхронізуємо список елементів, за якими стежить ResizeObserver
+  function syncObserved() {
+    const observer = ro;
+    if (!observer) return;
+
+    const targets = new Set<Element>();
+    const add = (node: Element | null | undefined) => {
+      if (node) targets.add(node);
+    };
+
+    add(containerRef.value);
+    add(measurementContainerRef.value);
+    add(actionsRef.value);
+    const trigger = dropdownTriggerRef.value;
+    add(trigger ? (trigger.closest(DROPDOWN_SELECTOR) ?? trigger) : null);
+    measurementContainerRef.value?.querySelectorAll(MEASURE_SELECTOR).forEach(node => add(node));
+
+    observed.forEach(node => {
+      if (!targets.has(node)) {
+        observer.unobserve(node);
+        observed.delete(node);
+      }
+    });
+    targets.forEach(node => {
+      if (!observed.has(node)) {
+        observer.observe(node);
+        observed.add(node);
+      }
+    });
+  }
+
+  // rAF-коалесинг: не більше одного розрахунку за кадр
+  function scheduleCalculate() {
+    if (disposed || rafId) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = 0;
+      if (disposed) return;
+      syncObserved();
+      calculate();
+    });
+  }
+
+  onMounted(() => {
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => scheduleCalculate());
+    }
+    syncObserved();
+    calculate(); // синхронно, до першого paint — без мигання
+
+    // Ширини фільтрів залежать від шрифтів
+    document.fonts?.ready.then(() => scheduleCalculate());
+  });
+
+  onBeforeUnmount(() => {
+    disposed = true;
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = 0;
     }
-    if (ro) {
-      ro.disconnect();
-      ro = null;
-    }
-  };
+    ro?.disconnect();
+    ro = null;
+    observed.clear();
+  });
 
-  onMounted(init);
-  onBeforeUnmount(cleanup);
+  // DOM вже оновлений (flush: 'post'), тому рахуємо одразу, а не на наступному кадрі
+  watch(
+    slotNodesLength,
+    () => {
+      syncObserved();
+      calculate();
+      scheduleCalculate();
+    },
+    { flush: 'post' }
+  );
 
-  // Додаткові методи для ручного контролю
-  const forceRecalculate = () => {
-    setTimeout(calculate, 100);
-  };
+  // З'явилась/зникла кнопка «Більше» або дії — беремо її реальну ширину
+  watch(
+    [actionsRef, dropdownTriggerRef],
+    () => {
+      syncObserved();
+      calculate();
+    },
+    { flush: 'post' }
+  );
 
   return {
     visibleIndexes,
+    isReady,
     calculate,
     scheduleCalculate,
-    forceRecalculate
+    forceRecalculate: scheduleCalculate,
   };
 }
