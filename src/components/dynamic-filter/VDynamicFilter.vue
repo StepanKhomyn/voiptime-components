@@ -21,6 +21,16 @@
     return flattenVNodes(raw);
   });
 
+  const slotNodesLength = computed(() => slotNodes.value.length);
+
+  const { visibleIndexes } = useResponsiveFilters(
+    dynamicFilterRef,
+    actionsRef,
+    dropdownTriggerRef,
+    measurementContainer,
+    slotNodesLength
+  );
+
   const flattenVNodes = (vnodes: VNode[]): VNode[] => {
     const result: VNode[] = [];
 
@@ -47,17 +57,6 @@
 
     return result;
   };
-
-  const slotNodesLength = computed(() => slotNodes.value.length);
-
-  const { visibleIndexes } = useResponsiveFilters(
-    dynamicFilterRef,
-    actionsRef,
-    dropdownTriggerRef,
-    measurementContainer,
-    slotNodesLength
-  );
-
 </script>
 
 <template>
