@@ -117,7 +117,7 @@
         { name: 'Badge', icon: '🔴', component: DemoBadge },
         { name: 'Login', icon: '🔐', component: DemoLogin },
       ],
-    },
+    }
   ];
 
   const filteredSections = computed(() => {
