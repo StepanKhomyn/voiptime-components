@@ -28,3 +28,4 @@ git push origin main
 
 генерування іконок
 npm run generate-icons
+
