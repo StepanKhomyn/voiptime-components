@@ -1,3 +1,10 @@
+## [1.22.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.20...v1.22.21) (2026-09-28)
+
+
+### Bug Fixes
+
+* Change npm token ([53cc48b](https://github.com/StepanKhomyn/voiptime-components/commit/53cc48b241c97da92a75d650b8bd0ca307cc0ce2))
+
 ## [1.22.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.19...v1.22.20) (2026-09-28)
 
 
