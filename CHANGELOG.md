@@ -1,3 +1,10 @@
+## [1.22.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.21...v1.22.22) (2026-09-29)
+
+
+### Bug Fixes
+
+* new summary select logic ([39241a2](https://github.com/StepanKhomyn/voiptime-components/commit/39241a2dcae5f8c91464f6eec09d2246f7eee015))
+
 ## [1.22.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.20...v1.22.21) (2026-09-28)
 
 
