@@ -53,6 +53,7 @@
     hideTimeout: 0,
     filterPlaceholder: undefined,
     allowRemoteFilter: false,
+    summary: undefined,
   });
 
   // ===== EMITS =====
@@ -535,9 +536,7 @@
     if (!props.clearable || props.disabled) return false;
 
     // Для множинного вибору перевіряємо довжину масиву
-    if (isMultiple.value) {
-      return selectedOptions.value.length > 0;
-    }
+    if (isMultiple.value) return !!props.summary || selectedOptions.value.length > 0;
 
     // Для одиночного вибору перевіряємо наявність значення
     return (
@@ -561,6 +560,7 @@
 
     // Label плаває якщо є фокус, dropdown відкритий, або є значення
     return (
+      !!props.summary ||
       state.isFocused.value ||
       isDropdownVisible.value ||
       (props.multiple && selectedOptions.value.length > 0) ||
@@ -1048,7 +1048,8 @@
       <!-- Display Field -->
       <div class="vt-select__field">
         <!-- Multiple selected tags -->
-        <div v-if="multiple && selectedOptions.length > 0" ref="containerRef" class="vt-select__tags">
+        <span v-if="summary" class="vt-select__display-text">{{ summary }}</span>
+        <div v-else-if="multiple && selectedOptions.length > 0" ref="containerRef" class="vt-select__tags">
           <!-- Visible tags -->
           <div
             v-for="(option, index) in visibleTags"
