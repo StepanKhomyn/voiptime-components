@@ -55,6 +55,7 @@ export interface VtSelectProps {
   borderColor?: string;
   textColor?: string;
   summary?: string;
+  summaryItems?: string[]
 }
 
 export interface VtSelectEmits {

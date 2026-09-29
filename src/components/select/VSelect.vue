@@ -54,6 +54,7 @@
     filterPlaceholder: undefined,
     allowRemoteFilter: false,
     summary: undefined,
+    summaryItems: Array,
   });
 
   // ===== EMITS =====
@@ -650,6 +651,15 @@
     return createCollapsedTooltip(collapsedCount.value, hiddenOptions);
   });
 
+  const summaryTooltip = computed(() => {
+    const items = props.summaryItems ?? [];
+    if (items.length < 2) return '';
+    return createCollapsedTooltip(
+      items.length - 1,
+      items.slice(1).map(label => ({ value: label, label }))
+    );
+  });
+
   // ===== EVENT HANDLERS =====
   const handleClickOutside = (event: MouseEvent) => {
     if (!isDropdownVisible.value) return;
@@ -1048,7 +1058,22 @@
       <!-- Display Field -->
       <div class="vt-select__field">
         <!-- Multiple selected tags -->
-        <span v-if="summary" class="vt-select__display-text">{{ summary }}</span>
+        <div v-if="summary" class="vt-select__tags">
+          <span class="vt-select__display-text">{{ summary }}</span>
+
+          <template v-if="summaryItems?.length">
+            <div class="vt-select__tag">
+              <span class="vt-select__tag-text">{{ summaryItems[0] }}</span>
+            </div>
+            <div
+              v-if="summaryItems.length > 1"
+              v-tooltip="summaryTooltip"
+              class="vt-select__tag vt-select__tag--collapsed"
+            >
+              <span class="vt-select__tag-text">+{{ summaryItems.length - 1 }}</span>
+            </div>
+          </template>
+        </div>
         <div v-else-if="multiple && selectedOptions.length > 0" ref="containerRef" class="vt-select__tags">
           <!-- Visible tags -->
           <div
