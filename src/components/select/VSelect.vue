@@ -1188,23 +1188,8 @@
           @click.stop
           @mousedown.prevent
         >
-          <div v-if="filterable || (multiple && selectAll)" class="vt-select-dropdown__search">
-            <VCheckbox
-              v-if="multiple && selectAll"
-              :checked="isAllSelected"
-              :indeterminate="isIndeterminate"
-              :label="
-                filterable
-                  ? ''
-                  : isAllSelected
-                    ? t(LOCALE_KEYS.CHECKBOX_UNSELECT_ALL)
-                    : t(LOCALE_KEYS.CHECKBOX_SELECT_ALL)
-              "
-              @change="handleToggleSelectAll"
-            />
-
+          <div v-if="filterable" class="vt-select-dropdown__search">
             <VInput
-              v-if="filterable"
               ref="filterInputRef"
               v-model="state.filterQuery.value"
               :placeholder="filterPlaceholderText"
@@ -1213,6 +1198,15 @@
               type="text"
               @clear="handleFilterClear"
               @input="handleFilterInput"
+            />
+          </div>
+
+          <div v-if="multiple && selectAll" class="vt-select-dropdown__all">
+            <VCheckbox
+              :checked="isAllSelected"
+              :indeterminate="isIndeterminate"
+              :label="isAllSelected ? t(LOCALE_KEYS.CHECKBOX_UNSELECT_ALL) : t(LOCALE_KEYS.CHECKBOX_SELECT_ALL)"
+              @change="handleToggleSelectAll"
             />
           </div>
 
