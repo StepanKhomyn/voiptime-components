@@ -408,30 +408,34 @@
   border-radius: var(--radius-main);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  padding: 0; // було var(--vt-padding-base) 0 — з ним "Виділити всі" не прилягає до країв
+  padding: 0; // було var(--vt-padding-base) 0 0 0
   min-width: 100px;
   z-index: 2000;
   animation: dropdown-fade-in 0.2s ease;
 
   &__search {
     flex-shrink: 0;
-    padding: var(--vt-padding-base);
+    padding: var(--vt-padding-base); // верхній відступ тепер тут
     border-bottom: 1px solid var(--color-gray-5);
+    // margin-bottom більше не потрібен
+
+    &--with-all {
+      border-bottom: none;
+    }
 
     &.vt-input--focused {
       border-color: transparent;
     }
   }
 
-  // Рядок "Виділити всі"
   &__all {
     flex-shrink: 0;
     display: flex;
     align-items: center;
     min-height: 33px;
     padding: 0 var(--vt-padding-base);
-    margin-bottom: var(--vt-padding-sm);
-    background: var(--color-gray-6); // ~#f2f2f2 з макету
+    // margin-bottom прибрано, відступ до списку задає padding-top у __options
+    background: var(--color-gray-6);
     border-bottom: 1px solid var(--color-gray-5);
 
     .vt-checkbox {
@@ -439,7 +443,6 @@
       width: 100%;
     }
 
-    // Жирний темний текст як на макеті
     .vt-checkbox__label {
       font-size: 14px;
       font-weight: 600;
@@ -450,7 +453,7 @@
   &__options {
     flex: 1;
     min-height: 0;
-    padding: 0 var(--vt-padding-base) var(--vt-padding-base) var(--vt-padding-base); // скролбар лишається впритул до правого краю dropdown
+    padding: var(--vt-padding-base); // верхній відступ від пошуку / "Виділити всі" / верху dropdown
     overflow-y: auto;
     display: flex;
     flex-direction: column;
