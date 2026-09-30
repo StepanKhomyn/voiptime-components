@@ -1,3 +1,10 @@
+## [1.22.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.23...v1.22.24) (2026-09-30)
+
+
+### Bug Fixes
+
+* select all styles ([909f893](https://github.com/StepanKhomyn/voiptime-components/commit/909f89307ad1040e0484a8d031657b2fea3823b5))
+
 ## [1.22.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.22...v1.22.23) (2026-09-29)
 
 
