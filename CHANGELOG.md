@@ -1,3 +1,10 @@
+## [1.22.32](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.31...v1.22.32) (2026-10-01)
+
+
+### Bug Fixes
+
+* fix select ([a762096](https://github.com/StepanKhomyn/voiptime-components/commit/a762096fcd1d8963132250a1234566cd1190a406))
+
 ## [1.22.31](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.30...v1.22.31) (2026-10-01)
 
 
