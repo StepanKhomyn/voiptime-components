@@ -1,3 +1,10 @@
+## [1.22.28](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.27...v1.22.28) (2026-10-01)
+
+
+### Bug Fixes
+
+* 4569 Call quality | Оцінювання | Фільтрація: оптимізувати довгі назви фільтрів на періодах, щоб назви не накладалися і не закривали собою частину інших полів ([2b3a240](https://github.com/StepanKhomyn/voiptime-components/commit/2b3a240886b34a28d6fd8fdadca7b501abc4eae5))
+
 ## [1.22.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.26...v1.22.27) (2026-10-01)
 
 
