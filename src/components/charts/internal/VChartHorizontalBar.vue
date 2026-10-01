@@ -63,7 +63,7 @@
         <div class="vt-chart__bar-track">
           <div :style="{ width: barWidth(seg.count) + '%', backgroundColor: seg.color }" class="vt-chart__bar-fill">
             <div class="vt-chart__bar-tooltip">
-              <span class="vt-chart__bar-count">{{ seg.count }}</span>
+              <div class="vt-chart__bar-count">{{ seg.count }}</div>
               <span v-if="showPercent" class="vt-chart__bar-percent">{{ percentOf(seg) }}%</span>
             </div>
           </div>

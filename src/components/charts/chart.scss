@@ -123,10 +123,6 @@ $transition-fast: filter 0.15s ease;
   flex-direction: column;
   height: 100%;
 
-  &--with-percent {
-    --vt-bar-right-gap: 120px;
-  }
-
   &-container {
     display: flex;
     flex-direction: column;
@@ -188,6 +184,8 @@ $transition-fast: filter 0.15s ease;
     height: 100%;
     transition: width $transition-default;
     position: relative;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
   }
 
   // плашка "кількість + %" одразу після кінця бару
@@ -205,8 +203,11 @@ $transition-fast: filter 0.15s ease;
   }
 
   &-count {
+    display: flex;
+    align-items: center;
+    height: 20px;
     padding: 2px 5px;
-    border-radius: 6px;
+    border-radius: 5px;
     background: #e0e0e0;
     font-size: 14px;
     font-weight: 500;
