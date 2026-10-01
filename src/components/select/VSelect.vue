@@ -1061,7 +1061,6 @@
       <!-- Floating Label для outlined стилю -->
       <label
         v-if="label && outlined"
-        :for="id"
         :key="isLabelTruncated ? 'truncated' : 'full'"
         ref="floatingLabelRef"
         v-tooltip="floatingLabelTooltip()"
