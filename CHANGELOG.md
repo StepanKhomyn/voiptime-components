@@ -1,3 +1,10 @@
+## [1.22.27](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.26...v1.22.27) (2026-10-01)
+
+
+### Bug Fixes
+
+* remove < from copy icon ([65b6c68](https://github.com/StepanKhomyn/voiptime-components/commit/65b6c68a7dff6ea58ae6fca92a08666936a22efc))
+
 ## [1.22.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.25...v1.22.26) (2026-09-30)
 
 
