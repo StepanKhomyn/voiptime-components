@@ -13,7 +13,10 @@ export interface ChartSegment {
   count: number;
   color: string;
   icon?: any;
+  percent?: number;
 }
+
+export type BarSortOrder = 'none' | 'asc' | 'desc';
 
 export interface ComboSeriesConfig {
   type: 'bar' | 'line';
@@ -39,6 +42,8 @@ export interface HorizontalBarChartProps {
   type: VChartType.horizontal;
   segments: ChartSegment[];
   showAxis?: boolean;
+  showPercent?: boolean;
+  sort?: BarSortOrder
 }
 
 // ── Combo ─────────────────────────────────────────────────────────────────────

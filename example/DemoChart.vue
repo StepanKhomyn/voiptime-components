@@ -28,8 +28,8 @@
 
   // ── Horizontal Bar дані ───────────────────────────────────────────────────────
   const channelSegments: ChartSegment[] = [
-    { label: 'Inbound', count: 712, color: '#3b82f6' },
     { label: 'Outbound', count: 489, color: '#10b981' },
+    { label: 'Inbound', count: 712, color: '#3b82f6' },
     { label: 'Callback', count: 203, color: '#f59e0b' },
     { label: 'Voicemail', count: 156, color: '#ef4444' },
   ];
@@ -179,6 +179,8 @@
       rows: [
         { name: 'segments', type: 'ChartSegment[]', default: '-', description: 'Масив смужок', required: true },
         { name: 'showAxis', type: 'boolean', default: 'false', description: 'Показувати вісь X з підписами значень' },
+        { name: 'showPercent', type: 'boolean', default: 'false', description: 'Показувати відсотки біля значень' },
+        { name: 'sort', type: 'string', default: 'none', description: 'Сортувати елементи (none, desc, asc)' },
       ],
     },
     {
@@ -373,6 +375,12 @@
       <DocPreview title="З віссю (showAxis)">
         <div style="width: 100%">
           <VChart :segments="channelSegments" :show-axis="true" type="horizontal-bar" />
+        </div>
+      </DocPreview>
+
+      <DocPreview title="З відсотками та віссю та сортуванням (showAxis)">
+        <div style="width: 100%">
+          <VChart :segments="channelSegments" :show-axis="true" type="horizontal-bar" :show-percent="true" sort="desc"/>
         </div>
       </DocPreview>
 

@@ -37,6 +37,8 @@
       v-else-if="props.type === 'horizontal-bar'"
       :segments="(props as HorizontalBarChartProps).segments"
       :show-axis="(props as HorizontalBarChartProps).showAxis"
+      :show-percent="(props as HorizontalBarChartProps).showPercent"
+      :sort="(props as HorizontalBarChartProps).sort"
     />
 
     <VChartScaleBar

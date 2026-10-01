@@ -117,18 +117,28 @@ $transition-fast: filter 0.15s ease;
 
 // ── Horizontal Bar Chart ─────────────────────────────────────────────────────
 .vt-chart__bar {
+  --vt-bar-right-gap: 52px;
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &--with-percent {
+    --vt-bar-right-gap: 120px;
+  }
+
   &-container {
     display: flex;
     flex-direction: column;
     position: relative;
-    height: 100%;
+    flex: 1;
   }
 
   &-background {
     position: absolute;
     top: 0;
     left: 38px;
-    right: 52px;
+    right: var(--vt-bar-right-gap);
     bottom: 0;
     display: flex;
     pointer-events: none;
@@ -171,27 +181,42 @@ $transition-fast: filter 0.15s ease;
     border-radius: 4px;
     position: relative;
     overflow: visible;
-    margin-right: 52px;
+    margin-right: var(--vt-bar-right-gap);
   }
 
   &-fill {
     height: 100%;
     transition: width $transition-default;
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding-right: 8px;
   }
 
+  // плашка "кількість + %" одразу після кінця бару
   &-tooltip {
     position: absolute;
-    right: -20px;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
+    margin-left: var(--vt-padding-base);
+    display: flex;
+    align-items: center;
+    gap: var(--vt-gap-base);
+    white-space: nowrap;
+    z-index: 10;
+  }
+
+  &-count {
+    padding: 2px 5px;
+    border-radius: 6px;
+    background: #e0e0e0;
     font-size: 14px;
     font-weight: 500;
     color: $color-text-main;
-    white-space: nowrap;
-    z-index: 10;
+  }
+
+  &-percent {
+    font-size: 14px;
+    font-weight: 500;
+    color: #4f4f4f;
   }
 
   &-axis {
@@ -199,7 +224,7 @@ $transition-fast: filter 0.15s ease;
     height: 30px;
     margin-top: 0;
     margin-left: 38px;
-    margin-right: 52px;
+    margin-right: var(--vt-bar-right-gap);
   }
 
   &-axis-line {
