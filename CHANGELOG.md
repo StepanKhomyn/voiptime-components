@@ -1,3 +1,10 @@
+## [1.22.31](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.30...v1.22.31) (2026-10-01)
+
+
+### Bug Fixes
+
+* remove id ([a0d4b16](https://github.com/StepanKhomyn/voiptime-components/commit/a0d4b168d5dbfdd885fccd5b9823bf86f08dcdfa))
+
 ## [1.22.30](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.29...v1.22.30) (2026-10-01)
 
 
