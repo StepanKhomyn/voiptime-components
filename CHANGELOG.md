@@ -1,3 +1,10 @@
+## [1.23.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.0...v1.23.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* додано проценти на горизонтальну вісь та сортування ([f9340df](https://github.com/StepanKhomyn/voiptime-components/commit/f9340dff967d1cf1910c4265f293f0f3801af234))
+
 # [1.23.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.22.32...v1.23.0) (2026-10-01)
 
 
