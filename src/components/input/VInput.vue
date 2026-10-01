@@ -172,6 +172,15 @@
     emit('validation', { isValid: isValid.value, errors: errors });
   };
 
+  // Focus
+
+  const getField = () => (isTextarea.value ? textareaRef.value : inputRef.value);
+
+  const focusField = () => {
+    if (props.disabled) return;
+    getField()?.focus();
+  };
+
   // Обчислювані властивості
   const isTextarea = computed(() => props.type === 'textarea');
 
@@ -391,7 +400,7 @@
   const handleClear = () => {
     emit('update:modelValue', '');
     emit('clear');
-    inputRef.value?.focus();
+    getField()?.focus();
 
     // Очистка помилок валідації
     validationErrors.value = [];
@@ -402,7 +411,7 @@
   const togglePasswordVisibility = () => {
     isPasswordVisible.value = !isPasswordVisible.value;
     nextTick(() => {
-      inputRef.value?.focus();
+      getField()?.focus();
     });
   };
 
@@ -463,17 +472,9 @@
   };
 
   // Методи для експорту (ref methods)
-  const focus = () => {
-    inputRef.value?.focus();
-  };
-
-  const blur = () => {
-    inputRef.value?.blur();
-  };
-
-  const select = () => {
-    inputRef.value?.select();
-  };
+  const focus = () => getField()?.focus();
+  const blur = () => getField()?.blur();
+  const select = () => getField()?.select();
 
   const clear = () => {
     handleClear();
@@ -590,6 +591,8 @@
         :class="{ 'vt-input__floating-label--truncated': isLabelTruncated }"
         class="vt-input__floating-label"
         data-placement="top"
+        @mousedown.prevent
+        @click="focusField"
       >
         {{ label }}
         <span v-if="required" class="vt-input__required">*</span>
