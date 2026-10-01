@@ -1061,12 +1061,12 @@
       <!-- Floating Label для outlined стилю -->
       <label
         v-if="label && outlined"
-        :key="isLabelTruncated ? 'truncated' : 'full'"
         ref="floatingLabelRef"
         v-tooltip="floatingLabelTooltip()"
         :class="{ 'vt-select__floating-label--truncated': isLabelTruncated }"
         class="vt-select__floating-label"
         data-placement="top"
+        @mousedown.prevent
       >
         {{ label }}
         <span v-if="required" class="vt-select__required">*</span>
