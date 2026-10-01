@@ -19,6 +19,7 @@
   import VButton from '@/components/button/VButton.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
+  import { useTruncatedLabel } from '@/composables/useTruncatedLabel';
 
   const { t } = useI18n();
 
@@ -57,6 +58,14 @@
     endTime: ref<TimeObject | null>(null),
     isSelectingEnd: ref(false),
   };
+
+  // Відображення label
+
+  const floatingLabelRef = ref<HTMLElement>();
+  const { isTruncated: isLabelTruncated, tooltipText: floatingLabelTooltip } = useTruncatedLabel(
+    floatingLabelRef,
+    () => props.label
+  );
 
   // ===== INTERSECTION OBSERVER STATE =====
   const observers = ref<Map<HTMLElement, IntersectionObserver>>(new Map());
@@ -842,7 +851,15 @@
       @focus="handleFocus"
     >
       <!-- Floating Label для outlined стилю -->
-      <label v-if="label && outlined" class="vt-timepicker__floating-label">
+      <label
+        v-if="label && outlined"
+        :key="isLabelTruncated ? 'truncated' : 'full'"
+        ref="floatingLabelRef"
+        v-tooltip="floatingLabelTooltip()"
+        :class="{ 'vt-timepicker__floating-label--truncated': isLabelTruncated }"
+        class="vt-timepicker__floating-label"
+        data-placement="top"
+      >
         {{ label }}
         <span v-if="required" class="vt-timepicker__required">*</span>
       </label>

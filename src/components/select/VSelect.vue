@@ -26,6 +26,7 @@
   import VInput from '@/components/input/VInput.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
+  import { useTruncatedLabel } from '@/composables/useTruncatedLabel';
 
   const { t } = useI18n();
 
@@ -56,6 +57,14 @@
     summary: undefined,
     summaryItems: Array,
   });
+
+  // Відображення label
+
+  const floatingLabelRef = ref<HTMLElement>();
+  const { isTruncated: isLabelTruncated, tooltipText: floatingLabelTooltip } = useTruncatedLabel(
+    floatingLabelRef,
+    () => props.label
+  );
 
   // ===== EMITS =====
   const emit = defineEmits<VtSelectEmits>();
@@ -1050,7 +1059,16 @@
       @keydown="handleKeydown"
     >
       <!-- Floating Label для outlined стилю -->
-      <label v-if="label && outlined" :for="id" class="vt-select__floating-label">
+      <label
+        v-if="label && outlined"
+        :for="id"
+        :key="isLabelTruncated ? 'truncated' : 'full'"
+        ref="floatingLabelRef"
+        v-tooltip="floatingLabelTooltip()"
+        :class="{ 'vt-select__floating-label--truncated': isLabelTruncated }"
+        class="vt-select__floating-label"
+        data-placement="top"
+      >
         {{ label }}
         <span v-if="required" class="vt-select__required">*</span>
       </label>

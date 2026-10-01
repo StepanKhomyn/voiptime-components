@@ -4,6 +4,7 @@
   import VIcon from '@/components/icon/VIcon.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
+  import { useTruncatedLabel } from '@/composables/useTruncatedLabel';
 
   const { t } = useI18n();
 
@@ -22,6 +23,14 @@
     validateOnInput: true,
     validateOnBlur: true,
   });
+
+  // Відображення label
+
+  const floatingLabelRef = ref<HTMLElement>();
+  const { isTruncated: isLabelTruncated, tooltipText: floatingLabelTooltip } = useTruncatedLabel(
+    floatingLabelRef,
+    () => props.label
+  );
 
   // Емітери
   const emit = defineEmits<VtInputEmits>();
@@ -573,7 +582,15 @@
     <!-- Input Container -->
     <div class="vt-input__container">
       <!-- Floating Label для outlined стилю -->
-      <label v-if="label && outlined" :for="id" class="vt-input__floating-label">
+      <label
+        v-if="label && outlined"
+        :key="isLabelTruncated ? 'truncated' : 'full'"
+        ref="floatingLabelRef"
+        v-tooltip="floatingLabelTooltip()"
+        :class="{ 'vt-input__floating-label--truncated': isLabelTruncated }"
+        class="vt-input__floating-label"
+        data-placement="top"
+      >
         {{ label }}
         <span v-if="required" class="vt-input__required">*</span>
       </label>

@@ -9,6 +9,7 @@
   import type { TimePickerValue } from '@/components/timepicker/types';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
+  import { useTruncatedLabel } from '@/composables/useTruncatedLabel';
 
   const { t } = useI18n();
   const dateLocale = useDateLocale();
@@ -36,6 +37,14 @@
     maxDateRange: Infinity,
     previousDateDisabled: false,
   });
+
+  // Відображення label
+
+  const floatingLabelRef = ref<HTMLElement>();
+  const { isTruncated: isLabelTruncated, tooltipText: floatingLabelTooltip } = useTruncatedLabel(
+    floatingLabelRef,
+    () => props.label
+  );
 
   // ===== EMITS =====
   const emit = defineEmits<VDatePickerEmits>();
@@ -1084,7 +1093,15 @@
       @focus="handleFocus"
     >
       <!-- Floating Label для outlined стилю -->
-      <label v-if="label && outlined" :for="id" class="vt-datepicker__floating-label">
+      <label
+        v-if="label && outlined"
+        :key="isLabelTruncated ? 'truncated' : 'full'"
+        ref="floatingLabelRef"
+        v-tooltip="floatingLabelTooltip()"
+        :class="{ 'vt-datepicker__floating-label--truncated': isLabelTruncated }"
+        class="vt-datepicker__floating-label"
+        data-placement="top"
+      >
         {{ label }}
         <span v-if="required" class="vt-datepicker__required">*</span>
       </label>
