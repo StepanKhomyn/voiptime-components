@@ -57,7 +57,7 @@
     measurementContainer,
     slotNodesLength,
     {
-      debug: true, // <- після діагностики поставте false або прибрати
+      debug: false, // <- після діагностики поставте false або прибрати
     }
   );
 </script>
