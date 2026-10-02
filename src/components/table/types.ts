@@ -1,5 +1,5 @@
 import type { Component, VNode } from 'vue';
-import type { IconName } from '@/icons';
+import type { IconName } from '@/components/icon/icons';
 
 export interface VTableStyleConfig {
   [key: string]: string;

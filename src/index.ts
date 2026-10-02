@@ -107,7 +107,8 @@ export { loaderDirective };
 
 // ----------------- Експортуємо типи -----------------
 export type { VButtonProps, VButtonEmits, VButtonType } from './components/button/types';
-export type { IconName } from './icons/index';
+export type { IconName, GroupIconName, IconGroup, LegacyIconName } from './components/icon/icons';
+export { iconGroups } from './components/icon/icons';
 export type { TooltipPlacement } from './directives/tooltip/types';
 
 export type { VModalProps, VModalEmits, VModalSize, VModalConfig, VModalInstance } from './components/modal/types';

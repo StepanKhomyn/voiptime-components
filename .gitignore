@@ -23,3 +23,6 @@ dist
 *.sln
 *.sw?
 
+
+# Кеш імпорту іконок з Figma
+.figma-cache

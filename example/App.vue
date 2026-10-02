@@ -3,6 +3,7 @@
   import pkg from '../package.json';
   import DemoButton from './DemoButton.vue';
   import DemoIcons from './DemoIcons.vue';
+  import DemoIconGroups from './DemoIconGroups.vue';
   import DemoModal from './DemoModal.vue';
   import DemoTooltip from './DemoTooltip.vue';
   import DemoPagination from './DemoPagination.vue';
@@ -107,7 +108,8 @@
     {
       group: 'Media & UI',
       items: [
-        { name: 'Icons', icon: '🎨', component: DemoIcons },
+        { name: 'Icon Groups', icon: '🗃️', component: DemoIconGroups },
+        { name: 'Icons (legacy)', icon: '🎨', component: DemoIcons },
         { name: 'Empty', icon: '🗂️', component: DemoEmpty },
         { name: 'Fullscreen Image', icon: '🖼️', component: DemoImageFullScreen },
         { name: 'Audio Player', icon: '🎧', component: DemoAudio },

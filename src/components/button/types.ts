@@ -1,4 +1,4 @@
-import type { IconName } from '../../icons';
+import type { IconName } from '../icon/icons';
 import type { TooltipPlacement } from '../../directives/tooltip/types';
 
 export type VButtonType = 'default' | 'primary' | 'success' | 'danger' | 'warning' | 'info';

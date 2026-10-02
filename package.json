@@ -37,7 +37,10 @@
     "build:demo": "vite build --config vite.demo.config.ts",
     "prepare": "npm run build",
     "preview": "vite preview",
-    "generate-icons": "node scripts/generate-icons.cjs"
+    "generate-icons": "node scripts/generate-icons.cjs",
+    "fetch-icons": "node scripts/fetch-figma-icons.cjs",
+    "fetch-icons:offline": "node scripts/fetch-figma-icons.cjs --offline",
+    "generate-icon-groups": "node scripts/generate-icon-groups.cjs"
   },
   "dependencies": {
     "vue": "^3.5.17",

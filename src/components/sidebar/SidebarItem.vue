@@ -2,7 +2,7 @@
   import { computed, onBeforeUnmount, ref } from 'vue';
   import type { SidebarItemRaw } from './types';
   import VIcon from '@/components/icon/VIcon.vue';
-  import type { IconName } from '@/icons';
+  import type { IconName } from '@/components/icon/icons';
 
   const props = defineProps<{
     item: SidebarItemRaw;

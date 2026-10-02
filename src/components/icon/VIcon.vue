@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { computed } from 'vue';
-  import type { IconName } from '../../icons';
-  import { icons } from '../../icons';
+  import type { IconName } from './icons';
+  import { allIcons } from './icons';
 
   interface Props {
     name: IconName;
@@ -14,7 +14,7 @@
     color: 'currentColor',
   });
 
-  const Icon = computed(() => icons[props.name]);
+  const Icon = computed(() => allIcons[props.name]);
 
   const iconStyle = computed(() => ({
     ...(props.width && { width: typeof props.width === 'number' ? `${props.width}px` : props.width }),

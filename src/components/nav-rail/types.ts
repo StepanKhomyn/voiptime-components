@@ -1,4 +1,4 @@
-import type { IconName } from '@/icons';
+import type { IconName } from '@/components/icon/icons';
 export type VNavRailPlacement = 'left' | 'right';
 
 // Локальний тип позиції беджа — якщо у вашому VBadge вже є експортований

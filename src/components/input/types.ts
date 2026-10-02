@@ -1,4 +1,4 @@
-import type { IconName } from '@/icons';
+import type { IconName } from '@/components/icon/icons';
 
 export type VtInputSize = 'small' | 'medium' | 'large';
 export type VtInputStatus = 'default' | 'success' | 'error' | 'warning';

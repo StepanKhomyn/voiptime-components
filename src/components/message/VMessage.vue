@@ -1,7 +1,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import type { VMessageInstance, VMessageOptions, VMessageType } from './types';
-  import type { IconName } from '../../icons';
+  import type { IconName } from '../icon/icons';
   import VIcon from '@/components/icon/VIcon.vue';
 
   const messages = ref<VMessageInstance[]>([]);

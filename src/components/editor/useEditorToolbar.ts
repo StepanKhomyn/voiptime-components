@@ -3,7 +3,7 @@ import type { VtEditorToolbarGroup } from './types';
 import { FONT_GROUPS, HEADING_GROUPS, TOOLBAR_ICONS } from './constants';
 import { useI18n } from '@/locales/useI18n';
 import { LOCALE_KEYS } from '@/locales/types';
-import type { IconName } from '@/icons';
+import type { IconName } from '@/components/icon/icons';
 
 export interface ToolbarItem {
   type: 'button' | 'select' | 'separator';

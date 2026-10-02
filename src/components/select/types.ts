@@ -1,5 +1,5 @@
 import type { InjectionKey } from 'vue';
-import type { IconName } from '@/icons';
+import type { IconName } from '@/components/icon/icons';
 import { LANGUAGES } from '@/locales/types';
 
 // types.ts - оновлені типи для підтримки об'єктів та фільтрації

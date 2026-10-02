@@ -2,7 +2,7 @@
   import { computed } from 'vue';
   import VIcon from '@/components/icon/VIcon.vue';
   import type { VInfoBoxProps } from './types';
-  import type { IconName } from '@/icons';
+  import type { IconName } from '@/components/icon/icons';
 
   const props = withDefaults(defineProps<VInfoBoxProps>(), {
     type: 'primary',
