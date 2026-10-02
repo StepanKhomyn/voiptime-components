@@ -90,6 +90,7 @@
         display: flex;
         align-items: center;
         flex-direction: row;
+        flex-shrink: 0;
         gap: var(--vt-gap-base);
       }
     }
@@ -101,6 +102,9 @@
       align-items: center;
       gap: var(--vt-gap-base);
       box-sizing: border-box;
+      // було: ширина по вмісту
+      flex: 1 1 auto;
+      min-width: 0;
 
       &__inline {
         display: flex;

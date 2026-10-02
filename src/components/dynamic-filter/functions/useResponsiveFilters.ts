@@ -1,235 +1,264 @@
 import { nextTick, onBeforeUnmount, onMounted, ref, type Ref, watch } from 'vue';
 
+interface ResponsiveFiltersOptions {
+  /** Виводити діагностику в консоль */
+  debug?: boolean;
+  /** Мінімальна ширина одного фільтра */
+  minFilterWidth?: number;
+  /** Запас, щоб не впиратися в край пікселя в піксель */
+  reserve?: number;
+  /** Ширина кнопки "Більше фільтрів", поки її ще не виміряли */
+  triggerFallbackWidth?: number;
+}
+
+const px = (value: string | null | undefined, fallback = 0) => {
+  const n = parseFloat(value || '');
+  return Number.isNaN(n) ? fallback : n;
+};
+
+const outerWidth = (el: HTMLElement) => {
+  const s = getComputedStyle(el);
+  return el.getBoundingClientRect().width + px(s.marginLeft) + px(s.marginRight);
+};
+
 export function useResponsiveFilters(
   containerRef: Ref<HTMLElement | null>,
   actionsRef: Ref<HTMLElement | null>,
   dropdownTriggerRef: Ref<HTMLElement | null>,
   measurementContainerRef: Ref<HTMLElement | null>,
-  slotNodesLength: Ref<number>
+  slotNodesLength: Ref<number>,
+  options: ResponsiveFiltersOptions = {}
 ) {
+  const {
+    debug = false,
+    minFilterWidth = 150,
+    reserve = 8,
+    triggerFallbackWidth = 140,
+  } = options;
+
   const visibleIndexes = ref<number[]>([]);
 
-  // debounce через rAF
+  let lastTriggerWidth = 0;
   let rafId = 0;
+  let ro: ResizeObserver | null = null;
+  let observedMeasureItems: HTMLElement[] = [];
+  const timers = new Set<number>();
+  let destroyed = false;
+
+  const log = (...args: unknown[]) => {
+    if (debug) console.log('[useResponsiveFilters]', ...args);
+  };
+
+  function later(fn: () => void, ms: number) {
+    const id = window.setTimeout(() => {
+      timers.delete(id);
+      if (!destroyed) fn();
+    }, ms);
+    timers.add(id);
+  }
+
+  // debounce через rAF
   function scheduleCalculate() {
     if (rafId) cancelAnimationFrame(rafId);
     rafId = requestAnimationFrame(() => {
-      calculate();
       rafId = 0;
+      calculate();
     });
   }
 
-  // ResizeObserver для відстеження змін розмірів
-  let ro: ResizeObserver | null = null;
-
-  function getHorizontalMargins(el: HTMLElement) {
-    const s = getComputedStyle(el);
-    return parseFloat(s.marginLeft || "0") + parseFloat(s.marginRight || "0");
+  function setVisible(next: number[]) {
+    const prev = visibleIndexes.value;
+    const same = prev.length === next.length && prev.every((v, i) => v === next[i]);
+    if (!same) visibleIndexes.value = next;
   }
 
   function calculate() {
+    if (destroyed) return;
+
     const el = containerRef.value;
     const measureRoot = measurementContainerRef.value;
     if (!el || !measureRoot) return;
 
-    // Знаходимо головний контейнер vt-page__card
-    const manageFormCard = el.closest('.vt-page__card') as HTMLElement;
-    if (!manageFormCard) {
-      console.warn('vt-page__card container not found');
+    // Хедер, у якому лежить фільтр (фільтр + кнопки справа)
+    const header = (el.closest('.vt-page__card-header') as HTMLElement | null) ?? el.parentElement;
+    if (!header) return;
+
+    const headerStyle = getComputedStyle(header);
+    const headerContentWidth =
+      header.clientWidth - px(headerStyle.paddingLeft) - px(headerStyle.paddingRight);
+
+    if (headerContentWidth <= 0) {
+      log('skip: header has zero width (hidden?)');
       return;
     }
 
-    // Отримуємо розміри
-    const containerRect = el.getBoundingClientRect();
-    const cardRect = manageFormCard.getBoundingClientRect();
+    const headerGap = px(headerStyle.columnGap, 10);
+    const elGap = px(getComputedStyle(el).columnGap, 10);
 
-    // Обчислюємо ширину правих елементів
+    // --- Сусідні елементи хедера (все, крім самого фільтра) ---
+    const ownChild = Array.from(header.children).find(c => c === el || c.contains(el));
+    const siblings = (Array.from(header.children) as HTMLElement[]).filter(c => {
+      if (c === ownChild) return false;
+      const s = getComputedStyle(c);
+      return s.display !== 'none' && s.position !== 'absolute' && s.position !== 'fixed';
+    });
+    const siblingsWidth = siblings.reduce((sum, s) => sum + outerWidth(s), 0);
 
-    let rightElementsWidth = 0;
-    if (containerRect.width === 0 || cardRect.width === 0) {
-      return;
-    }
+    // Скільки місця має весь блок фільтра (el)
+    const elAvailable = headerContentWidth - siblingsWidth - headerGap * siblings.length;
 
-    // Кнопки дій (якщо є)
-    if (actionsRef.value) {
-      const actionsRect = actionsRef.value.getBoundingClientRect();
-      rightElementsWidth += actionsRect.width + getHorizontalMargins(actionsRef.value);
-    }
+    // --- Всередині el: [inline] [dropdown?] [actions] ---
+    const actionsWidth = actionsRef.value ? outerWidth(actionsRef.value) : 0;
+    const actionsBlock = actionsWidth > 0 ? actionsWidth + elGap : 0;
 
-    // Дропдаун тригер
     if (dropdownTriggerRef.value) {
-      const triggerRect = dropdownTriggerRef.value.getBoundingClientRect();
-      rightElementsWidth += triggerRect.width + getHorizontalMargins(dropdownTriggerRef.value);
+      const w = outerWidth(dropdownTriggerRef.value);
+      if (w > 0) lastTriggerWidth = w;
+    }
+    const triggerBlock = (lastTriggerWidth || triggerFallbackWidth) + elGap;
+
+    // --- Ширини фільтрів ---
+    const measureItems = Array.from(
+      measureRoot.querySelectorAll<HTMLElement>('.vt-page__card-filter__measure-element')
+    );
+    const widths = measureItems.map(i => Math.max(i.getBoundingClientRect().width, minFilterWidth));
+
+    if (widths.length === 0) {
+      setVisible([]);
+      return;
     }
 
-    // Шукаємо всі елементи праворуч від фільтрів в рамках vt-page__card-header
-    const cardList = el.closest('.vt-page__card-header') as HTMLElement;
-    if (cardList) {
-      const allChildren = Array.from(cardList.children) as HTMLElement[];
-      const containerIndex = allChildren.findIndex(child => child.contains(el));
+    const totalWidth = widths.reduce((a, b) => a + b, 0) + elGap * (widths.length - 1);
+    const limitWithoutTrigger = elAvailable - actionsBlock - reserve;
 
-      if (containerIndex >= 0) {
-        const rightSiblings = allChildren.slice(containerIndex + 1);
-        rightSiblings.forEach((sibling) => {
-          // Пропускаємо приховані елементи
-          const siblingStyles = getComputedStyle(sibling);
-          if (siblingStyles.display === 'none' || siblingStyles.visibility === 'hidden') {
-            return;
-          }
-
-          const siblingRect = sibling.getBoundingClientRect();
-          rightElementsWidth += siblingRect.width + getHorizontalMargins(sibling);
-        });
+    const pack = (limit: number) => {
+      const result: number[] = [];
+      let used = 0;
+      for (let i = 0; i < widths.length; i++) {
+        const w = widths[i] + (i > 0 ? elGap : 0);
+        if (used + w <= limit) {
+          result.push(i);
+          used += w;
+        } else {
+          break;
+        }
       }
+      return result;
+    };
+
+    let next: number[];
+    let mode: 'all' | 'with-trigger';
+    if (totalWidth <= limitWithoutTrigger) {
+      next = widths.map((_, i) => i);
+      mode = 'all';
+    } else {
+      next = pack(limitWithoutTrigger - triggerBlock);
+      mode = 'with-trigger';
     }
 
-    // Додаємо запас для стабільності
-    const extraReserve = 20;
-
-    // Доступна ширина: від лівого краю контейнера до правого краю карти мінус праві елементи
-    let availableWidth = Math.max(0, cardRect.right - containerRect.left - rightElementsWidth - extraReserve);
-
-    // Обмежуємо власною шириною контейнера
-    const containerPadding = parseFloat(getComputedStyle(el).paddingLeft || "0") +
-      parseFloat(getComputedStyle(el).paddingRight || "0");
-    availableWidth = Math.min(availableWidth, el.clientWidth - containerPadding);
-
-    // Вимірюємо фільтри
-    const measureItems = measureRoot.querySelectorAll<HTMLElement>(".vt-page__card-filter__measure-element");
-    const newVisible: number[] = [];
-    let used = 0;
-    const GAP = 10;
-    const MIN_FILTER_WIDTH = 150;
-    for (let i = 0; i < measureItems.length; i++) {
-      const itemRect = measureItems[i].getBoundingClientRect();
-      const itemWidth = Math.max(
-        itemRect.width,
-        MIN_FILTER_WIDTH
-      );
-      const wWithGap = itemWidth + (i > 0 ? GAP : 0);
-
-      if (used + wWithGap <= availableWidth) {
-        newVisible.push(i);
-        used += wWithGap;
-      } else {
-        break;
-      }
+    if (debug) {
+      log('calculate', {
+        headerContentWidth,
+        siblingsWidth,
+        siblingsCount: siblings.length,
+        headerGap,
+        elAvailable,
+        elGap,
+        actionsWidth,
+        triggerBlock,
+        limitWithoutTrigger,
+        widths,
+        totalWidth,
+        mode,
+        visible: next,
+        elClientWidth: el.clientWidth,
+      });
     }
 
-    visibleIndexes.value = newVisible;
+    setVisible(next);
+  }
+
+  // Стежимо за вимірювальними елементами (змінюється вміст/ширина фільтра)
+  function observeMeasureItems() {
+    if (!ro) return;
+    observedMeasureItems.forEach(i => ro!.unobserve(i));
+    observedMeasureItems = [];
+    const root = measurementContainerRef.value;
+    if (!root) return;
+    observedMeasureItems = Array.from(
+      root.querySelectorAll<HTMLElement>('.vt-page__card-filter__measure-element')
+    );
+    observedMeasureItems.forEach(i => ro!.observe(i));
   }
 
   const init = () => {
     // Перший розрахунок
     nextTick(() => {
-      setTimeout(calculate, 50); // Невелика затримка для стабілізації
+      observeMeasureItems();
+      later(calculate, 50);
     });
 
-    // Window resize
-    window.addEventListener("resize", scheduleCalculate);
+    window.addEventListener('resize', scheduleCalculate);
 
-    // ResizeObserver для ключових контейнерів
     if ('ResizeObserver' in window) {
-      ro = new ResizeObserver((entries) => {
-        // Перевіряємо чи є значні зміни розмірів
-        const hasSignificantChange = entries.some(entry => {
-          const { width, height } = entry.contentRect;
-          return width > 0 && height > 0; // Ігноруємо нульові розміри
-        });
-
-        if (hasSignificantChange) {
-          scheduleCalculate();
-        }
-      });
+      ro = new ResizeObserver(() => scheduleCalculate());
 
       const el = containerRef.value;
       if (el) {
-        // Стежимо за основними контейнерами
         ro.observe(el);
-
-        const manageFormCard = el.closest('.vt-page__card');
-        if (manageFormCard) {
-          ro.observe(manageFormCard);
-        }
-
-        // Стежимо за левим sidebar
-        const sidebar = document.querySelector('.left-panel, .sidebar, nav[class*="nav"], .main-layout__aside');
-        if (sidebar) {
-          ro.observe(sidebar);
-        }
+        const header = el.closest('.vt-page__card-header') ?? el.parentElement;
+        if (header) ro.observe(header);
       }
+      if (actionsRef.value) ro.observe(actionsRef.value);
+      observeMeasureItems();
     }
 
-    // Спостерігач за змінами класів (для sidebar toggle)
-    const body = document.body;
-    const bodyObserver = new MutationObserver((mutations) => {
-      const hasClassChanges = mutations.some(mutation =>
-        mutation.type === 'attributes' && mutation.attributeName === 'class'
-      );
-
-      if (hasClassChanges) {
-        // Затримка для завершення CSS анімації
-        setTimeout(scheduleCalculate, 300);
-      }
-    });
-
-    bodyObserver.observe(body, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    // Cleanup function для body observer
-    const cleanup = () => {
-      bodyObserver.disconnect();
-    };
-
-    // Додаємо cleanup до основної функції cleanup
-    const originalCleanup = window.addEventListener.prototype;
-
-    // Слухач змін слотів
-    watch(
-      () => slotNodesLength.value,
-      () => {
-        nextTick(() => {
-          setTimeout(calculate, 100);
-        });
-      },
-    );
-
-    // Слухач змін кнопок
-    watch(
-      [actionsRef, dropdownTriggerRef],
-      () => {
-        nextTick(scheduleCalculate);
-      },
-      { flush: 'post' }
-    );
+    // Шрифти змінюють ширини
+    (document as any).fonts?.ready?.then(() => scheduleCalculate());
   };
 
   const cleanup = () => {
-    window.removeEventListener("resize", scheduleCalculate);
+    destroyed = true;
+    window.removeEventListener('resize', scheduleCalculate);
     if (rafId) {
       cancelAnimationFrame(rafId);
       rafId = 0;
     }
+    timers.forEach(id => clearTimeout(id));
+    timers.clear();
     if (ro) {
       ro.disconnect();
       ro = null;
     }
+    observedMeasureItems = [];
   };
+
+  // Зміна кількості слотів
+  watch(slotNodesLength, () => {
+    nextTick(() => {
+      observeMeasureItems();
+      later(calculate, 100);
+    });
+  });
+
+  // Тригер дропдауну з'являється/зникає (v-if), кнопки дій змінюються
+  watch(
+    [actionsRef, dropdownTriggerRef],
+    () => {
+      nextTick(scheduleCalculate);
+    },
+    { flush: 'post' }
+  );
 
   onMounted(init);
   onBeforeUnmount(cleanup);
 
-  // Додаткові методи для ручного контролю
-  const forceRecalculate = () => {
-    setTimeout(calculate, 100);
-  };
+  const forceRecalculate = () => later(calculate, 100);
 
   return {
     visibleIndexes,
     calculate,
     scheduleCalculate,
-    forceRecalculate
+    forceRecalculate,
   };
 }

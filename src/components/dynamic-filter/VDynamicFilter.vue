@@ -16,20 +16,6 @@
     default?: () => any[];
     actions?: () => any[];
   }>();
-  const slotNodes = computed(() => {
-    const raw = slots.default ? slots.default() : [];
-    return flattenVNodes(raw);
-  });
-
-  const slotNodesLength = computed(() => slotNodes.value.length);
-
-  const { visibleIndexes } = useResponsiveFilters(
-    dynamicFilterRef,
-    actionsRef,
-    dropdownTriggerRef,
-    measurementContainer,
-    slotNodesLength
-  );
 
   const flattenVNodes = (vnodes: VNode[]): VNode[] => {
     const result: VNode[] = [];
@@ -41,7 +27,6 @@
         if (Array.isArray(children)) {
           result.push(...flattenVNodes(children as VNode[]));
         } else if (children && typeof children === 'object') {
-          // children — об'єкт зі слотами { default: fn, _: 1 }
           const defaultSlot = (children as any).default;
           if (typeof defaultSlot === 'function') {
             const slotResult = defaultSlot();
@@ -57,6 +42,24 @@
 
     return result;
   };
+
+  const slotNodes = computed(() => {
+    const raw = slots.default ? slots.default() : [];
+    return flattenVNodes(raw);
+  });
+
+  const slotNodesLength = computed(() => slotNodes.value.length);
+
+  const { visibleIndexes } = useResponsiveFilters(
+    dynamicFilterRef,
+    actionsRef,
+    dropdownTriggerRef,
+    measurementContainer,
+    slotNodesLength,
+    {
+      debug: true, // <- після діагностики поставте false або прибрати
+    }
+  );
 </script>
 
 <template>
@@ -95,7 +98,7 @@
       <slot name="actions" />
     </div>
 
-    <!-- Прихований контейнер для вимірювання ширин (не впливає на layout) -->
+    <!-- Прихований контейнер для вимірювання ширин -->
     <div ref="measurementContainer" aria-hidden="true" class="vt-page__card-filter__measure-root">
       <template v-for="(element, idx) in slotNodes" :key="'m' + idx">
         <div class="vt-page__card-filter__measure-element vt-page__card-filter__control">
