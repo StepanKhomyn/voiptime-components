@@ -1,3 +1,11 @@
+## [1.23.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.4...v1.23.5) (2026-10-02)
+
+
+### Bug Fixes
+
+* додано групи іконок ([1c28a77](https://github.com/StepanKhomyn/voiptime-components/commit/1c28a77b6ff0de4ad8a0df092508e41c29bff889))
+* додано групи іконок ([2880bef](https://github.com/StepanKhomyn/voiptime-components/commit/2880befa59745e21baa5c678988b1379870c01d2))
+
 ## [1.23.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.3...v1.23.4) (2026-10-02)
 
 
