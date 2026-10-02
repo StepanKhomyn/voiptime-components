@@ -56,6 +56,7 @@
     allowRemoteFilter: false,
     summary: undefined,
     summaryItems: Array,
+    displayRows: undefined,
   });
 
   // Відображення label
@@ -714,6 +715,8 @@
     validation.clear();
   };
 
+  const isSingleRow = computed(() => props.collapsedTags || props.displayRows === 1);
+
   const handleRemoveTag = (value: any) => {
     if (!isMultiple.value) return;
 
@@ -1091,7 +1094,12 @@
             </div>
           </template>
         </div>
-        <div v-else-if="multiple && selectedOptions.length > 0" ref="containerRef" class="vt-select__tags">
+        <div
+          v-else-if="multiple && selectedOptions.length > 0"
+          ref="containerRef"
+          :class="{ 'vt-select__tags--single-row': isSingleRow }"
+          class="vt-select__tags"
+        >
           <!-- Visible tags -->
           <div
             v-for="(option, index) in visibleTags"
