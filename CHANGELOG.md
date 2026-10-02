@@ -1,3 +1,10 @@
+## [1.23.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.1...v1.23.2) (2026-10-02)
+
+
+### Bug Fixes
+
+* debug responsive filter ([a7fe09c](https://github.com/StepanKhomyn/voiptime-components/commit/a7fe09cd382d5fb5be996673fe45aacf05926690))
+
 ## [1.23.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.0...v1.23.1) (2026-10-01)
 
 
