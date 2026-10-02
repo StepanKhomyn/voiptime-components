@@ -182,6 +182,27 @@
       overflow: hidden;
       white-space: nowrap;
     }
+
+    &--single-row {
+      flex-wrap: nowrap;
+      min-width: 0;
+      width: 100%;
+
+      .vt-select__tag {
+        flex-shrink: 1;   // дозволяємо тегу стискатися
+        min-width: 0;     // без цього flex-елемент не стискається нижче ширини контенту
+        overflow: hidden;
+
+        &--collapsed {
+          flex-shrink: 0; // "+N" ніколи не стискається
+          min-width: 30px;
+        }
+      }
+
+      .vt-select__tag-text {
+        min-width: 0;
+      }
+    }
   }
 
   &__tag {

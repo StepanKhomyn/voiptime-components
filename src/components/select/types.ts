@@ -55,7 +55,9 @@ export interface VtSelectProps {
   borderColor?: string;
   textColor?: string;
   summary?: string;
-  summaryItems?: string[]
+  summaryItems?: string[];
+  /** Кількість рядків для тегів. 1 — один рядок, довгі теги обрізаються через "..." */
+  displayRows?: number;
 }
 
 export interface VtSelectEmits {

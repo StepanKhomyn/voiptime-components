@@ -1,3 +1,10 @@
+## [1.23.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.3...v1.23.4) (2026-10-02)
+
+
+### Bug Fixes
+
+* overflow collapsed tags in multiselect ([4ca53c0](https://github.com/StepanKhomyn/voiptime-components/commit/4ca53c05318c1f65d179ddbc087990b013fc9136))
+
 ## [1.23.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.2...v1.23.3) (2026-10-02)
 
 

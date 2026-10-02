@@ -1,8 +1,15 @@
 <template>
   <div class="vt-avatar" :style="rootSizeStyle">
-    <img v-if="imageUrl" :src="imageUrl" alt="Avatar" class="vt-avatar__image" loading="lazy" />
+    <img
+      v-if="showImage"
+      :src="imageUrl"
+      alt="Avatar"
+      class="vt-avatar__image"
+      loading="lazy"
+      @error="hasError = true"
+    />
 
-    <div v-else-if="$slots.svg" class="vt-avatar__image">
+    <div v-else-if="hasSlotContent('svg')" class="vt-avatar__image">
       <slot name="svg" />
     </div>
 
@@ -10,19 +17,19 @@
       {{ initials }}
     </div>
 
-    <div v-if="$slots.icon" class="vt-avatar__social-icon">
+    <div v-if="hasSlotContent('icon')" class="vt-avatar__social-icon">
       <slot name="icon" />
     </div>
 
-    <div v-if="$slots.count" class="vt-avatar__count">
+    <div v-if="hasSlotContent('count')" class="vt-avatar__count">
       <slot name="count" />
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import { computed } from 'vue';
-  import type { StyleValue } from 'vue';
+  import { computed, ref, watch, useSlots, Comment, Fragment } from 'vue';
+  import type { StyleValue, VNode } from 'vue';
   import type { VAvatarProps } from './types';
 
   const props = withDefaults(defineProps<VAvatarProps>(), {
@@ -30,6 +37,41 @@
     lastName: '',
     imageUrl: '',
     size: 40,
+  });
+
+  const slots = useSlots();
+
+  /** true, якщо слот переданий І реально має вміст (не порожній v-if / <!----> ) */
+  const isVNodeNotEmpty = (node: VNode): boolean => {
+    if (node.type === Comment) return false;
+    if (node.type === Fragment) {
+      return Array.isArray(node.children) && (node.children as VNode[]).some(isVNodeNotEmpty);
+    }
+    return true;
+  };
+
+  const hasSlotContent = (name: string): boolean => {
+    const slot = slots[name];
+    if (!slot) return false;
+    return slot().some(isVNodeNotEmpty);
+  };
+
+  /** помилка завантаження картинки */
+  const hasError = ref(false);
+
+  watch(
+    () => props.imageUrl,
+    () => {
+      hasError.value = false;
+    },
+  );
+
+  const showImage = computed(() => {
+    const url = props.imageUrl;
+    if (!url || hasError.value) return false;
+    // відсікаємо data:text/html та інші не-зображення
+    if (url.startsWith('data:') && !url.startsWith('data:image/')) return false;
+    return true;
   });
 
   const initials = computed(() => {
