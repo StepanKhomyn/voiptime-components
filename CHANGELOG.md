@@ -1,3 +1,10 @@
+## [1.23.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.6...v1.23.7) (2026-10-05)
+
+
+### Bug Fixes
+
+* add tooltip to error message on input 2 ([7e11a94](https://github.com/StepanKhomyn/voiptime-components/commit/7e11a940d3ba745cf9eb5f87e6d041d4c63b97b9))
+
 ## [1.23.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.5...v1.23.6) (2026-10-05)
 
 
