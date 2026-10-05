@@ -9,7 +9,7 @@
   import type { TimePickerValue } from '@/components/timepicker/types';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
-  import { useTruncatedLabel } from '@/composables/useTruncatedLabel';
+  import { isAnyChildOverflowing, useTruncatedLabel } from '@/composables/useTruncatedLabel';
 
   const { t } = useI18n();
   const dateLocale = useDateLocale();
@@ -360,6 +360,23 @@
     if (validationError.value) return validationError.value;
     return '';
   });
+
+  // Тултіпи для плейсхолдера та помилки на бордері, якщо текст не вміщається
+  const placeholderRef = ref<HTMLElement>();
+  const { tooltipText: placeholderTooltip } = useTruncatedLabel(
+    placeholderRef,
+    () => {
+      if (props.outlined) return '';
+      if (isRange.value) {
+        return [props.startPlaceholder, props.endPlaceholder].filter(Boolean).join(` ${props.rangeSeparator} `);
+      }
+      return currentPlaceholder.value;
+    },
+    isAnyChildOverflowing
+  );
+
+  const borderErrorRef = ref<HTMLElement>();
+  const { tooltipText: borderErrorTooltip } = useTruncatedLabel(borderErrorRef, () => displayErrorMessage.value);
 
   const dropdownStyle = computed(() => ({
     ...dropdownPosition.value,
@@ -1095,7 +1112,6 @@
       <!-- Floating Label для outlined стилю -->
       <label
         v-if="label && outlined"
-        :key="isLabelTruncated ? 'truncated' : 'full'"
         ref="floatingLabelRef"
         v-tooltip="floatingLabelTooltip()"
         :class="{ 'vt-datepicker__floating-label--truncated': isLabelTruncated }"
@@ -1121,15 +1137,19 @@
             {{ displayText }}
           </template>
         </div>
-        <div v-else class="vt-datepicker__placeholder">
+        <div
+          v-else
+          ref="placeholderRef"
+          v-tooltip="placeholderTooltip()"
+          class="vt-datepicker__placeholder"
+          data-placement="top"
+        >
           <template v-if="isRange">
             <span>{{ outlined ? '' : props.startPlaceholder }}</span>
             <span v-if="!outlined" class="vt-datepicker__separator">{{ props.rangeSeparator }}</span>
             <span v-if="!outlined">{{ props.endPlaceholder }}</span>
           </template>
-          <template v-else>
-            {{ outlined ? '' : currentPlaceholder }}
-          </template>
+          <span v-else>{{ outlined ? '' : currentPlaceholder }}</span>
         </div>
 
         <div class="vt-datepicker__suffix">
@@ -1146,7 +1166,13 @@
       </div>
 
       <!-- Error Message на бордері для outlined -->
-      <div v-if="outlined && displayErrorMessage" class="vt-datepicker__border-error">
+      <div
+        v-if="outlined && displayErrorMessage"
+        ref="borderErrorRef"
+        v-tooltip="borderErrorTooltip()"
+        class="vt-datepicker__border-error"
+        data-placement="bottom"
+      >
         {{ displayErrorMessage }}
       </div>
     </div>

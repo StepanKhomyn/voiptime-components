@@ -4,7 +4,7 @@
   import VIcon from '@/components/icon/VIcon.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
-  import { useTruncatedLabel } from '@/composables/useTruncatedLabel';
+  import { isInputPlaceholderOverflowing, useTruncatedLabel } from '@/composables/useTruncatedLabel';
 
   const { t } = useI18n();
 
@@ -32,11 +32,22 @@
     () => props.label
   );
 
+  // Плейсхолдер (тільки для не-outlined input, поки поле порожнє)
+  const inputRef = ref<HTMLInputElement | HTMLTextAreaElement>();
+  const { tooltipText: placeholderTooltip } = useTruncatedLabel(
+    inputRef,
+    () => {
+      const value = props.modelValue;
+      const isEmpty = value === undefined || value === null || value === '';
+      return !props.outlined && isEmpty ? props.placeholder : '';
+    },
+    isInputPlaceholderOverflowing
+  );
+
   // Емітери
   const emit = defineEmits<VtInputEmits>();
 
   // Реактивні змінні
-  const inputRef = ref<HTMLInputElement | HTMLTextAreaElement>();
   const textareaRef = ref<HTMLTextAreaElement>();
   const isFocused = ref(false);
   const isPasswordVisible = ref(false);
@@ -227,6 +238,9 @@
     }
   });
 
+  // Іконка помилки показує повний текст помилки, якщо він не вміщається
+  const isErrorStatusIcon = computed(() => finalPrefixIcon.value === 'alertCircle' && !props.prefixIcon);
+
   // Визначаємо чи є prefix іконка (користувацька, автоматична або стану)
   const hasPrefix = computed(() => {
     return !!props.prefixIcon || !!getAutomaticPrefixIcon.value || !!getDefaultStatusIcon.value;
@@ -333,6 +347,10 @@
     if (validationErrors.value.length > 0) return validationErrors.value[0];
     return '';
   });
+
+  // Помилка на бордері (outlined)
+  const borderErrorRef = ref<HTMLElement>();
+  const { tooltipText: borderErrorTooltip } = useTruncatedLabel(borderErrorRef, () => displayErrorMessage.value);
 
   // Визначаємо стиль resize для textarea
   const textareaResize = computed(() => {
@@ -585,7 +603,6 @@
       <!-- Floating Label для outlined стилю -->
       <label
         v-if="label && outlined"
-        :key="isLabelTruncated ? 'truncated' : 'full'"
         ref="floatingLabelRef"
         v-tooltip="floatingLabelTooltip()"
         :class="{ 'vt-input__floating-label--truncated': isLabelTruncated }"
@@ -599,7 +616,12 @@
       </label>
 
       <!-- Prefix Icon -->
-      <div v-if="hasPrefix" class="vt-input__prefix">
+      <div
+        v-if="hasPrefix"
+        v-tooltip="isErrorStatusIcon ? borderErrorTooltip() : ''"
+        class="vt-input__prefix"
+        data-placement="top"
+      >
         <VIcon :class="prefixIconClass" :name="finalPrefixIcon!" />
       </div>
 
@@ -636,7 +658,9 @@
         v-else
         :id="id"
         ref="inputRef"
+        v-tooltip="placeholderTooltip()"
         :autocomplete="autocomplete"
+        data-placement="top"
         :disabled="disabled"
         :max="max"
         :maxlength="maxlength"
@@ -683,7 +707,13 @@
       </div>
 
       <!-- Error Message на бордері для outlined -->
-      <div v-if="outlined && displayErrorMessage" class="vt-input__border-error">
+      <div
+        v-if="outlined && displayErrorMessage"
+        ref="borderErrorRef"
+        v-tooltip="borderErrorTooltip()"
+        class="vt-input__border-error"
+        data-placement="bottom"
+      >
         {{ displayErrorMessage }}
       </div>
     </div>

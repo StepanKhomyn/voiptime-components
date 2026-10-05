@@ -609,6 +609,13 @@
     return '';
   });
 
+  // Тултіпи для плейсхолдера та помилки на бордері, якщо текст не вміщається
+  const placeholderRef = ref<HTMLElement>();
+  const { tooltipText: placeholderTooltip } = useTruncatedLabel(placeholderRef, () => placeholderText.value);
+
+  const borderErrorRef = ref<HTMLElement>();
+  const { tooltipText: borderErrorTooltip } = useTruncatedLabel(borderErrorRef, () => displayErrorMessage.value);
+
   const dropdownStyle = computed(() => {
     const triggerWidth = triggerRef.value?.offsetWidth ?? 0;
 
@@ -1151,7 +1158,13 @@
         </span>
 
         <!-- Placeholder (тільки для не-outlined) -->
-        <span v-else-if="!outlined" class="vt-select__placeholder">
+        <span
+          v-else-if="!outlined"
+          ref="placeholderRef"
+          v-tooltip="placeholderTooltip()"
+          class="vt-select__placeholder"
+          data-placement="top"
+        >
           {{ placeholderText }}
         </span>
       </div>
@@ -1182,7 +1195,13 @@
       </div>
 
       <!-- Error Message на бордері для outlined -->
-      <div v-if="outlined && displayErrorMessage" class="vt-select__border-error">
+      <div
+        v-if="outlined && displayErrorMessage"
+        ref="borderErrorRef"
+        v-tooltip="borderErrorTooltip()"
+        class="vt-select__border-error"
+        data-placement="bottom"
+      >
         {{ displayErrorMessage }}
       </div>
     </div>

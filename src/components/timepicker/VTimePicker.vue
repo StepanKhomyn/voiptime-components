@@ -19,7 +19,7 @@
   import VButton from '@/components/button/VButton.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
-  import { useTruncatedLabel } from '@/composables/useTruncatedLabel';
+  import { isAnyChildOverflowing, useTruncatedLabel } from '@/composables/useTruncatedLabel';
 
   const { t } = useI18n();
 
@@ -191,6 +191,23 @@
     if (props.errorMessage) return props.errorMessage;
     return '';
   });
+
+  // Тултіпи для плейсхолдера та помилки на бордері, якщо текст не вміщається
+  const placeholderRef = ref<HTMLElement>();
+  const { tooltipText: placeholderTooltip } = useTruncatedLabel(
+    placeholderRef,
+    () => {
+      if (props.outlined) return '';
+      if (isRange.value) {
+        return [props.startPlaceholder, props.endPlaceholder].filter(Boolean).join(` ${props.rangeSeparator} `);
+      }
+      return currentPlaceholder.value;
+    },
+    isAnyChildOverflowing
+  );
+
+  const borderErrorRef = ref<HTMLElement>();
+  const { tooltipText: borderErrorTooltip } = useTruncatedLabel(borderErrorRef, () => displayErrorMessage.value);
 
   // ===== CURRENT TIME STATE =====
   const currentHour = ref(0);
@@ -853,7 +870,6 @@
       <!-- Floating Label для outlined стилю -->
       <label
         v-if="label && outlined"
-        :key="isLabelTruncated ? 'truncated' : 'full'"
         ref="floatingLabelRef"
         v-tooltip="floatingLabelTooltip()"
         :class="{ 'vt-timepicker__floating-label--truncated': isLabelTruncated }"
@@ -879,15 +895,19 @@
             {{ displayText }}
           </template>
         </div>
-        <div v-else-if="!outlined" class="vt-timepicker__placeholder">
+        <div
+          v-else-if="!outlined"
+          ref="placeholderRef"
+          v-tooltip="placeholderTooltip()"
+          class="vt-timepicker__placeholder"
+          data-placement="top"
+        >
           <template v-if="isRange">
             <span>{{ props.startPlaceholder }}</span>
-            <span>{{ props.rangeSeparator }}</span>
+            <span class="vt-timepicker__separator">{{ props.rangeSeparator }}</span>
             <span>{{ props.endPlaceholder }}</span>
           </template>
-          <template v-else>
-            {{ currentPlaceholder }}
-          </template>
+          <span v-else>{{ currentPlaceholder }}</span>
         </div>
 
         <div class="vt-timepicker__suffix">
@@ -904,7 +924,13 @@
       </div>
 
       <!-- Error Message на бордері для outlined -->
-      <div v-if="outlined && displayErrorMessage" class="vt-timepicker__border-error">
+      <div
+        v-if="outlined && displayErrorMessage"
+        ref="borderErrorRef"
+        v-tooltip="borderErrorTooltip()"
+        class="vt-timepicker__border-error"
+        data-placement="bottom"
+      >
         {{ displayErrorMessage }}
       </div>
     </div>

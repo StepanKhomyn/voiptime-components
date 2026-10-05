@@ -4,6 +4,7 @@ type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
 type TooltipHTMLElement = HTMLElement & {
   __tooltipEl?: HTMLDivElement;
+  __tooltipText?: string;
   __mouseenterHandler?: () => void;
   __mouseleaveHandler?: () => void;
   __scrollHandler?: () => void;
@@ -187,35 +188,45 @@ const isInTable = (element: HTMLElement): boolean => {
   return !!element.closest('.vt-table, table');
 };
 
+const getPlacement = (el: HTMLElement): TooltipPlacement => (el.dataset.placement as TooltipPlacement) || 'top';
+
+const getBindingText = (binding: DirectiveBinding<string>): string => binding.value?.trim() ?? '';
+
+// Видаляємо tooltip з DOM (обробники залишаються і створять його знову при потребі)
+const removeTooltip = (el: TooltipHTMLElement) => {
+  el.__tooltipEl?.remove();
+  delete el.__tooltipEl;
+};
+
 export const tooltipDirective: ObjectDirective = {
   mounted(el: TooltipHTMLElement, binding: DirectiveBinding<string>) {
-    const text = binding.value?.trim();
-    if (!text) return;
+    el.__tooltipText = getBindingText(binding);
 
-    const placement: TooltipPlacement = (el.dataset.placement as TooltipPlacement) || 'top';
-    const tooltip = createTooltip(text, placement);
-
-    el.__tooltipEl = tooltip;
-
-    // Обробники подій
+    // Обробники читають актуальний текст з елемента, тому їх достатньо додати один раз
     const show = () => {
+      const text = el.__tooltipText;
+      if (!text) return;
+
       // Якщо елемент в таблиці, показуємо тільки при overflow
       // Інакше показуємо завжди
-      const shouldShow = isInTable(el) ? hasTextOverflow(el) : true;
+      if (isInTable(el) && !hasTextOverflow(el)) return;
 
-      if (shouldShow) {
-        showTooltip(tooltip, el, placement);
+      const placement = getPlacement(el);
+      if (!el.__tooltipEl) {
+        el.__tooltipEl = createTooltip(text, placement);
       }
+
+      showTooltip(el.__tooltipEl, el, placement);
     };
 
     const hide = () => {
-      hideTooltip(tooltip);
+      if (el.__tooltipEl) hideTooltip(el.__tooltipEl);
     };
 
     // Оновлюємо позицію при скролі
     const updatePosition = () => {
-      if (tooltip.style.opacity === '1') {
-        positionTooltip(tooltip, el, placement);
+      if (el.__tooltipEl?.style.opacity === '1') {
+        positionTooltip(el.__tooltipEl, el, getPlacement(el));
       }
     };
 
@@ -232,61 +243,24 @@ export const tooltipDirective: ObjectDirective = {
   },
 
   updated(el: TooltipHTMLElement, binding: DirectiveBinding<string>) {
-    const text = binding.value?.trim();
+    const text = getBindingText(binding);
+    if (text === el.__tooltipText) return;
 
-    if (el.__tooltipEl) {
-      if (text) {
-        // Оновлюємо текст tooltip'а
-        el.__tooltipEl.firstChild!.textContent = text;
-      } else {
-        // Якщо немає тексту, видаляємо tooltip
-        if (el.__tooltipEl.parentElement) {
-          el.__tooltipEl.parentElement.removeChild(el.__tooltipEl);
-        }
-        delete el.__tooltipEl;
-      }
-    } else if (text) {
-      // Якщо tooltip не існував, але тепер є текст, створюємо його
-      const placement: TooltipPlacement = (el.dataset.placement as TooltipPlacement) || 'top';
-      const tooltip = createTooltip(text, placement);
-      el.__tooltipEl = tooltip;
+    el.__tooltipText = text;
 
-      // Додаємо обробники подій
-      const show = () => {
-        const shouldShow = isInTable(el) ? hasTextOverflow(el) : true;
-        if (shouldShow) {
-          showTooltip(tooltip, el, placement);
-        }
-      };
-
-      const hide = () => {
-        hideTooltip(tooltip);
-      };
-
-      const updatePosition = () => {
-        if (tooltip.style.opacity === '1') {
-          positionTooltip(tooltip, el, placement);
-        }
-      };
-
-      el.__mouseenterHandler = show;
-      el.__mouseleaveHandler = hide;
-      el.__scrollHandler = updatePosition;
-
-      el.addEventListener('mouseenter', show);
-      el.addEventListener('mouseleave', hide);
-
-      window.addEventListener('scroll', updatePosition, true);
-      window.addEventListener('resize', updatePosition);
+    if (!text) {
+      // Якщо немає тексту, видаляємо tooltip (в т.ч. якщо він зараз показаний)
+      removeTooltip(el);
+    } else if (el.__tooltipEl) {
+      // Оновлюємо текст tooltip'а
+      el.__tooltipEl.firstChild!.textContent = text;
     }
   },
 
   beforeUnmount(el: TooltipHTMLElement) {
     // Видаляємо tooltip з DOM
-    if (el.__tooltipEl && el.__tooltipEl.parentElement) {
-      el.__tooltipEl.parentElement.removeChild(el.__tooltipEl);
-      delete el.__tooltipEl;
-    }
+    removeTooltip(el);
+    delete el.__tooltipText;
 
     // Видаляємо обробники подій
     if (el.__mouseenterHandler) {
