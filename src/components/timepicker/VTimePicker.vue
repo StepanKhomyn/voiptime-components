@@ -192,23 +192,6 @@
     return '';
   });
 
-  // Тултіпи для плейсхолдера та помилки на бордері, якщо текст не вміщається
-  const placeholderRef = ref<HTMLElement>();
-  const { tooltipText: placeholderTooltip } = useTruncatedLabel(
-    placeholderRef,
-    () => {
-      if (props.outlined) return '';
-      if (isRange.value) {
-        return [props.startPlaceholder, props.endPlaceholder].filter(Boolean).join(` ${props.rangeSeparator} `);
-      }
-      return currentPlaceholder.value;
-    },
-    isAnyChildOverflowing
-  );
-
-  const borderErrorRef = ref<HTMLElement>();
-  const { tooltipText: borderErrorTooltip } = useTruncatedLabel(borderErrorRef, () => displayErrorMessage.value);
-
   // ===== CURRENT TIME STATE =====
   const currentHour = ref(0);
   const currentMinute = ref(0);
@@ -275,6 +258,23 @@
   const actualStartPlaceholder = computed(() => props.startPlaceholder || t(LOCALE_KEYS.TIME_PICKER_START_PLACEHOLDER));
 
   const actualEndPlaceholder = computed(() => props.endPlaceholder || t(LOCALE_KEYS.TIME_PICKER_END_PLACEHOLDER));
+
+  // Тултіпи для плейсхолдера та помилки на бордері, якщо текст не вміщається
+  const placeholderRef = ref<HTMLElement>();
+  const { tooltipText: placeholderTooltip } = useTruncatedLabel(
+    placeholderRef,
+    () => {
+      if (props.outlined) return '';
+      if (isRange.value) {
+        return [props.startPlaceholder, props.endPlaceholder].filter(Boolean).join(` ${props.rangeSeparator} `);
+      }
+      return currentPlaceholder.value;
+    },
+    isAnyChildOverflowing
+  );
+
+  const borderErrorRef = ref<HTMLElement>();
+  const { tooltipText: borderErrorTooltip } = useTruncatedLabel(borderErrorRef, () => displayErrorMessage.value);
 
   // ===== DROPDOWN INTEGRATION =====
   const {
