@@ -21,7 +21,7 @@ export function withAsync(validator: ValidatorFn): WrappedValidator {
   return v;
 }
 
-// Він задає імя валідатору для дебагу ($validatorName)
+// Він задає імя валідатору для дебагу
 export function withName(name: string, validator: ValidatorFn): WrappedValidator {
   const v = validator as WrappedValidator;
   v.$validatorName = name;
@@ -29,12 +29,15 @@ export function withName(name: string, validator: ValidatorFn): WrappedValidator
 }
 
 // Універсальний хелпер, можна заюзати лише mk, якщо потрібно декілька хелперів
-export function mk<V extends ValidatorFn>(opts: {
-  name?: string;
-  params?: Record<string, any>;
-  message?: string | ((params?: any) => string);
-  async?: boolean;
-}, validator: V): WrappedValidator {
+export function mk<V extends ValidatorFn>(
+  opts: {
+    name?: string;
+    params?: Record<string, any>;
+    message?: string | ((params?: any) => string);
+    async?: boolean;
+  },
+  validator: V
+): WrappedValidator {
   let v = validator as WrappedValidator;
   if (opts.name) v.$validatorName = opts.name;
   if (opts.params) v.$params = opts.params;
