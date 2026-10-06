@@ -1,3 +1,10 @@
+## [1.23.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.8...v1.23.9) (2026-10-06)
+
+
+### Bug Fixes
+
+* Виправлено роботу useCklock від TimerDuration ([875ef2e](https://github.com/StepanKhomyn/voiptime-components/commit/875ef2e1193186c696350c915d51cea5d736642b))
+
 ## [1.23.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.7...v1.23.8) (2026-10-05)
 
 
