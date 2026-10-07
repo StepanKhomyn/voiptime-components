@@ -1,3 +1,10 @@
+## [1.23.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.9...v1.23.10) (2026-10-07)
+
+
+### Bug Fixes
+
+* update demo audio docs ([402e373](https://github.com/StepanKhomyn/voiptime-components/commit/402e373dc1666259c40f49632615b178560ab895))
+
 ## [1.23.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.8...v1.23.9) (2026-10-06)
 
 
