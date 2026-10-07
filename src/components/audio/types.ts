@@ -10,7 +10,7 @@ export interface VAudioProps {
   type?: VAudioType;
   download?: boolean;
   height?: string;
-  playPosition?: VAudioPlayPosition
+  playPosition?: VAudioPlayPosition;
 }
 
 export type PlaybackSpeed = 0.5 | 1 | 1.5 | 2;

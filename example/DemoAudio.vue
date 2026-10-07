@@ -83,6 +83,12 @@
           description: 'Кнопка програвання розташування',
         },
         {
+          name: 'height',
+          type: "number",
+          default: '100 / 36',
+          description: 'Кастомна9 висота плеєру',
+        },
+        {
           name: 'type',
           type: "'default' | 'channel-routed'",
           default: "'default'",

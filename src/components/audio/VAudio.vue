@@ -423,10 +423,10 @@
         @click="togglePlay"
       >
         <slot v-if="isPlay" name="icon-pause">
-          <VIcon height="24" name="pause" width="24" />
+          <VIcon height="20" name="pause" width="20" />
         </slot>
         <slot v-else name="icon-play">
-          <VIcon height="24" name="start" width="24" />
+          <VIcon height="20" name="start" width="20" />
         </slot>
       </button>
       <div class="vt-audio__wave-area">
@@ -446,10 +446,10 @@
           @click="togglePlay"
         >
           <slot v-if="isPlay" name="icon-pause">
-            <VIcon height="24" name="pause" width="24" />
+            <VIcon height="20" name="pause" width="20" />
           </slot>
           <slot v-else name="icon-play">
-            <VIcon height="24" name="start" width="24" />
+            <VIcon height="20" name="start" width="20" />
           </slot>
         </button>
 
