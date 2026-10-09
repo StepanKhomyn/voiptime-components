@@ -1,3 +1,10 @@
+## [1.23.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.10...v1.23.11) (2026-10-09)
+
+
+### Bug Fixes
+
+* Виправлено відображення дропдауну в селекті, так щоб воно не перекривало самого поля інпуту ([7fd3f76](https://github.com/StepanKhomyn/voiptime-components/commit/7fd3f768d433b9d1068b186e9e35c36375bc7d8a))
+
 ## [1.23.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.9...v1.23.10) (2026-10-07)
 
 
