@@ -109,54 +109,69 @@ const getScrollableParents = (element: Element): Element[] => {
 
 const calculateDropdownPosition = (
   triggerRect: DOMRect,
-  dropdownRect: DOMRect,
+  dropdownSize: { width: number; height: number },
   placement: string
 ): DropdownPosition => {
+  const { width, height } = dropdownSize;
+  const viewportHeight = window.innerHeight;
   let top = 0;
   let left = 0;
 
+  const bottomTop = triggerRect.bottom + window.scrollY + 5;
+  const flippedTop = triggerRect.top + window.scrollY - height - 5;
+
   switch (placement) {
     case 'bottom':
-      top = triggerRect.bottom + window.scrollY + 5;
-      left = triggerRect.left + window.scrollX + (triggerRect.width - dropdownRect.width) / 2;
+      top = bottomTop;
+      left = triggerRect.left + window.scrollX + (triggerRect.width - width) / 2;
       break;
     case 'bottom-start':
-      top = triggerRect.bottom + window.scrollY + 5;
+      top = bottomTop;
       left = triggerRect.left + window.scrollX;
       break;
     case 'bottom-end':
-      top = triggerRect.bottom + window.scrollY + 5;
-      left = triggerRect.right + window.scrollX - dropdownRect.width;
+      top = bottomTop;
+      left = triggerRect.right + window.scrollX - width;
       break;
     case 'top':
-      top = triggerRect.top + window.scrollY - dropdownRect.height - 20;
-      left = triggerRect.left + window.scrollX + (triggerRect.width - dropdownRect.width) / 2;
+      top = triggerRect.top + window.scrollY - height - 20;
+      left = triggerRect.left + window.scrollX + (triggerRect.width - width) / 2;
       break;
     case 'top-start':
-      top = triggerRect.top + window.scrollY - dropdownRect.height - 20;
+      top = triggerRect.top + window.scrollY - height - 20;
       left = triggerRect.left + window.scrollX;
       break;
     case 'top-end':
-      top = triggerRect.top + window.scrollY - dropdownRect.height - 20;
-      left = triggerRect.right + window.scrollX - dropdownRect.width;
+      top = triggerRect.top + window.scrollY - height - 20;
+      left = triggerRect.right + window.scrollX - width;
       break;
   }
 
   // Корекція меж екрана
-  if (left + dropdownRect.width > window.innerWidth) {
-    left = window.innerWidth - dropdownRect.width - 10;
+  if (left + width > window.innerWidth) {
+    left = window.innerWidth - width - 10;
   }
   if (left < 10) left = 10;
 
-  if (top + dropdownRect.height > window.innerHeight + window.scrollY) {
-    top = triggerRect.top + window.scrollY - dropdownRect.height - 5;
+  let isAbove = top < bottomTop;
+
+  // Не вміщається знизу — розгортаємо над полем, якщо зверху місця більше
+  if (!isAbove && top + height > viewportHeight + window.scrollY) {
+    const spaceBelow = viewportHeight - triggerRect.bottom;
+    const spaceAbove = triggerRect.top;
+    if (spaceAbove > spaceBelow) {
+      top = flippedTop;
+      isAbove = true;
+    }
   }
-  if (top < window.scrollY + 10) top = window.scrollY + 10;
+
+  // Над полем не обрізаємо зверху, щоб не перекривати саме поле
+  if (!isAbove && top < window.scrollY + 10) top = window.scrollY + 10;
 
   return {
     top: `${top}px`,
     left: `${left}px`,
-    transformOrigin: 'center top',
+    transformOrigin: isAbove ? 'center bottom' : 'center top',
   };
 };
 
@@ -182,6 +197,7 @@ export function useDropdown(
   const wasVisibleBeforeHiding = ref(false);
   const timeoutPending = ref<number | null>(null);
   const scrollableParents = ref<Element[]>([]);
+  let resizeObserver: ResizeObserver | null = null;
 
   const dropdownPosition = ref<DropdownPosition>({
     top: '0px',
@@ -217,9 +233,14 @@ export function useDropdown(
     if (!triggerRef.value || !dropdownRef.value) return;
 
     const triggerRect = triggerRef.value.getBoundingClientRect();
-    const dropdownRect = dropdownRef.value.getBoundingClientRect();
+    // offsetWidth/offsetHeight не враховують transform (анімація scaleY при відкритті),
+    // на відміну від getBoundingClientRect, тому дають реальний розмір дропдауна
+    const dropdownSize = {
+      width: dropdownRef.value.offsetWidth,
+      height: dropdownRef.value.offsetHeight,
+    };
 
-    const position = calculateDropdownPosition(triggerRect, dropdownRect, placement);
+    const position = calculateDropdownPosition(triggerRect, dropdownSize, placement);
     dropdownPosition.value = {
       ...position,
       minWidth: `${triggerRect.width}px`,
@@ -244,6 +265,14 @@ export function useDropdown(
       parent.addEventListener('scroll', handleScroll, { passive: true });
     });
     window.addEventListener('resize', handleScroll);
+
+    // Перераховуємо позицію, коли змінюється розмір дропдауна (підвантаження опцій, фільтр тощо)
+    if (dropdownRef.value && typeof ResizeObserver !== 'undefined') {
+      resizeObserver = new ResizeObserver(() => {
+        if (visible.value) updatePosition();
+      });
+      resizeObserver.observe(dropdownRef.value);
+    }
   };
 
   const removeScrollListeners = (): void => {
@@ -252,6 +281,8 @@ export function useDropdown(
     });
     window.removeEventListener('resize', handleScroll);
     scrollableParents.value = [];
+    resizeObserver?.disconnect();
+    resizeObserver = null;
   };
 
   // Main methods
