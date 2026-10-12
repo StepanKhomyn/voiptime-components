@@ -1,3 +1,10 @@
+## [1.23.13](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.12...v1.23.13) (2026-10-12)
+
+
+### Bug Fixes
+
+* VDynamicFilter: він тепер пропускає коментарі від v-if і пробіли ([fb3c4c1](https://github.com/StepanKhomyn/voiptime-components/commit/fb3c4c1de2af90ff3e37c88d656939ba11ba4a90))
+
 ## [1.23.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.11...v1.23.12) (2026-10-12)
 
 
