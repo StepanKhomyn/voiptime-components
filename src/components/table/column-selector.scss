@@ -12,6 +12,13 @@
 
   &__panel {
     width: 50%;
+
+    // Обмежена висота: при великій кількості колонок (> ~12) у списку з'являється скрол
+    &--scrollable {
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
     display: flex;
     flex-direction: column;
     gap: var(--vt-gap-sm);

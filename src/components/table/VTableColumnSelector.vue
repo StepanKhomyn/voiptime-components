@@ -79,6 +79,14 @@
   const isPinned = (column: VTableColumnProps) => !!(column.pinnedLeft || column.pinnedRight);
   const canDragColumn = (column: VTableColumnProps) => !isPinned(column);
 
+  // ─── Мінімум одна активна колонка ─────────────────────────────────────────
+
+  const hasActiveColumns = computed(() => activeColumns.value.length > 0);
+
+  /** Остання активна колонка — її не можна зняти */
+  const isLastActive = (column: VTableColumnProps) =>
+    activeColumns.value.length === 1 && activeColumns.value[0].prop === column.prop;
+
   // ─── Initialization ───────────────────────────────────────────────────────
 
   const initializeWorkingCopies = () => {
@@ -130,8 +138,8 @@
   // ─── Toggle single column ─────────────────────────────────────────────────
 
   const handleColumnToggle = (column: VTableColumnProps, isChecked: boolean) => {
-    // Закріплені колонки не можна знімати
-    if (isPinned(column) && !isChecked) return;
+    // Закріплені колонки та останню активну колонку не можна знімати
+    if ((isPinned(column) || isLastActive(column)) && !isChecked) return;
 
     const idx = workingColumns.value.findIndex(c => c.prop === column.prop);
     if (idx === -1) return;
@@ -183,8 +191,17 @@
       });
     } else {
       // Вимикаємо всі незакріплені активні колонки групи
+      const toHide = new Set(
+        workingColumns.value.filter(c => groupProps.has(c.prop) && c._visible && !isPinned(c)).map(c => c.prop)
+      );
+
+      // Має лишитися хоча б одна активна колонка — залишаємо першу з групи
+      if (toHide.size && toHide.size === activeColumns.value.length) {
+        toHide.delete(activeColumns.value[0].prop);
+      }
+
       workingColumns.value = workingColumns.value.map(col => {
-        if (groupProps.has(col.prop) && col._visible && !isPinned(col)) {
+        if (toHide.has(col.prop)) {
           return { ...col, _visible: false };
         }
         return col;
@@ -343,12 +360,14 @@
 
   const canToggleColumn = (column: VTableColumnProps) => {
     const wc = workingColumns.value.find(c => c.prop === column.prop);
-    return !wc || !isPinned(wc);
+    return !wc || (!isPinned(wc) && !isLastActive(wc));
   };
 
   // ─── Save / Cancel / Reset ────────────────────────────────────────────────
 
   const handleSave = () => {
+    if (!hasActiveColumns.value) return;
+
     // Емітимо тільки видимі колонки (без службового флагу _visible)
     const result = activeColumns.value.map(({ _visible, ...col }) => col as VTableColumnProps);
     emit('update-columns', result);
@@ -384,7 +403,7 @@
   <div class="vt-columns-selector-body">
     <div class="vt-columns-selector">
       <!-- ── Ліва панель: активні колонки ──────────────────────────────── -->
-      <div class="vt-columns-selector__panel">
+      <div class="vt-columns-selector__panel vt-columns-selector__panel--scrollable">
         <div
           v-for="(col, index) in activeColumnsForDrag"
           :key="'active-' + col.prop"
@@ -402,8 +421,9 @@
             class="vt-columns-selector__panel-item-icon"
           />
           <VCheckbox
+            v-tooltip="isLastActive(col) ? t(LOCALE_KEYS.TABLE_MIN_ONE_COLUMN) : null"
             :checked="true"
-            :disabled="isPinned(col)"
+            :disabled="isPinned(col) || isLastActive(col)"
             :label="col.label"
             @change="checked => handleColumnToggle(col, checked)"
             @click.stop
@@ -415,7 +435,7 @@
       <!-- ── Права панель: згруповані або flat ─────────────────────────── -->
 
       <!-- Без груп — проста flat-панель -->
-      <div v-if="!regularGroups.length" class="vt-columns-selector__panel">
+      <div v-if="!regularGroups.length" class="vt-columns-selector__panel vt-columns-selector__panel--scrollable">
         <div v-for="col in inactiveColumns" :key="'inactive-' + col.prop" class="vt-columns-selector__panel-item">
           <VCheckbox
             :checked="false"
@@ -429,7 +449,7 @@
       </div>
 
       <!-- З групами -->
-      <div v-else class="vt-columns-selector__available">
+      <div v-else class="vt-columns-selector__available vt-columns-selector__panel--scrollable">
         <div v-for="group in regularGroups" :key="group.name" class="vt-columns-selector__group">
           <div
             :class="{ 'vt-columns-selector__group-header--expanded': expandedGroups.has(group.name) }"
@@ -473,7 +493,11 @@
     <!-- ── Кнопки ─────────────────────────────────────────────────────── -->
     <div class="vt-modal__content-button">
       <VButton @click="handleCancel">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
-      <VButton icon="save" type="primary" @click="handleSave">{{ t(LOCALE_KEYS.BUTTON_SAVE) }}</VButton>
+      <span v-tooltip="hasActiveColumns ? null : t(LOCALE_KEYS.TABLE_MIN_ONE_COLUMN)">
+        <VButton :disabled="!hasActiveColumns" icon="save" type="primary" @click="handleSave">
+          {{ t(LOCALE_KEYS.BUTTON_SAVE) }}
+        </VButton>
+      </span>
       <VButton icon="arrowReload" shape="circle" tooltip tooltipPlacement="right" @click="resetColumnsToDefault">
         {{ t(LOCALE_KEYS.BUTTON_RESET) }}
       </VButton>

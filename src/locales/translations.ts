@@ -18,6 +18,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.TABLE_EMPTY]: 'Немає даних!',
     [LOCALE_KEYS.TABLE_PINNED]: '(закріплено)',
     [LOCALE_KEYS.TABLE_COLUMN_ACTION]: 'Управління колонками таблиці',
+    [LOCALE_KEYS.TABLE_MIN_ONE_COLUMN]: 'Має залишитися щонайменше одна колонка',
 
     [LOCALE_KEYS.BUTTON_SAVE]: 'Зберегти',
     [LOCALE_KEYS.BUTTON_RESET]: 'Скинути',
@@ -191,6 +192,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.TABLE_EMPTY]: 'No data!',
     [LOCALE_KEYS.TABLE_PINNED]: '(pinned)',
     [LOCALE_KEYS.TABLE_COLUMN_ACTION]: 'Table column settings',
+    [LOCALE_KEYS.TABLE_MIN_ONE_COLUMN]: 'At least one column must remain',
 
     [LOCALE_KEYS.BUTTON_SAVE]: 'Save',
     [LOCALE_KEYS.BUTTON_RESET]: 'Reset',
@@ -365,6 +367,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.TABLE_EMPTY]: 'Нет данных!',
     [LOCALE_KEYS.TABLE_PINNED]: '(закреплено)',
     [LOCALE_KEYS.TABLE_COLUMN_ACTION]: 'Управление колонками таблицы',
+    [LOCALE_KEYS.TABLE_MIN_ONE_COLUMN]: 'Должна остаться хотя бы одна колонка',
 
     [LOCALE_KEYS.BUTTON_SAVE]: 'Сохранить',
     [LOCALE_KEYS.BUTTON_RESET]: 'Скинуть',

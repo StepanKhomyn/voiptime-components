@@ -25,6 +25,7 @@
     allData: undefined,
     columnsSelector: () => [],
     columns: () => [],
+    defaultColumns: undefined,
     rowDraggable: false,
     showDragHandle: true,
   });
@@ -48,7 +49,8 @@
   const tableWrapperRef = ref<HTMLElement>();
   // Reactive state
   const internalColumns = reactive<VTableColumnProps[]>([]);
-  const defaultColumns = ref<VTableColumnProps[]>([]);
+  const initialColumns = ref<VTableColumnProps[]>([]);
+  const defaultColumns = computed(() => props.defaultColumns ?? initialColumns.value);
 
   const isDefaultColumnsInitialized = ref(false);
 
@@ -106,7 +108,7 @@
     internalColumns,
     cols => {
       if (!isDefaultColumnsInitialized.value && cols.length > 0) {
-        defaultColumns.value = cols.map(col => ({ ...col }));
+        initialColumns.value = cols.map(col => ({ ...col }));
         isDefaultColumnsInitialized.value = true;
       }
     },

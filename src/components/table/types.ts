@@ -101,6 +101,9 @@ export interface VTableProps {
   highlightCurrentRow?: boolean;
   allData?: Record<string, any>[];
   columns?: VTableColumnProps[];
+  /** Повний набір колонок за замовчуванням для селектора колонок (і кнопки "Скинути").
+   *  Якщо не передано — береться перший набір зареєстрованих колонок. */
+  defaultColumns?: VTableColumnProps[];
   hideHeader?: boolean;
   rowHighlight?: VTableRowHighlightFunction;
 
