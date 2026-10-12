@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, Fragment, ref, type VNode } from 'vue';
+  import { Comment, computed, Fragment, ref, Text, type VNode } from 'vue';
   import { useResponsiveFilters } from '@/components/dynamic-filter/functions/useResponsiveFilters';
   import VDropdown from '@/components/dropdown/VDropdown.vue';
   import VButton from '@/components/button/VButton.vue';
@@ -35,6 +35,9 @@
             }
           }
         }
+      } else if (vnode.type === Comment || (vnode.type === Text && !String(vnode.children).trim())) {
+        // Плейсхолдери v-if та пробіли — не фільтри, інакше займають порожні комірки
+        continue;
       } else {
         result.push(vnode);
       }
@@ -55,10 +58,7 @@
     actionsRef,
     dropdownTriggerRef,
     measurementContainer,
-    slotNodesLength,
-    {
-      debug: false, // <- після діагностики поставте false або прибрати
-    }
+    slotNodesLength
   );
 </script>
 
