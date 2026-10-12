@@ -1,3 +1,10 @@
+## [1.23.12](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.11...v1.23.12) (2026-10-12)
+
+
+### Bug Fixes
+
+* Додано валідацію на вибір колонок таблиці, VOIP-4432 ([dd23c9f](https://github.com/StepanKhomyn/voiptime-components/commit/dd23c9fcbd34a22d314821dd20572dc6f8e9655b))
+
 ## [1.23.11](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.10...v1.23.11) (2026-10-09)
 
 
