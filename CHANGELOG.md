@@ -1,3 +1,10 @@
+## [1.23.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.14...v1.23.15) (2026-10-13)
+
+
+### Bug Fixes
+
+* Додано нові іконки ([0b7ead3](https://github.com/StepanKhomyn/voiptime-components/commit/0b7ead396f925094ae73a47e1b4d91e7cc99a3c5))
+
 ## [1.23.14](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.13...v1.23.14) (2026-10-13)
 
 
