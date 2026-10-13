@@ -358,6 +358,25 @@ function resolveIcons(file) {
   return { icons, skipped };
 }
 
+const MANUAL_ICON_MARKER = 'Додано вручну (немає у Figma)';
+
+function collectManualIcons() {
+  if (!fs.existsSync(OUTPUT_DIR)) return [];
+  return fs
+    .readdirSync(OUTPUT_DIR, { withFileTypes: true })
+    .filter(entry => entry.isDirectory())
+    .flatMap(entry =>
+      fs
+        .readdirSync(path.join(OUTPUT_DIR, entry.name))
+        .filter(file => file.endsWith('Icon.vue'))
+        .map(file => {
+          const relativePath = path.join(entry.name, file);
+          return { relativePath, content: fs.readFileSync(path.join(OUTPUT_DIR, relativePath), 'utf8') };
+        })
+    )
+    .filter(icon => icon.content.includes(MANUAL_ICON_MARKER));
+}
+
 async function fetchFigmaIcons() {
   const token = OFFLINE ? null : readToken();
   const file = await loadFigmaFile(token);
@@ -367,6 +386,9 @@ async function fetchFigmaIcons() {
 
   // Спочатку завантажуємо все, щоб при помилці мережі не втратити поточні іконки
   const svgs = await loadSvgs(icons, token);
+
+  // Іконки, додані вручну (з маркером MANUAL_ICON_MARKER), зберігаємо - їх немає у Figma
+  const manualIcons = collectManualIcons();
 
   fs.rmSync(OUTPUT_DIR, { recursive: true, force: true });
 
@@ -379,6 +401,17 @@ async function fetchFigmaIcons() {
       'utf8'
     );
   }
+
+  for (const icon of manualIcons) {
+    const target = path.join(OUTPUT_DIR, icon.relativePath);
+    if (fs.existsSync(target)) {
+      console.warn(`⚠️  ${icon.relativePath} тепер є у Figma - ручну версію замінено`);
+      continue;
+    }
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.writeFileSync(target, icon.content, 'utf8');
+  }
+  if (manualIcons.length) console.log(`📌 Збережено ручних іконок: ${manualIcons.length}`);
 
   console.log(`✅ Іконки збережено у ${config.outputDir}`);
   if (skipped.length) {

@@ -17,7 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 
-// стара назва -> нова; null - нового відповідника немає (стара іконка лишається deprecated)
+// стара назва -> нова; null - нового відповідника немає (ellipse - замість іконки використовуйте звичайний div/span з border-radius)
 const ICON_MAP = {
   addLine: 'misc_add_line',
   addNewRecord: 'player_add_new_record',
@@ -26,7 +26,7 @@ const ICON_MAP = {
   circleChecked: 'input_circle_checked',
   circleClose: 'input_circle_close',
   close: 'input_close',
-  copy: null,
+  copy: 'actions_copy',
   delete: 'actions_delete',
   download: 'files_download',
   edit: 'actions_edit',
@@ -42,7 +42,7 @@ const ICON_MAP = {
   prompt: 'ai_prompt',
   reply: 'message_reply',
   save: 'actions_save',
-  settingsFilled: null,
+  settingsFilled: 'actions_settings_filled',
   star: 'actions_star',
   statusChange: 'status_change',
   unlock: 'actions_unlock',
@@ -72,7 +72,7 @@ const ICON_MAP = {
   phoneArrowDown: 'notification_phone_arrow_down',
   phoneCalling: 'phone_calling',
   phoneCancelRecall: 'phone_cancel_recall',
-  phoneExecuteRecall: null,
+  phoneExecuteRecall: 'input_ok',
   phoneHangup: 'phone_hangup',
   phoneInactiveTalk: 'phone_inactive_talk',
   phoneOffline: 'phone_offline',
@@ -85,7 +85,7 @@ const ICON_MAP = {
   speaker: 'player_speaker',
   speakerMuted: 'player_speaker_muted',
   telemarketCall: 'phone_outgoing_call',
-  transferCall: null,
+  transferCall: 'phone_transfer_call',
   volumeCall: 'ivr_volume_call',
   scale: 'call_quality_scale',
   scaleOff: 'call_quality_scale_off',
@@ -112,7 +112,7 @@ const ICON_MAP = {
   viber: 'media_viber',
   whatsUp: 'media_whatsapp',
   widget: 'media_widget',
-  clientActivity: null,
+  clientActivity: 'client_activity',
   clientComment: 'client_comment',
   clientContacts: 'client_contacts',
   clientDigitalChannel: 'client_digital_channel',
@@ -123,7 +123,7 @@ const ICON_MAP = {
   clientVoiceChannel: 'phone_phone',
   conversationAccept: 'chat_check',
   conversationAudio: 'conversation_audio',
-  conversationBot: null,
+  conversationBot: 'conversation_bot',
   conversationDismiss: 'chat_delete',
   conversationEmojis: 'message_emojis',
   conversationHash: 'chat_tag',
@@ -142,7 +142,7 @@ const ICON_MAP = {
   azerbaijan: 'flags_azerbaijan',
   kazakhstan: 'flags_kazakhstan',
   poland: 'flags_poland',
-  terrorist: null,
+  terrorist: 'flags_russia',
   thailand: 'flags_thailand',
   ukraine: 'flags_ukraine',
   unitedKingdom: 'flags_united_kingdom',
@@ -150,15 +150,15 @@ const ICON_MAP = {
   alignJustify: 'text_editor_align_justify',
   alignLeft: 'text_editor_align_left',
   alignRight: 'text_editor_align_right',
-  blockquote: null,
+  blockquote: 'text_editor_blockquote',
   clearFormat: 'text_editor_clear_format',
   fontName: 'text_editor_font_name',
   html: 'misc_html',
   image: 'message_image',
-  indent: null,
+  indent: 'text_editor_indent',
   link: 'actions_link',
-  orderedList: null,
-  outdent: null,
+  orderedList: 'text_editor_ordered_list',
+  outdent: 'text_editor_outdent',
   redo: 'arrows_redo',
   subscript: 'text_editor_subscript',
   superscript: 'text_editor_superscript',
@@ -168,7 +168,7 @@ const ICON_MAP = {
   textStrikethrough: 'text_editor_strikethrough',
   textUnderline: 'text_editor_underline',
   undo: 'arrows_undo',
-  unorderedList: null,
+  unorderedList: 'text_editor_unordered_list',
   ellipse: null,
   fieldBoolean: 'field_boolean',
   fieldEnum: 'field_enum',
@@ -220,7 +220,7 @@ const ICON_MAP = {
   addToQueue: 'misc_add_to_queue',
   analizeIvrNumber: 'ivr_analyze_number',
   blackList: 'ivr_black_list',
-  box: null,
+  box: 'misc_box',
   callAcd: 'acd_call_acd',
   callQualityBlock: 'call_quality_block',
   callQualityTemplate: 'call_quality_template',
@@ -230,10 +230,10 @@ const ICON_MAP = {
   continueInDialPlan: 'misc_continue_in_dial_plan',
   dbRead: 'ivr_db_read',
   dbWrite: 'ivr_db_write',
-  diamond: null,
+  diamond: 'call_quality_diamond',
   diamondInSquare: 'right_menu_diamond_in_square',
   dsr: 'misc_dsr',
-  emptyRound: null,
+  emptyRound: 'phone_cancel_recall',
   hold: 'player_hold',
   httpGet: 'ivr_http_get',
   hungUpPhone: 'ivr_hung_up_phone',
@@ -253,7 +253,7 @@ const ICON_MAP = {
   plus: 'actions_add',
   predictive: 'status_predictive',
   preview: 'status_preview',
-  prioritySelect: null,
+  prioritySelect: 'status_priority_select',
   progressive: 'status_progressive',
   qrCode: 'misc_qr_code',
   quiz: 'itr_quiz',
@@ -282,12 +282,12 @@ const ICON_MAP = {
   pause: 'player_hold',
   start: 'player_start',
   stop: 'player_stop',
-  anketBlock: null,
-  callSubject: null,
-  iframBlock: null,
-  infoBlock: null,
-  proposalBlock: null,
-  variable: null,
+  anketBlock: 'scenario_anket_block',
+  callSubject: 'scenario_call_subject',
+  iframBlock: 'scenario_iframe_block',
+  infoBlock: 'scenario_info_block',
+  proposalBlock: 'scenario_proposal_block',
+  variable: 'ivr_variable',
   comment: 'tasks_comment',
   timeManagementCircle: 'calendar_time_management_circle',
   timer: 'calendar_timer',
@@ -299,10 +299,10 @@ const ICON_MAP = {
   dashboard: 'left_menu_dashboard',
   group: 'left_menu_group',
   home: 'misc_home',
-  integration: null,
+  integration: 'left_menu_integration',
   iTR: 'left_menu_i_tr',
-  pbx: null,
-  scenarios: null,
+  pbx: 'left_menu_pbx',
+  scenarios: 'left_menu_scenarios',
   settings: 'left_menu_settings',
   tasks: 'left_menu_client_task',
   users: 'users_users',
@@ -310,14 +310,14 @@ const ICON_MAP = {
   statsDiagramPie: 'right_menu_stats_diagram_pie',
   columnInsert: 'table_column_insert',
   columnsMove: 'table_columns_move',
-  empty: null,
+  empty: 'files_empty',
   excel: 'message_excel',
   freeze: 'table_freeze',
   listAdd: 'table_list_add',
   noChat: 'no_data_chat',
   noData: 'no_data_default',
   noSound: 'no_data_sound',
-  numberList: null,
+  numberList: 'table_number_list',
   tableSettings: 'table_settings',
   twoColumns: 'table_two_columns',
   twoRows: 'table_two_rows',
@@ -489,27 +489,72 @@ function processScript(text, file) {
     last = end;
     KEY_RE.lastIndex = end;
   }
+  return processTypedBlocks(out + text.slice(last), file);
+}
+
+// Індекс після парної закриваючої дужки для '{' на позиції open
+function blockEnd(text, open) {
+  let depth = 0;
+  let quote = null;
+  for (let k = open; k < text.length; k++) {
+    const ch = text[k];
+    if (quote) {
+      if (ch === '\\') k++;
+      else if (ch === quote) quote = null;
+      continue;
+    }
+    if (ch === '"' || ch === "'" || ch === '`') quote = ch;
+    else if (ch === '{') depth++;
+    else if (ch === '}' && --depth === 0) return k + 1;
+  }
+  return -1;
+}
+
+// Блоки, типізовані як IconName:
+//   function iconForType(type): IconName { ... return 'fieldString' }
+//   const PHONE_ICONS: Record<string, IconName> = { ... }
+function processTypedBlocks(text, file) {
+  const TYPED_RE = /\bIconName\b[^{};=()]*(?:=\s*)?\{/g;
+  let out = '';
+  let last = 0;
+  let m;
+  while ((m = TYPED_RE.exec(text))) {
+    const open = m.index + m[0].length - 1;
+    const close = blockEnd(text, open);
+    if (close === -1) continue;
+    out += text.slice(last, open) + replaceLiterals(text.slice(open, close), { file, line: lineOf(text, open) });
+    last = close;
+    TYPED_RE.lastIndex = close;
+  }
   return out + text.slice(last);
 }
 
 // Контексти, в яких рядок майже напевно не є іконкою (шум у звіті)
 const NOT_ICON_BEFORE = [
-  /[\w:@.#-]=$/, // значення HTML-атрибута: type="email", @click="close"
-  /\b(?:path|route|prop|type|for|id|key|fieldName|component|role|command|block)\s*:\s*$/,
-  /(?:emit|defineStore|\.on|append|setAttribute|createElement|getAttribute|toggle|getNodeName|addField|createFieldWatcher)\(\s*$/,
+  /[\w:@.#-]=["']?$/, // значення HTML-атрибута: type="email", @click="close", :type="'operator'"
+  /\b(?:path|route|prop|type|for|id|key|fieldName|component|role|command|block|group|value)\s*:\s*$/,
+  /[\w$\]]\([^()]*$/, // аргумент функції: openDialog('edit', row), emit('filterReset')
+  /\[\s*(?:(['"`])[^'"`]*\1\s*,\s*)*$/, // масив рядків: ['url', 'password']
+  /(?:===|!==|==|!=)\s*$/, // порівняння: type === 'edit'
+  /\bcase\s+$/,
+  /\$\{[^}]*$/, // всередині ${...} у шаблонному рядку
+  /(?:===|!==|==|!=)[^?]*\?(?:[^:]*:)?\s*$/, // тернарний оператор за результатом порівняння
   /\|\s*$/, // TS union: 'a' | 'b'
 ];
-const NOT_ICON_AFTER = [/^\s*\|/];
+const NOT_ICON_AFTER = [/^\s*\|/, /^\s*(?:===|!==|==|!=)/];
 
 function findLeftovers(text, file) {
   text.split('\n').forEach((line, idx) => {
+    // рядок, що складається лише з рядкового літерала: елемент списку колонок/полів
+    if (/^\s*(['"`])\w+\1,?\s*$/.test(line)) return;
     for (const m of line.matchAll(LITERAL_RE)) {
       if (!ICON_MAP[m[2]]) continue;
       const before = line.slice(0, m.index);
       const after = line.slice(m.index + m[0].length);
       if (NOT_ICON_BEFORE.some(re => re.test(before)) || NOT_ICON_AFTER.some(re => re.test(after))) continue;
-      // enum Foo { email = 'email' }
-      if (new RegExp(`\\b${m[2]}\\s*=\\s*$`).test(before)) continue;
+      // ключ, що містить саме значення: users: 'users', EMAIL = 'email', facebook_accounts: 'facebook'
+      const key = /([\w$]+)['"]?\s*[:=]\s*$/.exec(before);
+      if (key && key[1].toLowerCase().includes(m[2].toLowerCase())) continue;
       manualReview.push({ file, line: idx + 1, name: m[2], code: line.trim() });
     }
   });

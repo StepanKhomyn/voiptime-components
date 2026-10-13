@@ -9,6 +9,7 @@ import AcdConditionOutOfTimeIcon from './acd/AcdConditionOutOfTimeIcon.vue';
 import AcdPresentOperatorConditionIcon from './acd/AcdPresentOperatorConditionIcon.vue';
 import AcdQueueTimeoutConditionIcon from './acd/AcdQueueTimeoutConditionIcon.vue';
 import ActionsAddIcon from './actions/ActionsAddIcon.vue';
+import ActionsCopyIcon from './actions/ActionsCopyIcon.vue';
 import ActionsDeleteIcon from './actions/ActionsDeleteIcon.vue';
 import ActionsEditIcon from './actions/ActionsEditIcon.vue';
 import ActionsGoToIcon from './actions/ActionsGoToIcon.vue';
@@ -17,6 +18,7 @@ import ActionsLockIcon from './actions/ActionsLockIcon.vue';
 import ActionsLogoutIcon from './actions/ActionsLogoutIcon.vue';
 import ActionsMinusIcon from './actions/ActionsMinusIcon.vue';
 import ActionsSaveIcon from './actions/ActionsSaveIcon.vue';
+import ActionsSettingsFilledIcon from './actions/ActionsSettingsFilledIcon.vue';
 import ActionsStarFilledIcon from './actions/ActionsStarFilledIcon.vue';
 import ActionsStarIcon from './actions/ActionsStarIcon.vue';
 import ActionsUnlockIcon from './actions/ActionsUnlockIcon.vue';
@@ -41,6 +43,7 @@ import CalendarTimeManagementCircleIcon from './calendar/CalendarTimeManagementC
 import CalendarTimerIcon from './calendar/CalendarTimerIcon.vue';
 import CallQualityBlockIcon from './call-quality/CallQualityBlockIcon.vue';
 import CallQualityCardIcon from './call-quality/CallQualityCardIcon.vue';
+import CallQualityDiamondIcon from './call-quality/CallQualityDiamondIcon.vue';
 import CallQualityScaleIcon from './call-quality/CallQualityScaleIcon.vue';
 import CallQualityScaleOffIcon from './call-quality/CallQualityScaleOffIcon.vue';
 import CallQualityStatIcon from './call-quality/CallQualityStatIcon.vue';
@@ -58,6 +61,7 @@ import ChatRemoveIcon from './chat/ChatRemoveIcon.vue';
 import ChatStarIcon from './chat/ChatStarIcon.vue';
 import ChatTagIcon from './chat/ChatTagIcon.vue';
 import ChatVipIcon from './chat/ChatVipIcon.vue';
+import ClientActivityIcon from './client/ClientActivityIcon.vue';
 import ClientCommentIcon from './client/ClientCommentIcon.vue';
 import ClientContactsIcon from './client/ClientContactsIcon.vue';
 import ClientDigitalChannelIcon from './client/ClientDigitalChannelIcon.vue';
@@ -67,6 +71,7 @@ import ClientPhoneHomeIcon from './client/ClientPhoneHomeIcon.vue';
 import ClientSmsIcon from './client/ClientSmsIcon.vue';
 import ClientSocialMediaIcon from './client/ClientSocialMediaIcon.vue';
 import ConversationAudioIcon from './conversation/ConversationAudioIcon.vue';
+import ConversationBotIcon from './conversation/ConversationBotIcon.vue';
 import ConversationJoinMemberIcon from './conversation/ConversationJoinMemberIcon.vue';
 import ConversationPinIcon from './conversation/ConversationPinIcon.vue';
 import ConversationRedirectIcon from './conversation/ConversationRedirectIcon.vue';
@@ -79,6 +84,7 @@ import FieldIntegerIcon from './field/FieldIntegerIcon.vue';
 import FieldStringIcon from './field/FieldStringIcon.vue';
 import FilesDownloadFromCloudIcon from './files/FilesDownloadFromCloudIcon.vue';
 import FilesDownloadIcon from './files/FilesDownloadIcon.vue';
+import FilesEmptyIcon from './files/FilesEmptyIcon.vue';
 import FilesExportIcon from './files/FilesExportIcon.vue';
 import FilesExportToFileIcon from './files/FilesExportToFileIcon.vue';
 import FilesFolderIcon from './files/FilesFolderIcon.vue';
@@ -98,6 +104,7 @@ import FilterSelectIcon from './filter/FilterSelectIcon.vue';
 import FlagsAzerbaijanIcon from './flags/FlagsAzerbaijanIcon.vue';
 import FlagsKazakhstanIcon from './flags/FlagsKazakhstanIcon.vue';
 import FlagsPolandIcon from './flags/FlagsPolandIcon.vue';
+import FlagsRussiaIcon from './flags/FlagsRussiaIcon.vue';
 import FlagsThailandIcon from './flags/FlagsThailandIcon.vue';
 import FlagsUkraineIcon from './flags/FlagsUkraineIcon.vue';
 import FlagsUnitedKingdomIcon from './flags/FlagsUnitedKingdomIcon.vue';
@@ -138,6 +145,7 @@ import IvrRecordEndIcon from './ivr/IvrRecordEndIcon.vue';
 import IvrRecordStartIcon from './ivr/IvrRecordStartIcon.vue';
 import IvrSetVariableValueIcon from './ivr/IvrSetVariableValueIcon.vue';
 import IvrStatusChangeIcon from './ivr/IvrStatusChangeIcon.vue';
+import IvrVariableIcon from './ivr/IvrVariableIcon.vue';
 import IvrVoiceMailIcon from './ivr/IvrVoiceMailIcon.vue';
 import IvrVolumeCallIcon from './ivr/IvrVolumeCallIcon.vue';
 import IvrWaitIcon from './ivr/IvrWaitIcon.vue';
@@ -151,8 +159,11 @@ import LeftMenuCrmIcon from './left-menu/LeftMenuCrmIcon.vue';
 import LeftMenuDashboardIcon from './left-menu/LeftMenuDashboardIcon.vue';
 import LeftMenuGroupIcon from './left-menu/LeftMenuGroupIcon.vue';
 import LeftMenuITrIcon from './left-menu/LeftMenuITrIcon.vue';
+import LeftMenuIntegrationIcon from './left-menu/LeftMenuIntegrationIcon.vue';
 import LeftMenuIvrIcon from './left-menu/LeftMenuIvrIcon.vue';
+import LeftMenuPbxIcon from './left-menu/LeftMenuPbxIcon.vue';
 import LeftMenuScenarioCallIcon from './left-menu/LeftMenuScenarioCallIcon.vue';
+import LeftMenuScenariosIcon from './left-menu/LeftMenuScenariosIcon.vue';
 import LeftMenuSettingsIcon from './left-menu/LeftMenuSettingsIcon.vue';
 import LeftMenuWFmIcon from './left-menu/LeftMenuWFmIcon.vue';
 import MailDeletedIcon from './mail/MailDeletedIcon.vue';
@@ -189,6 +200,7 @@ import MessageStatusDeliveredIcon from './message/MessageStatusDeliveredIcon.vue
 import MiscAddAnswerIcon from './misc/MiscAddAnswerIcon.vue';
 import MiscAddLineIcon from './misc/MiscAddLineIcon.vue';
 import MiscAddToQueueIcon from './misc/MiscAddToQueueIcon.vue';
+import MiscBoxIcon from './misc/MiscBoxIcon.vue';
 import MiscCheckConnectionIcon from './misc/MiscCheckConnectionIcon.vue';
 import MiscContinueInDialPlanIcon from './misc/MiscContinueInDialPlanIcon.vue';
 import MiscConversationTopPanelIcon from './misc/MiscConversationTopPanelIcon.vue';
@@ -223,6 +235,7 @@ import PhoneOwnCallIcon from './phone/PhoneOwnCallIcon.vue';
 import PhonePhoneIcon from './phone/PhonePhoneIcon.vue';
 import PhoneRecallIcon from './phone/PhoneRecallIcon.vue';
 import PhoneTalkingIcon from './phone/PhoneTalkingIcon.vue';
+import PhoneTransferCallIcon from './phone/PhoneTransferCallIcon.vue';
 import PhoneTransferIcon from './phone/PhoneTransferIcon.vue';
 import PhoneUnavailableIcon from './phone/PhoneUnavailableIcon.vue';
 import PlayerAddNewRecordIcon from './player/PlayerAddNewRecordIcon.vue';
@@ -245,12 +258,18 @@ import RightMenuOperatorIcon from './right-menu/RightMenuOperatorIcon.vue';
 import RightMenuScenarioIcon from './right-menu/RightMenuScenarioIcon.vue';
 import RightMenuSchedulerIcon from './right-menu/RightMenuSchedulerIcon.vue';
 import RightMenuStatsDiagramPieIcon from './right-menu/RightMenuStatsDiagramPieIcon.vue';
+import ScenarioAnketBlockIcon from './scenario/ScenarioAnketBlockIcon.vue';
+import ScenarioCallSubjectIcon from './scenario/ScenarioCallSubjectIcon.vue';
+import ScenarioIframeBlockIcon from './scenario/ScenarioIframeBlockIcon.vue';
+import ScenarioInfoBlockIcon from './scenario/ScenarioInfoBlockIcon.vue';
+import ScenarioProposalBlockIcon from './scenario/ScenarioProposalBlockIcon.vue';
 import StatisticsDetailIcon from './statistics/StatisticsDetailIcon.vue';
 import StatisticsMonitoringIcon from './statistics/StatisticsMonitoringIcon.vue';
 import StatisticsSummaryIcon from './statistics/StatisticsSummaryIcon.vue';
 import StatusChangeIcon from './status/StatusChangeIcon.vue';
 import StatusPredictiveIcon from './status/StatusPredictiveIcon.vue';
 import StatusPreviewIcon from './status/StatusPreviewIcon.vue';
+import StatusPrioritySelectIcon from './status/StatusPrioritySelectIcon.vue';
 import StatusProgressiveIcon from './status/StatusProgressiveIcon.vue';
 import StatusSelectIcon from './status/StatusSelectIcon.vue';
 import TableArrowUpDownIcon from './table/TableArrowUpDownIcon.vue';
@@ -263,6 +282,7 @@ import TableListBulletHorizontalIcon from './table/TableListBulletHorizontalIcon
 import TableListBulletIcon from './table/TableListBulletIcon.vue';
 import TableListTreeIcon from './table/TableListTreeIcon.vue';
 import TableNodeTreeIcon from './table/TableNodeTreeIcon.vue';
+import TableNumberListIcon from './table/TableNumberListIcon.vue';
 import TableSettingsIcon from './table/TableSettingsIcon.vue';
 import TableTwoColumnsIcon from './table/TableTwoColumnsIcon.vue';
 import TableTwoRowsIcon from './table/TableTwoRowsIcon.vue';
@@ -274,15 +294,20 @@ import TextEditorAlignCenterIcon from './text-editor/TextEditorAlignCenterIcon.v
 import TextEditorAlignJustifyIcon from './text-editor/TextEditorAlignJustifyIcon.vue';
 import TextEditorAlignLeftIcon from './text-editor/TextEditorAlignLeftIcon.vue';
 import TextEditorAlignRightIcon from './text-editor/TextEditorAlignRightIcon.vue';
+import TextEditorBlockquoteIcon from './text-editor/TextEditorBlockquoteIcon.vue';
 import TextEditorBoldIcon from './text-editor/TextEditorBoldIcon.vue';
 import TextEditorClearFormatIcon from './text-editor/TextEditorClearFormatIcon.vue';
 import TextEditorFontNameIcon from './text-editor/TextEditorFontNameIcon.vue';
+import TextEditorIndentIcon from './text-editor/TextEditorIndentIcon.vue';
 import TextEditorItalicIcon from './text-editor/TextEditorItalicIcon.vue';
+import TextEditorOrderedListIcon from './text-editor/TextEditorOrderedListIcon.vue';
+import TextEditorOutdentIcon from './text-editor/TextEditorOutdentIcon.vue';
 import TextEditorStrikethroughIcon from './text-editor/TextEditorStrikethroughIcon.vue';
 import TextEditorSubscriptIcon from './text-editor/TextEditorSubscriptIcon.vue';
 import TextEditorSuperscriptIcon from './text-editor/TextEditorSuperscriptIcon.vue';
 import TextEditorTagTypeIcon from './text-editor/TextEditorTagTypeIcon.vue';
 import TextEditorUnderlineIcon from './text-editor/TextEditorUnderlineIcon.vue';
+import TextEditorUnorderedListIcon from './text-editor/TextEditorUnorderedListIcon.vue';
 import UsersActiveIcon from './users/UsersActiveIcon.vue';
 import UsersBlockIcon from './users/UsersBlockIcon.vue';
 import UsersDeleteIcon from './users/UsersDeleteIcon.vue';
@@ -304,6 +329,7 @@ export const groupIcons = {
 
   // actions
   actions_add: ActionsAddIcon,
+  actions_copy: ActionsCopyIcon,
   actions_delete: ActionsDeleteIcon,
   actions_edit: ActionsEditIcon,
   actions_go_to: ActionsGoToIcon,
@@ -312,6 +338,7 @@ export const groupIcons = {
   actions_logout: ActionsLogoutIcon,
   actions_minus: ActionsMinusIcon,
   actions_save: ActionsSaveIcon,
+  actions_settings_filled: ActionsSettingsFilledIcon,
   actions_star_filled: ActionsStarFilledIcon,
   actions_star: ActionsStarIcon,
   actions_unlock: ActionsUnlockIcon,
@@ -344,6 +371,7 @@ export const groupIcons = {
   // call-quality
   call_quality_block: CallQualityBlockIcon,
   call_quality_card: CallQualityCardIcon,
+  call_quality_diamond: CallQualityDiamondIcon,
   call_quality_scale: CallQualityScaleIcon,
   call_quality_scale_off: CallQualityScaleOffIcon,
   call_quality_stat: CallQualityStatIcon,
@@ -365,6 +393,7 @@ export const groupIcons = {
   chat_vip: ChatVipIcon,
 
   // client
+  client_activity: ClientActivityIcon,
   client_comment: ClientCommentIcon,
   client_contacts: ClientContactsIcon,
   client_digital_channel: ClientDigitalChannelIcon,
@@ -376,6 +405,7 @@ export const groupIcons = {
 
   // conversation
   conversation_audio: ConversationAudioIcon,
+  conversation_bot: ConversationBotIcon,
   conversation_join_member: ConversationJoinMemberIcon,
   conversation_pin: ConversationPinIcon,
   conversation_redirect: ConversationRedirectIcon,
@@ -392,6 +422,7 @@ export const groupIcons = {
   // files
   files_download_from_cloud: FilesDownloadFromCloudIcon,
   files_download: FilesDownloadIcon,
+  files_empty: FilesEmptyIcon,
   files_export: FilesExportIcon,
   files_export_to_file: FilesExportToFileIcon,
   files_folder: FilesFolderIcon,
@@ -415,6 +446,7 @@ export const groupIcons = {
   flags_azerbaijan: FlagsAzerbaijanIcon,
   flags_kazakhstan: FlagsKazakhstanIcon,
   flags_poland: FlagsPolandIcon,
+  flags_russia: FlagsRussiaIcon,
   flags_thailand: FlagsThailandIcon,
   flags_ukraine: FlagsUkraineIcon,
   flags_united_kingdom: FlagsUnitedKingdomIcon,
@@ -461,6 +493,7 @@ export const groupIcons = {
   ivr_record_start: IvrRecordStartIcon,
   ivr_set_variable_value: IvrSetVariableValueIcon,
   ivr_status_change: IvrStatusChangeIcon,
+  ivr_variable: IvrVariableIcon,
   ivr_voice_mail: IvrVoiceMailIcon,
   ivr_volume_call: IvrVolumeCallIcon,
   ivr_wait: IvrWaitIcon,
@@ -476,8 +509,11 @@ export const groupIcons = {
   left_menu_dashboard: LeftMenuDashboardIcon,
   left_menu_group: LeftMenuGroupIcon,
   left_menu_i_tr: LeftMenuITrIcon,
+  left_menu_integration: LeftMenuIntegrationIcon,
   left_menu_ivr: LeftMenuIvrIcon,
+  left_menu_pbx: LeftMenuPbxIcon,
   left_menu_scenario_call: LeftMenuScenarioCallIcon,
+  left_menu_scenarios: LeftMenuScenariosIcon,
   left_menu_settings: LeftMenuSettingsIcon,
   left_menu_w_fm: LeftMenuWFmIcon,
 
@@ -522,6 +558,7 @@ export const groupIcons = {
   misc_add_answer: MiscAddAnswerIcon,
   misc_add_line: MiscAddLineIcon,
   misc_add_to_queue: MiscAddToQueueIcon,
+  misc_box: MiscBoxIcon,
   misc_check_connection: MiscCheckConnectionIcon,
   misc_continue_in_dial_plan: MiscContinueInDialPlanIcon,
   misc_conversation_top_panel: MiscConversationTopPanelIcon,
@@ -562,6 +599,7 @@ export const groupIcons = {
   phone_phone: PhonePhoneIcon,
   phone_recall: PhoneRecallIcon,
   phone_talking: PhoneTalkingIcon,
+  phone_transfer_call: PhoneTransferCallIcon,
   phone_transfer: PhoneTransferIcon,
   phone_unavailable: PhoneUnavailableIcon,
 
@@ -589,6 +627,13 @@ export const groupIcons = {
   right_menu_scheduler: RightMenuSchedulerIcon,
   right_menu_stats_diagram_pie: RightMenuStatsDiagramPieIcon,
 
+  // scenario
+  scenario_anket_block: ScenarioAnketBlockIcon,
+  scenario_call_subject: ScenarioCallSubjectIcon,
+  scenario_iframe_block: ScenarioIframeBlockIcon,
+  scenario_info_block: ScenarioInfoBlockIcon,
+  scenario_proposal_block: ScenarioProposalBlockIcon,
+
   // statistics
   statistics_detail: StatisticsDetailIcon,
   statistics_monitoring: StatisticsMonitoringIcon,
@@ -598,6 +643,7 @@ export const groupIcons = {
   status_change: StatusChangeIcon,
   status_predictive: StatusPredictiveIcon,
   status_preview: StatusPreviewIcon,
+  status_priority_select: StatusPrioritySelectIcon,
   status_progressive: StatusProgressiveIcon,
   status_select: StatusSelectIcon,
 
@@ -612,6 +658,7 @@ export const groupIcons = {
   table_list_bullet: TableListBulletIcon,
   table_list_tree: TableListTreeIcon,
   table_node_tree: TableNodeTreeIcon,
+  table_number_list: TableNumberListIcon,
   table_settings: TableSettingsIcon,
   table_two_columns: TableTwoColumnsIcon,
   table_two_rows: TableTwoRowsIcon,
@@ -627,15 +674,20 @@ export const groupIcons = {
   text_editor_align_justify: TextEditorAlignJustifyIcon,
   text_editor_align_left: TextEditorAlignLeftIcon,
   text_editor_align_right: TextEditorAlignRightIcon,
+  text_editor_blockquote: TextEditorBlockquoteIcon,
   text_editor_bold: TextEditorBoldIcon,
   text_editor_clear_format: TextEditorClearFormatIcon,
   text_editor_font_name: TextEditorFontNameIcon,
+  text_editor_indent: TextEditorIndentIcon,
   text_editor_italic: TextEditorItalicIcon,
+  text_editor_ordered_list: TextEditorOrderedListIcon,
+  text_editor_outdent: TextEditorOutdentIcon,
   text_editor_strikethrough: TextEditorStrikethroughIcon,
   text_editor_subscript: TextEditorSubscriptIcon,
   text_editor_superscript: TextEditorSuperscriptIcon,
   text_editor_tag_type: TextEditorTagTypeIcon,
   text_editor_underline: TextEditorUnderlineIcon,
+  text_editor_unordered_list: TextEditorUnorderedListIcon,
 
   // users
   users_active: UsersActiveIcon,
@@ -664,6 +716,7 @@ export const iconGroups = {
   ],
   'actions': [
     'actions_add',
+    'actions_copy',
     'actions_delete',
     'actions_edit',
     'actions_go_to',
@@ -672,6 +725,7 @@ export const iconGroups = {
     'actions_logout',
     'actions_minus',
     'actions_save',
+    'actions_settings_filled',
     'actions_star_filled',
     'actions_star',
     'actions_unlock',
@@ -704,6 +758,7 @@ export const iconGroups = {
   'call-quality': [
     'call_quality_block',
     'call_quality_card',
+    'call_quality_diamond',
     'call_quality_scale',
     'call_quality_scale_off',
     'call_quality_stat',
@@ -725,6 +780,7 @@ export const iconGroups = {
     'chat_vip',
   ],
   'client': [
+    'client_activity',
     'client_comment',
     'client_contacts',
     'client_digital_channel',
@@ -736,6 +792,7 @@ export const iconGroups = {
   ],
   'conversation': [
     'conversation_audio',
+    'conversation_bot',
     'conversation_join_member',
     'conversation_pin',
     'conversation_redirect',
@@ -752,6 +809,7 @@ export const iconGroups = {
   'files': [
     'files_download_from_cloud',
     'files_download',
+    'files_empty',
     'files_export',
     'files_export_to_file',
     'files_folder',
@@ -775,6 +833,7 @@ export const iconGroups = {
     'flags_azerbaijan',
     'flags_kazakhstan',
     'flags_poland',
+    'flags_russia',
     'flags_thailand',
     'flags_ukraine',
     'flags_united_kingdom',
@@ -821,6 +880,7 @@ export const iconGroups = {
     'ivr_record_start',
     'ivr_set_variable_value',
     'ivr_status_change',
+    'ivr_variable',
     'ivr_voice_mail',
     'ivr_volume_call',
     'ivr_wait',
@@ -836,8 +896,11 @@ export const iconGroups = {
     'left_menu_dashboard',
     'left_menu_group',
     'left_menu_i_tr',
+    'left_menu_integration',
     'left_menu_ivr',
+    'left_menu_pbx',
     'left_menu_scenario_call',
+    'left_menu_scenarios',
     'left_menu_settings',
     'left_menu_w_fm',
   ],
@@ -882,6 +945,7 @@ export const iconGroups = {
     'misc_add_answer',
     'misc_add_line',
     'misc_add_to_queue',
+    'misc_box',
     'misc_check_connection',
     'misc_continue_in_dial_plan',
     'misc_conversation_top_panel',
@@ -922,6 +986,7 @@ export const iconGroups = {
     'phone_phone',
     'phone_recall',
     'phone_talking',
+    'phone_transfer_call',
     'phone_transfer',
     'phone_unavailable',
   ],
@@ -949,6 +1014,13 @@ export const iconGroups = {
     'right_menu_scheduler',
     'right_menu_stats_diagram_pie',
   ],
+  'scenario': [
+    'scenario_anket_block',
+    'scenario_call_subject',
+    'scenario_iframe_block',
+    'scenario_info_block',
+    'scenario_proposal_block',
+  ],
   'statistics': [
     'statistics_detail',
     'statistics_monitoring',
@@ -958,6 +1030,7 @@ export const iconGroups = {
     'status_change',
     'status_predictive',
     'status_preview',
+    'status_priority_select',
     'status_progressive',
     'status_select',
   ],
@@ -972,6 +1045,7 @@ export const iconGroups = {
     'table_list_bullet',
     'table_list_tree',
     'table_node_tree',
+    'table_number_list',
     'table_settings',
     'table_two_columns',
     'table_two_rows',
@@ -987,15 +1061,20 @@ export const iconGroups = {
     'text_editor_align_justify',
     'text_editor_align_left',
     'text_editor_align_right',
+    'text_editor_blockquote',
     'text_editor_bold',
     'text_editor_clear_format',
     'text_editor_font_name',
+    'text_editor_indent',
     'text_editor_italic',
+    'text_editor_ordered_list',
+    'text_editor_outdent',
     'text_editor_strikethrough',
     'text_editor_subscript',
     'text_editor_superscript',
     'text_editor_tag_type',
     'text_editor_underline',
+    'text_editor_unordered_list',
   ],
   'users': [
     'users_active',
