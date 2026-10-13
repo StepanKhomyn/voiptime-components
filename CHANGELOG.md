@@ -1,3 +1,10 @@
+## [1.23.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.15...v1.23.16) (2026-10-13)
+
+
+### Bug Fixes
+
+* Поправлено гіт ігнор ([d24d3e0](https://github.com/StepanKhomyn/voiptime-components/commit/d24d3e0762752ccaa373ee741fe9bf2b0919fdc1))
+
 ## [1.23.15](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.14...v1.23.15) (2026-10-13)
 
 
