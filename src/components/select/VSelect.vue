@@ -326,6 +326,8 @@
       selectedValues: newValues,
     });
 
+    refocusFilterInput();
+
     if (props.validateOnInput) {
       validation.validate();
     }
@@ -699,11 +701,29 @@
 
     if (!isMultiple.value) {
       hideDropdown();
+    } else {
+      refocusFilterInput();
     }
 
     if (props.validateOnInput) {
       validation.validate();
     }
+  };
+
+  // Клік по чекбоксу (label → native input) забирає фокус з поля пошуку,
+  // тому повертаємо його назад, щоб можна було одразу продовжити ввід
+  const refocusFilterInput = () => {
+    if (props.filterable && isDropdownVisible.value) {
+      nextTick(() => filterInputRef.value?.focus());
+    }
+  };
+
+  // Блокуємо mousedown у dropdown, щоб не втрачати фокус, але не для поля пошуку —
+  // інакше після втрати фокусу (напр. клік по чекбоксу) в нього вже не повернутись кліком
+  const handleDropdownMouseDown = (event: MouseEvent) => {
+    const target = event.target as HTMLElement | null;
+    if (target?.closest('.vt-select-dropdown__search')) return;
+    event.preventDefault();
   };
 
   const handleCheckboxChange = (option: VtSelectOption, isChecked: boolean) => {
@@ -1230,7 +1250,7 @@
           class="vt-select-dropdown"
           role="listbox"
           @click.stop
-          @mousedown.prevent
+          @mousedown="handleDropdownMouseDown"
         >
           <div v-if="filterable" class="vt-select-dropdown__search">
             <VInput
