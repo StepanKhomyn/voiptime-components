@@ -4,7 +4,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.23.16",
+  "version": "1.23.17",
   "type": "module",
   "main": "dist/index.umd.js",
   "module": "dist/index.es.js",

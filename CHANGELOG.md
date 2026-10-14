@@ -1,3 +1,10 @@
+## [1.23.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.16...v1.23.17) (2026-10-14)
+
+
+### Bug Fixes
+
+* Поле пошуку в мультиселекті більше не блокується після вибору опції чекбоксом ([985cf5b](https://github.com/StepanKhomyn/voiptime-components/commit/985cf5bb398b5510d4e24e3398240cc18b39e6dc))
+
 ## [1.23.16](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.15...v1.23.16) (2026-10-13)
 
 
