@@ -6,6 +6,7 @@
 //   node <шлях-до-vue-component-lib>/scripts/migrate-icons.cjs [dir ...] [--dry]
 //
 //   dir    - папки/файли для обробки (за замовчуванням ./src)
+//            для Flask/Jinja-проєкту без src: node .../migrate-icons.cjs . --dry
 //   --dry  - нічого не записувати, лише показати, що буде змінено
 //
 // Що замінюється автоматично:
@@ -324,8 +325,12 @@ const ICON_MAP = {
   unfreeze: 'table_unfreeze',
 };
 
-const EXTENSIONS = ['.vue', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.html', '.jinja', '.jinja2', '.j2'];
-const IGNORE_DIRS = new Set(['node_modules', 'dist', 'build', '.git', '.nuxt', '.output', 'coverage', 'public']);
+const EXTENSIONS = ['.vue', '.ts', '.tsx', '.js', '.jsx', '.mjs', '.cjs', '.html', '.jinja', '.jinja2', '.j2', '.py'];
+const IGNORE_DIRS = new Set([
+  'node_modules', 'dist', 'build', '.git', '.nuxt', '.output', 'coverage', 'public',
+  // Python
+  'venv', '.venv', 'env', '__pycache__', 'site-packages', 'migrations', '.pytest_cache', '.mypy_cache', '.tox',
+]);
 
 const args = process.argv.slice(2);
 const dryRun = args.includes('--dry');
@@ -540,6 +545,10 @@ const NOT_ICON_BEFORE = [
   /\$\{[^}]*$/, // всередині ${...} у шаблонному рядку
   /(?:===|!==|==|!=)[^?]*\?(?:[^:]*:)?\s*$/, // тернарний оператор за результатом порівняння
   /\|\s*$/, // TS union: 'a' | 'b'
+  /\b(?:dropEffect|effectAllowed)\s*=\s*$/, // drag & drop: dropEffect = 'copy'
+  /\[\s*$/, // доступ за ключем: f["operator"]
+  /\{\s*(?:(['"])[^'"]*\1\s*,\s*)*$/, // множина рядків (Python): {"email", "uuid"}
+  /\b(?:name|__tablename__|tablename)\s*=\s*$/, // Python: name = "users", __tablename__ = "user"
 ];
 const NOT_ICON_AFTER = [/^\s*\|/, /^\s*(?:===|!==|==|!=)/];
 
@@ -547,11 +556,15 @@ function findLeftovers(text, file) {
   text.split('\n').forEach((line, idx) => {
     // рядок, що складається лише з рядкового літерала: елемент списку колонок/полів
     if (/^\s*(['"`])\w+\1,?\s*$/.test(line)) return;
+    // коментарі та гілки багаторядкового тернарного оператора (? 'copy' / : 'move')
+    if (/^\s*(?:\/\/|\/?\*|\?|:|#)/.test(line)) return;
     for (const m of line.matchAll(LITERAL_RE)) {
       if (!ICON_MAP[m[2]]) continue;
       const before = line.slice(0, m.index);
       const after = line.slice(m.index + m[0].length);
       if (NOT_ICON_BEFORE.some(re => re.test(before)) || NOT_ICON_AFTER.some(re => re.test(after))) continue;
+      // ключ словника/об'єкта: "operator": ... (але не гілка тернарного: cond ? 'a' : 'b')
+      if (/^\s*:(?!:)/.test(after) && !/\?\s*$/.test(before)) continue;
       // ключ, що містить саме значення: users: 'users', EMAIL = 'email', facebook_accounts: 'facebook'
       const key = /([\w$]+)['"]?\s*[:=]\s*$/.exec(before);
       if (key && key[1].toLowerCase().includes(m[2].toLowerCase())) continue;
@@ -565,8 +578,12 @@ for (const file of files) {
   const original = fs.readFileSync(file, 'utf8');
   let text = original;
   // .vue/.html: теги + <script>; .ts/.js: лише JS; .tsx/.jsx: і те, і те
-  if (/\.(vue|html|jinja2?|j2|[jt]sx)$/.test(file)) text = processTags(text, file);
-  if (!/\.(vue|html|jinja2?|j2)$/.test(file)) text = processScript(text, file);
+  const isTemplate = /\.(vue|html|jinja2?|j2)$/.test(file);
+  if (isTemplate || /\.[jt]sx$/.test(file)) text = processTags(text, file);
+  // Jinja: {% set icon = 'x' %}, {{ macro(icon='x') }}
+  if (isTemplate) text = text.replace(/\{[{%][\s\S]*?[}%]\}/g, block => processScript(block, file));
+  // .ts/.js/.py: icon: 'x', "icon": "x", icon='x'
+  if (!isTemplate) text = processScript(text, file);
   findLeftovers(text, file);
   if (text !== original) {
     stats.files++;
