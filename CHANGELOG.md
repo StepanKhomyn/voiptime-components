@@ -1,3 +1,10 @@
+## [1.23.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.18...v1.23.19) (2026-10-16)
+
+
+### Bug Fixes
+
+* прибрано залишки посилань на видалені legacy-іконки (src/icons) ([4800684](https://github.com/StepanKhomyn/voiptime-components/commit/4800684e355806667b03f8540d63ac757f245394))
+
 ## [1.23.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.17...v1.23.18) (2026-10-16)
 
 
