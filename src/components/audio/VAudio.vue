@@ -423,10 +423,10 @@
         @click="togglePlay"
       >
         <slot v-if="isPlay" name="icon-pause">
-          <VIcon height="20" name="pause" width="20" />
+          <VIcon height="20" name="player_hold" width="20" />
         </slot>
         <slot v-else name="icon-play">
-          <VIcon height="20" name="start" width="20" />
+          <VIcon height="20" name="player_start" width="20" />
         </slot>
       </button>
       <div class="vt-audio__wave-area">
@@ -436,7 +436,7 @@
 
       <div class="vt-audio__controls">
         <button v-if="props.download" :disabled="isPlayerDisabled" class="vt-audio__btn" @click="downloadRecord">
-          <VIcon height="20" name="import" width="20" />
+          <VIcon height="20" name="files_import" width="20" />
         </button>
 
         <button
@@ -446,10 +446,10 @@
           @click="togglePlay"
         >
           <slot v-if="isPlay" name="icon-pause">
-            <VIcon height="20" name="pause" width="20" />
+            <VIcon height="20" name="player_hold" width="20" />
           </slot>
           <slot v-else name="icon-play">
-            <VIcon height="20" name="start" width="20" />
+            <VIcon height="20" name="player_start" width="20" />
           </slot>
         </button>
 
