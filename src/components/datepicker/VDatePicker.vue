@@ -1160,7 +1160,7 @@
             type="button"
             @click.stop="handleClear"
           >
-            <VIcon name="close" />
+            <VIcon name="input_close" />
           </button>
         </div>
       </div>
