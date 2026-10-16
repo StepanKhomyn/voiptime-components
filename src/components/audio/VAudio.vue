@@ -406,7 +406,7 @@
   <div :class="{ 'is-disabled': isPlayerDisabled, 'is-channel-routed': isChannelRoutedMode }" class="vt-audio">
     <div v-if="!recordUrl" class="vt-audio__empty">
       <slot name="empty">
-        <VEmpty v-if="!isChannelRoutedMode" :text="t(LOCALE_KEYS.AUDIO_EMPTY)" icon="noSound" />
+        <VEmpty v-if="!isChannelRoutedMode" :text="t(LOCALE_KEYS.AUDIO_EMPTY)" icon="no_data_sound" />
         <span v-else>{{ t(LOCALE_KEYS.AUDIO_EMPTY) }}</span>
       </slot>
     </div>
