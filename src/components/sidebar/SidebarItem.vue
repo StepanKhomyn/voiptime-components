@@ -132,7 +132,7 @@
     <div class="vt-hub-item-main" @click="handleClick" :class="{ collapsed, active: isActive }">
       <VIcon class="vt-hub-item-icon" :name="(item.icon ?? 'empty') as IconName" :width="24" :height="24" />
       <span v-if="!collapsed" class="vt-hub-item-label">{{ item.i18n }}</span>
-      <VIcon v-if="item.children && !collapsed" class="vt-hub-item-arrow" name="arrowRight"></VIcon>
+      <VIcon v-if="item.children && !collapsed" class="vt-hub-item-arrow" name="arrows_right"></VIcon>
     </div>
 
     <!-- DIVIDER -->

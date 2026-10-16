@@ -80,7 +80,7 @@
             </template>
           </div>
           <button v-if="message.showClose" class="vt-message-close" type="button" @click="removeMessage(message.id)">
-            <VIcon name="close" />
+            <VIcon name="input_close" />
           </button>
         </div>
       </transition-group>

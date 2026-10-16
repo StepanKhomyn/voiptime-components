@@ -882,7 +882,7 @@
 
       <div class="vt-timepicker__input">
         <div class="vt-timepicker__icon">
-          <VIcon name="clock" />
+          <VIcon name="calendar_timer" />
         </div>
 
         <div v-if="hasDisplayValue" class="vt-timepicker__text">
@@ -918,7 +918,7 @@
             type="button"
             @click.stop="handleClear"
           >
-            <VIcon name="close" />
+            <VIcon name="input_close" />
           </button>
         </div>
       </div>

@@ -563,12 +563,12 @@
               <div v-if="col.sortable && !col.manage" class="vt-th__sortable">
                 <VIcon
                   :class="getSortIconClasses(col, sortState).asc"
-                  name="arrowTop"
+                  name="arrows_top"
                   @click.stop="handleSort(col, 'asc')"
                 />
                 <VIcon
                   :class="getSortIconClasses(col, sortState).desc"
-                  name="arrowDown"
+                  name="arrows_down"
                   @click.stop="handleSort(col, 'desc')"
                 />
               </div>
@@ -646,7 +646,7 @@
               class="vt-table__td vt-table__td--drag-handle"
             >
               <div class="vt-table__cell-content vt-table__drag-handle">
-                <VIcon name="columnsMove" />
+                <VIcon name="table_columns_move" />
               </div>
             </td>
 

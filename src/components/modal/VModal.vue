@@ -50,7 +50,7 @@
           <h2 v-if="title" class="vt-modal__title">
             {{ title }}
           </h2>
-          <VIcon v-if="showCloseButton" class="vt-modal__close" name="close" @click="closeModal" />
+          <VIcon v-if="showCloseButton" class="vt-modal__close" name="input_close" @click="closeModal" />
         </div>
 
         <!-- Scrollable content -->

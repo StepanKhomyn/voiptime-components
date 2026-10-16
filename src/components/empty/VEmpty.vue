@@ -9,7 +9,7 @@
 
   const props = withDefaults(defineProps<VEmptyProps>(), {
     text: '',
-    icon: 'noData',
+    icon: 'no_data_default',
   });
 
   const currentIcon = computed(() => {

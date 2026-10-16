@@ -66,9 +66,9 @@
       </ul>
     </nav>
     <div @click="toggleCollapse" class="vt-hub-sidebar-footer" :class="{ collapsed }">
-      <VIcon v-if="collapsed" name="arrowRight"></VIcon>
+      <VIcon v-if="collapsed" name="arrows_right"></VIcon>
       <!--      <span v-if="!collapsed" class="hub-sidebar-footer__label">Згорнути меню</span>-->
-      <VIcon v-if="!collapsed" name="arrowLeft"></VIcon>
+      <VIcon v-if="!collapsed" name="arrows_left"></VIcon>
     </div>
   </aside>
 </template>

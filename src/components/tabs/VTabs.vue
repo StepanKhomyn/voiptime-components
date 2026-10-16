@@ -139,7 +139,7 @@
     <div ref="navRef" class="vt-tabs__nav">
       <!-- Стрілка вліво -->
       <button v-show="showLeftArrow" class="vt-tabs__arrow vt-tabs__arrow--left" @click="scrollLeft">
-        <VIcon name="arrowLeft" />
+        <VIcon name="arrows_left" />
       </button>
 
       <!-- Контейнер з табами -->
@@ -166,7 +166,7 @@
 
             <!-- Кнопка закриття -->
             <span v-if="tab.closable" class="vt-tabs__close" @click.stop="removeTab(tab.name)">
-              <VIcon name="close" />
+              <VIcon name="input_close" />
             </span>
           </div>
         </div>
@@ -174,7 +174,7 @@
 
       <!-- Стрілка вправо -->
       <button v-show="showRightArrow" class="vt-tabs__arrow vt-tabs__arrow--right" @click="scrollRight">
-        <VIcon name="arrowRight" />
+        <VIcon name="arrows_right" />
       </button>
     </div>
 

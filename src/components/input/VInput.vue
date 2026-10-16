@@ -202,9 +202,9 @@
 
     switch (props.type) {
       case 'email':
-        return 'email';
+        return 'mail_email';
       case 'url':
-        return 'url';
+        return 'input_url';
       default:
         return null;
     }
@@ -219,27 +219,27 @@
     if (getAutomaticPrefixIcon.value) return null;
 
     // У випадку якщо є errorMessage відображаємо іконку типу error
-    if (props.errorMessage) return 'alertCircle';
+    if (props.errorMessage) return 'input_alert_triangle';
 
     // Показуємо іконки для всіх станів, включаючи явно встановлені
     switch (props.status) {
       case 'error':
-        return 'alertCircle';
+        return 'input_alert_triangle';
       case 'warning':
-        return 'alertTriangle';
+        return 'input_alert_circle';
       case 'success':
-        return 'checkCircle';
+        return 'input_check_circle';
       default:
         // Для дефолтного стану показуємо іконку тільки при помилці валідації
         if (!isValid.value) {
-          return 'alertCircle';
+          return 'input_alert_triangle';
         }
         return null;
     }
   });
 
   // Іконка помилки показує повний текст помилки, якщо він не вміщається
-  const isErrorStatusIcon = computed(() => finalPrefixIcon.value === 'alertCircle' && !props.prefixIcon);
+  const isErrorStatusIcon = computed(() => finalPrefixIcon.value === 'input_alert_circle' && !props.prefixIcon);
 
   // Визначаємо чи є prefix іконка (користувацька, автоматична або стану)
   const hasPrefix = computed(() => {
@@ -689,7 +689,7 @@
       <div v-if="hasSuffix" class="vt-input__suffix">
         <!-- Clear Button -->
         <button v-if="showClearButton" class="vt-input__clear-btn" type="button" @click="handleClear">
-          <VIcon class="vt-input__icon" name="close" />
+          <VIcon class="vt-input__icon" name="input_close" />
         </button>
 
         <!-- Password Toggle -->
@@ -699,7 +699,7 @@
           type="button"
           @click="togglePasswordVisibility"
         >
-          <VIcon :name="isPasswordVisible ? 'eyeOpened' : 'eyeClosed'" class="vt-input__icon" />
+          <VIcon :name="isPasswordVisible ? 'input_eye_opened' : 'input_eye_closed'" class="vt-input__icon" />
         </button>
 
         <!-- Suffix Icon -->
