@@ -92,9 +92,6 @@
 
   <!-- Колір (усі іконки, окрім багатоколірних, використовують currentColor) -->
   <VIcon name="filter_save" color="#a82525" />
-
-  <!-- Старі назви (src/icons) теж працюють, але вони deprecated -->
-  <VIcon name="arrowDown" />
 </template>`;
 </script>
 

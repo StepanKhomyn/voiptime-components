@@ -5,12 +5,12 @@
   import DocPreview from './helper/DocPreview.vue';
   import DocPropsTable, { TableSection } from './helper/DocPropsTable.vue';
   import DocFeature from './helper/DocFeature.vue';
-  import { icons } from '@/icons';
+  import { allIcons } from '@/components/icon/icons';
 
   const loadingButtons = ref<Set<string>>(new Set());
 
   const buttonTypes = ['default', 'primary', 'success', 'danger', 'warning', 'info'] as const;
-  const iconNames = Object.keys(icons).slice(0, 6);
+  const iconNames = Object.keys(allIcons).slice(0, 6);
 
   function simulateLoading(id: string) {
     loadingButtons.value.add(id);

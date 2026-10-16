@@ -46,8 +46,7 @@ src/icon-groups/
 (`<VIcon name="filter_save" color="#a82525" />`). Багатоколірні (месенджери, прапори, no-data,
 `phone_answer_call`, `phone_hangup_call`) зберігають оригінальні кольори.
 
-Старі іконки з `src/icons` (`arrowDown`, `filterSave`, ...) теж працюють у `VIcon`, але вони deprecated —
-для нового коду використовуйте іконки з груп. Усі доступні іконки — в демо, розділ **Icon Groups** (`npm run dev`).
+Усі доступні іконки — в демо, розділ **Icon Groups** (`npm run dev`).
 
 ## Налаштування токена Figma (один раз)
 
