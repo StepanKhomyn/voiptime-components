@@ -6,7 +6,7 @@
       </div>
 
       <div v-if="fileBase64" class="vt-avatar-upload__delete-btn" @click="removeImage">
-        <VIcon name="delete" />
+        <VIcon name="actions_delete" />
       </div>
     </div>
 
@@ -33,7 +33,7 @@
             <slot name="title" />
             <div class="vt-avatar-upload-close" @click="closePopup">
               <slot name="closeIcon" />
-              <VIcon name="close" />
+              <VIcon name="input_close" />
             </div>
           </div>
 

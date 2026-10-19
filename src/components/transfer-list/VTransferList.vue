@@ -312,26 +312,26 @@
     <div class="vt-transfer-list__controls">
       <VButton
         v-if="!fetchLeft"
-        shape="square" type="default" icon="arrowDoubleRight" tooltip
+        shape="square" type="default" icon="arrows_double_left" tooltip
         :disabled="!listOne.length"
         @click="moveAllToRight"
       >Move all right</VButton>
 
       <VButton
-        shape="square" type="default" icon="arrowRight" tooltip
+        shape="square" type="default" icon="arrows_right" tooltip
         :disabled="!activeLeft"
         @click="moveSingleToRight"
       >Move right</VButton>
 
       <VButton
-        shape="square" type="default" icon="arrowLeft" tooltip
+        shape="square" type="default" icon="arrows_left" tooltip
         :disabled="!activeRight"
         @click="moveSingleToLeft"
       >Move left</VButton>
 
       <VButton
         v-if="!fetchRight"
-        shape="square" type="default" icon="arrowDoubleLeft" tooltip
+        shape="square" type="default" icon="arrows_double_left" tooltip
         :disabled="!listTwo.length"
         @click="moveAllToLeft"
       >Move all left</VButton>

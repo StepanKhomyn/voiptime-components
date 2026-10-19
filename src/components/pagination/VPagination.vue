@@ -151,7 +151,7 @@
         :disabled="isPreviousDisabled"
         @click="goToPrevious"
       >
-        <VIcon name="arrowLeft" />
+        <VIcon name="arrows_left" />
       </button>
 
       <!-- Номери сторінок -->
@@ -173,13 +173,13 @@
         :disabled="isNextDisabled"
         @click="goToNext"
       >
-        <VIcon name="arrowRight" />
+        <VIcon name="arrows_right" />
       </button>
     </div>
 
     <!-- Релоад -->
     <div>
-      <VButton icon="arrowReload" shape="circle" tooltip tooltipPlacement="left" @click="reloadData"
+      <VButton icon="arrows_reload" shape="circle" tooltip tooltipPlacement="left" @click="reloadData"
         >{{ t(LOCALE_KEYS.PAGINATION_RELOAD) }}
       </VButton>
     </div>

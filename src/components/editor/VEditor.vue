@@ -325,7 +325,7 @@
         @click="scrollToolbar('left')"
         @mousedown.prevent
       >
-        <VIcon name="arrowLeft" />
+        <VIcon name="arrows_left" />
       </button>
 
       <div ref="toolbarRef" class="vt-editor__toolbar" @scroll="updateScrollButtons">
@@ -342,7 +342,7 @@
             trigger="hover"
             @mousedown.prevent
           >
-            <VIcon v-tooltip="t(LOCALE_KEYS.EDITOR_HEADING)" name="tagType" />
+            <VIcon v-tooltip="t(LOCALE_KEYS.EDITOR_HEADING)" name="text_editor_tag_type" />
             <template #dropdown>
               <VDropdownItem v-for="h in HEADING_GROUPS" :key="h.value" @click="applyBlock(h.value)" @mousedown.prevent>
                 {{ h.label }}
@@ -359,7 +359,7 @@
             trigger="hover"
             @mousedown.prevent
           >
-            <VIcon v-tooltip="t(LOCALE_KEYS.EDITOR_FONT)" name="fontName" />
+            <VIcon v-tooltip="t(LOCALE_KEYS.EDITOR_FONT)" name="text_editor_font_name" />
             <template #dropdown>
               <VDropdownItem v-for="f in FONT_GROUPS" :key="f.value" @click="applyFont(f.value)" @mousedown.prevent>
                 <span :style="{ fontFamily: f.value }">{{ f.label }}</span>
@@ -409,7 +409,7 @@
         @click="scrollToolbar('right')"
         @mousedown.prevent
       >
-        <VIcon name="arrowRight" />
+        <VIcon name="arrows_right" />
       </button>
     </div>
 

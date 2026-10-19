@@ -417,7 +417,7 @@
         >
           <VIcon
             :class="{ 'vt-columns-selector__panel-item-icon--draggable': canDragColumn(col) }"
-            :name="canDragColumn(col) ? 'columnsMove' : 'freeze'"
+            :name="canDragColumn(col) ? 'table_columns_move' : 'table_freeze'"
             class="vt-columns-selector__panel-item-icon"
           />
           <VCheckbox
@@ -465,7 +465,7 @@
             />
             <VIcon v-if="group.icon" :name="group.icon" class="vt-columns-selector__group-icon" />
 
-            <VIcon class="vt-columns-selector__group-toggle" name="arrowDown" />
+            <VIcon class="vt-columns-selector__group-toggle" name="arrows_down" />
           </div>
 
           <div
@@ -494,11 +494,11 @@
     <div class="vt-modal__content-button">
       <VButton @click="handleCancel">{{ t(LOCALE_KEYS.BUTTON_CANCEL) }}</VButton>
       <span v-tooltip="hasActiveColumns ? null : t(LOCALE_KEYS.TABLE_MIN_ONE_COLUMN)">
-        <VButton :disabled="!hasActiveColumns" icon="save" type="primary" @click="handleSave">
+        <VButton :disabled="!hasActiveColumns" icon="actions_save" type="primary" @click="handleSave">
           {{ t(LOCALE_KEYS.BUTTON_SAVE) }}
         </VButton>
       </span>
-      <VButton icon="arrowReload" shape="circle" tooltip tooltipPlacement="right" @click="resetColumnsToDefault">
+      <VButton icon="arrows_reload" shape="circle" tooltip tooltipPlacement="right" @click="resetColumnsToDefault">
         {{ t(LOCALE_KEYS.BUTTON_RESET) }}
       </VButton>
     </div>

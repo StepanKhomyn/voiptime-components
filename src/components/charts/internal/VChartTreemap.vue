@@ -139,7 +139,7 @@
   <div ref="wrapper" :style="{ height: containerHeight + 'px' }" class="vt-chart__treemap-wrapper">
     <div v-if="!layout.length" class="vt-chart__treemap-wrapper--empty">
       <div class="vt-chart__treemap-empty">
-        <VIcon name="empty" />
+        <VIcon name="files_empty" />
         <span>{{ t(LOCALE_KEYS.TABLE_EMPTY) }}</span>
       </div>
     </div>

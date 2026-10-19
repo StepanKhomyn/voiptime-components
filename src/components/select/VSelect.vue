@@ -1142,7 +1142,7 @@
             <VIcon
               v-if="!props.disabled"
               class="vt-select__tag-close"
-              name="close"
+              name="input_close"
               @click.stop="handleRemoveTag(option.value)"
             />
           </div>
@@ -1202,7 +1202,7 @@
           type="button"
           @click.stop="handleClear"
         >
-          <VIcon name="close" />
+          <VIcon name="input_close" />
         </button>
 
         <!-- Arrow icon -->
@@ -1210,7 +1210,7 @@
           v-else
           :class="{ 'vt-select__arrow--open': isDropdownVisible }"
           class="vt-select__icon vt-select__arrow"
-          name="arrowDown"
+          name="arrows_down"
         />
       </div>
 
@@ -1258,7 +1258,7 @@
               v-model="state.filterQuery.value"
               :placeholder="filterPlaceholderText"
               clearable
-              suffix-icon="search"
+              suffix-icon="input_search"
               type="text"
               @clear="handleFilterClear"
               @input="handleFilterInput"

@@ -14,7 +14,7 @@
         </slot>
       </div>
       <div :class="{ 'is-active': isActive }" class="vt-collapse-item__arrow">
-        <VIcon name="arrowRight" />
+        <VIcon name="arrows_right" />
       </div>
     </div>
 

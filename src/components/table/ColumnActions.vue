@@ -124,17 +124,17 @@
   <VDropdown placement="bottom-start" trigger="click" @command="handleCommand">
     <!-- Trigger -->
     <div class="vt-table-header-actions">
-      <VIcon name="listBullet" />
+      <VIcon name="table_list_bullet" />
     </div>
 
     <!-- Dropdown Menu -->
     <template #dropdown>
       <VDropdownItem command="pin">
-        <VIcon :name="isPinnedAny() ? 'unfreeze' : 'freeze'" />
+        <VIcon :name="isPinnedAny() ? 'table_unfreeze' : 'table_freeze'" />
         <div>{{ isPinnedAny() ? t(LOCALE_KEYS.TABLE_UNFREEZE) : t(LOCALE_KEYS.TABLE_FREEZE) }}</div>
       </VDropdownItem>
       <VDropdownItem command="columns">
-        <VIcon name="columnInsert" />
+        <VIcon name="table_column_insert" />
         <div>{{ t(LOCALE_KEYS.TABLE_COLUMNS) }}</div>
       </VDropdownItem>
     </template>

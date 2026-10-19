@@ -80,7 +80,7 @@
       trigger="click"
     >
       <div ref="dropdownTriggerRef">
-        <VButton icon="filterAdd" type="default">{{ t(LOCALE_KEYS.FILTER_MORE) }}</VButton>
+        <VButton icon="filter_add" type="default">{{ t(LOCALE_KEYS.FILTER_MORE) }}</VButton>
       </div>
       <template #dropdown>
         <div class="vt-page__card-filter__dropdown-target">

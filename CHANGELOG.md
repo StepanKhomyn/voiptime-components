@@ -1,3 +1,21 @@
+## [1.23.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.18...v1.23.19) (2026-10-16)
+
+
+### Bug Fixes
+
+* прибрано залишки посилань на видалені legacy-іконки (src/icons) ([4800684](https://github.com/StepanKhomyn/voiptime-components/commit/4800684e355806667b03f8540d63ac757f245394))
+
+## [1.23.18](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.17...v1.23.18) (2026-10-16)
+
+
+### Bug Fixes
+
+* remove legacy icons ([29a6ceb](https://github.com/StepanKhomyn/voiptime-components/commit/29a6ceb709f850d65c479056e957608a330aa0df))
+* remove legacy icons ([fbbc861](https://github.com/StepanKhomyn/voiptime-components/commit/fbbc861167afb1310e4ac55b75401032ab73f1c0))
+* remove legacy icons ([b814492](https://github.com/StepanKhomyn/voiptime-components/commit/b8144925439743179da6213f6bda9a2c92c3671f))
+* remove legacy icons ([f393420](https://github.com/StepanKhomyn/voiptime-components/commit/f3934200593557372bf23ab34b9113db199dadf8))
+* remove legacy icons ([a346cb0](https://github.com/StepanKhomyn/voiptime-components/commit/a346cb0b3150a53b49afcc0d03ea7b89c185fff0))
+
 ## [1.23.17](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.16...v1.23.17) (2026-10-14)
 
 

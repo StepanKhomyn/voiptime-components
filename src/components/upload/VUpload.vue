@@ -366,7 +366,7 @@
       <VButton
         v-else
         :disabled="isDisabled || !canAddMoreFiles"
-        icon="uploadCloud"
+        icon="files_upload_cloud"
         type="primary"
         @click="openFileDialog"
       >
@@ -378,7 +378,7 @@
     <div v-if="uploadedFiles.length > 0" class="vt-upload__list">
       <div v-for="file in uploadedFiles" :key="file.id" class="vt-upload__list-item">
         <div class="vt-upload__list-item-icon">
-          <VIcon name="fileDoc" />
+          <VIcon name="message_document" />
         </div>
 
         <div class="vt-upload__list-item-info">
@@ -387,7 +387,7 @@
         </div>
 
         <button :disabled="isDisabled" class="vt-upload__list-item-remove" type="button" @click="removeFile(file)">
-          <VIcon name="delete" />
+          <VIcon name="actions_delete" />
         </button>
       </div>
     </div>

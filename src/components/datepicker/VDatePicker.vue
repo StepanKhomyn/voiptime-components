@@ -1124,7 +1124,7 @@
 
       <div class="vt-datepicker__input">
         <div class="vt-datepicker__icon">
-          <VIcon :name="isDateTimeType ? 'clock' : 'calendar'" />
+          <VIcon :name="isDateTimeType ? 'calendar_timer' : 'calendar_calendar'" />
         </div>
 
         <div v-if="hasDisplayValue" class="vt-datepicker__text">
@@ -1160,7 +1160,7 @@
             type="button"
             @click.stop="handleClear"
           >
-            <VIcon name="close" />
+            <VIcon name="input_close" />
           </button>
         </div>
       </div>
@@ -1211,7 +1211,7 @@
                 </div>
                 <div class="vt-datepicker__header">
                   <button class="vt-datepicker__nav-btn" @click="navigatePrev">
-                    <VIcon name="arrowLeft" />
+                    <VIcon name="arrows_left" />
                   </button>
 
                   <div class="vt-datepicker__header-content">
@@ -1299,7 +1299,7 @@
                   </div>
 
                   <button class="vt-datepicker__nav-btn" @click="navigateNext">
-                    <VIcon name="arrowRight" />
+                    <VIcon name="arrows_right" />
                   </button>
                 </div>
 
@@ -1375,7 +1375,7 @@
               <!-- Calendar Header -->
               <div class="vt-datepicker__header">
                 <button class="vt-datepicker__nav-btn" @click="navigatePrev">
-                  <VIcon name="arrowLeft" />
+                  <VIcon name="arrows_left" />
                 </button>
 
                 <div class="vt-datepicker__header-content">
@@ -1401,7 +1401,7 @@
                 </div>
 
                 <button class="vt-datepicker__nav-btn" @click="navigateNext">
-                  <VIcon name="arrowRight" />
+                  <VIcon name="arrows_right" />
                 </button>
               </div>
 
