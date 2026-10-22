@@ -1,3 +1,11 @@
+## [1.23.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.19...v1.23.20) (2026-10-22)
+
+
+### Bug Fixes
+
+* VOIP-4668. Пагінація Клієнти: пропадає можливість скролу списку коли зменшити масштаб сторінки на вкладках де список завантажується при прокручуванню, та таким чином не спрацьовує тригер і нові записи не завантажуються у список ([1f38079](https://github.com/StepanKhomyn/voiptime-components/commit/1f380790f9756283a726bd8a22533e90a071b18c))
+* Додано сітчасту розмітку на grid ([e2daf98](https://github.com/StepanKhomyn/voiptime-components/commit/e2daf98352e094c8f97fae437af2dc4df2d7cc63))
+
 ## [1.23.19](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.18...v1.23.19) (2026-10-16)
 
 
