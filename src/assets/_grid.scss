@@ -1,0 +1,109 @@
+// ── Сітка карток (.vt-card-grid) ──────────────────────────────────────────────
+//
+// Розкладка кількох .vt-page__card на сторінці через CSS Grid.
+//
+//   .vt-card-grid                  — всі діти в один рядок, однакової ширини
+//   .vt-card-grid--cols-{1..12}    — N однакових колонок, діти переносяться рядами
+//   .vt-card-grid--rows-head       — перший рядок по висоті контенту, решта ділять залишок
+//   .vt-card-grid--rows-foot       — останній (другий) рядок по висоті контенту
+//   .vt-card-grid--rows-auto       — всі рядки по контенту, сітка скролиться
+//   .vt-card-grid--gap-{none|sm|lg}
+//   .vt-card-grid--responsive      — на вузьких екранах все в одну колонку
+//
+//   .vt-card-grid__span-{1..12}     — скільки колонок займає картка
+//   .vt-card-grid__span-full        — на всю ширину
+//   .vt-card-grid__row-span-{1..6}  — скільки рядків займає картка
+//
+// Нестандартні треки — через CSS-змінні інлайном:
+//   style="--vt-grid-cols: 300px minmax(0, 1fr); --vt-grid-rows: 120px minmax(0, 1fr)"
+
+$vt-grid-max-cols: 12;
+$vt-grid-max-rows: 6;
+
+.vt-card-grid {
+  display: grid;
+  grid-auto-flow: var(--vt-grid-flow, column);
+  grid-template-columns: var(--vt-grid-cols, none);
+  grid-template-rows: var(--vt-grid-rows, none);
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-rows: var(--vt-grid-auto-rows, minmax(0, 1fr));
+  gap: var(--vt-gap-base);
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+
+  // Картки займають всю клітинку і не роздувають трек контентом
+  > .vt-page__card {
+    height: auto;
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @for $i from 1 through $vt-grid-max-cols {
+    &--cols-#{$i} {
+      --vt-grid-flow: row;
+      --vt-grid-cols: repeat(#{$i}, minmax(0, 1fr));
+    }
+  }
+
+  // Тонкий рядок зверху (фільтр / статистика), решта рядків ділять висоту
+  &--rows-head {
+    --vt-grid-rows: auto;
+  }
+
+  // Тонкий рядок знизу під основним контентом
+  &--rows-foot {
+    --vt-grid-rows: minmax(0, 1fr) auto;
+  }
+
+  // Всі рядки по контенту — сторінка скролиться всередині сітки
+  &--rows-auto {
+    --vt-grid-auto-rows: auto;
+    align-content: start;
+    overflow-y: auto;
+  }
+
+  &--gap-none {
+    gap: 0;
+  }
+
+  &--gap-sm {
+    gap: var(--vt-gap-sm);
+  }
+
+  &--gap-lg {
+    gap: var(--vt-gap-lg);
+  }
+
+  &__span-full {
+    grid-column: 1 / -1;
+  }
+
+  @for $i from 1 through $vt-grid-max-cols {
+    &__span-#{$i} {
+      grid-column: span #{$i};
+    }
+  }
+
+  @for $i from 1 through $vt-grid-max-rows {
+    &__row-span-#{$i} {
+      grid-row: span #{$i};
+    }
+  }
+
+  &--responsive {
+    @media (max-width: 768px) {
+      --vt-grid-flow: row;
+      --vt-grid-cols: minmax(0, 1fr);
+      --vt-grid-auto-rows: auto;
+      align-content: start;
+      overflow-y: auto;
+
+      > * {
+        grid-column: 1 / -1;
+        grid-row: auto;
+      }
+    }
+  }
+}

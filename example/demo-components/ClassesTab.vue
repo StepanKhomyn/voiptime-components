@@ -1,6 +1,7 @@
 <script setup>
   import { ref } from 'vue';
   import PageLayoutAnatomy from './PageLayoutAnatomy.vue';
+  import PageGridBuilder from './PageGridBuilder.vue';
 
   defineOptions({ name: 'ClassesTab' });
 
@@ -8,6 +9,7 @@
 
   const subTabs = [
     { key: 'layout', label: 'Лейаут', ready: true },
+    { key: 'grid', label: 'Сітка карток', ready: true },
   ];
 
   function selectSub(tab) {
@@ -33,6 +35,7 @@
 
     <!-- Кожна анатомія — окремий компонент, підключений сюди за ключем -->
     <PageLayoutAnatomy v-if="activeSub === 'layout'" />
+    <PageGridBuilder v-else-if="activeSub === 'grid'" />
   </div>
 </template>
 
