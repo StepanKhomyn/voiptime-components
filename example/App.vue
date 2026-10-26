@@ -150,6 +150,7 @@
           <span class="docs-sidebar__logo-mark">VT</span>
         </div>
         <div>
+
           <div class="docs-sidebar__brand-name">VoIPTime UI</div>
           <div class="docs-sidebar__brand-version"> v{{ pkg.version }}</div>
         </div>
