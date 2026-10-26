@@ -116,7 +116,7 @@
         { name: 'Avatar Upload', icon: '📸', component: DemoAvatarUpload },
         { name: 'Badge', icon: '🔴', component: DemoBadge },
         { name: 'Login', icon: '🔐', component: DemoLogin },
-      ],
+      ]
     }
   ];
 
