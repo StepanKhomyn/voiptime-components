@@ -1,3 +1,10 @@
+## [1.23.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.21...v1.23.22) (2026-10-26)
+
+
+### Bug Fixes
+
+*  дропдауни з useDropdown (VSelect, VDropdown, VTimePicker, VDatePicker) повністю влазять у межі екрану. Якщо місця не вистачає ні знизу, ні зверху, дропдаун зсувається до краю з відступом 10px і може накрити поле ([be33f4e](https://github.com/StepanKhomyn/voiptime-components/commit/be33f4e98a0abfb7351b1a23f106244fd2f7ff78))
+
 ## [1.23.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.20...v1.23.21) (2026-10-26)
 
 
