@@ -194,6 +194,18 @@
       pointer-events: none;
     }
 
+    // Захист від глобальних ресетів у проєктах (напр. `* { font-weight: normal }`):
+    // execCommand('bold') визначає жирність за computed font-weight, тож <b> має бути жирним,
+    // а вкладені елементи — успадковувати жирність від батька
+    * {
+      font-weight: inherit;
+    }
+
+    b,
+    strong {
+      font-weight: bold;
+    }
+
     p {
       margin: 0 0 8px;
     }
