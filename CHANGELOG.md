@@ -1,3 +1,13 @@
+## [1.23.21](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.20...v1.23.21) (2026-10-26)
+
+
+### Bug Fixes
+
+* Правки стилів календаря (VOIP-4690) ([d34472f](https://github.com/StepanKhomyn/voiptime-components/commit/d34472f9e362768a34b32a38a78693f437d14805))
+* Правки стилів календаря (VOIP-4690) ([7e9b6ee](https://github.com/StepanKhomyn/voiptime-components/commit/7e9b6eedde35ba13137210562162e9f25d96b5ed))
+* Правки стилів календаря (VOIP-4690) ([9be0eaa](https://github.com/StepanKhomyn/voiptime-components/commit/9be0eaa8ce7ee16f7ba25a909806ab951dc80f6a))
+* Правки стилів календаря (VOIP-4690) 2 ([65aae62](https://github.com/StepanKhomyn/voiptime-components/commit/65aae62841519db34d9d3bb4b62a6f13c9e9a3d5))
+
 ## [1.23.20](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.19...v1.23.20) (2026-10-22)
 
 
