@@ -1,3 +1,10 @@
+## [1.23.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.22...v1.23.23) (2026-10-26)
+
+
+### Bug Fixes
+
+*  Виправлено стилі VEditor для жирності шрифтів ([054e5c3](https://github.com/StepanKhomyn/voiptime-components/commit/054e5c3080279d0c4b272001ed303b48f5469622))
+
 ## [1.23.22](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.21...v1.23.22) (2026-10-26)
 
 
