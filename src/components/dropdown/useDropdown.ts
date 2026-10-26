@@ -165,8 +165,11 @@ const calculateDropdownPosition = (
     }
   }
 
-  // Над полем не обрізаємо зверху, щоб не перекривати саме поле
-  if (!isAbove && top < window.scrollY + 10) top = window.scrollY + 10;
+  // Не вміщається ні знизу, ні зверху — зсуваємо в межі екрана, навіть якщо перекриє поле
+  const minTop = window.scrollY + 10;
+  const maxTop = window.scrollY + viewportHeight - height - 10;
+  if (top > maxTop) top = maxTop;
+  if (top < minTop) top = minTop;
 
   return {
     top: `${top}px`,
