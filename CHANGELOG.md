@@ -1,3 +1,10 @@
+## [1.23.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.23...v1.23.24) (2026-10-26)
+
+
+### Bug Fixes
+
+* Зміна кольорів полів форми (VOIP-4691). ([8ee8ad1](https://github.com/StepanKhomyn/voiptime-components/commit/8ee8ad1488f2f37337d6c1093f83c303c2abe265))
+
 ## [1.23.23](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.22...v1.23.23) (2026-10-26)
 
 
