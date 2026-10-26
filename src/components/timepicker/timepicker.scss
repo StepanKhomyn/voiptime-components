@@ -19,8 +19,14 @@
     .vt-timepicker__trigger {
       border-color: var(--color-gray-5);
       background-color: var(--color-gray-6);
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
       cursor: not-allowed;
+    }
+
+    .vt-timepicker__icon,
+    .vt-timepicker__text,
+    .vt-timepicker__placeholder {
+      color: var(--color-gray-3);
     }
   }
 
@@ -55,7 +61,7 @@
       top: 50%;
       transform: translateY(-50%);
       font-size: var(--font-size-sm);
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
       background-color: #ffffff;
       padding: 0 4px;
       pointer-events: none;
@@ -96,7 +102,7 @@
 
     &.vt-timepicker--disabled {
       .vt-timepicker__floating-label {
-        color: var(--color-gray-4);
+        color: var(--color-gray-3);
         background-color: var(--color-gray-6);
       }
     }
@@ -140,7 +146,7 @@
 
   &__icon {
     flex-shrink: 0;
-    color: var(--color-gray-4);
+    color: var(--color-gray-3);
     font-size: 14px;
     display: flex;
     align-items: center;
@@ -156,7 +162,7 @@
     flex: 1;
     width: 100%;
     min-width: 0;
-    color: var(--color-gray-4);
+    color: var(--color-gray-3);
     display: flex;
     flex-direction: row;
     align-items: center;

@@ -22,9 +22,15 @@
 
   &--disabled {
     .vt-datepicker__trigger {
-      background-color: #f5f5f5;
+      border-color: var(--color-gray-5);
+      background-color: var(--color-gray-6);
       cursor: not-allowed;
-      opacity: 0.6;
+    }
+
+    .vt-datepicker__icon,
+    .vt-datepicker__text,
+    .vt-datepicker__placeholder {
+      color: var(--color-gray-3);
     }
   }
 
@@ -73,7 +79,7 @@
   &__icon {
     display: flex;
     flex-shrink: 0;
-    color: var(--color-gray-4);
+    color: var(--color-gray-3);
   }
 
   &__text {
@@ -94,7 +100,7 @@
     flex: 1;
     width: 100%;
     min-width: 0;
-    color: var(--color-gray-4);
+    color: var(--color-gray-3);
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -125,7 +131,7 @@
     border: none;
     background: transparent;
     border-radius: var(--radius-main);
-    color: var(--color-gray-4);
+    color: var(--color-gray-3);
     cursor: pointer;
     transition: background-color 0.2s ease;
 
@@ -146,7 +152,7 @@
       top: 50%;
       transform: translateY(-50%);
       font-size: var(--font-size-sm);
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
       background-color: #ffffff;
       padding: 0 4px;
       pointer-events: none;
@@ -187,7 +193,7 @@
 
     &.vt-datepicker--disabled {
       .vt-datepicker__floating-label {
-        color: var(--color-gray-4);
+        color: var(--color-gray-3);
         background-color: var(--color-gray-6);
       }
     }
@@ -250,8 +256,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     border: none;
     border-radius: 4px;
     background: transparent;
@@ -266,8 +272,8 @@
   }
 
   &__nav-spacer {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
   }
 
   &__header-content {
@@ -296,10 +302,6 @@
     color: #606266;
     font-size: 14px;
     font-weight: 500;
-  }
-
-  &__content {
-    min-height: 200px;
   }
 
   &__weekdays {
@@ -428,15 +430,15 @@
   &__months {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-    padding: 0 16px;
+    gap: 2px;
+    padding: 0 10px;
   }
 
   &__month {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 48px;
+    height: 28px;
     border: none;
     border-radius: 4px;
     background: transparent;
@@ -482,15 +484,15 @@
   &__years {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    padding: 0 16px;
+    gap: 2px;
+    padding: 0 10px;
   }
 
   &__year {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 48px;
+    height: 28px;
     border: none;
     border-radius: 4px;
     background: transparent;
@@ -535,8 +537,11 @@
 
   &__time {
     display: flex;
-    padding: 0 10px 8px 10px;
-    border-bottom: 1px solid var(--color-gray-5);
+    padding: 0 10px 8px;
+
+    .vt-datepicker__dual-calendar & {
+      padding: 0 0 8px;
+    }
   }
 
   &__actions {

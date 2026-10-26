@@ -36,7 +36,7 @@
     pointer-events: none;
 
     .vt-editor__content {
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
     }
   }
 
@@ -184,13 +184,13 @@
     flex: 1;
     padding: 10px 12px;
     outline: none;
-    color: var(--color-gray-2);
+    color: var(--color-gray-1);
     word-break: break-word;
     overflow-wrap: break-word;
 
     &:empty::before {
       content: attr(data-placeholder);
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
       pointer-events: none;
     }
 
@@ -311,13 +311,13 @@
     border: 1px solid var(--color-gray-5);
     border-radius: var(--radius-main);
     background-color: var(--color-white);
-    color: var(--color-gray-2);
+    color: var(--color-gray-1);
     outline: none;
     transition: border-color 0.2s ease;
     box-sizing: border-box;
 
     &::placeholder {
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
     }
 
     &:focus {

@@ -1211,7 +1211,7 @@
                 </div>
                 <div class="vt-datepicker__header">
                   <button class="vt-datepicker__nav-btn" @click="navigatePrev">
-                    <VIcon name="arrows_left" />
+                    <VIcon :height="28" :width="28" name="arrows_left" />
                   </button>
 
                   <div class="vt-datepicker__header-content">
@@ -1299,7 +1299,7 @@
                   </div>
 
                   <button class="vt-datepicker__nav-btn" @click="navigateNext">
-                    <VIcon name="arrows_right" />
+                    <VIcon :height="28" :width="28" name="arrows_right" />
                   </button>
                 </div>
 
@@ -1375,7 +1375,7 @@
               <!-- Calendar Header -->
               <div class="vt-datepicker__header">
                 <button class="vt-datepicker__nav-btn" @click="navigatePrev">
-                  <VIcon name="arrows_left" />
+                  <VIcon :height="28" :width="28" name="arrows_left" />
                 </button>
 
                 <div class="vt-datepicker__header-content">
@@ -1401,7 +1401,7 @@
                 </div>
 
                 <button class="vt-datepicker__nav-btn" @click="navigateNext">
-                  <VIcon name="arrows_right" />
+                  <VIcon :height="28" :width="28" name="arrows_right" />
                 </button>
               </div>
 

@@ -2,7 +2,7 @@
 @use '../../assets/scrollbar' as *;
 
 :root {
-  --vt-select-text-color: #4F4F4F;
+  --vt-select-text-color: var(--color-gray-1);
 }
 
 .vt-select {
@@ -51,7 +51,7 @@
 
   &__placeholder {
     display: block;
-    color: var(--color-gray-4);
+    color: var(--color-gray-3);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -70,12 +70,12 @@
     min-width: 0;
 
     &::placeholder {
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
     }
 
     &:disabled {
       cursor: not-allowed;
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
     }
 
     &--filterable {
@@ -98,11 +98,11 @@
     border: none;
     outline: none;
     background: transparent;
-    color: var(--color-gray-2);
+    color: var(--color-gray-1);
     cursor: text;
 
     &::placeholder {
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
     }
   }
 
@@ -111,7 +111,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--vt-select-text-color, var(--color-gray-4));
+    color: var(--vt-select-icon-color, var(--color-gray-3));
   }
 
   &__prefix {
@@ -124,7 +124,7 @@
 
   &__icon {
     flex-shrink: 0;
-    color: var(--vt-select-text-color, var(--color-gray-4));
+    color: var(--vt-select-icon-color, var(--color-gray-3));
     transition: color 0.2s ease-in-out;
 
     &--error {
@@ -246,7 +246,7 @@
       background: transparent;
       border-radius: 50%;
       cursor: pointer;
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
       transition: all 0.2s ease;
 
       &:hover {
@@ -316,6 +316,7 @@
     .vt-select__container {
       border-color: var(--color-gray-5);
       background-color: var(--color-gray-6);
+      color: var(--color-gray-3);
       cursor: not-allowed;
     }
 
@@ -323,8 +324,10 @@
       cursor: not-allowed;
     }
 
+    .vt-select__prefix,
+    .vt-select__suffix,
     .vt-select__icon {
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
     }
   }
 
@@ -337,7 +340,7 @@
       top: 50%;
       transform: translateY(-50%);
       font-size: var(--font-size-sm);
-      color: var(--color-gray-4);
+      color: var(--color-gray-3);
       background-color: #ffffff;
       padding: 0 4px;
       pointer-events: none;
@@ -390,7 +393,7 @@
 
     &.vt-select--disabled {
       .vt-select__floating-label {
-        color: var(--color-gray-4);
+        color: var(--color-gray-3);
         background-color: var(--color-gray-6);
       }
     }
