@@ -1,3 +1,10 @@
+## [1.23.25](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.24...v1.23.25) (2026-10-27)
+
+
+### Bug Fixes
+
+* Тимчасова сумісність зі старими назвами іконок через legacyIconMap ([5743021](https://github.com/StepanKhomyn/voiptime-components/commit/57430212e9e6717f118f92f4644f7db8e755f600))
+
 ## [1.23.24](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.23...v1.23.24) (2026-10-26)
 
 
