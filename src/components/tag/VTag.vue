@@ -95,16 +95,37 @@
   const isCollapsed = ref(false);
   const labelText = ref('');
 
-  // Ширина батька в момент згортання і скільки px тексту тоді бракувало до minLabelWidth.
-  // Розгортаємо, лише коли батько виріс щонайменше на цей дефіцит — інакше тег блимав би при кожному ресайзі
-  let collapsedParentWidth = 0;
-  let collapseDeficit = 0;
+  // Предки, за якими стежимо, і їхня ширина в момент згортання.
+  // Безпосередній батько часто має ширину за вмістом (флекс-обгортка, тригер дропдауна) і стискається
+  // разом зі згорнутим тегом — тому дивимось весь ланцюжок до першого предка з незалежною від вмісту шириною
+  let ancestors: HTMLElement[] = [];
+  let collapsedWidths = new Map<HTMLElement, number>();
 
-  const getParentWidth = () => rootRef.value?.parentElement?.clientWidth ?? 0;
+  // Блоковий елемент, що не є флекс/грід-айтемом, заповнює контейнер, а не підлаштовується під вміст
+  const isLayoutBoundary = (el: HTMLElement) => {
+    const isInline = getComputedStyle(el).display.startsWith('inline');
+    const parentDisplay = el.parentElement ? getComputedStyle(el.parentElement).display : '';
+    return !isInline && !/flex|grid/.test(parentDisplay);
+  };
+
+  const collectAncestors = (el: HTMLElement) => {
+    const result: HTMLElement[] = [];
+    let node = el.parentElement;
+    while (node && node !== document.body) {
+      result.push(node);
+      if (isLayoutBoundary(node)) break;
+      node = node.parentElement;
+    }
+    return result;
+  };
+
+  const hasMoreSpace = () => ancestors.some(el => el.clientWidth > (collapsedWidths.get(el) ?? Infinity));
 
   const measure = () => {
+    // Місця побільшало — пробуємо розгорнути: measure після рендера згорне назад, якщо тексту все ще тісно.
+    // Усе відбувається до відмальовки кадру, тож тег не блимає
     if (isCollapsed.value) {
-      if (getParentWidth() >= collapsedParentWidth + collapseDeficit) expand();
+      if (hasMoreSpace()) expand();
       return;
     }
 
@@ -118,8 +139,7 @@
     isTruncated.value = isElementOverflowing(label);
 
     if (canCollapse.value && isTruncated.value && label.clientWidth < props.minLabelWidth) {
-      collapsedParentWidth = getParentWidth();
-      collapseDeficit = props.minLabelWidth - label.clientWidth;
+      collapsedWidths = new Map(ancestors.map(el => [el, el.clientWidth]));
       isCollapsed.value = true;
     }
   };
@@ -141,9 +161,10 @@
     const root = rootRef.value;
     if (!root) return;
 
+    ancestors = collectAncestors(root);
     observer = new ResizeObserver(scheduleMeasure);
     observer.observe(root);
-    if (root.parentElement) observer.observe(root.parentElement);
+    ancestors.forEach(el => observer!.observe(el));
     measure();
   });
 

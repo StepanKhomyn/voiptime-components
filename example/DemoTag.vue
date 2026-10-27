@@ -208,6 +208,18 @@
           <div :style="{ width: `${containerWidth}px` }" class="tag-showcase__box">
             <VTag color="danger" label="Без іконки — тільки обрізання тексту з тултіпом" />
           </div>
+          <div :style="{ width: `${containerWidth}px` }" class="tag-showcase__box">
+            <!-- Обгортка з шириною за вмістом (як тригер дропдауна) — стискається разом зі згорнутим тегом -->
+            <div class="tag-showcase__fit">
+              <VTag
+                clickable
+                color="warning"
+                dot
+                label="Тег у дропдауні, що розгортається назад"
+                suffix-icon="arrows_down"
+              />
+            </div>
+          </div>
         </div>
       </DocPreview>
 
@@ -290,6 +302,11 @@ const removeTag = tag => (tags.value = tags.value.filter(t => t !== tag))`"
       max-width: 400px;
       color: var(--color-gray-2);
       font-size: 12px;
+    }
+
+    &__fit {
+      display: flex;
+      min-width: 0;
     }
 
     &__box {
