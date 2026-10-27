@@ -208,8 +208,8 @@ export const tooltipDirective: ObjectDirective = {
       if (!text) return;
 
       // Якщо елемент в таблиці, показуємо тільки при overflow
-      // Інакше показуємо завжди
-      if (isInTable(el) && !hasTextOverflow(el)) return;
+      // Інакше показуємо завжди. Модифікатор .always — компонент сам вирішує, коли потрібен тултіп
+      if (!binding.modifiers.always && isInTable(el) && !hasTextOverflow(el)) return;
 
       const placement = getPlacement(el);
       if (!el.__tooltipEl) {

@@ -42,6 +42,7 @@ import VAudio from '@/components/audio/VAudio.vue';
 import VEmpty from '@/components/empty/VEmpty.vue';
 import VEditor from '@/components/editor/VEditor.vue';
 import VBadge from '@/components/badge/VBadge.vue';
+import VTag from '@/components/tag/VTag.vue';
 import VAppBar from '@/components/app-bar/VAppBar.vue';
 import VNavRail from '@/components/nav-rail/VNavRail.vue';
 
@@ -97,6 +98,7 @@ export {
   VEmpty,
   VEditor,
   VBadge,
+  VTag,
   VAppBar,
   VNavRail,
 };
@@ -289,6 +291,10 @@ export type { VtEditorProps, VtEditorEmits, VtEditorCommand } from './components
 //BadgeProps
 export type { VBadgeProps } from './components/badge/types';
 
+//TagProps
+export type { VTagProps, VTagEmits, VTagColor, VTagPresetColor, VTagSize, VTagVariant } from './components/tag/types';
+export { TAG_PRESET_COLORS } from './components/tag/types';
+
 //AppBarProps
 export type { VAppBarProps } from './components/app-bar/types';
 
@@ -379,6 +385,7 @@ const VUIPlugin = {
     app.component(`${prefix}Empty`, VEmpty);
     app.component(`${prefix}Editor`, VEditor);
     app.component(`${prefix}Badge`, VBadge);
+    app.component(`${prefix}Tag`, VTag);
     app.component(`${prefix}AppBar`, VAppBar);
     app.component(`${prefix}NavRail`, VNavRail);
 

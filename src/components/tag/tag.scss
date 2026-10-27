@@ -1,0 +1,200 @@
+// Усі відтінки тега виводяться з одного основного кольору --vt-tag-main.
+// Пресети перевизначають їх токенами палітри. Довільний колір задається inline-змінною:
+// фон і бордер — напівпрозорі від нього (лягають на будь-яку підкладку),
+// а --vt-tag-text / --vt-tag-on-main VTag підбирає під контраст (color.ts)
+.vt-tag {
+  --vt-tag-main: var(--color-primary-main);
+  --vt-tag-bg: color-mix(in srgb, var(--vt-tag-main) 12%, transparent);
+  --vt-tag-border: color-mix(in srgb, var(--vt-tag-main) 35%, transparent);
+  --vt-tag-text: var(--vt-tag-main);
+  --vt-tag-on-main: var(--color-white);
+  // Ховер — фон трохи ближче до основного кольору, працює і для токенів, і для довільного кольору
+  --vt-tag-hover-bg: color-mix(in srgb, var(--vt-tag-bg), var(--vt-tag-main) 10%);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+  height: 24px;
+  padding: 0 8px;
+  border: 1px solid var(--vt-tag-border);
+  border-radius: var(--radius-main, 5px);
+  background-color: var(--vt-tag-bg);
+  color: var(--vt-tag-text);
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  box-sizing: border-box;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &__label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      display: block;
+    }
+  }
+
+  &__dot {
+    flex-shrink: 0;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--vt-tag-main);
+  }
+
+  &__close {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    margin-right: -4px;
+    padding: 0;
+    border: none;
+    border-radius: 3px;
+    background: transparent;
+    color: inherit;
+    opacity: 0.7;
+    cursor: pointer;
+    transition:
+      opacity 0.15s ease,
+      background-color 0.15s ease;
+
+    &:hover:not(:disabled) {
+      opacity: 1;
+      background-color: color-mix(in srgb, currentColor 15%, transparent);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
+
+  // ─── Розміри ───
+  &--sm {
+    height: 20px;
+    padding: 0 6px;
+    font-size: 11px;
+  }
+
+  &--lg {
+    gap: 6px;
+    height: 28px;
+    padding: 0 10px;
+    font-size: 13px;
+  }
+
+  &--collapsed {
+    justify-content: center;
+    padding: 0;
+    aspect-ratio: 1;
+  }
+
+  // ─── Варіанти ───
+  &--outline {
+    background-color: transparent;
+    border-color: color-mix(in srgb, var(--vt-tag-main) 60%, transparent);
+  }
+
+  &--solid {
+    background-color: var(--vt-tag-main);
+    border-color: var(--vt-tag-main);
+    color: var(--vt-tag-on-main);
+
+    .vt-tag__dot {
+      background-color: var(--vt-tag-on-main);
+    }
+  }
+
+  // ─── Стани ───
+  &--clickable {
+    cursor: pointer;
+    user-select: none;
+
+    &:focus-visible {
+      outline: none;
+      box-shadow: 0 0 0 2px color-mix(in srgb, var(--vt-tag-main) 30%, transparent);
+    }
+
+    &.vt-tag--soft:hover {
+      background-color: var(--vt-tag-hover-bg);
+    }
+
+    &.vt-tag--outline:hover {
+      background-color: var(--vt-tag-bg);
+    }
+
+    &.vt-tag--solid:hover {
+      background-color: color-mix(in srgb, var(--vt-tag-main) 85%, #000);
+      border-color: color-mix(in srgb, var(--vt-tag-main) 85%, #000);
+    }
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  // ─── Пресети: токени палітри бібліотеки ───
+  &--primary {
+    --vt-tag-main: var(--color-primary-main);
+    --vt-tag-bg: var(--color-primary-light);
+    --vt-tag-border: var(--color-primary-border);
+    --vt-tag-text: var(--color-primary-main);
+  }
+
+  &--success {
+    --vt-tag-main: var(--color-success-main);
+    --vt-tag-bg: var(--color-success-bg);
+    --vt-tag-border: var(--color-success-border);
+    --vt-tag-text: var(--color-success-main);
+  }
+
+  &--danger {
+    --vt-tag-main: var(--color-danger-main);
+    --vt-tag-bg: var(--color-danger-bg);
+    --vt-tag-border: var(--color-danger-border);
+    --vt-tag-text: var(--color-danger-main);
+  }
+
+  // Світлі кольори: текст темніший за основний, на solid — темний текст
+  &--warning {
+    --vt-tag-main: var(--color-warning-main);
+    --vt-tag-bg: var(--color-warning-bg);
+    --vt-tag-border: var(--color-warning-border);
+    --vt-tag-text: var(--color-warning-pressed);
+    --vt-tag-on-main: var(--color-gray-1);
+  }
+
+  &--yellow {
+    --vt-tag-main: var(--color-yellow-main);
+    --vt-tag-bg: var(--color-yellow-bg);
+    --vt-tag-border: var(--color-yellow-border);
+    --vt-tag-text: color-mix(in srgb, var(--color-yellow-pressed) 70%, #000);
+    --vt-tag-on-main: var(--color-gray-1);
+  }
+
+  &--gray {
+    --vt-tag-main: var(--color-gray-3);
+    --vt-tag-bg: var(--color-gray-6);
+    --vt-tag-border: var(--color-gray-5);
+    --vt-tag-text: var(--color-gray-2);
+  }
+}

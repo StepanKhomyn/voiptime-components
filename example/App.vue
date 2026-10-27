@@ -38,6 +38,7 @@
   import DemoColorPicker from './DemoColorPicker.vue';
   import DemoEditor from './DemoEditor.vue';
   import DemoBadge from './DemoBadge.vue';
+  import DemoTag from './DemoTag.vue';
   import DemoAppBar from './DemoAppBar.vue';
   import DemoNavRail from './DemoNavRail.vue';
 
@@ -115,6 +116,7 @@
         { name: 'Avatar', icon: '👤', component: DemoAvatar },
         { name: 'Avatar Upload', icon: '📸', component: DemoAvatarUpload },
         { name: 'Badge', icon: '🔴', component: DemoBadge },
+        { name: 'Tag', icon: '🏷️', component: DemoTag },
         { name: 'Login', icon: '🔐', component: DemoLogin },
       ]
     }
