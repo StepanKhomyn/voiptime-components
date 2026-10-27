@@ -2,6 +2,7 @@
   import { computed } from 'vue';
   import type { IconName } from './icons';
   import { groupIcons } from '@/icon-groups';
+  import { legacyIconMap } from './legacyIconMap';
 
   interface Props {
     name: IconName;
@@ -14,7 +15,12 @@
     color: 'currentColor',
   });
 
-  const Icon = computed(() => groupIcons[props.name]);
+  // Стара назва (deprecated) -> нова через legacyIconMap
+  const Icon = computed(
+    () =>
+      groupIcons[props.name as keyof typeof groupIcons] ??
+      groupIcons[legacyIconMap[props.name as keyof typeof legacyIconMap]]
+  );
 
   const iconStyle = computed(() => ({
     ...(props.width && { width: typeof props.width === 'number' ? `${props.width}px` : props.width }),
