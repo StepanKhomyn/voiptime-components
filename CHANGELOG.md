@@ -1,3 +1,10 @@
+## [1.23.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.25...v1.23.26) (2026-10-27)
+
+
+### Bug Fixes
+
+* VSelect textColor знову фарбує іконки селекта ([4f5b614](https://github.com/StepanKhomyn/voiptime-components/commit/4f5b614aedf71790452237100ae618567be1ceeb))
+
 ## [1.23.25](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.24...v1.23.25) (2026-10-27)
 
 
