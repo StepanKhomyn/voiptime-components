@@ -312,7 +312,7 @@
     <div class="vt-transfer-list__controls">
       <VButton
         v-if="!fetchLeft"
-        shape="square" type="default" icon="arrows_double_left" tooltip
+        shape="square" type="default" icon="arrows_double_right" tooltip
         :disabled="!listOne.length"
         @click="moveAllToRight"
       >Move all right</VButton>
