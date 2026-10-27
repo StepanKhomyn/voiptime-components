@@ -1,3 +1,10 @@
+## [1.24.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.0...v1.24.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* VTag не розгортався назад ([4ec94fe](https://github.com/StepanKhomyn/voiptime-components/commit/4ec94fe8fa1c846f3aad7f1a59f20dfd35ed644b))
+
 # [1.24.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.26...v1.24.0) (2026-10-27)
 
 
