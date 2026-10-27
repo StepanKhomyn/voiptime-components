@@ -1,3 +1,10 @@
+## [1.24.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.1...v1.24.2) (2026-10-27)
+
+
+### Bug Fixes
+
+* Виправлено іконки в компоенеті трансфер ліста ([95eb423](https://github.com/StepanKhomyn/voiptime-components/commit/95eb423705586e41b964adf0b729c1e8fbb8ec96))
+
 ## [1.24.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.0...v1.24.1) (2026-10-27)
 
 
