@@ -1,3 +1,10 @@
+# [1.24.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.26...v1.24.0) (2026-10-27)
+
+
+### Features
+
+* VTag — компонента тега з обрізанням тексту та згортанням до іконки ([8fb1f51](https://github.com/StepanKhomyn/voiptime-components/commit/8fb1f511c4514d12f5cab14326a9956f885627de))
+
 ## [1.23.26](https://github.com/StepanKhomyn/voiptime-components/compare/v1.23.25...v1.23.26) (2026-10-27)
 
 
