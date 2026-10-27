@@ -599,7 +599,10 @@
 
     if (props.backgroundColor) parts.push(`background-color: ${props.backgroundColor}`);
     if (props.borderColor) parts.push(`border-color: ${props.borderColor}`);
-    if (props.textColor) parts.push(`--vt-select-text-color: ${props.textColor} !important`);
+    if (props.textColor) {
+      parts.push(`--vt-select-text-color: ${props.textColor} !important`);
+      parts.push(`--vt-select-icon-color: ${props.textColor} !important`);
+    }
 
     return parts.join('; ');
   });
