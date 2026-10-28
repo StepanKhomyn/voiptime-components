@@ -39,6 +39,7 @@
   import DemoEditor from './DemoEditor.vue';
   import DemoBadge from './DemoBadge.vue';
   import DemoTag from './DemoTag.vue';
+  import DemoDivider from './DemoDivider.vue';
   import DemoAppBar from './DemoAppBar.vue';
   import DemoNavRail from './DemoNavRail.vue';
 
@@ -117,6 +118,7 @@
         { name: 'Avatar Upload', icon: '📸', component: DemoAvatarUpload },
         { name: 'Badge', icon: '🔴', component: DemoBadge },
         { name: 'Tag', icon: '🏷️', component: DemoTag },
+        { name: 'Divider', icon: '➖', component: DemoDivider },
         { name: 'Login', icon: '🔐', component: DemoLogin },
       ]
     }

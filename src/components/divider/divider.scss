@@ -1,0 +1,39 @@
+.vt-divider {
+  --vt-divider-bg: var(--color-primary-light);
+  --vt-divider-color: var(--color-primary-main);
+  --vt-divider-line-color: var(--color-primary-border);
+  --vt-divider-font-size: 12px;
+
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+
+  &__label {
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 0 10px;
+    border-radius: 999px;
+    background-color: var(--vt-divider-bg);
+    color: var(--vt-divider-color);
+    font-size: var(--vt-divider-font-size);
+    font-weight: 500;
+    line-height: 27px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+  }
+
+  &__line {
+    flex: 1 1 0;
+    min-width: 0;
+    height: 1px;
+    background-color: var(--vt-divider-line-color);
+  }
+
+  // Відступ між плашкою та лінією — лише коли є текст
+  &__label + &__line {
+    margin-left: 10px;
+  }
+}
