@@ -1,3 +1,10 @@
+## [1.24.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.2...v1.24.3) (2026-10-28)
+
+
+### Bug Fixes
+
+* new divider component ([7f92a2b](https://github.com/StepanKhomyn/voiptime-components/commit/7f92a2b944aeace2c94ccb5effc6c26ae5d04150))
+
 ## [1.24.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.1...v1.24.2) (2026-10-27)
 
 
