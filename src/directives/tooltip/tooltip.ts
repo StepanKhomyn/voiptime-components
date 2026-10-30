@@ -7,7 +7,6 @@ type TooltipHTMLElement = HTMLElement & {
   __tooltipText?: string;
   __mouseenterHandler?: () => void;
   __mouseleaveHandler?: () => void;
-  __scrollHandler?: () => void;
 };
 
 // Функція для створення tooltip елемента
@@ -192,8 +191,35 @@ const getPlacement = (el: HTMLElement): TooltipPlacement => (el.dataset.placemen
 
 const getBindingText = (binding: DirectiveBinding<string>): string => binding.value?.trim() ?? '';
 
+// Показані tooltip'и. Позицію при скролі/ресайзі оновлюємо лише їм через один спільний слухач,
+// а не через окрему пару слухачів на window для кожного елемента з v-tooltip.
+const visibleTooltips = new Set<TooltipHTMLElement>();
+
+const updateVisiblePositions = () => {
+  visibleTooltips.forEach(el => {
+    if (el.__tooltipEl?.style.opacity === '1') {
+      positionTooltip(el.__tooltipEl, el, getPlacement(el));
+    }
+  });
+};
+
+const trackVisible = (el: TooltipHTMLElement) => {
+  if (!visibleTooltips.size) {
+    window.addEventListener('scroll', updateVisiblePositions, true);
+    window.addEventListener('resize', updateVisiblePositions);
+  }
+  visibleTooltips.add(el);
+};
+
+const untrackVisible = (el: TooltipHTMLElement) => {
+  if (!visibleTooltips.delete(el) || visibleTooltips.size) return;
+  window.removeEventListener('scroll', updateVisiblePositions, true);
+  window.removeEventListener('resize', updateVisiblePositions);
+};
+
 // Видаляємо tooltip з DOM (обробники залишаються і створять його знову при потребі)
 const removeTooltip = (el: TooltipHTMLElement) => {
+  untrackVisible(el);
   el.__tooltipEl?.remove();
   delete el.__tooltipEl;
 };
@@ -217,29 +243,19 @@ export const tooltipDirective: ObjectDirective = {
       }
 
       showTooltip(el.__tooltipEl, el, placement);
+      trackVisible(el);
     };
 
     const hide = () => {
       if (el.__tooltipEl) hideTooltip(el.__tooltipEl);
-    };
-
-    // Оновлюємо позицію при скролі
-    const updatePosition = () => {
-      if (el.__tooltipEl?.style.opacity === '1') {
-        positionTooltip(el.__tooltipEl, el, getPlacement(el));
-      }
+      untrackVisible(el);
     };
 
     el.__mouseenterHandler = show;
     el.__mouseleaveHandler = hide;
-    el.__scrollHandler = updatePosition;
 
     el.addEventListener('mouseenter', show);
     el.addEventListener('mouseleave', hide);
-
-    // Додаємо обробник скролу для оновлення позиції
-    window.addEventListener('scroll', updatePosition, true);
-    window.addEventListener('resize', updatePosition);
   },
 
   updated(el: TooltipHTMLElement, binding: DirectiveBinding<string>) {
@@ -271,12 +287,6 @@ export const tooltipDirective: ObjectDirective = {
     if (el.__mouseleaveHandler) {
       el.removeEventListener('mouseleave', el.__mouseleaveHandler);
       delete el.__mouseleaveHandler;
-    }
-
-    if (el.__scrollHandler) {
-      window.removeEventListener('scroll', el.__scrollHandler, true);
-      window.removeEventListener('resize', el.__scrollHandler);
-      delete el.__scrollHandler;
     }
   },
 };

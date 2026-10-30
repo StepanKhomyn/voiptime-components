@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, onMounted, onUnmounted, provide, reactive, ref, watch } from 'vue';
+  import { computed, onMounted, onUnmounted, onUpdated, provide, reactive, ref, watch } from 'vue';
   import type { SortDirection, SortState, VTableColumnProps, VTableEmits, VTableProps } from './types';
   import { useColumnResize, useTableColumns, useTableStyles } from './functions/composables';
   import { useTableSelection } from './functions/useTableSelection';
@@ -10,6 +10,7 @@
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
   import { useI18n } from '@/locales/useI18n';
   import VEmpty from '@/components/empty/VEmpty.vue';
+  import VTableRow from './VTableRow.vue';
 
   const props = withDefaults(defineProps<VTableProps>(), {
     selectable: false,
@@ -28,6 +29,8 @@
     defaultColumns: undefined,
     rowDraggable: false,
     showDragHandle: true,
+    virtualScroll: false,
+    virtualRowHeight: undefined,
   });
 
   const { t } = useI18n();
@@ -56,6 +59,77 @@
 
   const sortedData = computed(() => {
     return sortTableData(props.data || [], sortState.value, internalColumns);
+  });
+
+  // ─── Віртуальний скрол (опційно) ────────────────────────────────────────
+  // Рендеримо лише видимі рядки, а висоту решти тримаємо рядками-розпірками,
+  // щоб скролбар і infinity-scroll поводились як з повним списком.
+
+  const VIRTUAL_BUFFER = 10;
+  const DEFAULT_VIRTUAL_ROW_HEIGHT = 36;
+
+  const isVirtual = computed(() => props.virtualScroll && !props.rowDraggable);
+  const viewport = reactive({ scrollTop: 0, height: 0 });
+  const measuredRowHeight = ref(0);
+  const virtualRowHeight = computed(
+    () => props.virtualRowHeight || measuredRowHeight.value || DEFAULT_VIRTUAL_ROW_HEIGHT
+  );
+
+  const virtualRange = computed(() => {
+    const total = sortedData.value.length;
+    if (!isVirtual.value) return { start: 0, end: total };
+
+    const rowHeight = virtualRowHeight.value;
+    // До першого виміру висоти рендеримо з запасом під типовий екран
+    const height = viewport.height || 1000;
+    const end = Math.min(total, Math.ceil((viewport.scrollTop + height) / rowHeight) + VIRTUAL_BUFFER);
+    const start = Math.min(end, Math.max(0, Math.floor(viewport.scrollTop / rowHeight) - VIRTUAL_BUFFER));
+
+    return { start, end };
+  });
+
+  const visibleRows = computed(() => {
+    if (!isVirtual.value) return sortedData.value;
+    const { start, end } = virtualRange.value;
+    return sortedData.value.slice(start, end);
+  });
+
+  const virtualTopSpace = computed(() => (isVirtual.value ? virtualRange.value.start * virtualRowHeight.value : 0));
+  const virtualBottomSpace = computed(() =>
+    isVirtual.value ? (sortedData.value.length - virtualRange.value.end) * virtualRowHeight.value : 0
+  );
+
+  let viewportFrame: number | null = null;
+  const updateViewport = () => {
+    if (!isVirtual.value || viewportFrame !== null) return;
+    viewportFrame = requestAnimationFrame(() => {
+      viewportFrame = null;
+      const wrapper = tableWrapperRef.value;
+      if (!wrapper) return;
+      viewport.scrollTop = wrapper.scrollTop;
+      viewport.height = wrapper.clientHeight;
+    });
+  };
+
+  const measureVirtualRowHeight = () => {
+    if (!isVirtual.value || props.virtualRowHeight || measuredRowHeight.value) return;
+    const row = tableWrapperRef.value?.querySelector<HTMLElement>('tbody tr.vt-table__row');
+    if (row?.offsetHeight) measuredRowHeight.value = row.offsetHeight;
+  };
+
+  let viewportResizeObserver: ResizeObserver | null = null;
+
+  onMounted(() => {
+    if (!tableWrapperRef.value || typeof ResizeObserver === 'undefined') return;
+    viewportResizeObserver = new ResizeObserver(updateViewport);
+    viewportResizeObserver.observe(tableWrapperRef.value);
+  });
+
+  onUpdated(measureVirtualRowHeight);
+
+  onUnmounted(() => {
+    viewportResizeObserver?.disconnect();
+    if (viewportFrame !== null) cancelAnimationFrame(viewportFrame);
   });
 
   const hasColumnsModel = computed(() => modelColumns.value !== undefined);
@@ -204,6 +278,7 @@
   };
 
   const handleScroll = () => {
+    updateViewport();
     if (!tableWrapperRef.value || infinityScrollTriggered.value) return;
 
     const wrapper = tableWrapperRef.value;
@@ -365,6 +440,11 @@
       getDefaultColumnWidth
     );
   };
+
+  // Стилі клітинок однакові для всіх рядків — рахуємо раз на зміну колонок, а не на кожну клітинку
+  const cellStyles = computed(() => sortedColumns.value.map((col, index) => getColumnStyleWithContext(col, index)));
+  const selectionColumnStyle = computed(() => getSelectionColumnStyle());
+  const dragHandleColumnStyle = computed(() => getDragHandleColumnStyle());
 
   const getHeaderStyleWithContext = (col: VTableColumnProps, index: number) => {
     return getHeaderStyle(
@@ -594,104 +674,37 @@
         </tr>
       </thead>
       <tbody v-if="hasData">
-        <template v-for="(row, rowIndex) in sortedData" :key="createRowKey(row, rowIndex)">
-          <tr
-            :class="{
-              'vt-table__row--insert-before': dragComposable?.shouldShowInsertLine(rowIndex, 'before'),
-            }"
-          ></tr>
-          <tr
-            :class="[
-              'vt-table__row',
-              {
-                'vt-table__row--selected': selectionComposable?.isRowSelected(row),
-                'vt-table__row--current': selectionComposable?.currentRow.value === row,
-                'vt-table__row--clickable': props.selectOnClickRow || props.highlightCurrentRow,
-                'vt-table__row--draggable': props.rowDraggable,
-              },
-              ...getRowHighlightClasses(row, rowIndex),
-            ]"
-            :draggable="props.rowDraggable"
-            @click="handleRowClick(row, sortedColumns[0], $event)"
-            @dblclick="onRowDblClick(row, sortedColumns[0], $event)"
-            @dragend="dragComposable ? dragComposable.handleDragEnd($event) : null"
-            @dragenter="dragComposable ? dragComposable.handleDragEnter($event, rowIndex) : null"
-            @dragleave="dragComposable ? dragComposable.handleDragLeave($event) : null"
-            @dragover="dragComposable ? dragComposable.handleDragOver($event, rowIndex) : null"
-            @dragstart="dragComposable ? dragComposable.handleDragStart($event, row, rowIndex) : null"
-            @drop="dragComposable ? dragComposable.handleDrop($event, rowIndex) : null"
-          >
-            <td
-              v-if="props.selectable"
-              :class="{
-                'vt-table__td--pinned-left': true,
-              }"
-              :style="getSelectionColumnStyle()"
-              class="vt-table__td vt-table__td--selection"
-            >
-              <div class="vt-table__cell-content vt-table__cell-content--selection">
-                <VCheckbox
-                  :checked="selectionComposable?.isRowSelected(row)"
-                  @change="(isChecked, event) => handleCheckboxChange(isChecked, row, event)"
-                />
-              </div>
-            </td>
-
-            <td
-              v-if="props.rowDraggable && props.showDragHandle"
-              :class="{
-                'vt-table__td--pinned-left': true,
-              }"
-              :style="getDragHandleColumnStyle()"
-              class="vt-table__td vt-table__td--drag-handle"
-            >
-              <div class="vt-table__cell-content vt-table__drag-handle">
-                <VIcon name="table_columns_move" />
-              </div>
-            </td>
-
-            <td
-              v-for="(col, colIndex) in sortedColumns"
-              :key="`${createRowKey(row, rowIndex)}-${col.prop}`"
-              :ref="el => setColumnRef(el as HTMLElement, col.prop)"
-              :class="[
-                'vt-table__td',
-                {
-                  'vt-table__td--pinned-left': col.pinnedLeft,
-                  'vt-table__td--pinned-right': col.pinnedRight,
-                  'vt-table__td--manage': col.manage,
-                },
-              ]"
-              :style="getColumnStyleWithContext(col, colIndex)"
-            >
-              <div
-                v-tooltip="col.showOverflowTooltip ? getTooltipText(row, col) : null"
-                class="vt-table__cell-content vt-table__cell-content--ellipsis"
-              >
-                <component
-                  :is="col.renderSlot"
-                  v-if="col.renderSlot"
-                  :column="col"
-                  :index="rowIndex"
-                  :row="row"
-                  :value="row[col.prop]"
-                />
-                <span v-else>{{ row[col.prop] }}</span>
-              </div>
-              <div
-                v-if="!col.manage"
-                :data-resizer="col.prop"
-                class="vt-table__resizer"
-                @mousedown="e => handleMouseDown(e, col)"
-              />
-            </td>
-          </tr>
-          <tr
-            :class="{
-              'vt-table__row--insert-after': dragComposable?.shouldShowInsertLine(rowIndex, 'after'),
-            }"
-          ></tr>
-        </template>
+        <tr v-if="virtualTopSpace" :style="{ height: `${virtualTopSpace}px` }" class="vt-table__virtual-spacer" />
+        <VTableRow
+          v-for="(row, visibleIndex) in visibleRows"
+          :key="createRowKey(row, virtualRange.start + visibleIndex)"
+          :row="row"
+          :row-index="virtualRange.start + visibleIndex"
+          :columns="sortedColumns"
+          :cell-styles="cellStyles"
+          :selectable="props.selectable"
+          :row-draggable="props.rowDraggable"
+          :show-drag-handle="props.showDragHandle"
+          :selected="selectionComposable?.isRowSelected(row) ?? false"
+          :current="selectionComposable?.currentRow.value === row"
+          :clickable="props.selectOnClickRow || props.highlightCurrentRow"
+          :insert-before="dragComposable?.shouldShowInsertLine(virtualRange.start + visibleIndex, 'before') ?? false"
+          :insert-after="dragComposable?.shouldShowInsertLine(virtualRange.start + visibleIndex, 'after') ?? false"
+          :selection-column-style="selectionColumnStyle"
+          :drag-handle-column-style="dragHandleColumnStyle"
+          :drag-composable="dragComposable"
+          :get-row-highlight-classes="getRowHighlightClasses"
+          :get-tooltip-text="getTooltipText"
+          :on-row-click="handleRowClick"
+          :on-row-dbl-click="onRowDblClick"
+          :on-checkbox-change="handleCheckboxChange"
+          :on-resizer-mouse-down="handleMouseDown"
+        />
+        <tr
+          v-if="virtualBottomSpace"
+          :style="{ height: `${virtualBottomSpace}px` }"
+          class="vt-table__virtual-spacer"
+        />
       </tbody>
 
       <tfoot v-if="shouldShowSummary" class="vt-table__summary">

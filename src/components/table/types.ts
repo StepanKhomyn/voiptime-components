@@ -112,6 +112,15 @@ export interface VTableProps {
   rowDraggable?: boolean;
   /** Показувати handle для перетягування */
   showDragHandle?: boolean;
+
+  /**
+   * Рендерити лише видимі рядки (+ запас). Для великих таблиць з рядками однакової висоти,
+   * що часто оновлюються (моніторинг). Скролитись має сама таблиця (обмежена висота обгортки).
+   * Ігнорується разом з rowDraggable.
+   */
+  virtualScroll?: boolean;
+  /** Висота рядка для virtualScroll, px. Якщо не задано — вимірюється з першого рядка */
+  virtualRowHeight?: number;
 }
 
 export interface VTableEmits {
