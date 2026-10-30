@@ -22,6 +22,13 @@
     overflow-y: auto;
   }
 
+  // Відступ між пунктами меню
+  &-menu__scroll {
+    display: flex;
+    flex-direction: column;
+    gap: var(--vt-gap-sm);
+  }
+
   &-item {
     display: flex;
     align-items: center;

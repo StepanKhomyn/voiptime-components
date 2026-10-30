@@ -495,7 +495,7 @@
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: var(--vt-gap-base);
+    gap: var(--vt-gap-sm);
   }
 
   &__loading,
