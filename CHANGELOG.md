@@ -1,3 +1,10 @@
+## [1.24.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.3...v1.24.4) (2026-10-30)
+
+
+### Bug Fixes
+
+* Правки стилів  VOIP-4744 ([62066f5](https://github.com/StepanKhomyn/voiptime-components/commit/62066f5a4d265d21444011282c7401ea11ee9f61))
+
 ## [1.24.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.2...v1.24.3) (2026-10-28)
 
 
