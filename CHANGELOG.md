@@ -1,3 +1,10 @@
+## [1.24.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.4...v1.24.5) (2026-10-30)
+
+
+### Bug Fixes
+
+* Додано VTableRow компоенту, оптимізовано компоенту таблиці та тултіпу ([401f431](https://github.com/StepanKhomyn/voiptime-components/commit/401f4314c661927dec458975092d49594be3c4fe))
+
 ## [1.24.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.3...v1.24.4) (2026-10-30)
 
 
