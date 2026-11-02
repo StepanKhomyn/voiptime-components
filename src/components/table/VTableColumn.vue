@@ -39,6 +39,8 @@
     selectable: props.selectable,
     // Зберігаємо слот - пріоритет: назва колонки -> default -> slot
     renderSlot: slots[props.prop] ?? slots.default ?? slots.slot,
+    // Кастомний хедер колонки
+    renderHeader: slots.header,
   });
 
   let columnIndex = -1;
@@ -83,6 +85,7 @@
           const updatedColumn = {
             ...createColumn(),
             renderSlot: existingColumn.renderSlot, // Зберігаємо існуючий renderSlot
+            renderHeader: existingColumn.renderHeader,
           };
 
           // Замінюємо колонку

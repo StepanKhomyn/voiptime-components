@@ -636,7 +636,10 @@
             :style="getHeaderStyleWithContext(col, index)"
           >
             <div class="vt-th__content">
-              <div v-tooltip="col.label" class="vt-th__label">
+              <div v-if="col.renderHeader" class="vt-th__label vt-th__label--custom">
+                <component :is="col.renderHeader" :column="col" :index="index" />
+              </div>
+              <div v-else v-tooltip="col.label" class="vt-th__label">
                 {{ col.label }}
               </div>
 

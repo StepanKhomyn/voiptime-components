@@ -470,6 +470,12 @@
     white-space: nowrap;
     min-width: 0;
     text-align: left;
+
+    &--custom {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
   }
 
   &__sortable {

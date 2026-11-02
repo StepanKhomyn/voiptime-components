@@ -4,6 +4,7 @@
   import VTableColumn from '@/components/table/VTableColumn.vue';
   import VPagination from '@/components/pagination/VPagination.vue';
   import VInput from '@/components/input/VInput.vue';
+  import VIcon from '@/components/icon/VIcon.vue';
   import type { RowReorderEventData, SelectionChangeEventData } from '@/components/table/types';
 
   import DocSection from './helper/DocSection.vue';
@@ -274,6 +275,13 @@
       ],
     },
     {
+      title: 'Slots (VTableColumn)',
+      rows: [
+        { name: 'default / [prop]', type: '{ row, column, value, index }', description: 'Кастомний рендер клітинки' },
+        { name: 'header', type: '{ column, index }', description: 'Кастомний рендер заголовка колонки (іконки, бейджі тощо)' },
+      ],
+    },
+    {
       title: 'Events',
       rows: [
         { name: 'sort-change', type: 'SortChangeEventData', description: 'Зміна сортування' },
@@ -349,6 +357,40 @@
               </template>
             </VTableColumn>
             <VTableColumn manage prop="score" />
+          </VTable>
+        </div>
+      </DocPreview>
+    </DocSection>
+
+    <!-- ─── Кастомний хедер колонки ─── -->
+    <DocSection
+      description="Слот #header у VTableColumn дозволяє додати іконку або повністю замінити заголовок. Сортування, меню колонки та ресайз працюють як зазвичай"
+      title="Кастомний заголовок колонки"
+    >
+      <DocPreview>
+        <div style="width: 100%">
+          <VTable :data="highlightData.slice(0, 4)">
+            <VTableColumn label="ID" prop="id" width="60" />
+            <VTableColumn label="Ім'я" prop="name">
+              <template #header="{ column }">
+                <VIcon :height="16" :width="16" name="star" />
+                <span>{{ column.label }}</span>
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Відділ" prop="department">
+              <template #header="{ column }">
+                <span v-tooltip="'Підрозділ, у якому працює співробітник'">{{ column.label }}</span>
+                <VIcon :height="14" :width="14" name="email" />
+              </template>
+            </VTableColumn>
+            <VTableColumn label="Зарплата" prop="salary">
+              <template #header>
+                <span class="custom-header-badge">₴ Зарплата</span>
+              </template>
+              <template #default="{ value }">
+                <span class="salary-text">{{ formatSalary(value) }}</span>
+              </template>
+            </VTableColumn>
           </VTable>
         </div>
       </DocPreview>
@@ -617,6 +659,15 @@ const columnGroups = [
 </template>
 
 <style lang="scss" scoped>
+  .custom-header-badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: var(--color-primary-light, #e8f0fe);
+    color: var(--color-primary, #1a73e8);
+    font-weight: 600;
+    font-size: 12px;
+  }
+
   .table-showcase {
     max-width: 1000px;
     margin: 0 auto;

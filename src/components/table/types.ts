@@ -59,6 +59,11 @@ export type VTableRenderSlot = (props: {
   index?: number;
 }) => VNode | VNode[] | string | Component;
 
+export type VTableRenderHeaderSlot = (props: {
+  column: VTableColumnProps;
+  index: number;
+}) => VNode | VNode[] | string | Component;
+
 export interface VTableColumnProps {
   prop: string;
   label: string;
@@ -73,6 +78,8 @@ export interface VTableColumnProps {
   selectable?: boolean;
   manage?: boolean;
   renderSlot?: VTableRenderSlot;
+  /** Кастомний рендер хедера колонки (слот #header у VTableColumn) */
+  renderHeader?: VTableRenderHeaderSlot;
   sortMethod?: Function;
 }
 
