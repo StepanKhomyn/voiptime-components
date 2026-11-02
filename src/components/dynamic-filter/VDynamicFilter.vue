@@ -53,7 +53,7 @@
 
   const slotNodesLength = computed(() => slotNodes.value.length);
 
-  const { visibleIndexes } = useResponsiveFilters(
+  const { visibleIndexes, isTriggerCompact } = useResponsiveFilters(
     dynamicFilterRef,
     actionsRef,
     dropdownTriggerRef,
@@ -80,7 +80,14 @@
       trigger="click"
     >
       <div ref="dropdownTriggerRef">
-        <VButton icon="filter_add" type="default">{{ t(LOCALE_KEYS.FILTER_MORE) }}</VButton>
+        <VButton
+          :shape="isTriggerCompact ? 'square' : undefined"
+          :tooltip="isTriggerCompact"
+          icon="filter_add"
+          type="default"
+        >
+          {{ t(LOCALE_KEYS.FILTER_MORE) }}
+        </VButton>
       </div>
       <template #dropdown>
         <div class="vt-page__card-filter__dropdown-target">

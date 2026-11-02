@@ -9,6 +9,8 @@ interface ResponsiveFiltersOptions {
   reserve?: number;
   /** Ширина кнопки "Більше фільтрів", поки її ще не виміряли */
   triggerFallbackWidth?: number;
+  /** Ширина кнопки "Більше фільтрів" у вигляді іконки, поки її ще не виміряли */
+  compactTriggerFallbackWidth?: number;
 }
 
 const px = (value: string | null | undefined, fallback = 0) => {
@@ -34,11 +36,15 @@ export function useResponsiveFilters(
     minFilterWidth = 150,
     reserve = 8,
     triggerFallbackWidth = 140,
+    compactTriggerFallbackWidth = 32,
   } = options;
 
   const visibleIndexes = ref<number[]>([]);
+  /** Кнопка "Більше фільтрів" не влазить з назвою — показуємо лише іконку */
+  const isTriggerCompact = ref(false);
 
   let lastTriggerWidth = 0;
+  let lastCompactTriggerWidth = 0;
   let rafId = 0;
   let ro: ResizeObserver | null = null;
   let observedMeasureItems: HTMLElement[] = [];
@@ -111,11 +117,16 @@ export function useResponsiveFilters(
     const actionsWidth = actionsRef.value ? outerWidth(actionsRef.value) : 0;
     const actionsBlock = actionsWidth > 0 ? actionsWidth + elGap : 0;
 
+    // Ширину запамʼятовуємо окремо для кожного вигляду кнопки (з назвою / лише іконка)
     if (dropdownTriggerRef.value) {
       const w = outerWidth(dropdownTriggerRef.value);
-      if (w > 0) lastTriggerWidth = w;
+      if (w > 0) {
+        if (isTriggerCompact.value) lastCompactTriggerWidth = w;
+        else lastTriggerWidth = w;
+      }
     }
-    const triggerBlock = (lastTriggerWidth || triggerFallbackWidth) + elGap;
+    const fullTriggerBlock = (lastTriggerWidth || triggerFallbackWidth) + elGap;
+    const compactTriggerBlock = (lastCompactTriggerWidth || compactTriggerFallbackWidth) + elGap;
 
     // --- Ширини фільтрів ---
     const measureItems = Array.from(
@@ -125,6 +136,7 @@ export function useResponsiveFilters(
 
     if (widths.length === 0) {
       setVisible([]);
+      isTriggerCompact.value = false;
       return;
     }
 
@@ -148,10 +160,14 @@ export function useResponsiveFilters(
 
     let next: number[];
     let mode: 'all' | 'with-trigger';
+    let compact = false;
     if (totalWidth <= limitWithoutTrigger) {
       next = widths.map((_, i) => i);
       mode = 'all';
     } else {
+      // Кнопка з назвою не влазить навіть без жодного фільтра — згортаємо її в іконку
+      compact = limitWithoutTrigger < fullTriggerBlock;
+      const triggerBlock = compact ? compactTriggerBlock : fullTriggerBlock;
       next = pack(limitWithoutTrigger - triggerBlock);
       mode = 'with-trigger';
     }
@@ -165,7 +181,9 @@ export function useResponsiveFilters(
         elAvailable,
         elGap,
         actionsWidth,
-        triggerBlock,
+        fullTriggerBlock,
+        compactTriggerBlock,
+        compact,
         limitWithoutTrigger,
         widths,
         totalWidth,
@@ -176,6 +194,7 @@ export function useResponsiveFilters(
     }
 
     setVisible(next);
+    if (isTriggerCompact.value !== compact) isTriggerCompact.value = compact;
   }
 
   // Стежимо за вимірювальними елементами (змінюється вміст/ширина фільтра)
@@ -241,9 +260,9 @@ export function useResponsiveFilters(
     });
   });
 
-  // Тригер дропдауну з'являється/зникає (v-if), кнопки дій змінюються
+  // Тригер дропдауну з'являється/зникає (v-if) або змінює вигляд, кнопки дій змінюються
   watch(
-    [actionsRef, dropdownTriggerRef],
+    [actionsRef, dropdownTriggerRef, isTriggerCompact],
     () => {
       nextTick(scheduleCalculate);
     },
@@ -257,6 +276,7 @@ export function useResponsiveFilters(
 
   return {
     visibleIndexes,
+    isTriggerCompact,
     calculate,
     scheduleCalculate,
     forceRecalculate,

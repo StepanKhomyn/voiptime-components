@@ -256,7 +256,9 @@
       }
     }
 
-    &.vt-input--label-floating {
+    // Chrome автозаповнив поле без оновлення v-model — лейбл теж піднімаємо, щоб не накладався на текст
+    &.vt-input--label-floating,
+    &:has(input:-webkit-autofill) {
       .vt-input__floating-label {
         top: 0;
         transform: translateY(-50%);
