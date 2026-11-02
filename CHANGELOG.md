@@ -1,3 +1,10 @@
+## [1.24.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.5...v1.24.6) (2026-11-02)
+
+
+### Bug Fixes
+
+* Додано слот для кастомізації хедеру таблиці ([b099487](https://github.com/StepanKhomyn/voiptime-components/commit/b0994871c4bf5a15528f5b3bbe8de145b769fe9b))
+
 ## [1.24.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.4...v1.24.5) (2026-10-30)
 
 
