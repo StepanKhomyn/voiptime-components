@@ -1,3 +1,10 @@
+## [1.24.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.6...v1.24.7) (2026-11-02)
+
+
+### Bug Fixes
+
+* Правки стилів ([ba1a0cf](https://github.com/StepanKhomyn/voiptime-components/commit/ba1a0cf456a24084ae0f3be33ce0de3bed8f8243))
+
 ## [1.24.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.5...v1.24.6) (2026-11-02)
 
 
