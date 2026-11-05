@@ -1,3 +1,10 @@
+## [1.24.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.7...v1.24.8) (2026-11-05)
+
+
+### Bug Fixes
+
+* VOIP-4764. Виправлено відображення тултіпу в таблиці ([18fabbe](https://github.com/StepanKhomyn/voiptime-components/commit/18fabbeac9cec3c96f0bc7fe04822c9b67065be4))
+
 ## [1.24.7](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.6...v1.24.7) (2026-11-02)
 
 
