@@ -466,24 +466,6 @@
     );
   };
 
-  const stripHtml = (html: string): string => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || '';
-  };
-
-  const getTooltipText = (row: any, col: VTableColumnProps): string => {
-    if (!col?.prop) return '';
-
-    const value = row[col.prop];
-    if (value == null) return '';
-
-    if (typeof value === 'string' && value.includes('<')) {
-      return stripHtml(value);
-    }
-
-    return String(value);
-  };
-
   const summaryData = computed<Record<string, any>>(() => {
     if (!props.showSummary || !hasData.value) return {};
 
@@ -697,7 +679,6 @@
           :drag-handle-column-style="dragHandleColumnStyle"
           :drag-composable="dragComposable"
           :get-row-highlight-classes="getRowHighlightClasses"
-          :get-tooltip-text="getTooltipText"
           :on-row-click="handleRowClick"
           :on-row-dbl-click="onRowDblClick"
           :on-checkbox-change="handleCheckboxChange"

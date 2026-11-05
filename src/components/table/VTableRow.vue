@@ -30,7 +30,6 @@
     dragHandleColumnStyle: StyleValue;
     dragComposable: ReturnType<typeof useRowDrag> | null;
     getRowHighlightClasses: (row: any, rowIndex: number) => string[];
-    getTooltipText: (row: any, col: VTableColumnProps) => string;
     onRowClick: (row: Record<string, any>, column: VTableColumnProps, event: Event) => void;
     onRowDblClick: (row: Record<string, any>, column: VTableColumnProps, event: Event) => void;
     onCheckboxChange: (isChecked: boolean, row: Record<string, any>, event: Event) => void;
@@ -38,6 +37,9 @@
   }
 
   defineProps<Props>();
+
+  // Текст беремо з відрендереної клітинки, щоб тултіп збігався з тим, що показує слот
+  const getCellText = (el: HTMLElement): string => el.textContent?.replace(/\s+/g, ' ') ?? '';
 </script>
 
 <template>
@@ -110,7 +112,7 @@
       :style="cellStyles[colIndex]"
     >
       <div
-        v-tooltip="col.showOverflowTooltip ? getTooltipText(row, col) : null"
+        v-tooltip="col.showOverflowTooltip ? getCellText : null"
         class="vt-table__cell-content vt-table__cell-content--ellipsis"
       >
         <component

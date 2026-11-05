@@ -2,9 +2,12 @@ import type { DirectiveBinding, ObjectDirective } from 'vue';
 
 type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
+/** Текст тултіпа або функція, що повертає його в момент показу (для тексту, що залежить від DOM) */
+type TooltipValue = string | ((el: HTMLElement) => string);
+
 type TooltipHTMLElement = HTMLElement & {
   __tooltipEl?: HTMLDivElement;
-  __tooltipText?: string;
+  __tooltipValue?: TooltipValue;
   __mouseenterHandler?: () => void;
   __mouseleaveHandler?: () => void;
 };
@@ -189,7 +192,12 @@ const isInTable = (element: HTMLElement): boolean => {
 
 const getPlacement = (el: HTMLElement): TooltipPlacement => (el.dataset.placement as TooltipPlacement) || 'top';
 
-const getBindingText = (binding: DirectiveBinding<string>): string => binding.value?.trim() ?? '';
+const getBindingValue = (binding: DirectiveBinding<TooltipValue | null | undefined>): TooltipValue => binding.value ?? '';
+
+const getTooltipText = (el: TooltipHTMLElement): string => {
+  const value = el.__tooltipValue ?? '';
+  return (typeof value === 'function' ? value(el) : value).trim();
+};
 
 // Показані tooltip'и. Позицію при скролі/ресайзі оновлюємо лише їм через один спільний слухач,
 // а не через окрему пару слухачів на window для кожного елемента з v-tooltip.
@@ -225,12 +233,12 @@ const removeTooltip = (el: TooltipHTMLElement) => {
 };
 
 export const tooltipDirective: ObjectDirective = {
-  mounted(el: TooltipHTMLElement, binding: DirectiveBinding<string>) {
-    el.__tooltipText = getBindingText(binding);
+  mounted(el: TooltipHTMLElement, binding: DirectiveBinding<TooltipValue | null | undefined>) {
+    el.__tooltipValue = getBindingValue(binding);
 
     // Обробники читають актуальний текст з елемента, тому їх достатньо додати один раз
     const show = () => {
-      const text = el.__tooltipText;
+      const text = getTooltipText(el);
       if (!text) return;
 
       // Якщо елемент в таблиці, показуємо тільки при overflow
@@ -240,6 +248,8 @@ export const tooltipDirective: ObjectDirective = {
       const placement = getPlacement(el);
       if (!el.__tooltipEl) {
         el.__tooltipEl = createTooltip(text, placement);
+      } else {
+        el.__tooltipEl.firstChild!.textContent = text;
       }
 
       showTooltip(el.__tooltipEl, el, placement);
@@ -258,16 +268,15 @@ export const tooltipDirective: ObjectDirective = {
     el.addEventListener('mouseleave', hide);
   },
 
-  updated(el: TooltipHTMLElement, binding: DirectiveBinding<string>) {
-    const text = getBindingText(binding);
-    if (text === el.__tooltipText) return;
+  updated(el: TooltipHTMLElement, binding: DirectiveBinding<TooltipValue | null | undefined>) {
+    el.__tooltipValue = getBindingValue(binding);
+    if (!el.__tooltipEl) return;
 
-    el.__tooltipText = text;
-
+    const text = getTooltipText(el);
     if (!text) {
       // Якщо немає тексту, видаляємо tooltip (в т.ч. якщо він зараз показаний)
       removeTooltip(el);
-    } else if (el.__tooltipEl) {
+    } else if (el.__tooltipEl.firstChild!.textContent !== text) {
       // Оновлюємо текст tooltip'а
       el.__tooltipEl.firstChild!.textContent = text;
     }
@@ -276,7 +285,7 @@ export const tooltipDirective: ObjectDirective = {
   beforeUnmount(el: TooltipHTMLElement) {
     // Видаляємо tooltip з DOM
     removeTooltip(el);
-    delete el.__tooltipText;
+    delete el.__tooltipValue;
 
     // Видаляємо обробники подій
     if (el.__mouseenterHandler) {
