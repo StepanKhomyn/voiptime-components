@@ -1,3 +1,10 @@
+## [1.24.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.8...v1.24.9) (2026-11-06)
+
+
+### Bug Fixes
+
+* Видалено якусь іконку no.png ([504e2a9](https://github.com/StepanKhomyn/voiptime-components/commit/504e2a9392aac2fe1f305a7e1c68dd0b98ca9750))
+
 ## [1.24.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.7...v1.24.8) (2026-11-05)
 
 
