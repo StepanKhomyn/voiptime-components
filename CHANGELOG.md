@@ -1,3 +1,10 @@
+## [1.24.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.9...v1.24.10) (2026-11-06)
+
+
+### Bug Fixes
+
+* no content sticky now on table ([5d441d9](https://github.com/StepanKhomyn/voiptime-components/commit/5d441d97de0c86e0bc6947c1a3a45084e38ee7cc))
+
 ## [1.24.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.8...v1.24.9) (2026-11-06)
 
 
