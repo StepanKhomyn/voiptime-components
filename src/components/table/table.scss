@@ -41,6 +41,11 @@
   }
 
   &__empty-state {
+    // Фіксуємо по центру видимої області при горизонтальному скролі
+    position: sticky;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
     display: flex;
     flex: 1 1 auto;
     align-items: center;

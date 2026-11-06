@@ -623,6 +623,33 @@ const columnGroups = [
       </DocPreview>
     </DocSection>
 
+    <!-- ─── Порожня таблиця ─── -->
+    <DocSection
+      description="Коли даних немає, заглушка VEmpty залишається по центру видимої області навіть при горизонтальному скролі"
+      title="Порожня таблиця"
+    >
+      <DocPreview
+        :script="`
+<VTable :data=&quot;[]&quot; :max-height=&quot;320&quot;>
+  <VTableColumn :width=&quot;250&quot; label=&quot;Колонка 1&quot; prop=&quot;col1&quot; />
+  ...
+</VTable>
+`"
+      >
+        <div style="width: 100%; height: 320px">
+          <VTable :data="[]" :max-height="320">
+            <VTableColumn
+              v-for="n in 12"
+              :key="n"
+              :label="`Колонка ${n}`"
+              :prop="`col${n}`"
+              :width="250"
+            />
+          </VTable>
+        </div>
+      </DocPreview>
+    </DocSection>
+
     <!-- ─── API ─── -->
     <DocSection title="API">
       <DocPropsTable :sections="vtableSections" />
