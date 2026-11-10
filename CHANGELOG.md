@@ -1,3 +1,10 @@
+# [1.25.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.10...v1.25.0) (2026-11-10)
+
+
+### Features
+
+* Додано компонент VWidgetGrid — сітка блоків з перетягуванням і зміною розміру ([e5a735d](https://github.com/StepanKhomyn/voiptime-components/commit/e5a735d5a5a399fd3edfaea70b29126b5ae3b50c))
+
 ## [1.24.10](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.9...v1.24.10) (2026-11-06)
 
 
