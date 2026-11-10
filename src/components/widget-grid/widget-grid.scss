@@ -1,0 +1,441 @@
+.vt-widget-grid {
+  --vt-wg-accent: var(--color-primary-main);
+  --vt-wg-accent-soft: var(--color-primary-light);
+  --vt-wg-cell: var(--color-primary-bg);
+  --vt-wg-cell-border: var(--color-primary-border);
+  --vt-wg-radius: var(--vt-radius-lg, 12px);
+  --vt-wg-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --vt-wg-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --vt-wg-duration: 260ms;
+
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+
+  &.is-ready {
+    transition: height var(--vt-wg-duration) var(--vt-wg-ease);
+  }
+
+  // ---------------- Клітинки сітки ----------------
+  &__cells {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  &__cell {
+    position: absolute;
+    top: 0;
+    left: 0;
+    box-sizing: border-box;
+    border-radius: 8px;
+    background: var(--vt-wg-cell);
+    border: 1px dashed var(--vt-wg-cell-border);
+    opacity: 0;
+    animation: vt-wg-cell-in 320ms var(--vt-wg-ease) var(--vt-wg-d, 0ms) forwards;
+  }
+
+  // ---------------- Місце приземлення ----------------
+  &__placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--vt-wg-radius);
+    background: color-mix(in srgb, var(--vt-wg-accent) 10%, transparent);
+    border: 2px dashed var(--vt-wg-accent);
+    transition:
+      transform 180ms var(--vt-wg-ease),
+      width 180ms var(--vt-wg-ease),
+      height 180ms var(--vt-wg-ease);
+    animation: vt-wg-fade-in 160ms ease-out;
+    pointer-events: none;
+  }
+
+  &__size {
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: var(--vt-wg-accent);
+    color: var(--color-white);
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
+    white-space: nowrap;
+
+  }
+
+  // ---------------- Рамка зміни розміру ----------------
+  &__frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 11;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--vt-wg-radius);
+    border: 2px solid var(--vt-wg-accent);
+    background: color-mix(in srgb, var(--vt-wg-accent) 6%, transparent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--vt-wg-accent) 12%, transparent);
+    pointer-events: none;
+    will-change: transform, width, height;
+    animation: vt-wg-fade-in 120ms ease-out;
+  }
+
+  // ---------------- Віджет ----------------
+  &__item {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    box-sizing: border-box;
+    border-radius: var(--vt-wg-radius);
+    transform-origin: center center;
+    outline: none;
+    will-change: transform;
+  }
+
+  &.is-ready &__item {
+    transition:
+      transform var(--vt-wg-duration) var(--vt-wg-ease),
+      width var(--vt-wg-duration) var(--vt-wg-ease),
+      height var(--vt-wg-duration) var(--vt-wg-ease),
+      box-shadow 200ms ease;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    // Ізолюємо перерахунок layout вмісту (таблиці, графіки) від решти сторінки
+    contain: layout paint style;
+    transition:
+      transform 220ms var(--vt-wg-ease),
+      filter 220ms ease;
+
+    > * {
+      flex: 1 1 auto;
+      min-height: 0;
+    }
+  }
+
+  // Довге натискання на телефоні: без системного меню і виділення
+  &.has-long-press &__item {
+    -webkit-touch-callout: none;
+  }
+
+  // ---------------- Режим редагування ----------------
+  &.is-editing &__item {
+    cursor: grab;
+    touch-action: none;
+    user-select: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: calc(var(--vt-wg-radius) + 4px);
+      border: 2px solid transparent;
+      pointer-events: none;
+      transition:
+        border-color 160ms ease,
+        box-shadow 160ms ease;
+    }
+
+    &:hover::after {
+      border-color: var(--vt-wg-cell-border);
+    }
+
+    &.is-locked {
+      cursor: default;
+    }
+  }
+
+  &.is-editing &__content {
+    transform: scale(0.97);
+    animation: vt-wg-enter 420ms var(--vt-wg-spring) calc(var(--vt-wg-i, 0) * 30ms) backwards;
+  }
+
+  &.is-editing.is-interacting &__item:not(.is-dragging, .is-resizing) &__content {
+    filter: saturate(0.85) brightness(0.98);
+  }
+
+  &__shield {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+  }
+
+  // Обраний віджет — рамка з ручками, як на Samsung
+  &__item.is-active {
+    z-index: 3;
+
+    &::after {
+      border-color: var(--vt-wg-accent) !important;
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--vt-wg-accent) 12%, transparent);
+    }
+  }
+
+  &__item.is-active &__content {
+    transform: scale(1);
+  }
+
+  &__item:focus-visible::after {
+    border-color: var(--vt-wg-accent) !important;
+  }
+
+  // ---------------- Ручки зміни розміру ----------------
+  &__handle {
+    position: absolute;
+    z-index: 5;
+    box-sizing: border-box;
+    background: var(--color-white);
+    border: 2px solid var(--vt-wg-accent);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 18%);
+    opacity: 0;
+    transform: scale(0.4);
+    transition:
+      opacity 160ms ease,
+      transform 220ms var(--vt-wg-spring),
+      background-color 120ms ease;
+    touch-action: none;
+
+    // Невидима зона, щоб легко було влучити пальцем
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -10px;
+    }
+
+    &:hover,
+    &:active {
+      background: var(--vt-wg-accent);
+    }
+
+    // Бокові — "пігулки"
+    &--n,
+    &--s {
+      left: 50%;
+      width: 36px;
+      height: 10px;
+      margin-left: -18px;
+      border-radius: 999px;
+      cursor: ns-resize;
+    }
+
+    &--e,
+    &--w {
+      top: 50%;
+      width: 10px;
+      height: 36px;
+      margin-top: -18px;
+      border-radius: 999px;
+      cursor: ew-resize;
+    }
+
+    &--n {
+      top: -9px;
+    }
+
+    &--s {
+      bottom: -9px;
+    }
+
+    &--e {
+      right: -9px;
+    }
+
+    &--w {
+      left: -9px;
+    }
+
+    // Кутові — кружечки
+    &--ne,
+    &--nw,
+    &--se,
+    &--sw {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+
+    &--ne {
+      top: -11px;
+      right: -11px;
+      cursor: nesw-resize;
+    }
+
+    &--sw {
+      bottom: -11px;
+      left: -11px;
+      cursor: nesw-resize;
+    }
+
+    &--nw {
+      top: -11px;
+      left: -11px;
+      cursor: nwse-resize;
+    }
+
+    &--se {
+      right: -11px;
+      bottom: -11px;
+      cursor: nwse-resize;
+    }
+  }
+
+  &__item.is-active &__handle {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  &__item.is-resizing &__handle {
+    opacity: 0;
+  }
+
+  &__item:not(.is-active):hover &__handle {
+    opacity: 0.35;
+    transform: scale(0.8);
+  }
+
+  // ---------------- Перетягування ----------------
+  &.is-ready &__item.is-dragging {
+    z-index: 10;
+    transition: box-shadow 200ms ease;
+  }
+
+  // Під час resize сам віджет "перескакує" між клітинками (вміст перераховується
+  // лише при зміні кількості клітинок), а за курсором йде легка рамка
+  &.is-ready &__item.is-resizing {
+    z-index: 10;
+    transition:
+      transform 180ms var(--vt-wg-ease),
+      width 180ms var(--vt-wg-ease),
+      height 180ms var(--vt-wg-ease),
+      box-shadow 200ms ease;
+  }
+
+  &__item.is-dragging {
+    cursor: grabbing !important;
+    box-shadow:
+      0 24px 48px -12px rgb(0 40 50 / 35%),
+      0 8px 16px -8px rgb(0 40 50 / 25%);
+  }
+
+  &__item.is-dragging &__content,
+  &__item.is-resizing &__content {
+    transform: scale(1);
+  }
+
+  &__item.is-resizing {
+    box-shadow: 0 12px 32px -12px rgb(0 40 50 / 30%);
+  }
+
+  // "Приземлення" з легким пружинним перескоком
+  &.is-ready &__item.is-dropping {
+    z-index: 9;
+    transition:
+      transform 420ms var(--vt-wg-spring),
+      width 420ms var(--vt-wg-spring),
+      height 420ms var(--vt-wg-spring),
+      box-shadow 300ms ease;
+  }
+
+  // Відгук на довге натискання — хвиля від віджета
+  &__item.is-popping::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    border-radius: inherit;
+    border: 2px solid var(--vt-wg-accent);
+    pointer-events: none;
+    animation: vt-wg-ripple 420ms ease-out forwards;
+  }
+
+  // ---------------- Вузький екран ----------------
+  &.is-stacked &__item {
+    cursor: default;
+  }
+
+  &__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+// Під час жесту: без виділення тексту і з постійним курсором (щоб не мигав над іншими елементами)
+.vt-widget-grid-busy,
+.vt-widget-grid-busy * {
+  cursor: var(--vt-wg-cursor, grabbing) !important;
+  user-select: none !important;
+}
+
+@keyframes vt-wg-cell-in {
+  from {
+    opacity: 0;
+    scale: 0.6;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+@keyframes vt-wg-enter {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(0.94);
+  }
+  100% {
+    transform: scale(0.97);
+  }
+}
+
+@keyframes vt-wg-ripple {
+  from {
+    opacity: 0.9;
+    scale: 1;
+  }
+  to {
+    opacity: 0;
+    scale: 1.06;
+  }
+}
+
+@keyframes vt-wg-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vt-widget-grid,
+  .vt-widget-grid * {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}

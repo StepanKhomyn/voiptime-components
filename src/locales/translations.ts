@@ -174,6 +174,11 @@ export const translations: Translations = <Translations>{
     //Checkbox
     [LOCALE_KEYS.CHECKBOX_SELECT_ALL]: 'Виділити всі',
     [LOCALE_KEYS.CHECKBOX_UNSELECT_ALL]: 'Відмінити вибір',
+
+    //Widget grid
+    [LOCALE_KEYS.WIDGET_GRID_RESIZE]: 'Змінити розмір',
+    [LOCALE_KEYS.WIDGET_GRID_ITEM]: 'Віджет {id}: колонка {x}, рядок {y}, розмір {w}×{h}',
+    [LOCALE_KEYS.WIDGET_GRID_HINT]: 'Перетягніть, щоб перемістити. Стрілки — зсув, Shift+стрілки — розмір, Esc — завершити',
   },
 
   [LANGUAGES.en]: {
@@ -349,6 +354,11 @@ export const translations: Translations = <Translations>{
     //Checkbox
     [LOCALE_KEYS.CHECKBOX_SELECT_ALL]: 'Select all',
     [LOCALE_KEYS.CHECKBOX_UNSELECT_ALL]: 'Unselect all',
+
+    //Widget grid
+    [LOCALE_KEYS.WIDGET_GRID_RESIZE]: 'Resize',
+    [LOCALE_KEYS.WIDGET_GRID_ITEM]: 'Widget {id}: column {x}, row {y}, size {w}×{h}',
+    [LOCALE_KEYS.WIDGET_GRID_HINT]: 'Drag to move. Arrows move, Shift+arrows resize, Esc to finish',
   },
 
   [LANGUAGES.ru]: {
@@ -524,5 +534,10 @@ export const translations: Translations = <Translations>{
     //Checkbox
     [LOCALE_KEYS.CHECKBOX_SELECT_ALL]: 'Выбрать все',
     [LOCALE_KEYS.CHECKBOX_UNSELECT_ALL]: 'Отменить выбор',
+
+    //Widget grid
+    [LOCALE_KEYS.WIDGET_GRID_RESIZE]: 'Изменить размер',
+    [LOCALE_KEYS.WIDGET_GRID_ITEM]: 'Виджет {id}: колонка {x}, строка {y}, размер {w}×{h}',
+    [LOCALE_KEYS.WIDGET_GRID_HINT]: 'Перетащите, чтобы переместить. Стрелки — сдвиг, Shift+стрелки — размер, Esc — завершить',
   },
 };

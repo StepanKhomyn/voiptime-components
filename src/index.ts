@@ -46,6 +46,7 @@ import VTag from '@/components/tag/VTag.vue';
 import VDivider from '@/components/divider/VDivider.vue';
 import VAppBar from '@/components/app-bar/VAppBar.vue';
 import VNavRail from '@/components/nav-rail/VNavRail.vue';
+import VWidgetGrid from '@/components/widget-grid/VWidgetGrid.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -103,6 +104,7 @@ export {
   VDivider,
   VAppBar,
   VNavRail,
+  VWidgetGrid,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -306,6 +308,18 @@ export type { VAppBarProps } from './components/app-bar/types';
 //NavRailProps
 export type { VNavRailProps, VNavRailEmits } from './components/nav-rail/types';
 
+//WidgetGrid
+export type {
+  VWidgetGridProps,
+  VWidgetGridEmits,
+  VWidgetGridItem,
+  VWidgetGridLayout,
+  VWidgetGridId,
+  VWidgetGridResizeHandle,
+  VWidgetGridSlotProps,
+} from './components/widget-grid/types';
+export { compactLayout as compactWidgetGridLayout } from './components/widget-grid/layout';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -394,6 +408,7 @@ const VUIPlugin = {
     app.component(`${prefix}Divider`, VDivider);
     app.component(`${prefix}AppBar`, VAppBar);
     app.component(`${prefix}NavRail`, VNavRail);
+    app.component(`${prefix}WidgetGrid`, VWidgetGrid);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

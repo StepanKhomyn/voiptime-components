@@ -182,6 +182,11 @@ export enum LOCALE_KEYS {
 
   CHECKBOX_SELECT_ALL = 'CHECKBOX_SELECT_ALL',
   CHECKBOX_UNSELECT_ALL = 'CHECKBOX_UNSELECT_ALL',
+
+  // Widget grid
+  WIDGET_GRID_RESIZE = 'WIDGET_GRID_RESIZE',
+  WIDGET_GRID_ITEM = 'WIDGET_GRID_ITEM',
+  WIDGET_GRID_HINT = 'WIDGET_GRID_HINT',
 }
 
 // Тип для перекладів - гарантує наявність всіх ключів

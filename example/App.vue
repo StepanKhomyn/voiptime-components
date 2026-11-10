@@ -42,6 +42,7 @@
   import DemoDivider from './DemoDivider.vue';
   import DemoAppBar from './DemoAppBar.vue';
   import DemoNavRail from './DemoNavRail.vue';
+  import DemoWidgetGrid from './DemoWidgetGrid.vue';
 
   const searchQuery = ref('');
 
@@ -82,6 +83,7 @@
         { name: 'Table', icon: '📊', component: DemoTable },
         { name: 'Chart', icon: '📈', component: DemoChart },
         { name: 'Pagination', icon: '📄', component: DemoPagination },
+        { name: 'Widget Grid', icon: '🧩', tag: 'new', component: DemoWidgetGrid },
       ],
     },
     {
