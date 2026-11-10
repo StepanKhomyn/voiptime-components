@@ -19,7 +19,7 @@
       <span
         v-for="cell in cells"
         :key="cell.key"
-        :style="{ ...cellStyle, transform: `translate3d(${cell.left}px, ${cell.top}px, 0)`, '--vt-wg-d': `${cell.delay}ms` }"
+        :style="{ ...cellStyle, left: `${cell.left}px`, top: `${cell.top}px`, '--vt-wg-d': `${cell.delay}ms` }"
         class="vt-widget-grid__cell"
       />
     </div>
