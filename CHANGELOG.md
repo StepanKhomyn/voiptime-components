@@ -1,3 +1,10 @@
+## [1.25.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.0...v1.25.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* VWidgetGrid не обрізає стилі карток і не лагає ([ee1b743](https://github.com/StepanKhomyn/voiptime-components/commit/ee1b7438d1a631a16ceb70c9241dd36f4244abc8))
+
 # [1.25.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.24.10...v1.25.0) (2026-11-10)
 
 
