@@ -1,3 +1,10 @@
+## [1.25.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.1...v1.25.2) (2026-11-13)
+
+
+### Bug Fixes
+
+* VChartCombo підлаштовується під розмір контейнера, оновлено вигляд ([dff65de](https://github.com/StepanKhomyn/voiptime-components/commit/dff65de8a65dd2f2e06536df851d532c45d3934f))
+
 ## [1.25.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.0...v1.25.1) (2026-11-10)
 
 
