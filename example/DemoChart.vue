@@ -12,6 +12,25 @@
   import DocPropsTable, { TableSection } from './helper/DocPropsTable.vue';
   import DocFeature from './helper/DocFeature.vue';
 
+  // ── Combo дані ────────────────────────────────────────────────────────────────
+  const comboSeries = {
+    Оброблені: { type: 'bar' as const, color: '#27AE60', axis: 'left' as const },
+    Втрачені: { type: 'bar' as const, color: '#FFBD3E', axis: 'left' as const },
+    Всього: { type: 'bar' as const, color: '#EB5757', axis: 'left' as const },
+    SL: { type: 'line' as const, color: '#9C27B0', axis: 'right' as const },
+  };
+  const comboData = Array.from({ length: 24 }, (_, h) => {
+    const total = Math.round(20 + 60 * Math.sin((Math.PI * h) / 24) + (h % 5) * 3);
+    const lost = Math.round(total * (0.05 + ((h * 7) % 10) / 50));
+    return {
+      time: `${String(h).padStart(2, '0')}:00`,
+      Оброблені: total - lost,
+      Втрачені: lost,
+      Всього: total,
+      SL: Math.round(((total - lost) / total) * 100),
+    };
+  });
+
   // ── Donut дані ────────────────────────────────────────────────────────────────
   const callResults: ChartSegment[] = [
     { label: 'Voicemail', count: 456, color: '#f59e0b' },
@@ -337,6 +356,27 @@
 
 <template>
   <div class="chart-showcase">
+    <!-- ─── Combo ─── -->
+    <DocSection title="Combo — стовпці + лінія, дві осі">
+      <DocPreview title="Заповнює контейнер (потягни за правий нижній кут)">
+        <div class="combo-resizable">
+          <VChart type="combo" :data="comboData" :series-config="comboSeries" category-key="time" />
+        </div>
+      </DocPreview>
+
+      <DocPreview title="Фіксована висота (height = 260, разом з легендою)">
+        <div style="width: 100%">
+          <VChart type="combo" :data="comboData.slice(8, 14)" :series-config="comboSeries" category-key="time" :height="260" />
+        </div>
+      </DocPreview>
+
+      <DocPreview title="Порожній стан">
+        <div style="width: 100%">
+          <VChart type="combo" :data="[]" :series-config="comboSeries" category-key="time" :height="200" />
+        </div>
+      </DocPreview>
+    </DocSection>
+
     <!-- ─── Donut ─── -->
     <DocSection title="Donut — кільцева діаграма">
       <DocPreview title="З легендою (labels)">
@@ -609,6 +649,20 @@
 </template>
 
 <style lang="scss" scoped>
+  .combo-resizable {
+    width: 100%;
+    height: 340px;
+    min-width: 200px;
+    min-height: 120px;
+    max-width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+    border: 1px dashed #d6d9de;
+    border-radius: 6px;
+    resize: both;
+    overflow: hidden;
+  }
+
   .chart-showcase {
     max-width: 900px;
     margin: 0 auto;
