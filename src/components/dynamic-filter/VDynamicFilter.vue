@@ -3,6 +3,7 @@
   import { useResponsiveFilters } from '@/components/dynamic-filter/functions/useResponsiveFilters';
   import VDropdown from '@/components/dropdown/VDropdown.vue';
   import VButton from '@/components/button/VButton.vue';
+  import VBadge from '@/components/badge/VBadge.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
 
@@ -60,6 +61,8 @@
     measurementContainer,
     slotNodesLength
   );
+
+  const hiddenCount = computed(() => slotNodes.value.length - visibleIndexes.value.length);
 </script>
 
 <template>
@@ -75,19 +78,21 @@
 
     <!-- Dropdown для прихованих -->
     <VDropdown
-      v-if="visibleIndexes.length < slotNodes.length"
+      v-if="hiddenCount > 0"
       class="vt-page__card-filter__dropdown"
       trigger="click"
     >
       <div ref="dropdownTriggerRef">
-        <VButton
-          :shape="isTriggerCompact ? 'square' : undefined"
-          :tooltip="isTriggerCompact"
-          icon="filter_add"
-          type="default"
-        >
-          {{ t(LOCALE_KEYS.FILTER_MORE) }}
-        </VButton>
+        <VBadge :content="hiddenCount" position="top-start">
+          <VButton
+            :shape="isTriggerCompact ? 'square' : undefined"
+            :tooltip="isTriggerCompact"
+            icon="filter_add"
+            type="default"
+          >
+            {{ t(LOCALE_KEYS.FILTER_MORE) }}
+          </VButton>
+        </VBadge>
       </div>
       <template #dropdown>
         <div class="vt-page__card-filter__dropdown-target">
