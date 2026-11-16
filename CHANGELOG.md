@@ -1,3 +1,10 @@
+## [1.25.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.2...v1.25.3) (2026-11-16)
+
+
+### Bug Fixes
+
+* порожній стан графіків як у таблиці (VEmpty) ([150e73e](https://github.com/StepanKhomyn/voiptime-components/commit/150e73e6929f177e2fbf21c148800cdf39ad902d))
+
 ## [1.25.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.1...v1.25.2) (2026-11-13)
 
 
