@@ -346,13 +346,9 @@ $transition-fast: filter 0.15s ease;
     stroke-width: 2;
   }
 
+  // Лише позиціонування: вигляд дає VEmpty (як у VTable)
   &-empty {
     @include absolute-full;
-    @include flex-center;
-    flex-direction: column;
-    gap: 8px;
-    font-size: 12px;
-    color: $color-text-muted;
   }
 
   &-tooltip {
@@ -529,22 +525,6 @@ $transition-fast: filter 0.15s ease;
       width: 100%;
       height: 100%;
       border-radius: 6px;
-    }
-  }
-
-  &-empty {
-    @include flex-center;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px 32px;
-    border-radius: 10px;
-    background: #ffffff;
-    color: $color-text-muted;
-    font-size: 13px;
-
-    .vt-chart__treemap-icon {
-      color: #cccccc;
-      flex-shrink: 0;
     }
   }
 

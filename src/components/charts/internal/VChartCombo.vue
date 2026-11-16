@@ -1,9 +1,7 @@
 <script lang="ts" setup>
   import { computed, onMounted, onUnmounted, ref } from 'vue';
   import type { ComboChartPadding, ComboDataPoint, ComboSeriesConfig } from '../types';
-  import { useI18n } from '@/locales/useI18n';
-  import { LOCALE_KEYS } from '@/locales/types';
-  import VIcon from '@/components/icon/VIcon.vue';
+  import VEmpty from '@/components/empty/VEmpty.vue';
 
   /**
    * Комбінований графік: згруповані стовпці + лінії, дві осі Y (ліва — значення, права — %).
@@ -21,7 +19,6 @@
     padding?: ComboChartPadding;
   }>();
 
-  const { t } = useI18n();
 
   const FONT_SIZE = 11;
   /** Приблизна ширина символу підпису для розрахунку відступів і проріджування */
@@ -255,9 +252,9 @@
     </div>
 
     <div ref="plot" class="vt-chart__combo-plot" @mousemove="onMove" @mouseleave="onLeave">
+      <!-- Порожній стан — той самий VEmpty, що й у VTable -->
       <div v-if="!hasData" class="vt-chart__combo-empty">
-        <VIcon name="files_empty" />
-        <span>{{ t(LOCALE_KEYS.TABLE_EMPTY) }}</span>
+        <VEmpty />
       </div>
 
       <svg
