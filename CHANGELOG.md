@@ -1,3 +1,10 @@
+## [1.25.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.3...v1.25.4) (2026-11-16)
+
+
+### Bug Fixes
+
+* add badge to more filters ([98b3591](https://github.com/StepanKhomyn/voiptime-components/commit/98b3591b9e6f6b80d021b73a3849f66d41ed9f70))
+
 ## [1.25.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.2...v1.25.3) (2026-11-16)
 
 
