@@ -30,6 +30,7 @@
       v-if="props.type === 'donut'"
       :labels="(props as DonutChartProps).labels"
       :segments="(props as DonutChartProps).segments"
+      :show-counts="(props as DonutChartProps).showCounts"
       :size="(props as DonutChartProps).size"
     />
 

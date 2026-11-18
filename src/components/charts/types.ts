@@ -35,6 +35,8 @@ export interface DonutChartProps {
   segments: ChartSegment[];
   size?: number;
   labels?: boolean;
+  /** Показувати кількість на кожному сегменті постійно (а не лише при наведенні) */
+  showCounts?: boolean;
 }
 
 // ── Horizontal Bar ────────────────────────────────────────────────────────────

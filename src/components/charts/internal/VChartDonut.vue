@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-  import { computed, onMounted, ref, watch } from 'vue';
+  import { computed, nextTick, onMounted, ref, watch } from 'vue';
   import type { ChartSegment } from '../types';
 
   const props = defineProps<{
     segments: ChartSegment[];
     size?: number;
     labels?: boolean;
+    showCounts?: boolean;
   }>();
 
-  const size = props.size ?? 200;
+  // computed — щоб діаграма перемальовувалась при зміні розміру (адаптивні віджети)
+  const sizeRef = computed(() => props.size ?? 200);
   const canvas = ref<HTMLCanvasElement | null>(null);
   const hoveredIndex = ref<number | null>(null);
   const labelX = ref(0);
@@ -23,11 +25,28 @@
 
   const total = computed(() => processedSegments.value.reduce((sum, s) => sum + s.renderCount, 0));
 
-  watch(processedSegments, drawChart, { immediate: true });
+  /** Постійні бейджі з кількістю — посередині кожного сегмента */
+  const countBadges = computed(() => {
+    if (!props.showCounts || !props.segments?.some(s => s.count)) return [];
+    const size = sizeRef.value;
+    const d = size * 0.375;
+    let start = 0;
+    return processedSegments.value
+      .map(seg => {
+        const angle = (seg.renderCount / total.value) * 2 * Math.PI;
+        const mid = start + angle / 2;
+        start += angle;
+        return { count: seg.count, angle, x: size / 2 + Math.cos(mid) * d, y: size / 2 + Math.sin(mid) * d };
+      })
+      .filter(b => b.count && b.angle > 0.15);
+  });
+
+  watch([processedSegments, sizeRef], () => nextTick(drawChart), { immediate: true });
   onMounted(drawChart);
 
   function drawChart() {
     if (!canvas.value) return;
+    const size = sizeRef.value;
     const ctx = canvas.value.getContext('2d');
     if (!ctx) return;
 
@@ -51,6 +70,7 @@
   }
 
   function handleHover(e: MouseEvent) {
+    const size = sizeRef.value;
     const cx = size / 2,
       cy = size / 2;
     const dist = Math.hypot(e.offsetX - cx, e.offsetY - cy);
@@ -83,10 +103,23 @@
 </script>
 
 <template>
-  <div class="vt-chart__donut-container" @mouseleave="resetHover" @mousemove="handleHover">
-    <canvas ref="canvas" :height="size" :width="size" />
+  <div
+    :style="{ width: `${sizeRef}px`, '--vt-donut-size': `${sizeRef}px` }"
+    class="vt-chart__donut-container"
+    @mouseleave="resetHover"
+    @mousemove="handleHover"
+  >
+    <canvas ref="canvas" :height="sizeRef" :width="sizeRef" />
+    <span
+      v-for="(badge, i) in countBadges"
+      :key="i"
+      :style="{ left: `${badge.x}px`, top: `${badge.y}px` }"
+      class="vt-chart__donut-badge"
+    >
+      {{ badge.count }}
+    </span>
     <div
-      v-if="hoveredIndex !== null"
+      v-if="hoveredIndex !== null && !showCounts"
       :style="{ left: labelX + 'px', top: labelY + 'px' }"
       class="vt-chart__donut-count"
     >

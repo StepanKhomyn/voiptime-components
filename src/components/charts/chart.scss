@@ -83,6 +83,26 @@ $transition-fast: filter 0.15s ease;
     }
   }
 
+  // Постійний бейдж з кількістю на сегменті: 46px при діаметрі 250px
+  &-badge {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: calc(var(--vt-donut-size, 200px) * 0.185);
+    height: calc(var(--vt-donut-size, 200px) * 0.185);
+    min-width: 24px;
+    min-height: 24px;
+    border-radius: 50%;
+    background: var(--color-white);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
+    transform: translate(-50%, -50%);
+    color: #404040;
+    font-size: 14px;
+    font-weight: 500;
+    pointer-events: none;
+  }
+
   &-count {
     position: absolute;
     top: 50%;

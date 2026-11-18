@@ -187,6 +187,7 @@ export enum LOCALE_KEYS {
   WIDGET_GRID_RESIZE = 'WIDGET_GRID_RESIZE',
   WIDGET_GRID_ITEM = 'WIDGET_GRID_ITEM',
   WIDGET_GRID_HINT = 'WIDGET_GRID_HINT',
+  WIDGET_GRID_EDIT = 'WIDGET_GRID_EDIT',
 }
 
 // Тип для перекладів - гарантує наявність всіх ключів

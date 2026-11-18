@@ -82,6 +82,19 @@
           @pointerdown.stop="onResizePointerDown($event, item, handle)"
         />
       </template>
+
+      <!-- Кнопка входу в режим редагування (з'являється при наведенні) -->
+      <button
+        v-if="editButton && !canEdit && !stacked && (isDraggable(item) || isResizable(item))"
+        :aria-label="t(LOCALE_KEYS.WIDGET_GRID_EDIT)"
+        :title="t(LOCALE_KEYS.WIDGET_GRID_EDIT)"
+        class="vt-widget-grid__edit-toggle"
+        type="button"
+        @click.stop="enterEditing(item)"
+        @pointerdown.stop
+      >
+        <VIcon name="table_column_resize" />
+      </button>
     </div>
 
     <span :id="hintId" class="vt-widget-grid__sr-only">{{ t(LOCALE_KEYS.WIDGET_GRID_HINT) }}</span>
@@ -90,6 +103,7 @@
 
 <script lang="ts" setup>
   import { computed, nextTick, onBeforeUnmount, onMounted, onUpdated, ref, shallowRef, watch, type CSSProperties } from 'vue';
+  import VIcon from '@/components/icon/VIcon.vue';
   import { useI18n } from '@/locales/useI18n';
   import { LOCALE_KEYS } from '@/locales/types';
   import { clamp, clampItem, cloneLayout, layoutBottom, normalizeLayout, placeItem, sameLayout } from './layout';
@@ -109,7 +123,8 @@
     rowHeight: 60,
     gap: 16,
     compact: true,
-    longPress: true,
+    longPress: false,
+    editButton: true,
     longPressDelay: 450,
     dragHandle: undefined,
     resizeHandles: () => ['n', 'e', 's', 'w', 'ne', 'nw', 'se', 'sw'],
@@ -366,6 +381,13 @@
     } catch {
       /* ignore */
     }
+  }
+
+  /** Вхід у режим редагування кнопкою на віджеті */
+  function enterEditing(item: VWidgetGridItem) {
+    if (!props.editing) emit('update:editing', true);
+    selectItem(item.id);
+    pop(item.id);
   }
 
   function pop(id: VWidgetGridId) {
