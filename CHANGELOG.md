@@ -1,3 +1,10 @@
+## [1.27.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.0...v1.27.1) (2026-11-18)
+
+
+### Bug Fixes
+
+* VDonutSummary — кількість лише при наведенні, діаграма до 200px вміщається в блок; VWidgetCard з рамкою ([7f76b5e](https://github.com/StepanKhomyn/voiptime-components/commit/7f76b5ea8b5124171498728a120298d4f4bf8ffa))
+
 # [1.27.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.26.0...v1.27.0) (2026-11-18)
 
 
