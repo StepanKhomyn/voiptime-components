@@ -1,3 +1,10 @@
+## [1.27.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.1...v1.27.2) (2026-11-18)
+
+
+### Bug Fixes
+
+* VWidgetGrid — іконка widget_resize на кнопці редагування (крапки в куті, hover — primary) ([95c0112](https://github.com/StepanKhomyn/voiptime-components/commit/95c011245323ac4c0b694886ca0a4dfb500a6f46))
+
 ## [1.27.1](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.0...v1.27.1) (2026-11-18)
 
 
