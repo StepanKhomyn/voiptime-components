@@ -16,7 +16,7 @@
         <div
           v-for="(block, b) in blocks"
           :key="block.group ?? `item-${b}`"
-          :class="{ 'vt-donut-summary__group': block.group, 'is-flat': block.flat }"
+          :class="{ 'vt-donut-summary__group': block.group }"
           class="vt-donut-summary__block"
         >
           <div
@@ -57,7 +57,7 @@
   /**
    * Кільцева діаграма з легендою для віджета дашборду.
    * Сама обирає розкладку під місце, яке має (зазвичай — тіло VWidgetCard у клітинці VWidgetGrid):
-   * - row: діаграма зліва, легенда справа (діаграма стискається до 100px, щоб легенда вміщалась поруч);
+   * - row: діаграма зліва, легенда справа (діаграма стискається до 150px, щоб легенда вміщалась поруч);
    * - column: зовсім вузький віджет — легенда під діаграмою;
    * - compact: низький широкий віджет — групи легенди в один рядок.
    * Діаграма — звичайний VChart donut: до `size`, менша, якщо не влазить; кількість при наведенні.
@@ -70,10 +70,10 @@
   });
 
   /** Мінімальна ширина легенди поруч із діаграмою і проміжок між ними */
-  const LEGEND_MIN_WIDTH = 220;
+  const LEGEND_MIN_WIDTH = 250;
   const GAP = 20;
   /** Менше цього діаграма поруч із легендою не стискається — легенда йде під неї */
-  const ROW_MIN_SIZE = 100;
+  const ROW_MIN_SIZE = 150;
   /** Найменша діаграма взагалі (низький компактний блок) */
   const MIN_SIZE = 60;
   /** Широкий віджет переходить у compact, лише коли легенда стовпчиком не вміщається за висотою */
@@ -127,14 +127,12 @@
 
   /** Рядки, згруповані в блоки: сусідні з однаковою `group` — разом */
   const blocks = computed(() => {
-    const list: { group?: string; flat?: boolean; items: VDonutSummaryItem[] }[] = [];
+    const list: { group?: string; items: VDonutSummaryItem[] }[] = [];
     props.items.forEach(item => {
       const last = list[list.length - 1];
       if (item.group && last?.group === item.group) last.items.push(item);
       else list.push({ group: item.group, items: [item] });
     });
-    // В один рядок (compact) стають лише пласкі групи — дерево з «↳» лишається стовпчиком
-    list.forEach(block => (block.flat = block.items.every(item => !item.level)));
     return list;
   });
 

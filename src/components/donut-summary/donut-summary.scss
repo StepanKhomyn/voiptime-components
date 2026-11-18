@@ -18,7 +18,7 @@
     flex: 1 1 0;
     flex-direction: column;
     gap: 5px;
-    min-width: 220px;
+    min-width: 250px;
   }
 
   &__total {
@@ -152,7 +152,8 @@
       flex: 0 1 auto;
     }
 
-    .vt-donut-summary__group.is-flat {
+    // Рядки групи — в один рядок (і дерево теж: «↳» лишається, без додаткового відступу)
+    .vt-donut-summary__group {
       flex-direction: row;
       flex-wrap: wrap;
       column-gap: var(--vt-gap-lg, 20px);
@@ -160,6 +161,10 @@
       .vt-donut-summary__item {
         flex: 1 1 auto;
       }
+    }
+
+    .vt-donut-summary__indent {
+      display: none;
     }
   }
 }
