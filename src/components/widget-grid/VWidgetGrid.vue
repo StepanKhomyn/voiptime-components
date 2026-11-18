@@ -93,7 +93,7 @@
         @click.stop="enterEditing(item)"
         @pointerdown.stop
       >
-        <VIcon name="table_column_resize" />
+        <VIcon name="widget_resize" />
       </button>
     </div>
 

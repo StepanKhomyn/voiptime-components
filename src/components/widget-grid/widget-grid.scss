@@ -166,42 +166,29 @@
   }
 
   // ---------------- Кнопка входу в редагування ----------------
+  // Іконка widget_resize у правому нижньому куті віджета (макет): сірі крапки, при наведенні — primary
   &__edit-toggle {
     position: absolute;
-    // Відступ більший за ширину скролбара вмісту, щоб не перекривати його
-    right: 16px;
-    bottom: 10px;
+    right: 6px;
+    bottom: 6px;
     z-index: 4;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 28px;
-    height: 28px;
     padding: 0;
-    border: 1px solid var(--color-gray-5);
-    border-radius: 8px;
-    background: var(--color-white);
+    border: 0;
+    background: none;
     color: var(--color-gray-3);
-    box-shadow: 0 2px 6px rgb(0 0 0 / 8%);
     cursor: pointer;
     opacity: 0;
-    transform: scale(0.8);
     pointer-events: none;
     transition:
       opacity 160ms ease,
-      transform 200ms var(--vt-wg-spring),
-      color 120ms ease,
-      border-color 120ms ease;
-
-    svg {
-      width: 18px;
-      height: 18px;
-    }
+      color 120ms ease;
 
     &:hover,
     &:focus-visible {
-      color: var(--color-primary-hover);
-      border-color: var(--color-primary-hover);
+      color: var(--color-primary-main);
       outline: none;
     }
   }
@@ -209,14 +196,12 @@
   &__item:hover &__edit-toggle,
   &__edit-toggle:focus-visible {
     opacity: 1;
-    transform: scale(1);
     pointer-events: auto;
   }
 
   @media (hover: none) {
     &__edit-toggle {
-      opacity: 0.85;
-      transform: scale(1);
+      opacity: 1;
       pointer-events: auto;
     }
   }

@@ -316,6 +316,7 @@ import UsersGroupIcon from './users/UsersGroupIcon.vue';
 import UsersUserIcon from './users/UsersUserIcon.vue';
 import UsersUsersIcon from './users/UsersUsersIcon.vue';
 import WidgetDashboardIcon from './widget/WidgetDashboardIcon.vue';
+import WidgetResizeIcon from './widget/WidgetResizeIcon.vue';
 
 export const groupIcons = {
   // acd
@@ -700,6 +701,7 @@ export const groupIcons = {
 
   // widget
   widget_dashboard: WidgetDashboardIcon,
+  widget_resize: WidgetResizeIcon,
 } as const;
 
 export type GroupIconName = keyof typeof groupIcons;
@@ -1087,6 +1089,7 @@ export const iconGroups = {
   ],
   'widget': [
     'widget_dashboard',
+    'widget_resize',
   ],
 } as const;
 
