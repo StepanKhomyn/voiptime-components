@@ -1,3 +1,10 @@
+## [1.27.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.2...v1.27.3) (2026-11-18)
+
+
+### Bug Fixes
+
+* VDonutSummary — вузький блок кидає легенду під діаграму, компактний — усі групи в рядок; VWidgetCard без рамки ([e2ef141](https://github.com/StepanKhomyn/voiptime-components/commit/e2ef1415527dbe7d31506324a379684d71043fd4))
+
 ## [1.27.2](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.1...v1.27.2) (2026-11-18)
 
 
