@@ -1,3 +1,10 @@
+## [1.27.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.3...v1.27.4) (2026-11-18)
+
+
+### Bug Fixes
+
+* VChart donut — чітке кільце на HiDPI і при зумі (canvas у фізичних пікселях) ([7beda5f](https://github.com/StepanKhomyn/voiptime-components/commit/7beda5f3412b5b155cd96227e33353e92ea90193))
+
 ## [1.27.3](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.2...v1.27.3) (2026-11-18)
 
 
