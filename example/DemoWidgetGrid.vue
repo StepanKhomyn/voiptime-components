@@ -176,7 +176,8 @@
         { name: 'total', type: 'number', default: '—', description: 'Підсумок; від нього рахуються відсотки (слот #total — свій формат)' },
         { name: 'items', type: 'VDonutSummaryItem[]', default: '—', description: '{ label, count, color?, icon?, value?, level?: 0|1|2, group?, percent?, percentBase?, chart? }' },
         { name: 'segments', type: 'ChartSegment[]', default: 'з items', description: 'Сегменти діаграми, якщо відрізняються від легенди' },
-        { name: 'minSize / maxSize', type: 'number', default: '150 / 250', description: 'Межі діаметра діаграми, px' },
+        { name: 'size', type: 'number', default: '200', description: 'Діаметр діаграми, px' },
+        { name: 'showCounts', type: 'boolean', default: 'false', description: 'Кількість на сегментах постійно (інакше — при наведенні)' },
         { name: 'layout', type: "'row' | 'column' | 'compact'", default: 'авто', description: 'Зафіксувати розкладку. Авто: вузько → column, низько й широко → compact' },
       ],
     },
@@ -211,7 +212,7 @@
 <template>
   <div class="demo-wg">
     <DocSection
-      description="Наведіть на блок і натисніть кнопку справа знизу — вмикається редагування. Тягніть, щоб переставити; тягніть за ручки, щоб розтягнути чи стягнути. Зведення (VWidgetCard + VDonutSummary) самі перебудовуються під розмір блоку. Компонент нічого не зберігає — розкладку тримає застосунок через v-model."
+      description="Наведіть на блок і натисніть кнопку справа знизу — вмикається редагування. Тягніть, щоб переставити; тягніть за ручки, щоб розтягнути чи стягнути. Зведення (VWidgetCard + VDonutSummary) перебудовують легенду під розмір блоку. Компонент нічого не зберігає — розкладку тримає застосунок через v-model."
       title="Дашборд"
     >
       <div class="demo-wg__toolbar">
@@ -322,10 +323,6 @@
       padding: 16px;
       border-radius: 16px;
       background: var(--color-gray-7);
-    }
-
-    &__widget {
-      border: 1px solid var(--color-gray-5);
     }
 
     &__card {

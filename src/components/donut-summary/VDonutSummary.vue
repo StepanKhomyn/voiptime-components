@@ -1,7 +1,7 @@
 <template>
-  <div ref="rootRef" :class="`is-${currentLayout}`" class="vt-donut-summary">
+  <div ref="rootRef" :class="[`is-${currentLayout}`, { 'is-overflow': legendOverflows }]" class="vt-donut-summary">
     <div class="vt-donut-summary__chart">
-      <VChartDonut :segments="chartSegments" :size="size" show-counts />
+      <VChartDonut :segments="chartSegments" :show-counts="showCounts" :size="chartSize" />
     </div>
 
     <div class="vt-donut-summary__legend">
@@ -56,20 +56,26 @@
 
   /**
    * Кільцева діаграма з легендою для віджета дашборду.
-   * Сама обирає розкладку і діаметр під місце, яке має (зазвичай — тіло VWidgetCard у клітинці VWidgetGrid):
-   * - row: діаграма зліва, легенда справа; діаметр — за висотою, minSize…maxSize;
-   * - column: ширини не вистачає на обидві — легенда під діаграмою; діаметр — за шириною;
-   * - compact: низький широкий віджет — маленька діаграма, групи легенди в один рядок.
+   * Сама обирає розкладку під місце, яке має (зазвичай — тіло VWidgetCard у клітинці VWidgetGrid):
+   * - row: діаграма зліва, легенда справа (діаграма стискається до 100px, щоб легенда вміщалась поруч);
+   * - column: зовсім вузький віджет — легенда під діаграмою;
+   * - compact: низький широкий віджет — групи легенди в один рядок.
+   * Діаграма — звичайний VChart donut: до `size`, менша, якщо не влазить; кількість при наведенні.
    */
   const props = withDefaults(defineProps<VDonutSummaryProps>(), {
     segments: undefined,
-    minSize: 150,
-    maxSize: 250,
+    size: 200,
+    showCounts: false,
     layout: undefined,
   });
 
-  /** Діаграма (min 250) + легенда (min 275) + проміжок 20 */
-  const ROW_MIN_WIDTH = 545;
+  /** Мінімальна ширина легенди поруч із діаграмою і проміжок між ними */
+  const LEGEND_MIN_WIDTH = 220;
+  const GAP = 20;
+  /** Менше цього діаграма поруч із легендою не стискається — легенда йде під неї */
+  const ROW_MIN_SIZE = 100;
+  /** Найменша діаграма взагалі (низький компактний блок) */
+  const MIN_SIZE = 60;
   /** Широкий віджет переходить у compact, лише коли легенда стовпчиком не вміщається за висотою */
   const COMPACT_MIN_WIDTH = 700;
   /** Оцінка висоти легенди стовпчиком: рядок підсумку + рядки пунктів */
@@ -81,26 +87,34 @@
   const availableHeight = ref(0);
   let observer: ResizeObserver | null = null;
 
+  const height = computed(() => availableHeight.value || props.size);
+
+  /** Скільки ширини лишається діаграмі поруч із легендою */
+  const roomBesideLegend = computed(() => width.value - GAP - LEGEND_MIN_WIDTH);
+
+  const legendHeight = computed(() => TOTAL_ROW_HEIGHT + props.items.length * ITEM_ROW_HEIGHT);
+
   const autoLayout = computed<VDonutSummaryLayout>(() => {
     if (!width.value) return 'row';
-    if (width.value < ROW_MIN_WIDTH) return 'column';
-    const legendHeight = TOTAL_ROW_HEIGHT + props.items.length * ITEM_ROW_HEIGHT;
-    if (width.value >= COMPACT_MIN_WIDTH && legendHeight > availableHeight.value) return 'compact';
+    if (roomBesideLegend.value < ROW_MIN_SIZE) return 'column';
+    if (width.value >= COMPACT_MIN_WIDTH && legendHeight.value > height.value) return 'compact';
     return 'row';
   });
 
+  /** Легенда поруч вища за блок (прокрутка) — діаграму не центруємо, інакше вона з'їжджає вниз */
+  const legendOverflows = computed(() => currentLayout.value === 'row' && legendHeight.value > height.value);
+
   const currentLayout = computed(() => props.layout ?? autoLayout.value);
 
-  const clamp = (v: number) => Math.max(props.minSize, Math.min(v, props.maxSize));
-
-  const size = computed(() => {
-    if (!width.value) return clamp(200);
-    if (currentLayout.value === 'column') {
-      // Під діаграмою має лишитись видно хоча б початок легенди
-      const byHeight = availableHeight.value ? Math.max(props.minSize, availableHeight.value - 100) : props.maxSize;
-      return Math.floor(Math.min(width.value, props.maxSize, byHeight));
-    }
-    return Math.floor(clamp(availableHeight.value || props.maxSize));
+  /** Діаграма до `size`, але зменшується, щоб уміститися в блок (кількість — при наведенні, як у VChart) */
+  const chartSize = computed(() => {
+    if (!width.value) return props.size;
+    const size =
+      currentLayout.value === 'column'
+        ? // під діаграмою має лишитись видно хоча б початок легенди
+          Math.min(props.size, width.value, height.value - TOTAL_ROW_HEIGHT - ITEM_ROW_HEIGHT * 2)
+        : Math.min(props.size, height.value, roomBesideLegend.value);
+    return Math.max(MIN_SIZE, Math.floor(size));
   });
 
   const chartSegments = computed<ChartSegment[]>(

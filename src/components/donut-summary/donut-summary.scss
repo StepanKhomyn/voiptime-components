@@ -18,7 +18,7 @@
     flex: 1 1 0;
     flex-direction: column;
     gap: 5px;
-    min-width: 275px;
+    min-width: 220px;
   }
 
   &__total {
@@ -117,6 +117,10 @@
     color: var(--color-gray-4);
     text-align: right;
     white-space: nowrap;
+  }
+
+  &.is-overflow {
+    align-items: flex-start;
   }
 
   // ---------------- Легенда під діаграмою ----------------

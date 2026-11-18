@@ -43,10 +43,10 @@ export interface VDonutSummaryProps {
   items: VDonutSummaryItem[];
   /** Сегменти діаграми, якщо відрізняються від рядків легенди */
   segments?: ChartSegment[];
-  /** Мінімальний діаметр діаграми, px */
-  minSize?: number;
-  /** Максимальний діаметр діаграми, px */
-  maxSize?: number;
+  /** Найбільший діаметр діаграми, px (менший, якщо блок не вміщає) */
+  size?: number;
+  /** Кількість на сегментах постійно (за замовчуванням — лише при наведенні) */
+  showCounts?: boolean;
   /** Зафіксувати розкладку замість автоматичної */
   layout?: VDonutSummaryLayout;
 }
