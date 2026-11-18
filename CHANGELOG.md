@@ -1,3 +1,10 @@
+# [1.26.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.4...v1.26.0) (2026-11-18)
+
+
+### Features
+
+* VWidgetGrid — вхід у редагування кнопкою на віджеті, VChart donut — постійні бейджі та реактивний size ([4a5d7ea](https://github.com/StepanKhomyn/voiptime-components/commit/4a5d7eab4a7568ce09313a50a09c7414a3adae15))
+
 ## [1.25.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.3...v1.25.4) (2026-11-16)
 
 
