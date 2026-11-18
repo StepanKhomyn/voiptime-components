@@ -168,8 +168,9 @@
   // ---------------- Кнопка входу в редагування ----------------
   &__edit-toggle {
     position: absolute;
-    right: 6px;
-    bottom: 6px;
+    // Відступ більший за ширину скролбара вмісту, щоб не перекривати його
+    right: 16px;
+    bottom: 10px;
     z-index: 4;
     display: inline-flex;
     align-items: center;

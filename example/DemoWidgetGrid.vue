@@ -1,6 +1,9 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import VWidgetGrid from '@/components/widget-grid/VWidgetGrid.vue';
+  import VWidgetCard from '@/components/widget-card/VWidgetCard.vue';
+  import VDonutSummary from '@/components/donut-summary/VDonutSummary.vue';
+  import type { VDonutSummaryItem } from '@/components/donut-summary/types';
   import VButton from '@/components/button/VButton.vue';
   import VCheckbox from '@/components/checkbox/VCheckbox.vue';
   import type { VWidgetGridLayout } from '@/components/widget-grid/types';
@@ -10,12 +13,12 @@
 
   // ---------------- Дашборд як у кол-центрі ----------------
   const defaults: VWidgetGridLayout = [
-    { id: 'inbound', x: 0, y: 0, w: 4, h: 4, minW: 3, minH: 3 },
-    { id: 'online', x: 4, y: 0, w: 4, h: 4, minW: 3, minH: 3 },
-    { id: 'users', x: 8, y: 0, w: 4, h: 4, minW: 3, minH: 3 },
-    { id: 'calls', x: 0, y: 4, w: 6, h: 6, minW: 4, minH: 3 },
-    { id: 'operators', x: 6, y: 4, w: 6, h: 6, minW: 4, minH: 3 },
-    { id: 'sl', x: 0, y: 10, w: 12, h: 3, minH: 2 },
+    { id: 'inbound', x: 0, y: 0, w: 4, h: 5, minW: 3, minH: 3 },
+    { id: 'online', x: 4, y: 0, w: 4, h: 5, minW: 3, minH: 3 },
+    { id: 'users', x: 8, y: 0, w: 4, h: 5, minW: 3, minH: 3 },
+    { id: 'calls', x: 0, y: 5, w: 6, h: 6, minW: 4, minH: 3 },
+    { id: 'operators', x: 6, y: 5, w: 6, h: 6, minW: 4, minH: 3 },
+    { id: 'sl', x: 0, y: 11, w: 12, h: 3, minH: 2 },
   ];
 
   // Компонент нічого не зберігає сам — розкладка живе там, де її тримає застосунок
@@ -35,41 +38,48 @@
     sl: 'Service level',
   };
 
-  const series = {
-    inbound: [
-      { label: 'IVR', value: 12, color: 'var(--color-status-ready)' },
-      { label: 'ACD', value: 7, color: 'var(--color-status-talking)' },
-      { label: 'Втрачені', value: 3, color: 'var(--color-status-not-ready)' },
-    ],
-    online: [
-      { label: 'IVR', value: 4, color: 'var(--color-status-ready)' },
-      { label: 'ACD', value: 2, color: 'var(--color-status-talking)' },
-      { label: 'В обробці', value: 5, color: 'var(--color-status-reserved)' },
-    ],
-    users: [
-      { label: 'Ready', value: 5, color: 'var(--color-status-ready)' },
-      { label: 'Talking', value: 3, color: 'var(--color-status-talking)' },
-      { label: 'Working', value: 1, color: 'var(--color-status-working)' },
-      { label: 'Not ready', value: 2, color: 'var(--color-status-not-ready)' },
-    ],
-  } as const;
+  type SeriesKey = 'inbound' | 'online' | 'users';
 
-  type SeriesKey = keyof typeof series;
-  const isSeries = (id: string | number): id is SeriesKey => id in series;
-  const total = (key: SeriesKey) => series[key].reduce((s, i) => s + i.value, 0);
+  /** Дані для VWidgetCard + VDonutSummary (як у звітах кол-центру) */
+  const summaries: Record<SeriesKey, { card: string; title: string; total: number; items: VDonutSummaryItem[] }> = {
+    inbound: {
+      card: 'Вхідні дзвінки',
+      title: 'Всі вхідні дзвінки',
+      total: 22,
+      items: [
+        { label: 'IVR', count: 12, color: '#27AE60', group: 'calls' },
+        { label: 'ACD', count: 7, color: '#2D9CDB', group: 'calls' },
+        { label: 'Оброблені операторами', count: 5, level: 1, group: 'calls' },
+        { label: 'Перенаправлених', count: 1, level: 2, group: 'calls' },
+        { label: 'Втрачені', count: 3, color: '#EB5757', group: 'calls' },
+      ],
+    },
+    online: {
+      card: 'Онлайн дзвінки',
+      title: 'Всього дзвінків',
+      total: 11,
+      items: [
+        { label: 'IVR', count: 4, color: '#27AE60', group: 'calls' },
+        { label: 'ACD', count: 2, color: '#2D9CDB', group: 'calls' },
+        { label: 'В обробці', count: 5, color: '#F2C94C', group: 'calls' },
+      ],
+    },
+    users: {
+      card: 'Оператори',
+      title: 'Всього у системі',
+      total: 14,
+      items: [
+        { label: 'Залоговані активні', count: 11 },
+        { label: 'Ready', count: 5, color: '#27AE60', group: 'statuses' },
+        { label: 'Talking', count: 3, color: '#2D9CDB', group: 'statuses' },
+        { label: 'Working', count: 1, color: '#9B51E0', group: 'statuses' },
+        { label: 'Not ready', count: 2, color: '#EB5757', group: 'statuses' },
+        { label: 'Неактивні оператори', count: 3 },
+      ],
+    },
+  };
 
-  /** stroke-dasharray сегменти для SVG-кільця */
-  function donut(key: SeriesKey) {
-    const sum = total(key) || 1;
-    const c = 2 * Math.PI * 40;
-    let offset = 0;
-    return series[key].map(s => {
-      const len = (s.value / sum) * c;
-      const seg = { color: s.color, dash: `${len} ${c - len}`, offset: -offset };
-      offset += len;
-      return seg;
-    });
-  }
+  const isSeries = (id: string | number): id is SeriesKey => id in summaries;
 
   const operators = [
     { name: 'Dev Stepan', status: 'Ready', time: '00:02:05' },
@@ -139,12 +149,35 @@
         { name: 'rowHeight', type: 'number', default: '60', description: 'Висота рядка, px' },
         { name: 'gap', type: 'number', default: '16', description: 'Відступ між віджетами, px' },
         { name: 'compact', type: 'boolean', default: 'true', description: 'Підтягувати віджети вгору, прибираючи порожнечі' },
-        { name: 'longPress', type: 'boolean', default: 'true', description: 'Вхід у редагування довгим натисканням на віджет' },
+        { name: 'editButton', type: 'boolean', default: 'true', description: 'Кнопка в правому нижньому куті віджета (при наведенні), що вмикає редагування' },
+        { name: 'longPress', type: 'boolean', default: 'false', description: 'Вхід у редагування довгим натисканням на віджет' },
         { name: 'longPressDelay', type: 'number', default: '450', description: 'Тривалість довгого натискання, мс' },
         { name: 'dragHandle', type: 'string', default: 'undefined', description: 'CSS-селектор "ручки" для перетягування (інакше — весь віджет)' },
         { name: 'resizeHandles', type: "('n'|'e'|'s'|'w'|'ne'|'nw'|'se'|'sw')[]", default: 'усі 8', description: 'Які ручки зміни розміру показувати' },
         { name: 'showGrid', type: 'boolean', default: 'true', description: 'Клітинки сітки в режимі редагування' },
         { name: 'stackBelow', type: 'number', default: '0', description: 'Нижче цієї ширини (px) — одна колонка без редагування. 0 — вимкнено' },
+      ],
+    },
+    {
+      title: 'VWidgetCard — props / slots / events',
+      rows: [
+        { name: 'title', type: 'string', default: "''", description: 'Заголовок у шапці (або слот title)' },
+        { name: 'downloadable', type: 'boolean', default: 'false', description: 'Іконка завантаження в шапці → подія download' },
+        { name: 'flush', type: 'boolean', default: 'false', description: 'Тіло без відступів (таблиці, графіки на всю ширину)' },
+        { name: '#filters', type: 'slot', default: '—', description: 'Чіпи фільтрів; переносяться разом із заголовком' },
+        { name: '#actions', type: 'slot', default: '—', description: 'Додаткові дії праворуч у шапці' },
+        { name: '@download', type: '() => void', default: '—', description: 'Клік по іконці завантаження' },
+      ],
+    },
+    {
+      title: 'VDonutSummary — props',
+      rows: [
+        { name: 'title', type: 'string', default: '—', description: 'Підпис підсумку («Всі вхідні дзвінки»)' },
+        { name: 'total', type: 'number', default: '—', description: 'Підсумок; від нього рахуються відсотки (слот #total — свій формат)' },
+        { name: 'items', type: 'VDonutSummaryItem[]', default: '—', description: '{ label, count, color?, icon?, value?, level?: 0|1|2, group?, percent?, percentBase?, chart? }' },
+        { name: 'segments', type: 'ChartSegment[]', default: 'з items', description: 'Сегменти діаграми, якщо відрізняються від легенди' },
+        { name: 'minSize / maxSize', type: 'number', default: '150 / 250', description: 'Межі діаметра діаграми, px' },
+        { name: 'layout', type: "'row' | 'column' | 'compact'", default: 'авто', description: 'Зафіксувати розкладку. Авто: вузько → column, низько й широко → compact' },
       ],
     },
     {
@@ -166,7 +199,7 @@
     {
       title: 'Керування',
       rows: [
-        { name: 'Довге натискання', type: '—', description: 'Вмикає редагування і одразу дозволяє тягнути (як на телефоні)' },
+        { name: 'Кнопка на віджеті', type: '—', description: 'З’являється при наведенні справа знизу, вмикає редагування' },
         { name: '← ↑ → ↓', type: '—', description: 'Перемістити обраний віджет на клітинку' },
         { name: 'Shift + стрілки', type: '—', description: 'Змінити розмір обраного віджета' },
         { name: 'Esc', type: '—', description: 'Скасувати перетягування → зняти виділення → вийти з редагування' },
@@ -178,7 +211,7 @@
 <template>
   <div class="demo-wg">
     <DocSection
-      description="Затисніть будь-який блок на пів секунди — і він «підніметься», як віджет на Samsung. Тягніть, щоб переставити; тягніть за ручки, щоб розтягнути чи стягнути. Компонент нічого не зберігає — розкладку тримає застосунок через v-model."
+      description="Наведіть на блок і натисніть кнопку справа знизу — вмикається редагування. Тягніть, щоб переставити; тягніть за ручки, щоб розтягнути чи стягнути. Зведення (VWidgetCard + VDonutSummary) самі перебудовуються під розмір блоку. Компонент нічого не зберігає — розкладку тримає застосунок через v-model."
       title="Дашборд"
     >
       <div class="demo-wg__toolbar">
@@ -204,39 +237,20 @@
           @resize-end="i => (lastEvent = `resize-end: ${i.id} → ${i.w}×${i.h}`)"
         >
           <template #item="{ item, active }">
-            <div :class="{ 'is-active': active }" class="demo-wg__card">
+            <!-- Зведення: VWidgetCard + VDonutSummary, адаптуються під розмір блоку -->
+            <VWidgetCard v-if="isSeries(item.id)" :title="summaries[item.id].card" downloadable class="demo-wg__widget">
+              <VDonutSummary
+                :items="summaries[item.id].items"
+                :title="summaries[item.id].title"
+                :total="summaries[item.id].total"
+              />
+            </VWidgetCard>
+
+            <div v-else :class="{ 'is-active': active }" class="demo-wg__card">
               <div class="demo-wg__title">{{ titles[item.id] }}</div>
 
-              <!-- Зведення з кільцем -->
-              <div v-if="isSeries(item.id)" class="demo-wg__summary">
-                <ul class="demo-wg__legend">
-                  <li v-for="s in series[item.id]" :key="s.label">
-                    <i :style="{ background: s.color }" />
-                    <span>{{ s.label }}</span>
-                    <b>{{ s.value }}</b>
-                  </li>
-                </ul>
-                <svg class="demo-wg__donut" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" fill="none" r="40" stroke="var(--color-gray-6)" stroke-width="16" />
-                  <circle
-                    v-for="(seg, i) in donut(item.id)"
-                    :key="i"
-                    :stroke="seg.color"
-                    :stroke-dasharray="seg.dash"
-                    :stroke-dashoffset="seg.offset"
-                    cx="50"
-                    cy="50"
-                    fill="none"
-                    r="40"
-                    stroke-width="16"
-                    transform="rotate(-90 50 50)"
-                  />
-                  <text dominant-baseline="central" text-anchor="middle" x="50" y="50">{{ total(item.id) }}</text>
-                </svg>
-              </div>
-
               <!-- Таблиця операторів -->
-              <div v-else-if="item.id === 'operators'" class="demo-wg__table">
+              <div v-if="item.id === 'operators'" class="demo-wg__table">
                 <div v-for="o in operators" :key="o.name" class="demo-wg__row">
                   <span>{{ o.name }}</span>
                   <span :style="{ color: statusColor[o.status] }" class="demo-wg__status">● {{ o.status }}</span>
@@ -310,6 +324,10 @@
       background: var(--color-gray-7);
     }
 
+    &__widget {
+      border: 1px solid var(--color-gray-5);
+    }
+
     &__card {
       position: relative;
       display: flex;
@@ -328,55 +346,6 @@
       font-size: 14px;
       font-weight: 600;
       color: var(--color-primary-main);
-    }
-
-    &__summary {
-      display: flex;
-      flex: 1;
-      gap: 16px;
-      align-items: center;
-      min-height: 0;
-    }
-
-    &__legend {
-      flex: 1;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      font-size: 13px;
-
-      li {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 4px 0;
-      }
-
-      i {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-      }
-
-      b {
-        margin-left: auto;
-      }
-    }
-
-    &__donut {
-      height: 100%;
-      max-height: 160px;
-      aspect-ratio: 1;
-
-      circle {
-        transition: stroke-dasharray 0.4s ease;
-      }
-
-      text {
-        font-size: 20px;
-        font-weight: 700;
-        fill: var(--color-primary-main);
-      }
     }
 
     &__table {

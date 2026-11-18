@@ -47,6 +47,8 @@ import VDivider from '@/components/divider/VDivider.vue';
 import VAppBar from '@/components/app-bar/VAppBar.vue';
 import VNavRail from '@/components/nav-rail/VNavRail.vue';
 import VWidgetGrid from '@/components/widget-grid/VWidgetGrid.vue';
+import VWidgetCard from '@/components/widget-card/VWidgetCard.vue';
+import VDonutSummary from '@/components/donut-summary/VDonutSummary.vue';
 
 import './assets/main.scss';
 import { tooltipDirective } from './directives/tooltip/tooltip';
@@ -105,6 +107,8 @@ export {
   VAppBar,
   VNavRail,
   VWidgetGrid,
+  VWidgetCard,
+  VDonutSummary,
 };
 
 // ----------------- Експортуємо директиви -----------------
@@ -320,6 +324,13 @@ export type {
 } from './components/widget-grid/types';
 export { compactLayout as compactWidgetGridLayout } from './components/widget-grid/layout';
 
+//WidgetCard
+export type { VWidgetCardProps, VWidgetCardEmits } from './components/widget-card/types';
+
+//DonutSummary
+export type { VDonutSummaryProps, VDonutSummaryItem, VDonutSummaryLayout } from './components/donut-summary/types';
+export type { ChartSegment } from './components/charts/types';
+
 // ----------------- Експортуємо константи -----------------
 export { DEFAULT_COLUMN_CONFIG } from './components/table/types';
 export { DropdownContextKey } from './components/dropdown/types';
@@ -409,6 +420,8 @@ const VUIPlugin = {
     app.component(`${prefix}AppBar`, VAppBar);
     app.component(`${prefix}NavRail`, VNavRail);
     app.component(`${prefix}WidgetGrid`, VWidgetGrid);
+    app.component(`${prefix}WidgetCard`, VWidgetCard);
+    app.component(`${prefix}DonutSummary`, VDonutSummary);
 
     // Директиви
     app.directive('tooltip', tooltipDirective);

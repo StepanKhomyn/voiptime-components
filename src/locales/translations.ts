@@ -180,6 +180,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.WIDGET_GRID_ITEM]: 'Віджет {id}: колонка {x}, рядок {y}, розмір {w}×{h}',
     [LOCALE_KEYS.WIDGET_GRID_HINT]: 'Перетягніть, щоб перемістити. Стрілки — зсув, Shift+стрілки — розмір, Esc — завершити',
     [LOCALE_KEYS.WIDGET_GRID_EDIT]: 'Змінити розмір і розташування',
+    [LOCALE_KEYS.WIDGET_CARD_DOWNLOAD]: 'Завантажити',
   },
 
   [LANGUAGES.en]: {
@@ -361,6 +362,7 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.WIDGET_GRID_ITEM]: 'Widget {id}: column {x}, row {y}, size {w}×{h}',
     [LOCALE_KEYS.WIDGET_GRID_HINT]: 'Drag to move. Arrows move, Shift+arrows resize, Esc to finish',
     [LOCALE_KEYS.WIDGET_GRID_EDIT]: 'Resize and move',
+    [LOCALE_KEYS.WIDGET_CARD_DOWNLOAD]: 'Download',
   },
 
   [LANGUAGES.ru]: {
@@ -542,5 +544,6 @@ export const translations: Translations = <Translations>{
     [LOCALE_KEYS.WIDGET_GRID_ITEM]: 'Виджет {id}: колонка {x}, строка {y}, размер {w}×{h}',
     [LOCALE_KEYS.WIDGET_GRID_HINT]: 'Перетащите, чтобы переместить. Стрелки — сдвиг, Shift+стрелки — размер, Esc — завершить',
     [LOCALE_KEYS.WIDGET_GRID_EDIT]: 'Изменить размер и расположение',
+    [LOCALE_KEYS.WIDGET_CARD_DOWNLOAD]: 'Скачать',
   },
 };

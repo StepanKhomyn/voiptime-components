@@ -1,0 +1,161 @@
+// Діаграма + легенда віджета дашборду (макет VT_СС_DASHBOARDs)
+.vt-donut-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--vt-gap-lg, 20px);
+  width: 100%;
+  min-width: 0;
+
+  &__chart {
+    display: flex;
+    flex: 1 1 0;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  &__legend {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 275px;
+  }
+
+  &__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--vt-gap-base, 10px);
+    padding-bottom: var(--vt-padding-base, 10px);
+    font-weight: 500;
+    color: var(--color-primary-main);
+  }
+
+  &__title {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+
+  &__total-value {
+    font-size: 35px;
+    line-height: 27px;
+    white-space: nowrap;
+  }
+
+  &__list,
+  &__block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__group {
+    padding-left: var(--vt-padding-lg, 20px);
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: var(--vt-gap-base, 10px);
+    min-height: 27px;
+  }
+
+  &__label {
+    display: flex;
+    flex: 1 1 auto;
+    align-items: center;
+    gap: 5px;
+    min-width: 0;
+    font-size: 14px;
+    color: var(--color-gray-2);
+  }
+
+  &__item.is-heading &__label {
+    font-weight: 500;
+  }
+
+  &__text {
+    min-width: 0;
+  }
+
+  &__dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  &__icon {
+    flex-shrink: 0;
+    width: 15px;
+    height: 15px;
+  }
+
+  &__indent,
+  &__branch {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  &__branch {
+    color: var(--color-gray-4);
+  }
+
+  &__value {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 27px;
+    color: var(--color-primary-main);
+    white-space: nowrap;
+  }
+
+  &__percent {
+    min-width: 30px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 27px;
+    color: var(--color-gray-4);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  // ---------------- Легенда під діаграмою ----------------
+  &.is-column {
+    flex-direction: column;
+    align-items: stretch;
+
+    .vt-donut-summary__chart {
+      flex: none;
+    }
+
+    .vt-donut-summary__legend {
+      flex: none;
+      min-width: 0;
+    }
+  }
+
+  // ---------------- Низький широкий віджет ----------------
+  &.is-compact {
+    .vt-donut-summary__chart {
+      flex: none;
+    }
+
+    .vt-donut-summary__total {
+      justify-content: flex-start;
+    }
+
+    .vt-donut-summary__label {
+      flex: 0 1 auto;
+    }
+
+    .vt-donut-summary__group.is-flat {
+      flex-direction: row;
+      flex-wrap: wrap;
+      column-gap: var(--vt-gap-lg, 20px);
+
+      .vt-donut-summary__item {
+        flex: 1 1 auto;
+      }
+    }
+  }
+}
