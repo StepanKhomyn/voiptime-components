@@ -1,3 +1,10 @@
+## [1.27.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.4...v1.27.5) (2026-11-18)
+
+
+### Bug Fixes
+
+* VWidgetCard — повернуто рамку 1px gray-5 (картки на білому фоні) ([a85e4ba](https://github.com/StepanKhomyn/voiptime-components/commit/a85e4bab5ec77b3d6cbc92a732e5a3c7f2df765e))
+
 ## [1.27.4](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.3...v1.27.4) (2026-11-18)
 
 
