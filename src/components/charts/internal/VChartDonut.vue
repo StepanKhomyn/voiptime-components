@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, nextTick, onMounted, ref, watch } from 'vue';
+  import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
   import type { ChartSegment } from '../types';
 
   const props = defineProps<{
@@ -41,8 +41,30 @@
       .filter(b => b.count && b.angle > 0.15);
   });
 
-  watch([processedSegments, sizeRef], () => nextTick(drawChart), { immediate: true });
-  onMounted(drawChart);
+  /**
+   * Щільність пікселів екрана (HiDPI, зум браузера). Canvas малюємо у фізичних пікселях,
+   * а CSS-розмір лишаємо `size` — інакше браузер розтягує картинку і кільце розмите.
+   */
+  const pixelRatio = ref(typeof window === 'undefined' ? 1 : window.devicePixelRatio || 1);
+  const canvasPixels = computed(() => Math.round(sizeRef.value * pixelRatio.value));
+
+  let ratioQuery: MediaQueryList | null = null;
+  function watchPixelRatio() {
+    ratioQuery?.removeEventListener('change', onPixelRatioChange);
+    ratioQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio || 1}dppx)`);
+    ratioQuery.addEventListener('change', onPixelRatioChange);
+  }
+  function onPixelRatioChange() {
+    pixelRatio.value = window.devicePixelRatio || 1;
+    watchPixelRatio();
+  }
+
+  watch([processedSegments, sizeRef, pixelRatio], () => nextTick(drawChart), { immediate: true });
+  onMounted(() => {
+    watchPixelRatio();
+    drawChart();
+  });
+  onBeforeUnmount(() => ratioQuery?.removeEventListener('change', onPixelRatioChange));
 
   function drawChart() {
     if (!canvas.value) return;
@@ -50,6 +72,8 @@
     const ctx = canvas.value.getContext('2d');
     if (!ctx) return;
 
+    // Координати далі — у CSS-пікселях, масштаб до фізичних робить transform
+    ctx.setTransform(pixelRatio.value, 0, 0, pixelRatio.value, 0, 0);
     ctx.clearRect(0, 0, size, size);
     const cx = size / 2,
       cy = size / 2;
@@ -109,7 +133,12 @@
     @mouseleave="resetHover"
     @mousemove="handleHover"
   >
-    <canvas ref="canvas" :height="sizeRef" :width="sizeRef" />
+    <canvas
+      ref="canvas"
+      :height="canvasPixels"
+      :style="{ width: `${sizeRef}px`, height: `${sizeRef}px` }"
+      :width="canvasPixels"
+    />
     <span
       v-for="(badge, i) in countBadges"
       :key="i"
