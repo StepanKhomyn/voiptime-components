@@ -1,3 +1,10 @@
+# [1.27.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.26.0...v1.27.0) (2026-11-18)
+
+
+### Features
+
+* VWidgetCard і VDonutSummary — картка віджета та адаптивна діаграма з легендою для дашбордів ([9e70ffb](https://github.com/StepanKhomyn/voiptime-components/commit/9e70ffb817b828899bf5455e57d98a6cd833d347))
+
 # [1.26.0](https://github.com/StepanKhomyn/voiptime-components/compare/v1.25.4...v1.26.0) (2026-11-18)
 
 
