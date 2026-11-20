@@ -1,3 +1,10 @@
+## [1.27.6](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.5...v1.27.6) (2026-11-20)
+
+
+### Bug Fixes
+
+* add new chart ([f2c29c1](https://github.com/StepanKhomyn/voiptime-components/commit/f2c29c1044be3d152e2b65c90d552c9a2529e0a4))
+
 ## [1.27.5](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.4...v1.27.5) (2026-11-18)
 
 
