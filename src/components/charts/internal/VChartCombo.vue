@@ -1,6 +1,12 @@
 <script lang="ts" setup>
   import { computed, onMounted, onUnmounted, ref } from 'vue';
-  import type { ComboChartPadding, ComboDataPoint, ComboSeriesConfig } from '../types';
+  import type {
+    ComboAxisConfig,
+    ComboChartPadding,
+    ComboDataPoint,
+    ComboSeriesConfig,
+    ComboTooltipRow,
+  } from '../types';
   import VEmpty from '@/components/empty/VEmpty.vue';
 
   /**
@@ -9,21 +15,36 @@
    * Розмір береться з контейнера (ResizeObserver), тож графік ніколи не виходить за його межі.
    * `height` — загальна висота разом з легендою; без неї графік заповнює висоту батька.
    * `width` лишився для сумісності: ширина завжди дорівнює ширині контейнера.
+   *
+   * Усі налаштування нижче `padding` необов'язкові — без них графік поводиться як раніше
+   * (права вісь у %, світлий тултіп, легенда зверху, назви серій = ключі).
    */
-  const props = defineProps<{
-    data: ComboDataPoint[];
-    seriesConfig: Record<string, ComboSeriesConfig>;
-    categoryKey: string;
-    width?: number;
-    height?: number;
-    padding?: ComboChartPadding;
-  }>();
+  const props = withDefaults(
+    defineProps<{
+      data: ComboDataPoint[];
+      seriesConfig: Record<string, ComboSeriesConfig>;
+      categoryKey: string;
+      width?: number;
+      height?: number;
+      padding?: ComboChartPadding;
+      leftAxis?: ComboAxisConfig;
+      rightAxis?: ComboAxisConfig;
+      currentKey?: string;
+      currentLabel?: string;
+      tooltipTitle?: (item: ComboDataPoint, index: number) => string;
+      tooltipExtra?: (item: ComboDataPoint, index: number) => ComboTooltipRow[];
+      tooltipTheme?: 'light' | 'dark';
+      striped?: boolean;
+      legendPosition?: 'top' | 'bottom';
+      maxBarWidth?: number;
+    }>(),
+    { tooltipTheme: 'light', striped: false, legendPosition: 'top', maxBarWidth: 28 }
+  );
 
 
   const FONT_SIZE = 11;
   /** Приблизна ширина символу підпису для розрахунку відступів і проріджування */
   const CHAR_WIDTH = 6.5;
-  const MAX_BAR_WIDTH = 28;
   const BAR_RADIUS = 3;
   const Y_TICKS = 5;
   /** Нижче цієї висоти області графіка малювати немає сенсу */
@@ -58,6 +79,11 @@
 
   const hasData = computed(() => !!props.data?.length);
 
+  const seriesLabel = (key: string) => props.seriesConfig[key].label ?? key;
+
+  /** Категорія «поточна» (напр. незавершений період) — стовпці малюються currentColor */
+  const isCurrent = (item: ComboDataPoint) => !!props.currentKey && !!item[props.currentKey];
+
   const value = (item: ComboDataPoint, key: string): number | null => {
     const v = Number(item[key]);
     return Number.isFinite(v) ? v : null;
@@ -84,8 +110,18 @@
     return { max: top, ticks };
   });
 
+  /** Права вісь з форматером — шкала по даних, з тією ж кількістю поділок, що й ліва */
+  const customRightScale = computed(() => {
+    let max = 0;
+    props.data?.forEach(item => rightSeries.value.forEach(k => (max = Math.max(max, value(item, k) ?? 0))));
+    const n = leftScale.value.ticks.length - 1;
+    const step = niceStep(max / n);
+    return { max: step * n, ticks: Array.from({ length: n + 1 }, (_, i) => +(step * i).toFixed(6)) };
+  });
+
   /** Права вісь — відсотки 0–100 (SL). Якщо значення більші — розширюємо */
   const rightScale = computed(() => {
+    if (props.rightAxis?.format) return customRightScale.value;
     let max = 100;
     props.data?.forEach(item => rightSeries.value.forEach(k => (max = Math.max(max, value(item, k) ?? 0))));
     const top = Math.ceil(max / 20) * 20;
@@ -93,16 +129,32 @@
     return { max: top, ticks: Array.from({ length: Y_TICKS + 1 }, (_, i) => Math.round(step * i)) };
   });
 
-  const formatTick = (v: number) => (Math.abs(v) >= 10000 ? `${+(v / 1000).toFixed(1)}k` : `${+v.toFixed(2)}`);
+  const defaultTick = (v: number) => (Math.abs(v) >= 10000 ? `${+(v / 1000).toFixed(1)}k` : `${+v.toFixed(2)}`);
+  const formatTick = (v: number) => (props.leftAxis?.format ? props.leftAxis.format(v) : defaultTick(v));
+  const formatRightTick = (v: number) => (props.rightAxis?.format ? props.rightAxis.format(v) : `${v}%`);
+
+  /** Значення серії: формат серії → формат її осі → як раніше (права вісь у %) */
+  const formatValue = (key: string, v: number | null) => {
+    if (v === null) return '';
+    const config = props.seriesConfig[key];
+    if (config.format) return config.format(v);
+    if (config.axis === 'right') return formatRightTick(v);
+    return props.leftAxis?.format ? props.leftAxis.format(v) : `${v}`;
+  };
+
+  const hasValueLabels = computed(() =>
+    barSeries.value.some(k => props.seriesConfig[k].showValues)
+  );
 
   /* ================= LAYOUT ================= */
 
   const pad = computed<ComboChartPadding>(() => {
     if (props.padding) return props.padding;
     const leftLabel = Math.max(...leftScale.value.ticks.map(v => formatTick(v).length), 1);
+    const rightLabel = Math.max(...rightScale.value.ticks.map(v => formatRightTick(v).length), 1);
     return {
-      top: 8,
-      right: rightSeries.value.length ? 44 : 12,
+      top: hasValueLabels.value ? 20 : 8,
+      right: rightSeries.value.length ? Math.max(44, Math.ceil(rightLabel * CHAR_WIDTH) + 16) : 12,
       bottom: 24,
       left: Math.ceil(leftLabel * CHAR_WIDTH) + 12,
     };
@@ -131,20 +183,26 @@
   const bars = computed(() => {
     if (!hasData.value || !barSeries.value.length || inner.value.height <= 0) return [];
     const count = barSeries.value.length;
-    const group = Math.min(band.value * 0.72, MAX_BAR_WIDTH * count);
+    const group = Math.min(band.value * 0.72, props.maxBarWidth * count);
     const gap = count > 1 && group / count > 6 ? 2 : 0;
     const w = Math.max(1, (group - gap * (count - 1)) / count);
 
     return props.data.flatMap((item, i) => {
       const start = xCenter(i) - group / 2;
       return barSeries.value.map((key, s) => {
+        const config = props.seriesConfig[key];
         const v = Math.max(0, value(item, key) ?? 0);
         const y = yFor(key, v);
+        const x = start + s * (w + gap);
         return {
           key: `${i}-${key}`,
-          d: barPath(start + s * (w + gap), y, w, baseline.value - y),
-          color: props.seriesConfig[key].color,
+          d: barPath(x, y, w, baseline.value - y),
+          color: isCurrent(item) && config.currentColor ? config.currentColor : config.color,
           index: i,
+          // Підпис значення — лише якщо увімкнено і стовпець достатньо широкий
+          label: config.showValues && w >= 14 ? formatValue(key, v) : null,
+          labelX: x + w / 2,
+          labelY: y - 6,
         };
       });
     });
@@ -213,14 +271,31 @@
 
   const hovered = computed(() => {
     if (hoverIndex.value === null) return null;
-    const item = props.data[hoverIndex.value];
+    const index = hoverIndex.value;
+    const item = props.data[index];
     if (!item) return null;
     return {
-      category: String(item[props.categoryKey] ?? ''),
+      category: props.tooltipTitle ? props.tooltipTitle(item, index) : String(item[props.categoryKey] ?? ''),
       rows: seriesKeys.value
         .map(key => ({ key, value: value(item, key), config: props.seriesConfig[key] }))
         .filter(r => r.value !== null),
+      extra: props.tooltipExtra ? props.tooltipExtra(item, index) : [],
     };
+  });
+
+  /** Легенда: серії + (за потреби) пункт для «поточних» стовпців */
+  const legendItems = computed(() => {
+    const items = seriesKeys.value.map(key => ({
+      key,
+      label: seriesLabel(key),
+      type: props.seriesConfig[key].type,
+      color: props.seriesConfig[key].color,
+    }));
+    const currentColor = barSeries.value.map(k => props.seriesConfig[k].currentColor).find(Boolean);
+    if (props.currentLabel && currentColor && props.data?.some(isCurrent)) {
+      items.push({ key: '__current', label: props.currentLabel, type: 'bar', color: currentColor });
+    }
+    return items;
   });
 
   /** Тултіп тримаємо в межах графіка: біля правого краю — ліворуч від курсора */
@@ -234,20 +309,22 @@
     return { left: `${Math.max(0, left)}px`, top: `${top}px` };
   });
 
-  const formatValue = (key: string, v: number | null) =>
-    v === null ? '' : props.seriesConfig[key].axis === 'right' ? `${v}%` : `${v}`;
 </script>
 
 <template>
-  <div class="vt-chart__combo" :style="rootStyle">
+  <div
+    class="vt-chart__combo"
+    :class="{ 'vt-chart__combo--legend-bottom': legendPosition === 'bottom' }"
+    :style="rootStyle"
+  >
     <div class="vt-chart__combo-legend">
-      <div v-for="key in seriesKeys" :key="key" class="vt-chart__combo-legend-item">
+      <div v-for="item in legendItems" :key="item.key" class="vt-chart__combo-legend-item">
         <span
           class="vt-chart__combo-marker"
-          :class="`vt-chart__combo-marker--${seriesConfig[key].type}`"
-          :style="{ '--vt-combo-color': seriesConfig[key].color }"
+          :class="`vt-chart__combo-marker--${item.type}`"
+          :style="{ '--vt-combo-color': item.color }"
         />
-        <span>{{ key }}</span>
+        <span>{{ item.label }}</span>
       </div>
     </div>
 
@@ -264,6 +341,13 @@
         :height="plotHeight"
         :viewBox="`0 0 ${plotWidth} ${plotHeight}`"
       >
+        <!-- Смуги категорій через одну -->
+        <g v-if="striped" class="vt-chart__combo-stripes">
+          <template v-for="(_, i) in data" :key="`s${i}`">
+            <rect v-if="i % 2 === 0" :x="pad.left + band * i" :y="0" :width="band" :height="plotHeight" />
+          </template>
+        </g>
+
         <!-- Сітка -->
         <g class="vt-chart__combo-grid">
           <line
@@ -297,7 +381,7 @@
               text-anchor="start"
               dominant-baseline="middle"
             >
-              {{ tick }}%
+              {{ formatRightTick(tick) }}
             </text>
           </template>
           <text v-for="label in xLabels" :key="`x${label.i}`" :x="label.x" :y="baseline + 16" text-anchor="middle">
@@ -333,6 +417,14 @@
           />
         </g>
 
+        <g class="vt-chart__combo-value-text" :font-size="FONT_SIZE">
+          <template v-for="bar in bars" :key="`v${bar.key}`">
+            <text v-if="bar.label !== null" :x="bar.labelX" :y="bar.labelY" text-anchor="middle">
+              {{ bar.label }}
+            </text>
+          </template>
+        </g>
+
         <g v-for="line in lines" :key="line.key">
           <path
             :d="line.d"
@@ -355,7 +447,13 @@
         </g>
       </svg>
 
-      <div v-if="hovered" ref="tooltip" class="vt-chart__combo-tooltip" :style="tooltipStyle">
+      <div
+        v-if="hovered"
+        ref="tooltip"
+        class="vt-chart__combo-tooltip"
+        :class="{ 'vt-chart__combo-tooltip--dark': tooltipTheme === 'dark' }"
+        :style="tooltipStyle"
+      >
         <div class="vt-chart__combo-tooltip-title">{{ hovered.category }}</div>
         <div v-for="row in hovered.rows" :key="row.key" class="vt-chart__combo-tooltip-item">
           <span
@@ -363,8 +461,17 @@
             :class="`vt-chart__combo-marker--${row.config.type}`"
             :style="{ '--vt-combo-color': row.config.color }"
           />
-          <span class="vt-chart__combo-tooltip-label">{{ row.key }}</span>
+          <span class="vt-chart__combo-tooltip-label">{{ seriesLabel(row.key) }}</span>
           <span class="vt-chart__combo-tooltip-value">{{ formatValue(row.key, row.value) }}</span>
+        </div>
+        <div v-for="row in hovered.extra" :key="`e${row.label}`" class="vt-chart__combo-tooltip-item">
+          <span class="vt-chart__combo-tooltip-label">{{ row.label }}</span>
+          <span
+            class="vt-chart__combo-tooltip-value"
+            :class="row.tone && `vt-chart__combo-tooltip-value--${row.tone}`"
+          >
+            {{ row.value }}
+          </span>
         </div>
       </div>
     </div>

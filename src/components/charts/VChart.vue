@@ -83,6 +83,16 @@
       :width="(props as ComboChartProps).width"
       :height="(props as ComboChartProps).height"
       :padding="(props as ComboChartProps).padding"
+      :left-axis="(props as ComboChartProps).leftAxis"
+      :right-axis="(props as ComboChartProps).rightAxis"
+      :current-key="(props as ComboChartProps).currentKey"
+      :current-label="(props as ComboChartProps).currentLabel"
+      :tooltip-title="(props as ComboChartProps).tooltipTitle"
+      :tooltip-extra="(props as ComboChartProps).tooltipExtra"
+      :tooltip-theme="(props as ComboChartProps).tooltipTheme"
+      :striped="(props as ComboChartProps).striped"
+      :legend-position="(props as ComboChartProps).legendPosition"
+      :max-bar-width="(props as ComboChartProps).maxBarWidth"
     />
   </div>
 </template>

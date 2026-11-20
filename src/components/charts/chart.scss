@@ -403,6 +403,56 @@ $transition-fast: filter 0.15s ease;
     margin-left: 12px;
     font-weight: 600;
     font-variant-numeric: tabular-nums;
+
+    &--up {
+      color: #21965a;
+    }
+
+    &--down {
+      color: #d32f2f;
+    }
+  }
+
+  // ── Необов'язкові варіанти ──
+  &--legend-bottom &-legend {
+    order: 2;
+    justify-content: center;
+  }
+
+  &-stripes rect {
+    fill: #f7f7f7;
+  }
+
+  &-value-text text {
+    fill: $color-text-gray;
+    font-family: inherit;
+  }
+
+  &-tooltip--dark {
+    border-color: transparent;
+    background: #333;
+    color: #fff;
+
+    .vt-chart__combo-tooltip-title {
+      color: #f2c94c;
+      font-weight: 400;
+    }
+
+    .vt-chart__combo-tooltip-label {
+      color: #e0e0e0;
+    }
+
+    .vt-chart__combo-tooltip-value {
+      font-weight: 400;
+
+      &--up {
+        color: #6fcf97;
+      }
+
+      &--down {
+        color: #ff8a80;
+      }
+    }
   }
 }
 

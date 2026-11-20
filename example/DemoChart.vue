@@ -31,6 +31,43 @@
     };
   });
 
+  // ── Combo з налаштуваннями: хвилини (ліва шкала) + вартість у $ (права) ──────
+  const usageSeries = {
+    minutes: {
+      type: 'bar' as const,
+      color: '#21965A',
+      currentColor: '#8FCBA4',
+      label: 'Хвилини - ліва шкала',
+      showValues: true,
+      format: (v: number) => v.toLocaleString('uk-UA'),
+    },
+    cost: {
+      type: 'line' as const,
+      color: '#BDBDBD',
+      axis: 'right' as const,
+      label: 'Вартість - права шкала',
+      format: (v: number) => `$${v.toFixed(2)}`,
+    },
+  };
+  const usageData = [
+    { label: 'серп.', title: 'Серпень 2026', minutes: 946, cost: 57, delta: 0, current: false },
+    { label: 'вер.', title: 'Вересень 2026', minutes: 3543, cost: 213, delta: 274.5, current: false },
+    { label: 'жовт.', title: 'Жовтень 2026', minutes: 3233, cost: 194, delta: -8.7, current: false },
+    { label: 'лист.', title: 'Листопад 2026', minutes: 892, cost: 54, delta: -10.4, current: true },
+  ];
+  const usageTooltipTitle = (item: Record<string, unknown>) => String(item.title);
+  const usageTooltipExtra = (item: Record<string, unknown>) => {
+    const delta = Number(item.delta);
+    return [
+      {
+        label: 'До попереднього місяця',
+        value: delta ? `${delta > 0 ? '+' : ''}${delta}%` : '—',
+        tone: delta > 0 ? ('up' as const) : delta < 0 ? ('down' as const) : undefined,
+      },
+    ];
+  };
+  const usageRightAxis = { format: (v: number) => `$${v}` };
+
   // ── Donut дані ────────────────────────────────────────────────────────────────
   const callResults: ChartSegment[] = [
     { label: 'Voicemail', count: 456, color: '#f59e0b' },
@@ -373,6 +410,29 @@
       <DocPreview title="Порожній стан">
         <div style="width: 100%">
           <VChart type="combo" :data="[]" :series-config="comboSeries" category-key="time" :height="200" />
+        </div>
+      </DocPreview>
+
+      <DocPreview
+        title="З налаштуваннями: права шкала у $, поточний період, підписи значень, темний тултіп з дельтою"
+      >
+        <div style="width: 100%">
+          <VChart
+            type="combo"
+            :data="usageData"
+            :series-config="usageSeries"
+            category-key="label"
+            :height="360"
+            :right-axis="usageRightAxis"
+            current-key="current"
+            current-label="Поточний період"
+            :tooltip-title="usageTooltipTitle"
+            :tooltip-extra="usageTooltipExtra"
+            tooltip-theme="dark"
+            striped
+            legend-position="bottom"
+            :max-bar-width="56"
+          />
         </div>
       </DocPreview>
     </DocSection>

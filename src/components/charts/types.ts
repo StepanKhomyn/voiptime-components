@@ -22,6 +22,29 @@ export interface ComboSeriesConfig {
   type: 'bar' | 'line';
   color: string;
   axis?: 'left' | 'right';
+  /** Назва в легенді й тултіпі. За замовчуванням — ключ серії */
+  label?: string;
+  /** Форматування значення в тултіпі та підписах. За замовчуванням — формат осі серії */
+  format?: (v: number) => string;
+  /** Колір стовпця для «поточних» категорій (див. ComboChartProps.currentKey) */
+  currentColor?: string;
+  /** Підписи значень над стовпцями (лише для type: 'bar'; ховаються, якщо стовпці вузькі) */
+  showValues?: boolean;
+}
+
+export interface ComboAxisConfig {
+  /**
+   * Форматування підписів осі. Для правої осі: якщо задано — шкала будується по даних
+   * (як ліва), інакше лишається відсоткова 0–100% (SL)
+   */
+  format?: (v: number) => string;
+}
+
+export interface ComboTooltipRow {
+  label: string;
+  value: string;
+  /** Колір значення: up — зелений, down — червоний */
+  tone?: 'up' | 'down';
 }
 
 export interface ScaleBarSide {
@@ -51,16 +74,35 @@ export interface HorizontalBarChartProps {
 // ── Combo ─────────────────────────────────────────────────────────────────────
 export interface ComboChartProps {
   type: VChartType.combo;
-  data: Record<string, number | string>[];
+  data: Record<string, number | string | boolean>[];
   seriesConfig: Record<string, ComboSeriesConfig>;
   categoryKey: string;
   width?: number;
   height?: number;
   padding?: { top: number; right: number; bottom: number; left: number };
+  // ── Необов'язкові налаштування: без них графік поводиться як раніше ──
+  leftAxis?: ComboAxisConfig;
+  rightAxis?: ComboAxisConfig;
+  /** Поле в data: true → стовпці категорії малюються currentColor (напр. незавершений період) */
+  currentKey?: string;
+  /** Пункт легенди для «поточних» стовпців (показується, лише якщо такі є) */
+  currentLabel?: string;
+  /** Заголовок тултіпа. За замовчуванням — значення categoryKey */
+  tooltipTitle?: (item: ComboDataPoint, index: number) => string;
+  /** Додаткові рядки тултіпа під значеннями серій (напр. дельта до попереднього періоду) */
+  tooltipExtra?: (item: ComboDataPoint, index: number) => ComboTooltipRow[];
+  /** Темний тултіп. За замовчуванням — світлий */
+  tooltipTheme?: 'light' | 'dark';
+  /** Смуги категорій через одну */
+  striped?: boolean;
+  /** Легенда над графіком (за замовчуванням) або під ним по центру */
+  legendPosition?: 'top' | 'bottom';
+  /** Максимальна ширина одного стовпця, px. За замовчуванням 28 */
+  maxBarWidth?: number;
 }
 
 export interface ComboDataPoint {
-  [key: string]: number | string;
+  [key: string]: number | string | boolean;
 }
 
 export interface ComboChartPadding {
