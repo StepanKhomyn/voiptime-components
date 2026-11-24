@@ -217,11 +217,14 @@ import NoDataChatIcon from './no-data/NoDataChatIcon.vue';
 import NoDataDefaultIcon from './no-data/NoDataDefaultIcon.vue';
 import NoDataFilterIcon from './no-data/NoDataFilterIcon.vue';
 import NoDataSoundIcon from './no-data/NoDataSoundIcon.vue';
+import NotificationAssessmentReadyIcon from './notification/NotificationAssessmentReadyIcon.vue';
 import NotificationNotificationIcon from './notification/NotificationNotificationIcon.vue';
 import NotificationPhoneArrowDownIcon from './notification/NotificationPhoneArrowDownIcon.vue';
 import NotificationReadIcon from './notification/NotificationReadIcon.vue';
+import NotificationTranscriptionReadyIcon from './notification/NotificationTranscriptionReadyIcon.vue';
 import PhoneActiveTalkIcon from './phone/PhoneActiveTalkIcon.vue';
 import PhoneAnswerCallIcon from './phone/PhoneAnswerCallIcon.vue';
+import PhoneCallQueueIcon from './phone/PhoneCallQueueIcon.vue';
 import PhoneCallingIcon from './phone/PhoneCallingIcon.vue';
 import PhoneCancelRecallIcon from './phone/PhoneCancelRecallIcon.vue';
 import PhoneHangupCallIcon from './phone/PhoneHangupCallIcon.vue';
@@ -580,13 +583,16 @@ export const groupIcons = {
   no_data_sound: NoDataSoundIcon,
 
   // notification
+  notification_assessment_ready: NotificationAssessmentReadyIcon,
   notification_notification: NotificationNotificationIcon,
   notification_phone_arrow_down: NotificationPhoneArrowDownIcon,
   notification_read: NotificationReadIcon,
+  notification_transcription_ready: NotificationTranscriptionReadyIcon,
 
   // phone
   phone_active_talk: PhoneActiveTalkIcon,
   phone_answer_call: PhoneAnswerCallIcon,
+  phone_call_queue: PhoneCallQueueIcon,
   phone_calling: PhoneCallingIcon,
   phone_cancel_recall: PhoneCancelRecallIcon,
   phone_hangup_call: PhoneHangupCallIcon,
@@ -968,13 +974,16 @@ export const iconGroups = {
     'no_data_sound',
   ],
   'notification': [
+    'notification_assessment_ready',
     'notification_notification',
     'notification_phone_arrow_down',
     'notification_read',
+    'notification_transcription_ready',
   ],
   'phone': [
     'phone_active_talk',
     'phone_answer_call',
+    'phone_call_queue',
     'phone_calling',
     'phone_cancel_recall',
     'phone_hangup_call',
