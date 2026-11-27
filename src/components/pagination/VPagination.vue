@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-  import { computed, watch, ref } from 'vue';
+  import { computed, watch, ref, nextTick, onMounted, onBeforeUnmount } from 'vue';
   import type { PaginationEmits, PaginationProps } from './types';
   import VButton from '@/components/button/VButton.vue';
   import VIcon from '@/components/icon/VIcon.vue';
@@ -75,6 +75,68 @@
     return pages;
   });
 
+  /** Від скількох цифр номери сусідніх сторінок скорочуються до спільного з поточною закінчення */
+  const COMPACT_MIN_DIGITS = 4;
+
+  // ─── Компактний режим: вмикається, лише коли повна навігація не влазить в один рядок ───
+  const rootRef = ref<HTMLElement | null>(null);
+  const infoRef = ref<HTMLElement | null>(null);
+  const reloadRef = ref<HTMLElement | null>(null);
+  /** Прихована копія навігації з повними номерами — для виміру її ширини */
+  const navMeasureRef = ref<HTMLElement | null>(null);
+  const isCompact = ref(false);
+
+  const updateCompact = () => {
+    const root = rootRef.value;
+    if (!root || !infoRef.value || !navMeasureRef.value || !reloadRef.value) return;
+    const style = getComputedStyle(root);
+    const available = root.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+    // Мінімальний відступ між блоками (у кореня justify-content: space-between без gap)
+    const gap = parseFloat(style.columnGap) || 16;
+    const needed =
+      infoRef.value.offsetWidth + navMeasureRef.value.offsetWidth + reloadRef.value.offsetWidth + gap * 2;
+    isCompact.value = needed > available;
+  };
+
+  let resizeObserver: ResizeObserver | null = null;
+
+  onMounted(() => {
+    updateCompact();
+    if (typeof ResizeObserver !== 'undefined' && rootRef.value) {
+      resizeObserver = new ResizeObserver(() => updateCompact());
+      resizeObserver.observe(rootRef.value);
+    }
+  });
+
+  onBeforeUnmount(() => resizeObserver?.disconnect());
+
+  watch(
+    () => [visiblePages.value, props.totalItems, currentPageSize.value],
+    () => nextTick(updateCompact)
+  );
+
+  /**
+   * Підпис кнопки сторінки. Якщо навігація не влазить (isCompact), довгі номери біля поточної показуємо тільки закінченням,
+   * яке відрізняється від поточної: 44825 біля 44827 → «…25». Повний номер — у тултіпі.
+   * Першу, останню й поточну сторінки не скорочуємо.
+   */
+  const getPageLabel = (page: number | string): string => {
+    const label = String(page);
+    if (!isCompact.value || typeof page !== 'number' || page === currentPage.value || page === 1 || page === totalPages.value) {
+      return label;
+    }
+    const current = String(currentPage.value);
+    if (label.length < COMPACT_MIN_DIGITS || label.length !== current.length) return label;
+
+    let common = 0;
+    while (common < label.length && label[common] === current[common]) common++;
+    const suffix = label.slice(Math.min(common, label.length - 2));
+    return suffix.length < label.length ? `…${suffix}` : label;
+  };
+
+  const getPageTooltip = (page: number | string): string | null =>
+    getPageLabel(page) === String(page) ? null : String(page);
+
   // Methods
   const emitPageChange = () => {
     emit('pageChange', {
@@ -128,8 +190,8 @@
 </script>
 
 <template>
-  <div class="vt-pagination">
-    <div class="vt-pagination__info">
+  <div ref="rootRef" class="vt-pagination">
+    <div ref="infoRef" class="vt-pagination__info">
       <!-- Селект для кількості рядків на сторінку -->
       <div class="vt-pagination__rows-per-page">
         <VSelect id="rowsSelect" v-model="currentPageSize" class="vt-pagination__select" @change="handlePageSizeChange">
@@ -161,10 +223,11 @@
         :class="{
           'vt-pagination__nav-button--active': page === currentPage,
         }"
+        v-tooltip="getPageTooltip(page)"
         class="vt-pagination__nav-button"
         @click="goToPage(page)"
       >
-        {{ page }}
+        {{ getPageLabel(page) }}
       </button>
 
       <!-- Кнопка "Наступна" -->
@@ -177,8 +240,23 @@
       </button>
     </div>
 
+    <!-- Прихована навігація з повними номерами: за її шириною вирішуємо, чи скорочувати -->
+    <div ref="navMeasureRef" class="vt-pagination__navigation vt-pagination__measure" aria-hidden="true">
+      <button class="vt-pagination__nav-button" tabindex="-1"><VIcon name="arrows_left" /></button>
+      <button
+        v-for="(page, index) in visiblePages"
+        :key="index"
+        :class="{ 'vt-pagination__nav-button--active': page === currentPage }"
+        class="vt-pagination__nav-button"
+        tabindex="-1"
+      >
+        {{ page }}
+      </button>
+      <button class="vt-pagination__nav-button" tabindex="-1"><VIcon name="arrows_right" /></button>
+    </div>
+
     <!-- Релоад -->
-    <div>
+    <div ref="reloadRef">
       <VButton icon="arrows_reload" shape="circle" tooltip tooltipPlacement="left" @click="reloadData"
         >{{ t(LOCALE_KEYS.PAGINATION_RELOAD) }}
       </VButton>

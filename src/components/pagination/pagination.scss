@@ -10,11 +10,13 @@
   padding-bottom: 0;
   flex-wrap: wrap;
   color: var(--color-gray-3);
+  position: relative;
 
   &__info {
     display: flex;
     align-items: center;
     gap: var(--vt-gap-base);
+    white-space: nowrap;
   }
 
   &__list {
@@ -46,6 +48,15 @@
     gap: var(--vt-gap-base);
   }
 
+  &__measure {
+    position: absolute;
+    top: 0;
+    left: 0;
+    visibility: hidden;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
   &__nav-button {
     display: flex;
     align-items: center;
@@ -56,7 +67,10 @@
     background-color: transparent;
     color: var(--color-gray-4);
     padding: 5px 11px;
+    min-width: 32px;
     border-radius: 50px;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
 
     &:not(.vt-pagination__nav-button--active):not(:disabled):hover {
       color: var(--color-gray-3);
