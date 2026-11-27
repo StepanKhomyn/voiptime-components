@@ -48,6 +48,13 @@
     gap: var(--vt-gap-base);
   }
 
+  // Прихований діапазон лишається виміряним (для зворотного показу), але не займає місця
+  &__range--hidden {
+    position: absolute;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
   &__measure {
     position: absolute;
     top: 0;

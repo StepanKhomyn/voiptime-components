@@ -78,32 +78,50 @@
   /** Від скількох цифр номери сусідніх сторінок скорочуються до спільного з поточною закінчення */
   const COMPACT_MIN_DIGITS = 4;
 
-  // ─── Компактний режим: вмикається, лише коли повна навігація не влазить в один рядок ───
+  // ─── Адаптивність: коли все не влазить в один рядок ───
+  // 1) isCompact — скорочуємо номери сусідніх сторінок;
+  // 2) isRangeHidden — якщо й так не влазить, ховаємо «X - Y з N» (текст переїжджає в тултіп поточної сторінки).
   const rootRef = ref<HTMLElement | null>(null);
   const infoRef = ref<HTMLElement | null>(null);
+  const rowsRef = ref<HTMLElement | null>(null);
+  const rangeRef = ref<HTMLElement | null>(null);
+  const navRef = ref<HTMLElement | null>(null);
   const reloadRef = ref<HTMLElement | null>(null);
   /** Прихована копія навігації з повними номерами — для виміру її ширини */
   const navMeasureRef = ref<HTMLElement | null>(null);
   const isCompact = ref(false);
+  const isRangeHidden = ref(false);
 
-  const updateCompact = () => {
+  const updateLayout = async () => {
     const root = rootRef.value;
-    if (!root || !infoRef.value || !navMeasureRef.value || !reloadRef.value) return;
+    const info = infoRef.value;
+    if (!root || !info || !rowsRef.value || !rangeRef.value || !navMeasureRef.value || !reloadRef.value) return;
     const style = getComputedStyle(root);
     const available = root.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
     // Мінімальний відступ між блоками (у кореня justify-content: space-between без gap)
     const gap = parseFloat(style.columnGap) || 16;
-    const needed =
-      infoRef.value.offsetWidth + navMeasureRef.value.offsetWidth + reloadRef.value.offsetWidth + gap * 2;
-    isCompact.value = needed > available;
+    const infoGap = parseFloat(getComputedStyle(info).columnGap) || 0;
+    // Ширину діапазону міряємо й коли він прихований: він лише виведений з потоку, а не display: none
+    const infoWidth = rowsRef.value.offsetWidth + infoGap + rangeRef.value.offsetWidth;
+    const fixedWidth = infoWidth + reloadRef.value.offsetWidth + gap * 2;
+
+    isCompact.value = fixedWidth + navMeasureRef.value.offsetWidth > available;
+    if (!isCompact.value) {
+      isRangeHidden.value = false;
+      return;
+    }
+    // Чекаємо рендер скорочених номерів, щоб виміряти справжню ширину навігації
+    await nextTick();
+    if (!navRef.value) return;
+    isRangeHidden.value = fixedWidth + navRef.value.offsetWidth > available;
   };
 
   let resizeObserver: ResizeObserver | null = null;
 
   onMounted(() => {
-    updateCompact();
+    updateLayout();
     if (typeof ResizeObserver !== 'undefined' && rootRef.value) {
-      resizeObserver = new ResizeObserver(() => updateCompact());
+      resizeObserver = new ResizeObserver(() => updateLayout());
       resizeObserver.observe(rootRef.value);
     }
   });
@@ -112,7 +130,7 @@
 
   watch(
     () => [visiblePages.value, props.totalItems, currentPageSize.value],
-    () => nextTick(updateCompact)
+    () => nextTick(updateLayout)
   );
 
   /**
@@ -134,8 +152,13 @@
     return suffix.length < label.length ? `…${suffix}` : label;
   };
 
-  const getPageTooltip = (page: number | string): string | null =>
-    getPageLabel(page) === String(page) ? null : String(page);
+  const rangeText = computed(() => `${fromItem.value} - ${toItem.value} з ${props.totalItems}`);
+
+  const getPageTooltip = (page: number | string): string | null => {
+    // Діапазон прихований — показуємо його на поточній сторінці
+    if (page === currentPage.value) return isRangeHidden.value ? rangeText.value : null;
+    return getPageLabel(page) === String(page) ? null : String(page);
+  };
 
   // Methods
   const emitPageChange = () => {
@@ -193,7 +216,7 @@
   <div ref="rootRef" class="vt-pagination">
     <div ref="infoRef" class="vt-pagination__info">
       <!-- Селект для кількості рядків на сторінку -->
-      <div class="vt-pagination__rows-per-page">
+      <div ref="rowsRef" class="vt-pagination__rows-per-page">
         <VSelect id="rowsSelect" v-model="currentPageSize" class="vt-pagination__select" @change="handlePageSizeChange">
           <VOption v-for="option in pageSizeOptions" :key="option" :label="option" :value="option">
             {{ option }}
@@ -202,11 +225,18 @@
       </div>
 
       <!-- Інформація про відображення -->
-      <span>{{ fromItem }} - {{ toItem }} з {{ totalItems }} </span>
+      <span
+        ref="rangeRef"
+        :aria-hidden="isRangeHidden || undefined"
+        :class="{ 'vt-pagination__range--hidden': isRangeHidden }"
+        class="vt-pagination__range"
+      >
+        {{ rangeText }}
+      </span>
     </div>
 
     <!-- Навігація -->
-    <div class="vt-pagination__navigation">
+    <div ref="navRef" class="vt-pagination__navigation">
       <!-- Кнопка "Попередня" -->
       <button
         :class="{ 'vt-pagination__nav-button': true, 'has-items': !isPreviousDisabled }"
