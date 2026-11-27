@@ -1,3 +1,10 @@
+## [1.27.9](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.8...v1.27.9) (2026-11-27)
+
+
+### Bug Fixes
+
+* Правки стилів пагінації, коли великі числа - не влазиться вся пагінація ([6a4d5e2](https://github.com/StepanKhomyn/voiptime-components/commit/6a4d5e24be4c95703fb3e4234b18e86ebf3fb726))
+
 ## [1.27.8](https://github.com/StepanKhomyn/voiptime-components/compare/v1.27.7...v1.27.8) (2026-11-27)
 
 
